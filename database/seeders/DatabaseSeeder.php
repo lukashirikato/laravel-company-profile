@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         // Panggil seeder yang kamu buat
         $this->call([
-            CustomerSeeder::class,
+            CustomerSeeder::class, VoucherSeeder::class
         ]);
 
         // Jika ada seeder lain di masa depan, tinggal tambahkan di sini

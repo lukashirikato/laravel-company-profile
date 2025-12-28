@@ -3,23 +3,23 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Customer;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class CustomerSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
-        Customer::create([
-            'name' => 'Aisyah Fitri',
-            'email' => 'aisyah@example.com',
-            'phone_number' => '08123456789',
-            'program' => 'pilates',
-            'quota' => 10,
-            'membership' => 'exclusive program',
-            'preferred_membership' => 'private program',
-            'user_id' => null,
+        DB::table('customers')->insert([
+            [
+                'name' => 'Aisyah Fitri',
+                'email' => 'aisyah2@example.com',
+                'phone_number' => '08123456789',
+                'program' => 'pilates',
+                'quota' => 10,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
         ]);
-
-        // Tambah data lain jika perlu...
     }
 }

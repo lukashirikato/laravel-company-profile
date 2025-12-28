@@ -46,7 +46,7 @@
         <div class="text-center mb-6">
             <img src="{{ asset('icons/logo-ftm.jpg') }}" alt="Logo Gym" class="w-20 h-20 mx-auto mb-3 rounded-full logo-shadow">
             <h1 class="text-3xl font-bold text-gray-800">Selamat Datang</h1>
-            <p class="text-sm text-gray-500">FTM Society Muslimah</p>
+            <p class="text-sm text-gray-500">FTM Society</p>
         </div>
 
         {{-- Notifikasi sukses --}}

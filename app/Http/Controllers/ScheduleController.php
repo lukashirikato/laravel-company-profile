@@ -36,12 +36,11 @@ class ScheduleController extends Controller
      */
     public function store(Request $request)
     {
-        
         $request->validate([
-            'class_name'       => 'required|string|max:255',
-            'day'              => 'required|string|max:20',
-            'class_time'       => 'required|string|max:20',
-            'instructor'       => 'nullable|string|max:255',
+            'class_name' => 'required|string|max:255',
+            'day'        => 'required|string|max:20',
+            'class_time' => 'required|string|max:20',
+            'instructor' => 'nullable|string|max:255',
         ]);
 
         Schedule::create([
@@ -72,10 +71,10 @@ class ScheduleController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'class_name'       => 'required|string|max:255',
-            'day'              => 'required|string|max:20',
-            'class_time'       => 'required|string|max:20',
-            'instructor'       => 'required|string|max:255',
+            'class_name' => 'required|string|max:255',
+            'day'        => 'required|string|max:20',
+            'class_time' => 'required|string|max:20',
+            'instructor' => 'required|string|max:255',
         ]);
 
         $schedule = Schedule::findOrFail($id);
@@ -100,4 +99,34 @@ class ScheduleController extends Controller
 
         return redirect()->route('schedules.index')->with('success', 'Jadwal berhasil dihapus!');
     }
+
+    /**
+     * Ambil jadwal berdasarkan nama kelas (untuk AJAX)
+     */
+    public function getByClassName($name)
+{
+    // Trim dan decode nama kelas
+    $name = trim(urldecode($name));
+
+    $schedules = Schedule::where('class_name', $name)
+                         ->orderBy('day')
+                         ->get();
+
+    // Jika tidak ada jadwal, kembalikan array kosong
+    if ($schedules->isEmpty()) {
+        return response()->json([]);
+    }
+
+    // Mapping hasil
+    $result = $schedules->map(function ($sch) {
+        return [
+            'id'         => $sch->id,
+            'day'        => $sch->day,
+            'class_time' => $sch->class_time,
+            'instructor' => $sch->instructor, 
+        ];
+    });
+
+    return response()->json($result);
+}
 }

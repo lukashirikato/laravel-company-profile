@@ -14,13 +14,16 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
-        if (! $request->expectsJson()) {
-            // Jika akses ke /adm, redirect ke login admin
-            if ($request->is('adm') || $request->is('adm/*')) {
-                return route('admin.login.form');
-            }
-            // Default: login member
-            return route('member.login.form');
+        if ($request->expectsJson()) {
+            return null; // biarkan request JSON gagal dengan 401
         }
+
+        // Jika akses ke admin panel
+        if ($request->is('adm') || $request->is('adm/*')) {
+            return route('admin.login.form');
+        }
+
+        // Default: member login
+        return route('member.login.form');
     }
 }

@@ -58,7 +58,7 @@
         transform: translateY(0);
         animation: fadeInUp 0.7s cubic-bezier(.4,0,.2,1);
       }
-      :where([class^="ri-"])::before { content: "\f3c2"; }
+      
       body {
       font-family: 'Poppins', sans-serif;
       scroll-behavior: smooth;
@@ -164,117 +164,150 @@
   </head>
   <body class="bg-white text-gray-800">
     
-    <!-- Header -->
-    <header class="fixed w-full bg-white bg-opacity-95 shadow-sm z-50">
+  <!-- Header -->
+<header class="fixed w-full bg-white bg-opacity-95 shadow-sm z-50">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-      <a href="#" class="logo text-primary text-2xl">FTM SOCIETY</a>
-      <!-- Desktop Navigation -->
-      <nav class="hidden md:flex items-center space-x-8">
-        @auth
-          
-        @else
-        
-        @endauth
 
-         <!-- Menu Navigasi Umum -->
-<a href="#home" class="nav-link text-gray-700 hover:text-primary transition-colors">Home</a>
-<a href="#about" class="nav-link text-gray-700 hover:text-primary transition-colors">About</a>
-<a href="#Programs" class="nav-link text-gray-700 hover:text-primary transition-colors">Programs</a>
-<a href="#classes" class="nav-link text-gray-700 hover:text-primary transition-colors">Classes</a>
-<a href="#schedule" class="nav-link text-gray-700 hover:text-primary transition-colors">Schedule</a>
-<a href="#Facility" class="nav-link text-gray-700 hover:text-primary transition-colors">Gallery</a>
-<a href="#contact" class="nav-link text-gray-700 hover:text-primary transition-colors">Contact</a>
+        <!-- LOGO -->
+        <a href="#" class="logo text-primary text-2xl">FTM SOCIETY</a>
 
-<!-- Navigasi Desktop -->
-<nav class="hidden md:flex items-center space-x-8">
-<nav class="hidden md:flex items-center space-x-8">
-    {{-- Hapus blok @auth('customer') dan tombol logout --}}
-    {{-- Tampilkan hanya Join Now dan Login --}}
-    <a href="#join"
-       class="bg-primary text-white px-6 py-2 rounded-button hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all font-semibold">
-        Join Now
-    </a>
-    <a href="{{ route('member.login') }}"
-       class="bg-primary text-white px-6 py-2 rounded-button hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all font-semibold">
-        Login
-    </a>
-</nav>
+        <!-- DESKTOP NAVIGATION -->
+        <nav class="hidden md:flex items-center space-x-8">
+            <a href="#home" class="text-gray-700 hover:text-primary transition">Home</a>
+            <a href="#about" class="text-gray-700 hover:text-primary transition">About</a>
+            <a href="#Programs" class="text-gray-700 hover:text-primary transition">Programs</a>
+            <a href="#classes" class="text-gray-700 hover:text-primary transition">Classes</a>
+            <a href="#schedule" class="text-gray-700 hover:text-primary transition">Schedule</a>
+            <a href="#Facility" class="text-gray-700 hover:text-primary transition">Gallery</a>
+            <a href="#contact" class="text-gray-700 hover:text-primary transition">Contact</a>
 
-<!-- Tombol Menu Mobile -->
-<div class="md:hidden flex items-center">
-    <button id="mobile-menu-button"
-            class="w-10 h-10 flex items-center justify-center text-primary"
-            aria-label="Toggle mobile menu">
-        <i class="ri-menu-line ri-lg"></i>
-    </button>
+            <a href="#join"
+                class="bg-primary text-white px-6 py-2 rounded-button hover:bg-secondary hover:scale-105 transition font-semibold">
+                Join Now
+            </a>
+
+            <a href="{{ route('member.login') }}"
+                class="bg-primary text-white px-6 py-2 rounded-button hover:bg-secondary hover:scale-105 transition font-semibold">
+                Login
+            </a>
+        </nav>
+
+        <!-- TOMBOL MOBILE (⋮) -->
+        <button id="mobile-menu-button"
+            class="block md:hidden text-black text-4xl font-bold leading-none">
+            ⋮
+        </button>
+
+    </div>
+</header>
+
+<!-- MOBILE OVERLAY -->
+<div id="mobile-overlay" class="fixed inset-0 bg-black/50 hidden z-[9999]"></div>
+
+<!-- MOBILE MENU SLIDE -->
+<div id="mobile-menu"
+    class="fixed top-0 right-[-100%] h-full w-64 bg-white shadow-lg z-[10000] p-6 transition-all duration-300">
+
+    <div class="flex justify-end mb-8">
+        <button id="close-menu-button" class="w-10 h-10 flex items-center justify-center text-primary">
+            <i class="ri-close-line ri-lg"></i>
+        </button>
+    </div>
+
+    <nav class="flex flex-col space-y-6">
+        <a href="#home" class="text-gray-700 hover:text-primary transition">Home</a>
+        <a href="#about" class="text-gray-700 hover:text-primary transition">About</a>
+        <a href="#Programs" class="text-gray-700 hover:text-primary transition">Programs</a>
+        <a href="#classes" class="text-gray-700 hover:text-primary transition">Classes</a>
+        <a href="#schedule" class="text-gray-700 hover:text-primary transition">Schedule</a>
+        <a href="#Facility" class="text-gray-700 hover:text-primary transition">Gallery</a>
+        <a href="#contact" class="text-gray-700 hover:text-primary transition">Contact</a>
+
+        <a href="#join"
+            class="bg-primary text-white px-6 py-3 rounded-button text-center hover:bg-secondary hover:scale-105 transition font-semibold">
+            Join Now
+        </a>
+
+        <!-- LOGIN BUTTON (DITAMBAHKAN) -->
+        <a href="{{ route('member.login') }}"
+            class="border border-primary text-primary px-6 py-3 rounded-button text-center hover:bg-primary hover:text-white hover:scale-105 transition font-semibold">
+            Login
+        </a>
+    </nav>
 </div>
 
 
+<!-- SCRIPT NAVBAR MOBILE -->
+<script>
+  (function(){
+    const menuBtn = document.getElementById("mobile-menu-button");
+    const closeBtn = document.getElementById("close-menu-button");
+    const mobileMenu = document.getElementById("mobile-menu");
+    const overlay = document.getElementById("mobile-overlay");
 
-      <!-- Mobile Navigation -->
-     <div id="mobile-menu" class="mobile-menu fixed top-0 right-0 h-full w-64 bg-white shadow-lg z-50 p-6">
-      <div class="flex justify-end mb-8">
-        <button id="close-menu-button" class="w-10 h-10 flex items-center justify-center text-primary">
-          <i class="ri-close-line ri-lg"></i>
-        </button>
-      </div>
-      <nav class="flex flex-col space-y-6">
-       
+    if (!menuBtn || !mobileMenu) return;
 
-          <a
-            href="#home"
-            class="text-gray-700 hover:text-primary transition-colors"
-            >Dashboard</a
-          >
-          <a
-            href="#about"
-            class="text-gray-700 hover:text-primary transition-colors"
-            >About</a
-          >
-          <a
-            href="#Programs"
-            class="text-gray-700 hover:text-primary transition-colors"
-            >Programs</a
-          >
-          <a
-            href="#Classes"
-            class="text-gray-700 hover:text-primary transition-colors"
-            >Classes</a
-          >
-          <a
-            href="#schedule"
-            class="text-gray-700 hover:text-primary transition-colors"
-            >schedule</a
-          >
-          <a
-            href="#Facility"
-            class="text-gray-700 hover:text-primary transition-colors"
-            >Facility</
-          >
-          <a
-            href="#contact"
-            class="text-gray-700 hover:text-primary transition-colors"
-            >Contact</a
-          >
-          <a
-            href="#join"
-            class="bg-primary text-white px-6 py-3 !rounded-button text-center hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all whitespace-nowrap font-semibold"
-            >Join Now</a
-          >
-        </nav>
-      </div>
-    </header>
-   <!-- Hero Section -->
+    function showBackdrop(){
+      if (!overlay) return;
+      overlay.classList.remove('hidden');
+      overlay.style.pointerEvents = 'auto';
+    }
+    function hideBackdrop(){
+      if (!overlay) return;
+      overlay.classList.add('hidden');
+      overlay.style.pointerEvents = 'none';
+    }
+
+    function openMenu(){
+      // ensure nothing auto-opens the menu — only run on explicit click
+      console.log('[mobile] openMenu');
+      mobileMenu.style.right = '0';
+      menuBtn.setAttribute('aria-expanded','true');
+      showBackdrop();
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function closeMenu(){
+      console.log('[mobile] closeMenu');
+      mobileMenu.style.right = '-100%';
+      menuBtn.setAttribute('aria-expanded','false');
+      hideBackdrop();
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    // toggle on hamburger click (no automatic open anywhere else)
+    menuBtn.addEventListener('click', function(e){ e.preventDefault(); const isOpen = mobileMenu.style.right === '0' || mobileMenu.style.right === '' && mobileMenu.classList.contains('open'); if (isOpen) closeMenu(); else openMenu(); });
+
+    // close button — stop propagation so it can't re-open
+    if (closeBtn) closeBtn.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); try { e.stopImmediatePropagation(); } catch(_){} closeMenu(); return false; });
+
+    // clicking any link inside menu should close the menu so the user can see the page change
+    mobileMenu.querySelectorAll('a, button[type="submit"]').forEach(function(el){ el.addEventListener('click', function(){ setTimeout(closeMenu, 60); }); });
+
+    // backdrop click closes
+    if (overlay) overlay.addEventListener('click', function(){ closeMenu(); });
+
+    // Escape to close
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeMenu(); });
+
+    // expose helper
+    window.closeMobileMenu = closeMenu;
+  })();
+</script>
+
+
+
+<!-- HERO SECTION -->
 <section
   id="home"
-  class="relative min-h-screen flex items-center justify-start pt-16 overflow-hidden"
->
-  <!-- Background Container -->
+  class="relative min-h-screen flex items-center justify-start pt-20 overflow-hidden">
+
+  <!-- Background -->
   <div
     id="hero-bg"
-    class="absolute inset-0 bg-cover bg-center transition-all duration-700"
-    style="background-image: url('/images/bg1.jpg');"
-  ></div>
+    class="absolute inset-0 bg-cover bg-center transition-all duration-700 z-0"
+    style="background-image: url('/images/bg1.jpg');">
+  </div>
 
   <!-- Overlay -->
   <div
@@ -283,27 +316,21 @@
       to right,
       rgba(120, 45, 60, 0.65),
       rgba(255, 192, 203, 0.25)
-    );"
-  ></div>
+    );">
+  </div>
 
   <!-- Navigation Buttons -->
-<button
-  id="prev-bg"
-  class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white text-primary rounded-full p-2 shadow hover:bg-primary hover:text-white transition z-20"
-  aria-label="Previous Background"
->
-  <i class="ri-arrow-left-s-line text-2xl"></i>
-</button>
+  <button id="prev-bg"
+    class="hidden md:block absolute left-4 top-1/2 -translate-y-1/2 bg-white text-primary rounded-full p-2 shadow hover:bg-primary hover:text-white transition z-20">
+    <i class="ri-arrow-left-s-line text-2xl"></i>
+  </button>
 
-<button
-  id="next-bg"
-  class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white text-primary rounded-full p-2 shadow hover:bg-primary hover:text-white transition z-20"
-  aria-label="Next Background"
->
-  <i class="ri-arrow-right-s-line text-2xl"></i>
-</button>
+  <button id="next-bg"
+    class="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 bg-white text-primary rounded-full p-2 shadow hover:bg-primary hover:text-white transition z-20">
+    <i class="ri-arrow-right-s-line text-2xl"></i>
+  </button>
 
-  <!-- Content -->
+  <!-- HERO CONTENT -->
   <div class="container relative z-10 mx-auto px-4 py-20">
     <div class="max-w-2xl text-left">
       <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
@@ -313,17 +340,15 @@
       <p class="text-lg md:text-xl text-white mb-8">
         Good Habit inside Productive Muslimah
       </p>
+
       <div class="flex space-x-4">
-        <a
-          href="#join"
-          class="bg-[#3C1111] text-white px-6 py-3 rounded-md font-semibold hover:bg-[#5b2020] transition"
-        >
+        <a href="#join"
+          class="bg-[#3C1111] text-white px-6 py-3 rounded-md font-semibold hover:bg-[#5b2020] transition">
           Join Now
         </a>
-        <a
-          href="#classes"
-          class="border border-white text-white px-6 py-3 rounded-md font-semibold hover:bg-white hover:text-black transition"
-        >
+
+        <a href="#classes"
+          class="border border-white text-white px-6 py-3 rounded-md font-semibold hover:bg-white hover:text-black transition">
           Explore Classes
         </a>
       </div>
@@ -331,7 +356,7 @@
   </div>
 </section>
 
-<!-- JavaScript for Background Navigation -->
+<!-- HERO BACKGROUND SWITCH SCRIPT -->
 <script>
   const bgImages = [
     "/images/bg.jpg",
@@ -342,15 +367,11 @@
   const bgDiv = document.getElementById("hero-bg");
 
   function setBackground() {
-    if (bgDiv) {
-      bgDiv.style.backgroundImage = `url('${bgImages[currentBg]}')`;
-    }
+    bgDiv.style.backgroundImage = `url('${bgImages[currentBg]}')`;
   }
 
-  // Initial background load
   setBackground();
 
-  // Event Listeners
   document.getElementById("prev-bg")?.addEventListener("click", () => {
     currentBg = (currentBg - 1 + bgImages.length) % bgImages.length;
     setBackground();
@@ -362,17 +383,22 @@
   });
 </script>
 
-
-    <!-- About Section -->
+<!-- About Section -->
 <section id="about" class="py-20 bg-white">
   <div class="container mx-auto px-4">
+    
+    <!-- Title -->
     <div class="text-center mb-16">
       <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4">
         About FTM
       </h2>
       <div class="w-24 h-1 bg-secondary mx-auto"></div>
     </div>
+
+    <!-- Content Wrapper -->
     <div class="flex flex-col md:flex-row items-center gap-12">
+
+      <!-- Image -->
       <div class="md:w-1/2 flex justify-center">
         <img
           src="./images/logo ftm (1).jpg"
@@ -380,44 +406,61 @@
           class="rounded-lg shadow-lg w-56 sm:w-72 md:w-full h-auto object-cover transition-all duration-300"
         />
       </div>
+
+      <!-- Text -->
       <div class="md:w-1/2">
         <h3 class="text-2xl font-semibold text-primary mb-4">
-          Vision And Mision 
+          Vision And Mision
         </h3>
+
         <p class="text-gray-700 mb-6">
-          FTM society adalah memberikan ruang bagi para muslimah untuk memiliki gaya hidup aktif dan produktif yang sesuai dengan syariat Islam.Oleh karena itu, FTM Society hadir menyelenggarakan kegiatan olahraga dan kegiatan aktif sosial lainnya, seperti webinar dan event.
+          FTM society adalah memberikan ruang bagi para muslimah untuk memiliki gaya hidup aktif dan produktif yang sesuai dengan syariat Islam. Oleh karena itu, FTM Society hadir menyelenggarakan kegiatan olahraga dan kegiatan aktif sosial lainnya, seperti webinar dan event.
         </p>
-        <div class="flex gap-8 items-center mt-8">
-  <!-- Muslimah Only -->
-  <div class="flex items-center gap-2">
-    <div class="w-10 h-10 flex items-center justify-center rounded-full bg-pink-100 text-pink-600">
-      <i class="ri-shield-check-line ri-lg"></i>
-    </div>
-    <span class="font-medium text-gray-800">Muslimah Only</span>
-  </div>
 
-  <!-- Certified Trainers -->
-  <div class="flex items-center gap-2">
-    <div class="w-10 h-10 flex items-center justify-center rounded-full bg-pink-100 text-pink-600">
-      <i class="ri-heart-pulse-line ri-lg"></i>
-    </div>
-    <span class="font-medium text-gray-800">Certified Trainers</span>
-  </div>
+        <!-- Features (Fully Responsive) -->
+        <div class="flex flex-col sm:flex-row sm:flex-wrap gap-6 sm:gap-8 mt-8">
 
-  <!-- No Music & No Camera -->
-  <div class="flex items-center gap-2">
-    <div class="w-10 h-10 flex items-center justify-center rounded-full bg-pink-100 text-pink-600">
-      <i class="ri-pray-line ri-lg"></i>
-    </div>
-    <span class="font-medium text-gray-800">No Music & No Camera</span>
-  </div>
-</div>
+          <!-- Muslimah Only -->
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <div class="w-10 h-10 flex items-center justify-center rounded-full bg-pink-100 text-pink-600">
+              <i class="ri-shield-check-line ri-lg"></i>
+            </div>
+            <span class="font-medium text-gray-800">Muslimah Only</span>
+          </div>
+
+          <!-- Certified Trainers -->
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <div class="w-10 h-10 flex items-center justify-center rounded-full bg-pink-100 text-pink-600">
+              <i class="ri-heart-pulse-line ri-lg"></i>
+            </div>
+            <span class="font-medium text-gray-800">Certified Trainers</span>
+          </div>
+
+          <!-- No Music & No Camera -->
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <div class="w-10 h-10 flex items-center justify-center rounded-full bg-pink-100 text-pink-600">
+              <i class="ri-pray-line ri-lg"></i>
+            </div>
+            <span class="font-medium text-gray-800">No Music & No Camera</span>
+          </div>
 
         </div>
+        <!-- End Features -->
+
       </div>
+      <!-- End Text -->
+
     </div>
+    <!-- End Wrapper -->
+
   </div>
 </section>
+
+<!-- Optional: Prevent Horizontal Scroll Global -->
+<style>
+  body { overflow-x: hidden; }
+</style>
+
 
     <!-- Features Section (Slider) -->
 <section class="py-20 bg-gray-50">
@@ -675,16 +718,28 @@
 
 
 <!-- Modal Detail Service -->
-<div id="service-detail-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-  <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-8 relative">
-    <button onclick="closeServiceDetail()" class="absolute top-2 right-2 text-gray-500 hover:text-primary text-2xl">&times;</button>
+<div 
+  id="service-detail-modal"
+  class="fixed inset-0 hidden z-50 bg-black bg-opacity-60 items-center justify-center transition-opacity duration-200"
+>
+  <div 
+    id="service-detail-box"
+    class="bg-white rounded-lg shadow-xl max-w-md w-full p-8 relative transform transition-all duration-200 scale-95 opacity-0"
+  >
+    <button 
+      onclick="closeServiceDetail()" 
+      class="absolute top-2 right-2 text-gray-500 hover:text-primary text-2xl"
+      aria-label="Close Modal"
+    >
+      &times;
+    </button>
+
     <h3 id="service-detail-title" class="text-xl font-bold text-primary mb-4"></h3>
     <div id="service-detail-content" class="text-gray-700 text-sm leading-relaxed"></div>
   </div>
 </div>
 
 <script>
-  // Ganti detail program sesuai kebutuhan Anda
   const serviceDetails = {
     'private-group': {
       title: 'Private Group Class',
@@ -694,88 +749,87 @@
           <li>Cocok untuk komunitas, keluarga, atau teman</li>
           <li>Jadwal fleksibel & suasana eksklusif</li>
         </ul>
-        <p class="mb-2">Fasilitas:</p>
+        <p class="mb-2 font-semibold">Fasilitas:</p>
         <ul class="mb-3 list-disc pl-5">
           <li>Ruang latihan khusus</li>
           <li>Peralatan lengkap</li>
           <li>Free konsultasi awal</li>
         </ul>
-        <p class="mb-2">Hubungi kami untuk info harga & jadwal!</p>
       `
     },
     'private-training': {
       title: 'Private Training',
       content: `
         <ul class="mb-3 list-disc pl-5">
-          <li>Latihan personal 1-on-1 dengan trainer wanita profesional</li>
-          <li>Program disesuaikan dengan kebutuhan & tujuan Anda</li>
-          <li>Tersedia untuk Mat Pilates, Reformer Pilates, Muaythai, Body Shaping (Strength Training).</li>
+          <li>Latihan 1-on-1 dengan trainer profesional</li>
+          <li>Program disesuaikan dengan kebutuhan Anda</li>
         </ul>
-        <p class="mb-2">Cocok untuk pemula maupun advanced.</p>
       `
     },
     'single-visit': {
       title: 'Single Visit Class',
       content: `
         <ul class="mb-3 list-disc pl-5">
-          <li>Semi private dengan coach max. 6–7 orang</li>
-          <li>Dilatih oleh pelatih perempuan muslim yang sudah tersertifikasi</li>
-          <li>Jika pilih bundle, bisa mix kelas.</li>
-          <li>Jadwal dan ketersediaan slot akan di-update berkala.</li>
+          <li>Semi privat max 6–7 orang</li>
+          <li>Coach perempuan tersertifikasi</li>
         </ul>
-        <p class="mb-2">Booking langsung via WhatsApp!</p>
       `
     },
     'reformer-pilates': {
       title: 'Reformer Pilates',
       content: `
-       <ul class="mb-3 list-disc pl-5">
-          <li> 
-        1.Group Class
-        - Dilatih oleh instruktur tersertifikasi
-        - Semi Private max. 3 orang
-        - Jadwal dan ketersediaan slot akan di-update berkala
-        </li>
-          <li> 2.Private Class
-        - Dilatih oleh instruktur tersertifikasi
-        - Untuk special case (Scoliosis di atas 20 derajat, Ibu hamil, Lansia dan kondisi khusus lainnya yang memerlukan penanganan khusus)
-        </li>
+        <ul class="mb-3 list-disc pl-5">
+          <li>Group Class: semi private max 3 orang</li>
+          <li>Private Class untuk special case</li>
         </ul>
-        <p class="mb-2">"Untuk harga Private Class silakan hubungi kami".</p>
       `
     },
     'exclusive-program': {
       title: 'Exclusive Class Program',
       content: `
         <ul class="mb-3 list-disc pl-5">
-          <li>8x sesi dalam satu bulan dengan komposisi 2x sesi dalam satu pekan</li>
-          <li>Bertujuan untuk membangun habit olahraga</li>
-          <li>Progress setiap member relatif sama karena membernya tetap dari awal batch sampai akhir</li>
-          <li>Dilatih oleh pelatih perempuan muslim yang sudah tersertifikasi</li>
-          <li>Program berkelanjutan</li>
-          <li>Jadwal tetap sesuai group class yang dipilih</li>
-          <li>Buka pendaftaran dan rilis jadwal setiap pertengahan bulan.</li>
-          <li>Kelas dimulai di pekan pertama dan berakhir di pekan ke-4 atau 5</li>
-          <li>Semi private max. 6–7 orang per group.</li>
-          </li>
-          </ul>
-          <p class="mb-2">Dapatkan pengalaman latihan terbaik hanya di FTM Society.</p>
-        `
-      }
-    };
+          <li>8 sesi per bulan (2x/minggu)</li>
+          <li>Dilatih oleh pelatih perempuan muslim tersertifikasi</li>
+          <li>Semi private max 6–7 orang</li>
+        </ul>
+      `
+    },
+  };
 
   function showServiceDetail(key) {
+    const modal = document.getElementById('service-detail-modal');
+    const box = document.getElementById('service-detail-box');
+
     document.getElementById('service-detail-title').textContent = serviceDetails[key].title;
     document.getElementById('service-detail-content').innerHTML = serviceDetails[key].content;
-    document.getElementById('service-detail-modal').classList.remove('hidden');
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+
+    // animasi masuk
+    setTimeout(() => {
+      box.classList.remove('opacity-0', 'scale-95');
+      box.classList.add('opacity-100', 'scale-100');
+    }, 10);
   }
+
   function closeServiceDetail() {
-    document.getElementById('service-detail-modal').classList.add('hidden');
+    const modal = document.getElementById('service-detail-modal');
+    const box = document.getElementById('service-detail-box');
+
+    // animasi keluar
+    box.classList.add('opacity-0', 'scale-95');
+    box.classList.remove('opacity-100', 'scale-100');
+
+    setTimeout(() => {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }, 200);
   }
 </script>
 
- <!-- Pakeges & Pricing Section -->
-<section class="py-20 bg-gray-50">
+
+<!-- Packages & Pricing Section --><section class="py-20 bg-gray-50">
   <div class="container mx-auto px-4">
     <div class="text-center mb-16">
       <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4">
@@ -785,7 +839,8 @@
         Choose the perfect plan that fits your fitness journey and lifestyle.
       </p>
       <div class="w-24 h-1 bg-secondary mx-auto mt-4"></div>
-    </div>
+    </div> 
+
     <div class="relative">
       <!-- Tombol scroll kiri -->
       <button
@@ -798,6 +853,7 @@
       >
         <i class="ri-arrow-left-s-line text-2xl"></i>
       </button>
+
       <!-- Daftar membership scrollable -->
       <div
         id="membershipList"
@@ -805,180 +861,204 @@
         style="scrollbar-width: none; -ms-overflow-style: none;"
         onscroll="toggleMembershipScroll()"
       >
-        <!-- Card Template Start -->
-<!-- Card 1: Exclusive Class Program -->
-<div class="min-w-[320px] min-h-[500px] bg-white rounded-2xl shadow-md p-8 border-t-4 border-gradient-to-r from-primary to-secondary hover:scale-105 hover:shadow-2xl transition-all flex flex-col relative">
-  <span class="absolute top-4 right-4 bg-gradient-to-r from-primary to-secondary text-white text-xs px-3 py-1 rounded-full font-bold shadow">Best Value</span>
-  <div class="flex items-center justify-center mb-4">
-    <i class="ri-star-smile-line text-4xl text-secondary"></i>
-  </div>
-  <div>
-    <h3 class="text-xl font-bold text-gray-800 mb-2 text-center">Exclusive Class Program</h3>
-    <p class="text-2xl font-extrabold text-primary mb-4 text-center">IDR 850K <span class="text-base font-normal text-gray-500">/ Month</span></p>
-    <ul class="text-sm text-gray-600 space-y-2 mb-4">
-      <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Muaythai</li>
-      <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Mat Pilates</li>
-      <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Body Shaping</li>
-    </ul>
-  </div>
-  <div class="mt-auto">
-    <a href="https://wa.me/6287785767395" target="_blank" class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all text-sm font-semibold text-center mx-auto block">
-      Daftar Sekarang
-    </a>
-    <button
-      type="button"
-      onclick="showServiceDetail('exclusive-program')"
-      class="w-full text-secondary text-xs mt-1 hover:underline focus:outline-none bg-transparent border-0 p-0"
-      style="box-shadow:none;"
-    >
-      Lihat Selengkapnya
-    </button>
-  </div>
-</div>
 
-<!-- Card 2: Reformer Pilates (Single Visit Group Class) -->
-<div class="min-w-[320px] min-h-[500px] bg-white rounded-2xl shadow-md p-8 border-t-4 border-primary hover:scale-105 hover:shadow-2xl transition-all flex flex-col">
-  <div class="flex items-center justify-center mb-4">
-    <i class="ri-group-line text-4xl text-secondary"></i>
-  </div>
-  <div>
-    <h3 class="text-xl font-bold text-gray-800 mb-2 text-center">Reformer Pilates</h3>
-    <p class="text-2xl font-extrabold text-primary mb-4 text-center">Single Visit Group Class</p>
-    <ul class="text-sm text-gray-600 space-y-2 mb-4">
-      <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>IDR 400K / Single</li>
-      <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>IDR 700K / Double</li>
-      <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>IDR 900K / Triple</li>
-    </ul>
-  </div>
-  <div class="mt-auto">
-    <a href="https://wa.me/6287785767395" target="_blank" class="w-full bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all block text-center font-semibold">
-      Daftar Sekarang
-    </a>
-    <button
-      type="button"
-      onclick="showServiceDetail('reformer-pilates')"
-      class="w-full text-secondary text-xs mt-1 hover:underline focus:outline-none bg-transparent border-0 p-0"
-    >
-      Lihat Selengkapnya
-    </button>
-  </div>
-</div>
+      
+    <div class="relative">
+      <!-- Tombol scroll kiri -->
+      <button
+        type="button"
+        onclick="slideMembership(-1)"
+        class="absolute left-0 top-1/2 -translate-y-1/2 bg-white text-primary rounded-full p-2 shadow hover:bg-primary hover:text-white transition z-10"
+        aria-label="Scroll Left"
+        id="membershipScrollLeft"
+        style="display:none"
+      >
+        <i class="ri-arrow-left-s-line text-2xl"></i>
+      </button>
 
-<!-- Card 3: Single Visit Class -->
-<div class="min-w-[320px] min-h-[500px] bg-white rounded-2xl shadow-md p-8 border-t-4 border-primary hover:scale-105 hover:shadow-2xl transition-all flex flex-col">
-  <div class="flex items-center justify-center mb-4">
-    <i class="ri-door-open-line text-4xl text-secondary"></i>
-  </div>
-  <div>
-    <h3 class="text-xl font-bold text-gray-800 mb-2 text-center">Single Visit Class</h3>
-    <ul class="text-sm text-gray-600 space-y-2 mb-4">
-      <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Single Class: IDR.150K </li>
-      <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Bundle 2 Class: IDR.275K</li>
-      <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Bundle 4 Class: IDR.525K</li>
-    </ul>
-  </div>
-  <div class="mt-auto">
-    <a href="https://wa.me/6287785767395" target="_blank" class="w-full bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all block text-center font-semibold">
-      Daftar Sekarang
-    </a>
-    <button
-      type="button"
-      onclick="showServiceDetail('single-visit')"
-      class="w-full text-secondary text-xs mt-1 hover:underline focus:outline-none bg-transparent border-0 p-0"
-      style="box-shadow:none;"
-    >
-      Lihat Selengkapnya
-    </button>
-  </div>
-</div>
+      <!-- Daftar membership scrollable -->
+      <div
+        id="membershipList"
+        class="flex overflow-x-auto gap-8 scroll-smooth pb-4"
+        style="scrollbar-width: none; -ms-overflow-style: none;"
+        onscroll="toggleMembershipScroll()"
+      >
 
-<!-- Card 4: Reformer Pilates (Packages) -->
-<div class="min-w-[320px] min-h-[500px] bg-white rounded-2xl shadow-md p-8 border-t-4 border-primary hover:scale-105 hover:shadow-2xl transition-all flex flex-col">
-  <div class="flex items-center justify-center mb-4">
-    <i class="ri-calendar-check-line text-4xl text-secondary"></i>
-  </div>
-  <div>
-    <h3 class="text-xl font-bold text-gray-800 mb-2 text-center">Reformer Pilates</h3>
-    <p class="text-2xl font-extrabold text-primary mb-4 text-center">Packages</p>
-    <ul class="text-sm text-gray-600 space-y-2 mb-4">
-      <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>IDR 400K / Single Visit</li>
-      <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>IDR 1.400K / 4 Sessions 15 Days</li>
-      <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>IDR 1.540K / 4 Sessions 30 Days</li>
-      <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>IDR 2.200K / 8 Sessions 30 Days</li>
-      <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>IDR 2.640K / 8 Sessions 60 Days</li>
-    </ul>
-  </div>
-  <div class="mt-auto">
-    <a href="https://wa.me/6287785767395" target="_blank" class="w-full bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all block text-center font-semibold">
-      Daftar Sekarang
-    </a>
-    <button
-      type="button"
-      onclick="showServiceDetail('reformer-pilates')"
-      class="w-full text-secondary text-xs mt-1 hover:underline focus:outline-none bg-transparent border-0 p-0"
-      style="box-shadow:none;"
-    >
-      Lihat Selengkapnya
-    </button>
-  </div>
-</div>
+        <!-- Card 1: Exclusive Class Program -->
+        <div class="min-w-[320px] min-h-[500px] bg-white rounded-2xl shadow-md p-8 border-t-4 border-gradient-to-r from-primary to-secondary hover:scale-105 hover:shadow-2xl transition-all flex flex-col relative">
+          <span class="absolute top-4 right-4 bg-gradient-to-r from-primary to-secondary text-white text-xs px-3 py-1 rounded-full font-bold shadow">Best Value</span>
+          <div class="flex items-center justify-center mb-4">
+            <i class="ri-star-smile-line text-4xl text-secondary"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2 text-center">Exclusive Class Program</h3>
+          <p class="text-2xl font-extrabold text-primary mb-4 text-center">IDR 850K <span class="text-base font-normal text-gray-500">/ Month</span></p>
+          <ul class="text-sm text-gray-600 space-y-2 mb-4">
+            <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Muaythai</li>
+            <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Mat Pilates</li>
+            <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Body Shaping</li>
+          </ul>
 
-<!-- Card 5: Private Program -->
-<div class="min-w-[320px] min-h-[500px] bg-white rounded-2xl shadow-md p-8 border-t-4 border-primary hover:scale-105 hover:shadow-2xl transition-all flex flex-col">
-  <div class="flex items-center justify-center mb-4">
-    <i class="ri-user-line text-4xl text-secondary"></i>
-  </div>
-  <div>
-    <h3 class="text-xl font-bold text-gray-800 mb-2 text-center">Private Program</h3>
-    <ul class="text-sm text-gray-600 space-y-2 mb-4">
-      <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Muaythai</li>
-      <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Mat Pilates</li>
-      <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Body Shaping</li>
-    </ul>
-  </div>
-  <div class="mt-auto">
-    <a href="https://wa.me/6287785767395" target="_blank" class="w-full bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all block text-center font-semibold">
-      HUBUNGI TEAM KAMI
-    </a>
-    <button
-      type="button"
-      onclick="showServiceDetail('private-training')"
-      class="w-full text-secondary text-xs mt-1 hover:underline focus:outline-none bg-transparent border-0 p-0"
-      style="box-shadow:none;"
-    >
-      Lihat Selengkapnya
-    </button>
-  </div>
-</div>
+          <div class="mt-auto">
+            @if(auth('customer')->check())
+              <form action="{{ route('guest.checkout.process', ['package' => 1]) }}" method="POST">
+                @csrf
+                <input type="hidden" name="name" value="{{ auth('customer')->user()->name }}">
+                <input type="hidden" name="email" value="{{ auth('customer')->user()->email }}">
+                <input type="hidden" name="phone" value="{{ auth('customer')->user()->phone }}">
+                <a href="#signup"
+   class="w-full bg-primary text-white px-4 py-2 rounded-lg block text-center hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all text-sm font-semibold">
+    Daftar Sekarang
+</a>
 
-<!-- Card 6: Private Group Program -->
-<div class="min-w-[320px] min-h-[500px] bg-white rounded-2xl shadow-md p-8 border-t-4 border-primary hover:scale-105 hover:shadow-2xl transition-all flex flex-col">
-  <div class="flex items-center justify-center mb-4">
-    <i class="ri-team-line text-4xl text-secondary"></i>
+              </form>
+            @else
+              <a href="{{ route('join.package', ['package' => 1]) }}"
+                 class="w-full bg-primary text-white px-4 py-2 rounded-lg block text-center hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all text-sm font-semibold">
+                Daftar Sekarang
+              </a>
+            @endif
+            <button type="button" onclick="showServiceDetail('exclusive-program')" class="w-full text-secondary text-xs mt-1 hover:underline">Lihat Selengkapnya</button>
+          </div>
+        </div>
+
+        <!-- Card 2: Reformer Pilates -->
+        <div class="min-w-[320px] min-h-[500px] bg-white rounded-2xl shadow-md p-8 border-t-4 border-primary hover:scale-105 hover:shadow-2xl transition-all flex flex-col">
+          <div class="flex items-center justify-center mb-4">
+            <i class="ri-group-line text-4xl text-secondary"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2 text-center">Reformer Pilates</h3>
+          <p class="text-2xl font-extrabold text-primary mb-4 text-center">Single Visit Group Class</p>
+          <ul class="text-sm text-gray-600 space-y-2 mb-4">
+            <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>IDR 400K / Single</li>
+            <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>IDR 700K / Double</li>
+            <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>IDR 900K / Triple</li>
+          </ul>
+          <div class="mt-auto">
+            @if(auth('customer')->check())
+              <form action="{{ route('guest.checkout.process', ['package' => 2]) }}" method="POST">
+                @csrf
+                <input type="hidden" name="name" value="{{ auth('customer')->user()->name }}">
+                <input type="hidden" name="email" value="{{ auth('customer')->user()->email }}">
+                <input type="hidden" name="phone" value="{{ auth('customer')->user()->phone }}">
+                <button type="submit" class="w-full bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all font-semibold">
+                  Daftar Sekarang
+                </button>
+              </form>
+            @else
+              <a href="{{ route('join.package', ['package' => 2]) }}"
+                 class="w-full bg-primary text-white px-6 py-2 rounded-lg block text-center hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all font-semibold">
+                Daftar Sekarang
+              </a>
+            @endif
+            <button type="button" onclick="showServiceDetail('reformer-pilates')" class="w-full text-secondary text-xs mt-1 hover:underline">Lihat Selengkapnya</button>
+          </div>
+        </div>
+
+        <!-- Card 3: Single Visit Class -->
+        <div class="min-w-[320px] min-h-[500px] bg-white rounded-2xl shadow-md p-8 border-t-4 border-primary hover:scale-105 hover:shadow-2xl transition-all flex flex-col">
+          <div class="flex items-center justify-center mb-4">
+            <i class="ri-door-open-line text-4xl text-secondary"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2 text-center">Single Visit Class</h3>
+          <ul class="text-sm text-gray-600 space-y-2 mb-4">
+            <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Single Class: IDR.150K</li>
+            <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Bundle 2 Class: IDR.275K</li>
+            <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Bundle 4 Class: IDR.525K</li>
+          </ul>
+          <div class="mt-auto">
+            @if(auth('customer')->check())
+              <form action="{{ route('guest.checkout.process', ['package' => 3]) }}" method="POST">
+                @csrf
+                <input type="hidden" name="name" value="{{ auth('customer')->user()->name }}">
+                <input type="hidden" name="email" value="{{ auth('customer')->user()->email }}">
+                <input type="hidden" name="phone" value="{{ auth('customer')->user()->phone }}">
+                <button type="submit" class="w-full bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all font-semibold">
+                  Daftar Sekarang
+                </button>
+              </form>
+            @else
+              <a href="{{ route('join.package', ['package' => 3]) }}"
+                 class="w-full bg-primary text-white px-6 py-2 rounded-lg block text-center hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all font-semibold">
+                Daftar Sekarang
+              </a>
+            @endif
+            <button type="button" onclick="showServiceDetail('single-visit')" class="w-full text-secondary text-xs mt-1 hover:underline">Lihat Selengkapnya</button>
+          </div>
+        </div>
+
+        <!-- Card 4: Reformer Pilates Packages -->
+        <div class="min-w-[320px] min-h-[500px] bg-white rounded-2xl shadow-md p-8 border-t-4 border-primary hover:scale-105 hover:shadow-2xl transition-all flex flex-col">
+          <div class="flex items-center justify-center mb-4">
+            <i class="ri-calendar-check-line text-4xl text-secondary"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2 text-center">Reformer Pilates</h3>
+          <p class="text-2xl font-extrabold text-primary mb-4 text-center">Packages</p>
+          <ul class="text-sm text-gray-600 space-y-2 mb-4">
+            <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>IDR 400K / Single Visit</li>
+            <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>IDR 1.400K / 4 Sessions 15 Days</li>
+            <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>IDR 1.540K / 4 Sessions 30 Days</li>
+            <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>IDR 2.200K / 8 Sessions 30 Days</li>
+            <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>IDR 2.640K / 8 Sessions 60 Days</li>
+          </ul>
+          <div class="mt-auto">
+              <a href="#signup"
+   class="w-full bg-primary text-white px-4 py-2 rounded-lg block text-center hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all text-sm font-semibold">
+    Daftar Sekarang
+</a>
+
+            </form>
+            <button type="button" onclick="showServiceDetail('reformer-pilates')" class="w-full text-secondary text-xs mt-1 hover:underline focus:outline-none bg-transparent border-0 p-0" style="box-shadow:none;">
+              Lihat Selengkapnya
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 5: Private Program -->
+        <div class="min-w-[320px] min-h-[500px] bg-white rounded-2xl shadow-md p-8 border-t-4 border-primary hover:scale-105 hover:shadow-2xl transition-all flex flex-col">
+          <div class="flex items-center justify-center mb-4">
+            <i class="ri-user-line text-4xl text-secondary"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2 text-center">Private Program</h3>
+          <ul class="text-sm text-gray-600 space-y-2 mb-4">
+            <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Muaythai</li>
+            <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Mat Pilates</li>
+            <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Body Shaping</li>
+          </ul>
+          <div class="mt-auto">
+            <a href="https://wa.me/6287785767395" target="_blank" class="w-full bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all block text-center font-semibold">
+              HUBUNGI TEAM KAMI
+            </a>
+            <button type="button" onclick="showServiceDetail('private-training')" class="w-full text-secondary text-xs mt-1 hover:underline focus:outline-none bg-transparent border-0 p-0" style="box-shadow:none;">
+              Lihat Selengkapnya
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 6: Private Group Program -->
+        <div class="min-w-[320px] min-h-[500px] bg-white rounded-2xl shadow-md p-8 border-t-4 border-primary hover:scale-105 hover:shadow-2xl transition-all flex flex-col">
+          <div class="flex items-center justify-center mb-4">
+            <i class="ri-team-line text-4xl text-secondary"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2 text-center">Private Group Program</h3>
+          <ul class="text-sm text-gray-600 space-y-2 mb-4">
+            <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Muaythai</li>
+            <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Mat Pilates</li>
+            <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Body Shaping</li>
+          </ul>
+          <div class="mt-auto">
+            <a href="https://wa.me/6287785767395" target="_blank" class="w-full bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all block text-center font-semibold">
+              HUBUNGI TEAM KAMI
+            </a>
+            <button type="button" onclick="showServiceDetail('private-group')" class="w-full text-secondary text-xs mt-1 hover:underline focus:outline-none bg-transparent border-0 p-0" style="box-shadow:none;">
+              Lihat Selengkapnya
+            </button>
+          </div>
+        </div>
+
+      </div> <!-- End membershipList -->
+    </div>
   </div>
-  <div>
-    <h3 class="text-xl font-bold text-gray-800 mb-2 text-center">Private Group Program</h3>
-    <ul class="text-sm text-gray-600 space-y-2 mb-4">
-      <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Muaythai</li>
-      <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Mat Pilates</li>
-      <li><i class="ri-checkbox-circle-fill text-secondary mr-2"></i>Body Shaping</li>
-    </ul>
-  </div>
-  <div class="mt-auto">
-    <a href="https://wa.me/6287785767395" target="_blank" class="w-full bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all block text-center font-semibold">
-      HUBUNGI TEAM KAMI
-    </a>
-    <button
-      type="button"
-      onclick="showServiceDetail('private-group')"
-      class="w-full text-secondary text-xs mt-1 hover:underline focus:outline-none bg-transparent border-0 p-0"
-      style="box-shadow:none;"
-    >
-      Lihat Selengkapnya
-    </button>
-  </div>
-</div>
-        <div>
+</section>
           <!-- Daftar membership scrollable -->
   <div
     id="membershipList"
@@ -1137,14 +1217,23 @@
 
 @php
     use Illuminate\Support\Str;
+
+    // flatten dulu (ini kunci)
+    $flatSchedules = $schedules->flatten();
+
     $classKeywords = ['muaythai', 'pilates'];
     $groupedSchedules = [];
+
     foreach ($classKeywords as $keyword) {
-        $groupedSchedules[$keyword] = $schedules->filter(function($item) use ($keyword) {
-            return Str::contains(Str::lower($item->class_name), $keyword);
+        $groupedSchedules[$keyword] = $flatSchedules->filter(function ($schedule) use ($keyword) {
+            return Str::contains(
+                Str::lower($schedule->classModel->class_name ?? ''),
+                $keyword
+            );
         });
     }
 @endphp
+
 
 <script>
 const classSchedules = {
@@ -1153,15 +1242,16 @@ const classSchedules = {
             @foreach($entries as $entry)
                 {
                     hari: '{{ $entry->day }}',
-                    jam: '{{ $entry->class_time }}',
-                    instruktur: '{{ $entry->instructor }}',
-                    kelas: '{{ $entry->class_name }}'
+                    jam: '{{ \Carbon\Carbon::parse($entry->class_time)->format('H:i') }}',
+                    instruktur: '{{ $entry->instructor ?? '-' }}',
+                    kelas: '{{ optional($entry->classModel)->class_name ?? '-' }}'
                 }@if(!$loop->last),@endif
             @endforeach
         ]@if(!$loop->last),@endif
     @endforeach
 };
 
+<script>
   const classPrograms = {
     'muaythai': ["Exclusive Class Program", "Single Visit Class Program", "Private Program"],
     'body-shaping': ["Exclusive Class Program", "Single Visit Class Program", "Private Program"],
@@ -1252,54 +1342,85 @@ const classSchedules = {
         </div>
       </div>
     </section>
-    <div id="service-detail-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-  <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-8 relative">
-    <button onclick="closeServiceDetail()" class="absolute top-2 right-2 text-gray-500 hover:text-primary text-2xl">&times;</button>
+  <!-- Modal Service Detail -->
+<div 
+  id="service-detail-modal"
+  class="fixed inset-0 hidden z-50 bg-black bg-opacity-60 items-center justify-center transition-opacity"
+>
+  <div 
+    id="service-detail-box"
+    class="bg-white rounded-lg shadow-xl max-w-md w-full p-8 relative transform transition-all scale-95 opacity-0"
+  >
+    <button 
+      onclick="closeServiceDetail()" 
+      class="absolute top-2 right-2 text-gray-500 hover:text-primary text-2xl"
+      aria-label="Close Modal"
+    >
+      &times;
+    </button>
+
     <h3 id="service-detail-title" class="text-xl font-bold text-primary mb-4"></h3>
-    <p id="service-detail-desc" class="text-gray-700"></p>
+
+    <p id="service-detail-desc" class="text-gray-700 leading-relaxed"></p>
   </div>
 </div>
-    <!-- Jadwal Kelas Simpel & Modern -->
+
+   <!-- Jadwal Kelas Simpel & Modern -->
 <section id="schedule" class="py-10 px-4 bg-gray-50">
   <div class="max-w-3xl mx-auto text-center">
     <h2 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-6 uppercase tracking-wide">
       Jadwal Kelas Exclusive Program
     </h2>
 
-    <div class="overflow-hidden rounded-xl shadow-md bg-white">
-      <table class="w-full text-sm md:text-base text-gray-700">
+    <!-- WRAPPER supaya tabel bisa discroll jika layar kecil -->
+    <div class="overflow-x-auto rounded-xl shadow-md bg-white">
+      <table class="min-w-[600px] w-full text-sm md:text-base text-gray-700">
         <thead class="bg-gray-100 text-gray-600 uppercase text-xs font-semibold">
-          <tr>
-            <th class="py-4 px-4 text-center">Kelas</th>
-            <th class="py-4 px-4 text-center">Hari</th>
-            <th class="py-4 px-4 text-center">Jam</th>
-            <th class="py-4 px-4 text-center">Instruktur</th>
-          </tr>
         </thead>
-        <tbody>
-          @forelse($schedules as $schedule)
-            <tr class="border-t hover:bg-gray-50 transition">
-              <td class="py-3 px-4 text-center font-medium">
-                {{ $schedule->class_name }}
-              </td>
-              <td class="py-3 px-4 text-center">
-                {{ $schedule->day }}
-              </td>
-            <td class="py-3 px-4 text-center">
-              {{ explode(':', explode(' ', $schedule->class_time)[1])[0] . ':' . explode(':', explode(' ', $schedule->class_time)[1])[1] }}
+
+        <table class="w-full border-collapse">
+    <thead>
+        <tr class="bg-gray-800 text-white">
+            <th class="py-3 px-4 text-center">Class</th>
+            <th class="py-3 px-4 text-center">Day</th>
+            <th class="py-3 px-4 text-center">Time</th>
+            <th class="py-3 px-4 text-center">Coach</th>
+        </tr>
+    </thead>
+
+    <tbody>
+@foreach($schedules as $day => $items)
+
+    {{-- HEADER HARI --}}
+    <tr class="bg-gray-100">
+        <td colspan="4" class="py-2 px-4 font-bold text-left">
+            {{ $day }}
+        </td>
+    </tr>
+
+    {{-- DATA JADWAL --}}
+    @foreach($items as $schedule)
+        <tr class="border-t hover:bg-gray-50 transition">
+            <td class="py-3 px-4 text-center font-medium">
+                {{ $schedule->classModel->class_name ?? '-' }}
             </td>
-              <td class="py-3 px-4 text-center">
+
+            <td class="py-3 px-4 text-center">
+                {{ $schedule->day }}
+            </td>
+
+            <td class="py-3 px-4 text-center">
+                {{ \Carbon\Carbon::parse($schedule->class_time)->format('H:i') }}
+            </td>
+
+            <td class="py-3 px-4 text-center">
                 {{ $schedule->instructor ?? '-' }}
-              </td>
-            </tr>
-          @empty
-            <tr>
-              <td colspan="4" class="py-6 text-center text-gray-400">
-                Belum ada jadwal tersedia.
-              </td>
-            </tr>
-          @endforelse
-        </tbody>
+            </td>
+        </tr>
+    @endforeach
+
+@endforeach
+</tbody>
       </table>
     </div>
   </div>
@@ -1401,22 +1522,51 @@ const classSchedules = {
   });
 </script>
 
-  <!-- Partner logo -->
-<div class="text-center mb-16">
-      <h2 class="text-4xl font-bold text-primary mb-4">Partner</h2>
-      <p class="text-gray-600 max-w-2xl mx-auto">Supported by Trusted Partners Committed to a Healthy Lifestyle.</p>
-      <div class="w-24 h-1 bg-secondary mx-auto mt-4"></div>
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 items-center justify-center">
-      <img src="icons/partner 2..png" alt="Partner 1" class="mx-auto h-20 transition-all duration-300">
-      <img src="icons/partner 3..png" alt="Partner 2" class="mx-auto h-20 transition-all duration-300">
-      <img src="icons/partner 4..png" alt="Partner 3" class="mx-auto h-20 transition-all duration-300">
-      <img src="icons/partner 5..png" alt="Partner 4" class="mx-auto h-20 transition-all duration-300">
-      <img src="icons/partner 6..png" alt="Partner 5" class="mx-auto h-20 transition-all duration-300">
-      <img src="icons/partner 1..png" alt="Partner 6" class="mx-auto h-20 transition-all duration-300">
+<!-- Partner Section -->
+<section class="py-16">
+  <div class="text-center mb-10">
+    <h2 class="text-4xl font-bold text-primary mb-2">Partner</h2>
+    <p class="text-gray-600 max-w-2xl mx-auto">
+      Supported by Trusted Partners Committed to a Healthy Lifestyle.
+    </p>
+    <div class="w-24 h-1 bg-secondary mx-auto mt-4"></div>
+  </div>
+
+  <!-- Wrapper -->
+  <div class="overflow-hidden relative py-4">
+
+    <!-- Track berjalan -->
+    <div class="flex items-center gap-10 animate-scroll whitespace-nowrap">
+
+      <!-- Duplikasi logo (wajib agar looping mulus) -->
+      <img src="icons/partner 2..png" class="h-20 mx-4 object-contain" />
+      <img src="icons/partner 3..png" class="h-20 mx-4 object-contain" />
+      <img src="icons/partner 4..png" class="h-20 mx-4 object-contain" />
+      <img src="icons/partner 5..png" class="h-20 mx-4 object-contain" />
+      <img src="icons/partner 6..png" class="h-20 mx-4 object-contain" />
+      <img src="icons/partner 1..png" class="h-20 mx-4 object-contain" />
+
+      <!-- COPY AGAIN UNTUK LOOP TANPA JEDa -->
+      <img src="icons/partner 2..png" class="h-20 mx-4 object-contain" />
+      <img src="icons/partner 3..png" class="h-20 mx-4 object-contain" />
+      <img src="icons/partner 4..png" class="h-20 mx-4 object-contain" />
+      <img src="icons/partner 5..png" class="h-20 mx-4 object-contain" />
+      <img src="icons/partner 6..png" class="h-20 mx-4 object-contain" />
+      <img src="icons/partner 1..png" class="h-20 mx-4 object-contain" />
     </div>
   </div>
 </section>
+
+<style>
+  @keyframes scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .animate-scroll {
+    animation: scroll 18s linear infinite;
+  }
+</style>
 
 
 
@@ -1456,7 +1606,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   </div>
                   <div>
                     <h3 class="text-white font-semibold text-lg">
-                       Exclusive Access to Members-Only Class
+                      Exclusive Access to Members-Only Class
                     </h3>
                     <p class="text-white text-opacity-80">
                       Step into a private, peaceful training space — thoughtfully designed for Muslimah who value comfort, privacy, and premium quality.
@@ -1497,7 +1647,7 @@ document.addEventListener('DOMContentLoaded', function() {
               </div>
             </div>
             
-           <div class="md:w-1/2 bg-white p-10 md:p-16">
+           <div id="signup" class="md:w-1/2 bg-white p-10 md:p-16">
     <h3 class="text-2xl font-semibold text-primary mb-6">
     Sign Up Now
 </h3>
@@ -1533,7 +1683,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <form name="Data-Member" method="POST" action="{{ route('public.customers.store') }}" class="space-y-6">
     @csrf
-
     <div>
         <label for="name" class="block text-gray-700 mb-2">Full Name</label>
         <input type="text" id="name" name="name" placeholder="Nama lengkap" value="{{ old('name') }}" required
@@ -1557,12 +1706,6 @@ document.addEventListener('DOMContentLoaded', function() {
 <input type="date" id="birth_date" name="birth_date" value="{{ old('birth_date') }}" required
     class="w-full px-4 py-3 rounded border border-gray-300 focus:border-secondary" />
     </div>
-
-    
-
-   
-
-
 
     <div>
         <label for="goals" class="block text-gray-700 mb-2">Goals</label>
@@ -1597,12 +1740,6 @@ document.addEventListener('DOMContentLoaded', function() {
         <option value="tidak" {{ old('is_muslim') == 'tidak' ? 'selected' : '' }}>Tidak</option>
     </select>
 </div>
-
-    <div>
-        <label for="voucher" class="block text-gray-700 mb-2">Kode Voucher (jika ada)</label>
-        <input type="text" id="voucher" name="voucher" placeholder="Masukkan kode" value="{{ old('voucher') }}"
-            class="w-full px-4 py-3 rounded border border-gray-300 focus:border-secondary" />
-    </div>
 
     <div>
         <label class="flex items-start">

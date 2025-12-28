@@ -164,81 +164,68 @@
   </head>
   <body class="bg-white text-gray-800">
     
-    <!-- Header -->
-    <header class="fixed w-full bg-white bg-opacity-95 shadow-sm z-50">
-    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-      <a href="#" class="logo text-primary text-2xl">FTM SOCIETY</a>
       <!-- Desktop Navigation -->
 
-      <!-- filepath: c:\Users\hp\Desktop\progres\progres\resources\views\member\profile.blade.php -->
-<!-- Section Profil Member (Popup Trigger) -->
-<button
-  id="profile-popup-trigger"
-  type="button"
-  class="hidden"
-  onclick="showProfilePopup()"
-></button>
-
-<!-- Popup Modal Profil Member -->
-<div id="profile-popup" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50">
-  <div class="bg-white rounded-xl shadow-lg max-w-md w-full p-8 relative animate-fadeIn">
-    <button onclick="closeProfilePopup()" class="absolute top-3 right-3 text-gray-500 hover:text-red-600 text-xl cursor-pointer">&times;</button>
-    <h2 class="text-2xl font-bold text-primary mb-4 flex items-center gap-2">
-      <i class="ri-user-3-line text-secondary text-2xl"></i> Profil Member
-    </h2>
-    <ul class="space-y-2 mb-6">
-      <li><strong>Nama:</strong> {{ $customer->name }}</li>
-      <li><strong>Email:</strong> {{ $customer->email }}</li>
-      <li><strong>No HP:</strong> {{ $customer->phone_number }}</li>
-      <li><strong>Membership:</strong> {{ $customer->membership }}</li>
-      <li><strong>Kuota:</strong> {{ $customer->quota }}</li>
-    </ul>
-    <button
-      type="button"
-      onclick="showProgramPopup()"
-      class="bg-primary text-white px-6 py-2 rounded-lg font-semibold hover:bg-secondary transition-all"
-    >
-      Lihat Program Saya
-    </button>
-  </div>
-</div>
-
-<!-- Popup Modal Program -->
-<div id="program-popup" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50">
-  <div class="bg-white rounded-xl shadow-lg max-w-md w-full p-8 relative animate-fadeIn">
-    <button onclick="closeProgramPopup()" class="absolute top-3 right-3 text-gray-500 hover:text-red-600 text-xl cursor-pointer">&times;</button>
-    <h3 class="text-xl font-bold text-primary mb-4">Program yang Diambil</h3>
-    <div class="text-gray-800 text-lg font-semibold mb-2">
-      {{ $customer->program }}
-    </div>
-    <div class="text-gray-600 text-sm">
-      Membership: <span class="font-bold">{{ $customer->membership }}</span><br>
-      Kuota: <span class="font-bold">{{ $customer->quota }}</span>
-    </div>
-  </div>
-</div>
-     
 
         <!-- filepath: c:\Users\hp\Desktop\progres\progres\resources\views\member\profile.blade.php -->
-<!-- Menu Navigasi Umum (Desktop) -->
-<nav class="hidden md:flex items-center space-x-8">
-    <a href="#home" class="nav-link text-gray-700 hover:text-primary transition-colors">Home</a>
-    <a href="#about" class="nav-link text-gray-700 hover:text-primary transition-colors">About</a>
-    <a href="#Programs" class="nav-link text-gray-700 hover:text-primary transition-colors">Programs</a>
-    <a href="#classes" class="nav-link text-gray-700 hover:text-primary transition-colors">Classes</a>
-    <a href="#schedule" class="nav-link text-gray-700 hover:text-primary transition-colors">Schedule</a>
-    <a href="#Facility" class="nav-link text-gray-700 hover:text-primary transition-colors">Gallery</a>
-    <a href="#contact" class="nav-link text-gray-700 hover:text-primary transition-colors">Contact</a>
-@auth('customer')
-    <button
-    type="button"
-    onclick="showLogoutModal()"
-    class="bg-red-600 text-white px-6 py-2 rounded-button font-semibold"
->
-    Logout
-</button>
-@endauth
-</nav>
+<!-- HEADER -->
+<header class="fixed w-full bg-white bg-opacity-95 shadow-sm z-50">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+
+        <!-- LOGO -->
+        <a href="#" class="logo text-primary text-2xl font-semibold">
+            FTM SOCIETY
+        </a>
+
+        <!-- DESKTOP NAVIGATION -->
+        <nav class="hidden md:flex items-center space-x-8">
+
+            <!-- MENU UMUM -->
+            <a href="#home" class="text-gray-700 hover:text-primary transition">Home</a>
+            <a href="#about" class="text-gray-700 hover:text-primary transition">About</a>
+            <a href="#Programs" class="text-gray-700 hover:text-primary transition">Programs</a>
+            <a href="#classes" class="text-gray-700 hover:text-primary transition">Classes</a>
+            <a href="#schedule" class="text-gray-700 hover:text-primary transition">Schedule</a>
+            <a href="#Facility" class="text-gray-700 hover:text-primary transition">Gallery</a>
+            <a href="#contact" class="text-gray-700 hover:text-primary transition">Contact</a>
+
+            <!-- PROFIL -->
+            <a href="{{ route('member.profile.modal') }}"
+   class="flex items-center gap-2 text-gray-700 hover:text-primary transition">
+    <i class="ri-user-3-line text-xl"></i> Profil
+</a>
+
+
+            <!-- LOGIN / LOGOUT -->
+            @auth('customer')
+                <button
+                    type="button"
+                    onclick="showLogoutModal()"
+                    class="bg-red-600 text-white px-6 py-2 rounded-button font-semibold hover:bg-red-700 transition"
+                >
+                    Logout
+                </button>
+            @else
+                <a href="{{ route('member.login') }}"
+                    class="bg-primary text-white px-6 py-2 rounded-button hover:bg-secondary hover:scale-105 transition font-semibold">
+                    Login
+                </a>
+            @endauth
+
+        </nav>
+
+        <!-- Mobile button (visible on small screens) -->
+        <div class="md:hidden flex items-center">
+          <button id="mobile-menu-button"
+              class="w-10 h-10 flex items-center justify-center text-primary"
+              aria-label="Toggle mobile menu">
+            <i class="ri-menu-line ri-lg"></i>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
 
 <div id="logout-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
     <div class="bg-white rounded-xl shadow-lg max-w-sm w-full p-8 relative flex flex-col items-center">
@@ -277,115 +264,156 @@ function closeLogoutModal() {
       
 
 
-<!-- Mobile Navigation -->
-<div id="mobile-menu" class="mobile-menu fixed top-0 right-0 h-full w-64 bg-white shadow-lg z-50 p-6">
-    <div class="flex justify-end mb-8">
-        <button id="close-menu-button" class="w-10 h-10 flex items-center justify-center text-primary">
-            <i class="ri-close-line ri-lg"></i>
-        </button>
-    </div>
-<nav class="hidden md:flex items-center space-x-8">
-    <a href="#home" class="nav-link text-gray-700 hover:text-primary transition-colors">Home</a>
-    <a href="#about" class="nav-link text-gray-700 hover:text-primary transition-colors">About</a>
-    <a href="#Programs" class="nav-link text-gray-700 hover:text-primary transition-colors">Programs</a>
-    <a href="#classes" class="nav-link text-gray-700 hover:text-primary transition-colors">Classes</a>
-    <a href="#schedule" class="nav-link text-gray-700 hover:text-primary transition-colors">Schedule</a>
-    <a href="#Facility" class="nav-link text-gray-700 hover:text-primary transition-colors">Gallery</a>
-    <a href="#contact" class="nav-link text-gray-700 hover:text-primary transition-colors">Contact</a>
-@auth('customer')
-    <form method="POST" action="{{ route('member.logout') }}" class="inline">
-        @csrf
-        <button type="submit" class="bg-red-600 text-white px-6 py-2 rounded-button hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all font-semibold">
-            Logout
-        </button>
-    </form>
-@else
-        <a href="#join" class="bg-primary text-white px-6 py-2 rounded-button hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all font-semibold">
-            Join Now
-        </a>
-        <a href="{{ route('member.login.form') }}" class="bg-secondary text-white px-6 py-2 rounded-button hover:bg-primary hover:scale-105 hover:shadow-lg transition-all font-semibold">
-            Login
-        </a>
-    @endauth
-</nav>
-</div>
+<!-- (Removed duplicate/incorrect mobile menu — single mobile menu below is used) -->
 
-
-
-<!-- Tombol Menu Mobile -->
-<div class="md:hidden flex items-center">
-    <button id="mobile-menu-button"
-            class="w-10 h-10 flex items-center justify-center text-primary"
-            aria-label="Toggle mobile menu">
-        <i class="ri-menu-line ri-lg"></i>
-    </button>
-</div>
-
-      <!-- Mobile Navigation -->
-     <div id="mobile-menu" class="mobile-menu fixed top-0 right-0 h-full w-64 bg-white shadow-lg z-50 p-6">
-      <div class="flex justify-end mb-8">
-        <button id="close-menu-button" class="w-10 h-10 flex items-center justify-center text-primary">
-          <i class="ri-close-line ri-lg"></i>
+    <!-- Mobile Navigation + Backdrop -->
+    <div id="mobile-backdrop" class="fixed inset-0 bg-black bg-opacity-40 hidden" style="z-index:9998; transition: opacity .25s; pointer-events:none;"></div>
+    <div id="mobile-menu" class="mobile-menu fixed top-16 bottom-0 right-0 w-72 bg-white shadow-lg p-6 transform overflow-y-auto" style="z-index:9999;">
+      <div class="flex items-center justify-between mb-6">
+        <a href="#" class="logo text-primary font-semibold">FTM SOCIETY</a>
+        <button id="close-menu-button" type="button" aria-label="Tutup menu" class="w-9 h-9 inline-flex items-center justify-center rounded-md text-gray-700 hover:bg-gray-100" style="position:relative; z-index:10001; pointer-events:auto;">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
         </button>
       </div>
-      <nav class="flex flex-col space-y-6">
-       @auth('customer')
-    <a href="#" onclick="showProfilePopup(); return false;" class="ml-4 text-gray-700 hover:text-primary font-semibold">Profile</a>
-    <a href="{{ route('member.password.form') }}" class="ml-4 text-purple-700 hover:text-secondary font-semibold underline transition">Ubah Password</a>
-    <form method="POST" action="{{ route('member.logout') }}" class="ml-2 inline">
-        @csrf
-        <button type="submit" class="text-gray-700 hover:text-red-500 font-semibold">
-            Logout ({{ Auth::guard('customer')->user()->name }})
-        </button>
-    </form>
-@else
-          <a href="{{ route('member.login') }}" class="text-gray-700 hover:text-primary font-semibold">Login</a>
-          <a href="{{ route('member.register') }}" class="text-gray-700 hover:text-primary font-semibold">Register</a>
+
+      <nav class="flex flex-col gap-3">
+        @auth('customer')
+          <a href="#" onclick="showProfilePopup(); return false;" class="block px-4 py-3 rounded-md text-gray-800 hover:bg-primary hover:text-white transition font-semibold">Profile</a>
+          <a href="{{ route('member.password.form') }}" class="block px-4 py-3 rounded-md text-gray-800 hover:bg-primary hover:text-white transition font-semibold">Ubah Password</a>
+          <form method="POST" action="{{ route('member.logout') }}" class="px-4">
+            @csrf
+            <button type="submit" class="w-full text-left px-4 py-3 rounded-md text-gray-800 hover:bg-red-600 hover:text-white transition font-semibold">Logout ({{ Auth::guard('customer')->user()->name }})</button>
+          </form>
+        @else
+          <a href="{{ route('member.login') }}" class="block px-4 py-3 rounded-md text-gray-800 hover:bg-primary hover:text-white transition font-semibold">Login</a>
+          <a href="{{ route('member.register') }}" class="block px-4 py-3 rounded-md text-gray-800 hover:bg-primary hover:text-white transition font-semibold">Register</a>
         @endauth
 
-          <a
-            href="#home"
-            class="text-gray-700 hover:text-primary transition-colors"
-            >Dashboard</a
-          >
-          <a
-            href="#about"
-            class="text-gray-700 hover:text-primary transition-colors"
-            >About</a
-          >
-          <a
-            href="#Programs"
-            class="text-gray-700 hover:text-primary transition-colors"
-            >Programs</a
-          >
-          <a
-            href="#Classes"
-            class="text-gray-700 hover:text-primary transition-colors"
-            >Classes</a
-          >
-          <a
-            href="#schedule"
-            class="text-gray-700 hover:text-primary transition-colors"
-            >schedule</a
-          >
-          <a
-            href="#Facility"
-            class="text-gray-700 hover:text-primary transition-colors"
-            >Facility</
-          >
-          <a
-            href="#contact"
-            class="text-gray-700 hover:text-primary transition-colors"
-            >Contact</a
-          >
-          <a
-            href="#join"
-            class="bg-primary text-white px-6 py-3 !rounded-button text-center hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all whitespace-nowrap font-semibold"
-            >Join Now</a
-          >
-        </nav>
-      </div>
-    </header>
+        <hr class="my-2">
+        <a href="#home" class="block px-4 py-3 rounded-md text-gray-700 hover:bg-primary hover:text-white transition">Dashboard</a>
+        <a href="#about" class="block px-4 py-3 rounded-md text-gray-700 hover:bg-primary hover:text-white transition">About</a>
+        <a href="#Programs" class="block px-4 py-3 rounded-md text-gray-700 hover:bg-primary hover:text-white transition">Programs</a>
+        <a href="#Classes" class="block px-4 py-3 rounded-md text-gray-700 hover:bg-primary hover:text-white transition">Classes</a>
+        <a href="#schedule" class="block px-4 py-3 rounded-md text-gray-700 hover:bg-primary hover:text-white transition">Schedule</a>
+        <a href="#Facility" class="block px-4 py-3 rounded-md text-gray-700 hover:bg-primary hover:text-white transition">Facility</a>
+        <a href="#contact" class="block px-4 py-3 rounded-md text-gray-700 hover:bg-primary hover:text-white transition">Contact</a>
+
+      </nav>
+    </div>
+
+    <!-- Mobile menu toggle script -->
+    <script>
+      (function(){
+        const openBtn = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const closeBtn = document.getElementById('close-menu-button');
+        const backdrop = document.getElementById('mobile-backdrop');
+        if (!openBtn || !mobileMenu) return;
+
+        function showBackdrop() {
+          if (!backdrop) return;
+          backdrop.classList.remove('hidden');
+          backdrop.classList.add('block');
+        }
+        function hideBackdrop() {
+          if (!backdrop) return;
+          backdrop.classList.add('hidden');
+          backdrop.classList.remove('block');
+        }
+
+        function openMenu(){
+          console.log('[mobile-menu] openMenu');
+          // ensure any other popups are closed so menu stays on top and clickable
+          try { if (typeof closeProfilePopup === 'function') closeProfilePopup(); } catch(e){}
+          try { if (typeof closeServiceDetail === 'function') closeServiceDetail(); } catch(e){}
+          try { if (typeof closeModal === 'function') closeModal(); } catch(e){}
+
+          // make visible and slide in
+          mobileMenu.style.display = 'block';
+          // ensure class triggers CSS transition
+          setTimeout(function(){ mobileMenu.classList.add('active'); }, 10);
+          // remove any forced transform flag
+          mobileMenu.style.transform = '';
+          showBackdrop();
+          // enable backdrop pointer events
+          if (backdrop) backdrop.style.pointerEvents = 'auto';
+          document.body.classList.add('overflow-hidden');
+          openBtn.setAttribute('aria-expanded','true');
+          mobileMenu.setAttribute('aria-hidden','false');
+        }
+
+        function closeMenu(){
+          console.log('[mobile-menu] closeMenu');
+          // remove class first to trigger transition
+          // remove active class to start transition
+          mobileMenu.classList.remove('active');
+          hideBackdrop();
+          // force transform out in case CSS is overridden
+          try { mobileMenu.style.transform = 'translateX(100%)'; } catch(e){}
+          // after transition, hide the element to prevent accidental clicks
+          setTimeout(function(){ try { mobileMenu.style.display = 'none'; mobileMenu.style.transform = ''; } catch(e){} }, 350);
+          // disable backdrop pointer events after hiding
+          if (backdrop) backdrop.style.pointerEvents = 'none';
+          document.body.classList.remove('overflow-hidden');
+          openBtn.setAttribute('aria-expanded','false');
+          mobileMenu.setAttribute('aria-hidden','true');
+        }
+
+        openBtn.addEventListener('click', function(e){
+          e.preventDefault();
+          console.log('[mobile-menu] hamburger click, active=', mobileMenu.classList.contains('active'));
+          if (mobileMenu.classList.contains('active')) { closeMenu(); } else { openMenu(); }
+        });
+
+        if (closeBtn) closeBtn.addEventListener('click', function(e){
+          console.log('[mobile-menu] closeBtn click');
+          e.preventDefault();
+          e.stopPropagation();
+          try { e.stopImmediatePropagation(); } catch(_) {}
+          closeMenu();
+          return false;
+        });
+
+        // close on backdrop click
+        if (backdrop) backdrop.addEventListener('click', function(e){ console.log('[mobile-menu] backdrop click'); closeMenu(); });
+
+        // close when clicking links or form submit inside menu (bubble) - small delay
+        mobileMenu.querySelectorAll('a, button[type="submit"]').forEach(function(el){ el.addEventListener('click', function(){ console.log('[mobile-menu] link clicked'); setTimeout(closeMenu, 80); }); });
+
+        // capture-phase listener: runs before inline onclick handlers (so menu will close before e.g. showProfilePopup())
+        mobileMenu.addEventListener('click', function(e){
+          const t = e.target.closest('a, button');
+          if (!t) return;
+          console.log('[mobile-menu] capture click on', t.tagName, t.className || t.href || t.type);
+          // close immediately (no delay) so UI is hidden before other handlers run
+          try { closeMenu(); } catch (err) { console.warn('closeMenu failed in capture', err); }
+        }, true);
+
+        // expose helper for inline use as fallback
+        window.closeMobileMenu = function(){ try { closeMenu(); } catch(e){ } };
+
+        // Close on Escape
+        document.addEventListener('keydown', function(e){ if (e.key === 'Escape') { console.log('[mobile-menu] Escape pressed'); closeMenu(); } });
+
+        // Ensure menu is closed on initial load (avoid auto-open after login)
+        document.addEventListener('DOMContentLoaded', function(){
+          try {
+            hideBackdrop();
+            mobileMenu.classList.remove('active');
+            mobileMenu.setAttribute('aria-hidden','true');
+            if (openBtn) openBtn.setAttribute('aria-expanded','false');
+            // force transform out and hide element to avoid any visible flicker
+            mobileMenu.style.transform = 'translateX(100%)';
+            mobileMenu.style.display = 'none';
+            if (backdrop) { backdrop.style.display = 'none'; backdrop.style.pointerEvents = 'none'; }
+          } catch(e){ console.warn('init mobile menu close failed', e); }
+        });
+
+      })();
+    </script>
+
    <!-- Hero Section -->
  <!-- Hero Section -->
 <section
@@ -422,12 +450,6 @@ function closeLogoutModal() {
       </p>
       <div class="flex flex-wrap gap-4 md:justify-start justify-center">
         @auth('customer')
-          <a
-            href="#member-program"
-            class="bg-primary text-white px-8 py-3 !rounded-button font-semibold whitespace-nowrap transition-all hover:bg-secondary hover:scale-105 hover:shadow-lg text-center block md:inline-block"
-          >
-            Lihat Program Saya
-          </a>
         @else
           <a
             href="#join"
@@ -449,109 +471,86 @@ function closeLogoutModal() {
 </section>
 
 
-@auth('customer')
-<section id="member-program" class="py-16 bg-gradient-to-br from-[#fff] to-[#f3f4f6] font-sans">
-    <div class="max-w-4xl mx-auto px-6">
-        <!-- Heading -->
-        <div class="border-l-8 border-[#c68e8f] pl-6 mb-10">
-            <h2 class="text-4xl font-extrabold text-[#4a2b30] tracking-tight mb-2">
-                <i class="ri-heart-pulse-line text-[#c68e8f] mr-2"></i> Profil Member
-            </h2>
-            <p class="text-lg text-gray-600">Selamat datang, <span class="font-semibold">{{ auth('customer')->user()->name }}</span>! Berikut adalah detail keanggotaan Anda.</p>
-        </div>
 
-        <!-- Detail Section -->
-        <div class="space-y-6 text-gray-800">
-            <div class="grid sm:grid-cols-3 gap-2">
-                <div class="font-semibold text-[#4a2b30]">Nama</div>
-                <div class="sm:col-span-2">{{ auth('customer')->user()->name }}</div>
-            </div>
-            <div class="grid sm:grid-cols-3 gap-2">
-                <div class="font-semibold text-[#4a2b30]">Email</div>
-                <div class="sm:col-span-2">{{ auth('customer')->user()->email }}</div>
-            </div>
-            <div class="grid sm:grid-cols-3 gap-2">
-                <div class="font-semibold text-[#4a2b30]">No HP</div>
-                <div class="sm:col-span-2">{{ auth('customer')->user()->phone_number }}</div>
-            </div>
-            <div class="grid sm:grid-cols-3 gap-2">
-                <div class="font-semibold text-[#4a2b30]">Membership</div>
-                <div class="sm:col-span-2 capitalize">{{ auth('customer')->user()->membership }}</div>
-            </div>
-            <div class="grid sm:grid-cols-3 gap-2">
-                <div class="font-semibold text-[#4a2b30]">Credit Balance</div>
-                <div class="sm:col-span-2">
-                    <div class="w-full bg-gray-300 rounded-full h-4 relative">
-                        <div class="bg-[#c68e8f] h-4 rounded-full transition-all duration-500" style="width: {{ auth('customer')->user()->quota * 10 }}%;"></div>
-                        <span class="absolute inset-0 flex items-center justify-center text-xs font-bold text-[#4a2b30]">
-                            {{ auth('customer')->user()->quota }} sesi
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="grid sm:grid-cols-3 gap-2">
-                <div class="font-semibold text-[#4a2b30]">Classes</div>
-                <div class="sm:col-span-2">{{ auth('customer')->user()->program }}</div>
-            </div>
-        </div>
-    </div>
-</section>
-@endauth
-
-
-
-    <!-- About Section -->
+   <!-- About Section -->
 <section id="about" class="py-20 bg-white">
   <div class="container mx-auto px-4">
+    
+    <!-- Title -->
     <div class="text-center mb-16">
       <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4">
         About FTM
       </h2>
       <div class="w-24 h-1 bg-secondary mx-auto"></div>
     </div>
+
+    <!-- Content Wrapper -->
     <div class="flex flex-col md:flex-row items-center gap-12">
-      <div class="md:w-1/2 flex justify-center">
-        <img src="{{ asset('images/logo ftm (1).jpg') }}" alt="Muslim women exercising" ... />
-        
-      </div>
-      <div class="md:w-1/2">
-        <h3 class="text-2xl font-semibold text-primary mb-4">
-          Vision And Mision 
-        </h3>
-        <p class="text-gray-700 mb-6">
-          FTM society adalah memberikan ruang bagi para muslimah untuk memiliki gaya hidup aktif dan produktif yang sesuai dengan syariat Islam.Oleh karena itu, FTM Society hadir menyelenggarakan kegiatan olahraga dan kegiatan aktif sosial lainnya, seperti webinar dan event.
-        </p>
-        <div class="flex gap-8 items-center mt-8">
-  <!-- Muslimah Only -->
-  <div class="flex items-center gap-2">
-    <div class="w-10 h-10 flex items-center justify-center rounded-full bg-pink-100 text-pink-600">
-      <i class="ri-shield-check-line ri-lg"></i>
-    </div>
-    <span class="font-medium text-gray-800">Muslimah Only</span>
-  </div>
 
-  <!-- Certified Trainers -->
-  <div class="flex items-center gap-2">
-    <div class="w-10 h-10 flex items-center justify-center rounded-full bg-pink-100 text-pink-600">
-      <i class="ri-heart-pulse-line ri-lg"></i>
-    </div>
-    <span class="font-medium text-gray-800">Certified Trainers</span>
-  </div>
-
-  <!-- No Music & No Camera -->
-  <div class="flex items-center gap-2">
-    <div class="w-10 h-10 flex items-center justify-center rounded-full bg-pink-100 text-pink-600">
-      <i class="ri-pray-line ri-lg"></i>
-    </div>
-    <span class="font-medium text-gray-800">No Music & No Camera</span>
-  </div>
+    
+   <div class="md:w-1/2 flex justify-center">
+    <img
+        src="{{ asset('images\logo ftm (1).jpg') }}"
+        alt="Logo FTM"
+        class="rounded-lg shadow-lg w-56 sm:w-72 md:w-full h-auto object-cover transition-all duration-300"
+    />
 </div>
 
+
+
+      <!-- Text -->
+      <div class="md:w-1/2">
+        <h3 class="text-2xl font-semibold text-primary mb-4">
+          Vision And Mision
+        </h3>
+
+        <p class="text-gray-700 mb-6">
+          FTM society adalah memberikan ruang bagi para muslimah untuk memiliki gaya hidup aktif dan produktif yang sesuai dengan syariat Islam. Oleh karena itu, FTM Society hadir menyelenggarakan kegiatan olahraga dan kegiatan aktif sosial lainnya, seperti webinar dan event.
+        </p>
+
+        <!-- Features (Fully Responsive) -->
+        <div class="flex flex-col sm:flex-row sm:flex-wrap gap-6 sm:gap-8 mt-8">
+
+          <!-- Muslimah Only -->
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <div class="w-10 h-10 flex items-center justify-center rounded-full bg-pink-100 text-pink-600">
+              <i class="ri-shield-check-line ri-lg"></i>
+            </div>
+            <span class="font-medium text-gray-800">Muslimah Only</span>
+          </div>
+
+          <!-- Certified Trainers -->
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <div class="w-10 h-10 flex items-center justify-center rounded-full bg-pink-100 text-pink-600">
+              <i class="ri-heart-pulse-line ri-lg"></i>
+            </div>
+            <span class="font-medium text-gray-800">Certified Trainers</span>
+          </div>
+
+          <!-- No Music & No Camera -->
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <div class="w-10 h-10 flex items-center justify-center rounded-full bg-pink-100 text-pink-600">
+              <i class="ri-pray-line ri-lg"></i>
+            </div>
+            <span class="font-medium text-gray-800">No Music & No Camera</span>
+          </div>
+
         </div>
+        <!-- End Features -->
+
       </div>
+      <!-- End Text -->
+
     </div>
+    <!-- End Wrapper -->
+
   </div>
 </section>
+
+<!-- Optional: Prevent Horizontal Scroll Global -->
+<style>
+  body { overflow-x: hidden; }
+</style>
 
     <!-- Features Section (Slider) -->
 <section class="py-20 bg-gray-50">
@@ -657,9 +656,11 @@ function closeLogoutModal() {
     rightBtn.style.display = (slider.scrollLeft + slider.clientWidth) < slider.scrollWidth ? 'block' : 'none';
   }
   window.addEventListener('DOMContentLoaded', toggleFeatureScroll);
-  
 
-  <script>
+
+</script>
+
+<script>
   // Popup Profil Member
   function showProfilePopup() {
     document.getElementById('profile-popup').classList.remove('hidden');
@@ -831,16 +832,28 @@ function closeLogoutModal() {
 
 
 <!-- Modal Detail Service -->
-<div id="service-detail-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-  <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-8 relative">
-    <button onclick="closeServiceDetail()" class="absolute top-2 right-2 text-gray-500 hover:text-primary text-2xl">&times;</button>
+<div 
+  id="service-detail-modal"
+  class="fixed inset-0 hidden z-50 bg-black bg-opacity-60 items-center justify-center transition-opacity duration-200"
+>
+  <div 
+    id="service-detail-box"
+    class="bg-white rounded-lg shadow-xl max-w-md w-full p-8 relative transform transition-all duration-200 scale-95 opacity-0"
+  >
+    <button 
+      onclick="closeServiceDetail()" 
+      class="absolute top-2 right-2 text-gray-500 hover:text-primary text-2xl"
+      aria-label="Close Modal"
+    >
+      &times;
+    </button>
+
     <h3 id="service-detail-title" class="text-xl font-bold text-primary mb-4"></h3>
     <div id="service-detail-content" class="text-gray-700 text-sm leading-relaxed"></div>
   </div>
 </div>
 
 <script>
-  // Ganti detail program sesuai kebutuhan Anda
   const serviceDetails = {
     'private-group': {
       title: 'Private Group Class',
@@ -850,85 +863,85 @@ function closeLogoutModal() {
           <li>Cocok untuk komunitas, keluarga, atau teman</li>
           <li>Jadwal fleksibel & suasana eksklusif</li>
         </ul>
-        <p class="mb-2">Fasilitas:</p>
+        <p class="mb-2 font-semibold">Fasilitas:</p>
         <ul class="mb-3 list-disc pl-5">
           <li>Ruang latihan khusus</li>
           <li>Peralatan lengkap</li>
           <li>Free konsultasi awal</li>
         </ul>
-        <p class="mb-2">Hubungi kami untuk info harga & jadwal!</p>
       `
     },
     'private-training': {
       title: 'Private Training',
       content: `
         <ul class="mb-3 list-disc pl-5">
-          <li>Latihan personal 1-on-1 dengan trainer wanita profesional</li>
-          <li>Program disesuaikan dengan kebutuhan & tujuan Anda</li>
-          <li>Tersedia untuk Mat Pilates, Reformer Pilates, Muaythai, Body Shaping (Strength Training).</li>
+          <li>Latihan 1-on-1 dengan trainer profesional</li>
+          <li>Program disesuaikan dengan kebutuhan Anda</li>
         </ul>
-        <p class="mb-2">Cocok untuk pemula maupun advanced.</p>
       `
     },
     'single-visit': {
       title: 'Single Visit Class',
       content: `
         <ul class="mb-3 list-disc pl-5">
-          <li>Semi private dengan coach max. 6–7 orang</li>
-          <li>Dilatih oleh pelatih perempuan muslim yang sudah tersertifikasi</li>
-          <li>Jika pilih bundle, bisa mix kelas.</li>
-          <li>Jadwal dan ketersediaan slot akan di-update berkala.</li>
+          <li>Semi privat max 6–7 orang</li>
+          <li>Coach perempuan tersertifikasi</li>
         </ul>
-        <p class="mb-2">Booking langsung via WhatsApp!</p>
       `
     },
     'reformer-pilates': {
       title: 'Reformer Pilates',
       content: `
-       <ul class="mb-3 list-disc pl-5">
-          <li> 
-        1.Group Class
-        - Dilatih oleh instruktur tersertifikasi
-        - Semi Private max. 3 orang
-        - Jadwal dan ketersediaan slot akan di-update berkala
-        </li>
-          <li> 2.Private Class
-        - Dilatih oleh instruktur tersertifikasi
-        - Untuk special case (Scoliosis di atas 20 derajat, Ibu hamil, Lansia dan kondisi khusus lainnya yang memerlukan penanganan khusus)
-        </li>
+        <ul class="mb-3 list-disc pl-5">
+          <li>Group Class: semi private max 3 orang</li>
+          <li>Private Class untuk special case</li>
         </ul>
-        <p class="mb-2">"Untuk harga Private Class silakan hubungi kami".</p>
       `
     },
     'exclusive-program': {
       title: 'Exclusive Class Program',
       content: `
         <ul class="mb-3 list-disc pl-5">
-          <li>8x sesi dalam satu bulan dengan komposisi 2x sesi dalam satu pekan</li>
-          <li>Bertujuan untuk membangun habit olahraga</li>
-          <li>Progress setiap member relatif sama karena membernya tetap dari awal batch sampai akhir</li>
-          <li>Dilatih oleh pelatih perempuan muslim yang sudah tersertifikasi</li>
-          <li>Program berkelanjutan</li>
-          <li>Jadwal tetap sesuai group class yang dipilih</li>
-          <li>Buka pendaftaran dan rilis jadwal setiap pertengahan bulan.</li>
-          <li>Kelas dimulai di pekan pertama dan berakhir di pekan ke-4 atau 5</li>
-          <li>Semi private max. 6–7 orang per group.</li>
-          </li>
-          </ul>
-          <p class="mb-2">Dapatkan pengalaman latihan terbaik hanya di FTM Society.</p>
-        `
-      }
-    };
+          <li>8 sesi per bulan (2x/minggu)</li>
+          <li>Dilatih oleh pelatih perempuan muslim tersertifikasi</li>
+          <li>Semi private max 6–7 orang</li>
+        </ul>
+      `
+    },
+  };
 
   function showServiceDetail(key) {
+    const modal = document.getElementById('service-detail-modal');
+    const box = document.getElementById('service-detail-box');
+
     document.getElementById('service-detail-title').textContent = serviceDetails[key].title;
     document.getElementById('service-detail-content').innerHTML = serviceDetails[key].content;
-    document.getElementById('service-detail-modal').classList.remove('hidden');
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+
+    // animasi masuk
+    setTimeout(() => {
+      box.classList.remove('opacity-0', 'scale-95');
+      box.classList.add('opacity-100', 'scale-100');
+    }, 10);
   }
+
   function closeServiceDetail() {
-    document.getElementById('service-detail-modal').classList.add('hidden');
+    const modal = document.getElementById('service-detail-modal');
+    const box = document.getElementById('service-detail-box');
+
+    // animasi keluar
+    box.classList.add('opacity-0', 'scale-95');
+    box.classList.remove('opacity-100', 'scale-100');
+
+    setTimeout(() => {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }, 200);
   }
 </script>
+
 
  <!-- Pakeges & Pricing Section -->
 <section class="py-20 bg-gray-50">
@@ -978,7 +991,7 @@ function closeLogoutModal() {
     </ul>
   </div>
   <div class="mt-auto">
-    <a href="https://wa.me/6287785767395" target="_blank" class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all text-sm font-semibold text-center mx-auto block">
+    <a href="{{ route('join.package', ['package' => 'exclusive-class-program']) }}" class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all text-sm font-semibold text-center mx-auto block">
       Daftar Sekarang
     </a>
     <button
@@ -1007,9 +1020,14 @@ function closeLogoutModal() {
     </ul>
   </div>
   <div class="mt-auto">
-    <a href="https://wa.me/6287785767395" target="_blank" class="w-full bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all block text-center font-semibold">
+    <?php $reformer_variants = [
+        ['label' => 'Single - IDR 400K', 'url' => route('join.package', ['package' => 2])],
+        ['label' => 'Double - IDR 700K', 'url' => route('join.package', ['package' => 3])],
+        ['label' => 'Triple - IDR 900K', 'url' => route('join.package', ['package' => 4])],
+    ]; ?>
+    <button type="button" class="w-full bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all block text-center font-semibold join-btn" data-variants='{!! json_encode($reformer_variants) !!}'>
       Daftar Sekarang
-    </a>
+    </button>
     <button
       type="button"
       onclick="showServiceDetail('reformer-pilates')"
@@ -1034,9 +1052,14 @@ function closeLogoutModal() {
     </ul>
   </div>
   <div class="mt-auto">
-    <a href="https://wa.me/6287785767395" target="_blank" class="w-full bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all block text-center font-semibold">
+    <?php $single_visit_variants = [
+        ['label' => 'Single Class - IDR 150K', 'url' => route('join.package', ['package' => 5])],
+        ['label' => 'Bundle 2 - IDR 275K', 'url' => route('join.package', ['package' => 6])],
+        ['label' => 'Bundle 4 - IDR 525K', 'url' => route('join.package', ['package' => 7])],
+    ]; ?>
+    <button type="button" class="w-full bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all block text-center font-semibold join-btn" data-variants='{!! json_encode($single_visit_variants) !!}'>
       Daftar Sekarang
-    </a>
+    </button>
     <button
       type="button"
       onclick="showServiceDetail('single-visit')"
@@ -1065,9 +1088,16 @@ function closeLogoutModal() {
     </ul>
   </div>
   <div class="mt-auto">
-    <a href="https://wa.me/6287785767395" target="_blank" class="w-full bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all block text-center font-semibold">
+    <?php $reformer_packages_variants = [
+        ['label' => '1 Visit - IDR 400K', 'url' => route('join.package', ['package' => 8])],
+        ['label' => '4 Sessions / 15 Days - IDR 1.400K', 'url' => route('join.package', ['package' => 9])],
+        ['label' => '4 Sessions / 30 Days - IDR 1.540K', 'url' => route('join.package', ['package' => 10])],
+        ['label' => '8 Sessions / 30 Days - IDR 2.200K', 'url' => route('join.package', ['package' => 11])],
+        ['label' => '8 Sessions / 60 Days - IDR 2.640K', 'url' => route('join.package', ['package' => 12])],
+    ]; ?>
+    <button type="button" class="w-full bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all block text-center font-semibold join-btn" data-variants='{!! json_encode($reformer_packages_variants) !!}'>
       Daftar Sekarang
-    </a>
+    </button>
     <button
       type="button"
       onclick="showServiceDetail('reformer-pilates')"
@@ -1093,7 +1123,7 @@ function closeLogoutModal() {
     </ul>
   </div>
   <div class="mt-auto">
-    <a href="https://wa.me/6287785767395" target="_blank" class="w-full bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all block text-center font-semibold">
+    <a href="{{ route('join.package', ['package' => 'private-program']) }}" class="w-full bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all block text-center font-semibold">
       HUBUNGI TEAM KAMI
     </a>
     <button
@@ -1121,7 +1151,7 @@ function closeLogoutModal() {
     </ul>
   </div>
   <div class="mt-auto">
-    <a href="https://wa.me/6287785767395" target="_blank" class="w-full bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all block text-center font-semibold">
+    <a href="{{ route('join.package', ['package' => 'private-group-program']) }}" class="w-full bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all block text-center font-semibold">
       HUBUNGI TEAM KAMI
     </a>
     <button
@@ -1161,6 +1191,71 @@ function closeLogoutModal() {
 
 <!-- Tambahkan link Remix Icon di <head> jika belum -->
 <!-- <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet"> -->
+
+<!-- Package Variant Modal -->
+<div id="package-variant-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 mx-4">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-bold text-primary">Pilih Paket</h3>
+      <button type="button" onclick="closeVariantModal()" class="text-gray-600 text-2xl">&times;</button>
+    </div>
+    <div id="package-variant-list" class="flex flex-col gap-3"></div>
+    <div class="mt-4 text-right">
+      <button type="button" onclick="closeVariantModal()" class="px-4 py-2 rounded-button border border-gray-300">Batal</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openVariantModal(variants){
+    const modal = document.getElementById('package-variant-modal');
+    const list = document.getElementById('package-variant-list');
+    list.innerHTML = '';
+    variants.forEach(function(v){
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:bg-gray-50';
+      btn.textContent = v.label || 'Pilih Paket';
+      btn.addEventListener('click', function(){
+        // navigate to the variant URL
+        window.location.href = v.url;
+      });
+      list.appendChild(btn);
+    });
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+  function closeVariantModal(){
+    const modal = document.getElementById('package-variant-modal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+
+  // Attach handlers to join buttons
+  document.addEventListener('DOMContentLoaded', function(){
+    document.querySelectorAll('.join-btn').forEach(function(el){
+      el.addEventListener('click', function(e){
+        const data = el.getAttribute('data-variants');
+        if(!data) return;
+        try{
+          const variants = JSON.parse(data);
+          if(!Array.isArray(variants) || variants.length === 0) return;
+          if(variants.length === 1){
+            window.location.href = variants[0].url;
+            return;
+          }
+          openVariantModal(variants);
+        }catch(err){
+          console.error('Invalid variants JSON', err);
+        }
+      });
+    });
+    // close on backdrop click
+    document.getElementById('package-variant-modal').addEventListener('click', function(ev){
+      if(ev.target.id === 'package-variant-modal') closeVariantModal();
+    });
+  });
+</script>
 
 <script>
   function slideMembership(direction) {
@@ -1424,11 +1519,26 @@ function closeModal() {
         </div>
       </div>
     </section>
-    <div id="service-detail-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-  <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-8 relative">
-    <button onclick="closeServiceDetail()" class="absolute top-2 right-2 text-gray-500 hover:text-primary text-2xl">&times;</button>
+    <!-- Modal Service Detail -->
+<div 
+  id="service-detail-modal"
+  class="fixed inset-0 hidden z-50 bg-black bg-opacity-60 items-center justify-center transition-opacity"
+>
+  <div 
+    id="service-detail-box"
+    class="bg-white rounded-lg shadow-xl max-w-md w-full p-8 relative transform transition-all scale-95 opacity-0"
+  >
+    <button 
+      onclick="closeServiceDetail()" 
+      class="absolute top-2 right-2 text-gray-500 hover:text-primary text-2xl"
+      aria-label="Close Modal"
+    >
+      &times;
+    </button>
+
     <h3 id="service-detail-title" class="text-xl font-bold text-primary mb-4"></h3>
-    <p id="service-detail-desc" class="text-gray-700"></p>
+
+    <p id="service-detail-desc" class="text-gray-700 leading-relaxed"></p>
   </div>
 </div>
 
@@ -1571,21 +1681,52 @@ function closeModal() {
 </script>
 
 
-  <!-- Partner logo -->
-<div class="text-center mb-16">
-      <h2 class="text-4xl font-bold text-primary mb-4">Partner</h2>
-      <p class="text-gray-600 max-w-2xl mx-auto">Supported by Trusted Partners Committed to a Healthy Lifestyle.</p>
-      <div class="w-24 h-1 bg-secondary mx-auto mt-4"></div>
+<!-- Partner Section -->
+<section class="py-16">
+  <div class="text-center mb-10">
+    <h2 class="text-4xl font-bold text-primary mb-2">Partner</h2>
+    <p class="text-gray-600 max-w-2xl mx-auto">
+      Supported by Trusted Partners Committed to a Healthy Lifestyle.
+    </p>
+    <div class="w-24 h-1 bg-secondary mx-auto mt-4"></div>
+  </div>
+
+  <!-- Wrapper -->
+  <div class="overflow-hidden relative py-4">
+
+    <!-- Track berjalan -->
+    <div class="flex items-center gap-10 animate-scroll whitespace-nowrap">
+
+      <!-- Logo pertama -->
+      <img src="{{ asset('icons/partner 2..png') }}" class="h-20 mx-4 object-contain" />
+      <img src="{{ asset('icons/partner 3..png') }}" class="h-20 mx-4 object-contain" />
+      <img src="{{ asset('icons/partner 4..png') }}" class="h-20 mx-4 object-contain" />
+      <img src="{{ asset('icons/partner 5..png') }}" class="h-20 mx-4 object-contain" />
+      <img src="{{ asset('icons/partner 6..png') }}" class="h-20 mx-4 object-contain" />
+      <img src="{{ asset('icons/partner 1..png') }}" class="h-20 mx-4 object-contain" />
+
+      <!-- Duplikasi logo untuk loop infinite -->
+      <img src="{{ asset('icons/partner 2..png') }}" class="h-20 mx-4 object-contain" />
+      <img src="{{ asset('icons/partner 3..png') }}" class="h-20 mx-4 object-contain" />
+      <img src="{{ asset('icons/partner 4..png') }}" class="h-20 mx-4 object-contain" />
+      <img src="{{ asset('icons/partner 5..png') }}" class="h-20 mx-4 object-contain" />
+      <img src="{{ asset('icons/partner 6..png') }}" class="h-20 mx-4 object-contain" />
+      <img src="{{ asset('icons/partner 1..png') }}" class="h-20 mx-4 object-contain" />
     </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 items-center justify-center">
-<img src="{{ asset('icons/partner 2..png') }}" alt="Partner 1" class="mx-auto h-20 transition-all duration-300">
-<img src="{{ asset('icons/partner 3..png') }}" alt="Partner 2" class="mx-auto h-20 transition-all duration-300">
-<img src="{{ asset('icons/partner 4..png') }}" alt="Partner 3" class="mx-auto h-20 transition-all duration-300">
-<img src="{{ asset('icons/partner 5..png') }}" alt="Partner 4" class="mx-auto h-20 transition-all duration-300">
-<img src="{{ asset('icons/partner 6..png') }}" alt="Partner 5" class="mx-auto h-20 transition-all duration-300">
-<img src="{{ asset('icons/partner 1..png') }}" alt="Partner 6" class="mx-auto h-20 transition-all duration-300">
   </div>
 </section>
+
+<style>
+  @keyframes scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .animate-scroll {
+    animation: scroll 18s linear infinite;
+  }
+</style>
+
 
 
 
@@ -1878,4 +2019,32 @@ function closeModal() {
 
   </body>
 </html>
+
+<script>
+  // Render whether the customer is authenticated so JS can branch behavior
+  window.isCustomerAuthenticated = @json(auth('customer')->check());
+
+  document.addEventListener('DOMContentLoaded', function () {
+    // Intercept clicks on the WhatsApp booking links and route appropriately
+    const waSelector = 'a[href^="https://wa.me/6287785767395"]';
+    document.querySelectorAll(waSelector).forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        // Prevent the default WA open/reload so we can control flow
+        e.preventDefault();
+
+        if (!window.isCustomerAuthenticated) {
+          // Not logged in -> go to public Sign Up Now form on the landing page
+          window.location.href = '{{ route('home') }}#signup';
+          return;
+        }
+
+        // Logged in -> go to checkout. If the element provides a package via
+        // `data-package`, append it to the checkout query string.
+        const pkg = this.dataset.package;
+        const checkoutUrl = pkg ? '/checkout?package=' + encodeURIComponent(pkg) : '/checkout';
+        window.location.href = checkoutUrl;
+      });
+    });
+  });
+</script>
 

@@ -5,30 +5,39 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Attendance;
 
 class Customer extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    protected $fillable = [
+    /**
+     * === PRIMARY KEY FIX UNTUK FILAMENT ===
+     * Filament WAJIB menggunakan kolom 'id' sebagai primary key.
+     * Jika sebelumnya kamu menggunakan 'user_id', ubah tabelnya menjadi:
+     *   user_id → id (auto increment)
+     */
+    protected $primaryKey = 'id';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
+   protected $fillable = [
     'name',
     'email',
     'phone_number',
     'program',
     'quota',
-    'membership',
-    'preferred_membership',
-    'schedule_id',
-    'user_id',
     'password',
     'birth_date',
-    'schedule',
     'goals',
     'kondisi_khusus',
     'referensi',
     'pengalaman',
+    'package_id', 
     'is_muslim',
     'voucher_code',
+    'is_verified',
+    'force_password_change',
 ];
 
 
@@ -38,18 +47,38 @@ class Customer extends Authenticatable
     ];
 
     protected $casts = [
-        'agree' => 'boolean',
         'quota' => 'integer',
         'email_verified_at' => 'datetime',
         'is_verified' => 'boolean',
         'force_password_change' => 'boolean',
     ];
 
-    /**
-     * Relasi many-to-many: Customer bisa punya banyak jadwal
-     */
-public function schedules()
-{
-    return $this->belongsToMany(Schedule::class, 'customer_schedules'); // pastikan pivot table benar
-}
+    // =====================================================
+    // ================      RELASI        =================
+    // =====================================================
+
+    public function schedules()
+    {
+        return $this->belongsToMany(
+            Schedule::class,
+            'customer_schedules',
+            'customer_id',
+            'schedule_id'
+        )->withTimestamps();
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'customer_id', 'id');
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'customer_id', 'id');
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class, 'customer_id', 'id');
+    }
 }

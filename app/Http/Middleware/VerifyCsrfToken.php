@@ -12,6 +12,10 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        //
+        // Exclude Midtrans notification callback so external POSTs are accepted
+        'midtrans/notification',
+
+        // Exclude member login temporarily for Ngrok testing
+        '/member/login',
     ];
 }

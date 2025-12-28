@@ -3,47 +3,81 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use App\Models\Customer;
 
 class ProfileController extends Controller
 {
     /**
-     * Tampilkan form edit profil user yang sedang login.
+     * Tampilkan profil customer beserta transaksi, presensi, dan jadwal.
      */
-    public function edit(Request $request): View
+    public function show(): View|RedirectResponse
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        /** @var Customer|null $customer */
+        $customer = Auth::guard('customer')->user();
+
+        if (!$customer) {
+            return redirect('/login')->withErrors('Silakan login terlebih dahulu.');
+        }
+
+        // Ambil semua transaksi customer
+        $transactions = $customer->transactions()->latest()->get() ?? collect();
+
+        // Ambil semua presensi customer
+        $attendances = $customer->attendances()->latest()->get() ?? collect();
+
+        // Ambil semua jadwal customer
+        $schedules = $customer->schedules()->latest()->get() ?? collect();
+
+        return view('member.profile-modal', compact('customer', 'transactions', 'attendances', 'schedules'));
     }
 
     /**
-     * Update informasi profil user.
+     * Tampilkan form edit profil customer yang sedang login.
+     */
+    public function edit(Request $request): View|RedirectResponse
+    {
+        /** @var Customer|null $customer */
+        $customer = Auth::guard('customer')->user();
+
+        if (!$customer) {
+            return redirect('/login')->withErrors('Silakan login terlebih dahulu.');
+        }
+
+        return view('profile.edit', compact('customer'));
+    }
+
+    /**
+     * Update informasi profil customer.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $user = $request->user();
+        /** @var Customer $customer */
+        $customer = Auth::guard('customer')->user();
 
-        // Validasi input (sudah dari ProfileUpdateRequest)
-        $user->fill($request->validated());
-
-        // Jika email berubah, reset verifikasi email
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
+        if (!$customer) {
+            return redirect('/login')->withErrors('Silakan login terlebih dahulu.');
         }
 
-        $user->save();
+        $customer->fill($request->validated());
+
+        // Reset verifikasi email jika email berubah
+        if ($customer->isDirty('email')) {
+            $customer->email_verified_at = null;
+        }
+
+        $customer->save();
 
         return Redirect::route('profile.edit')->with('status', 'Profil berhasil diperbarui.');
     }
 
     /**
-     * Ganti password user yang sedang login.
+     * Ganti password customer yang sedang login.
      */
     public function changePassword(Request $request): RedirectResponse
     {
@@ -52,20 +86,25 @@ class ProfileController extends Controller
             'new_password' => 'required|confirmed|min:6',
         ]);
 
-        $user = $request->user();
+        /** @var Customer $customer */
+        $customer = Auth::guard('customer')->user();
 
-        if (!Hash::check($request->current_password, $user->password)) {
+        if (!$customer) {
+            return redirect('/login')->withErrors('Silakan login terlebih dahulu.');
+        }
+
+        if (!Hash::check($request->current_password, $customer->password)) {
             return back()->withErrors(['current_password' => 'Password lama salah.']);
         }
 
-        $user->password = bcrypt($request->new_password);
-        $user->save();
+        $customer->password = bcrypt($request->new_password);
+        $customer->save();
 
         return back()->with('success', 'Password berhasil diubah.');
     }
 
     /**
-     * Hapus akun user yang sedang login.
+     * Hapus akun customer yang sedang login.
      */
     public function destroy(Request $request): RedirectResponse
     {
@@ -73,16 +112,21 @@ class ProfileController extends Controller
             'password' => ['required'],
         ]);
 
-        $user = $request->user();
+        /** @var Customer $customer */
+        $customer = Auth::guard('customer')->user();
+
+        if (!$customer) {
+            return redirect('/login')->withErrors('Silakan login terlebih dahulu.');
+        }
 
         // Pastikan password benar sebelum hapus akun
-        if (!Hash::check($request->password, $user->password)) {
+        if (!Hash::check($request->password, $customer->password)) {
             return back()->withErrors(['password' => 'Password tidak sesuai.']);
         }
 
-        Auth::logout();
+        Auth::guard('customer')->logout();
 
-        $user->delete();
+        $customer->delete();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

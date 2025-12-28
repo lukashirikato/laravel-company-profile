@@ -69,7 +69,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Jakarta',
 
     /*
     |--------------------------------------------------------------------------
@@ -208,8 +208,13 @@ return [
     |
     */
 
-    'aliases' => Facade::defaultAliases()->merge([
-        // 'ExampleClass' => App\Example\ExampleClass::class,
-    ])->toArray(),
+   'aliases' => Facade::defaultAliases()->merge([
+    // 'ExampleClass' => App\Example\ExampleClass::class,
+
+    // ⬇️ TAMBAHKAN ALIAS DOMPDF
+    'Pdf' => Barryvdh\DomPDF\Facade\Pdf::class,
+
+])->toArray(),
+
 
 ];
