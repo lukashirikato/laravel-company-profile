@@ -8,22 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     protected $fillable = [
-        'customer_id',
-        'customer_name',
-        'package_id',
-        'amount',
-        'status',
-        'voucher_code',
-        'discount',
+    'customer_id',
+    'customer_name',
+    'package_id',
+    'amount',
+    'status',
+    'voucher_code',
+    'discount',
+    'selected_class_id',
+    'schedule_ids',
+    'quota_applied',
+    'payment_type',
+    'order_code',
+];
 
-        // ⬇️ TAMBAHKAN INI
-        'schedule_ids',
-        'quota_applied',
-
-        'payment_type',
-        'transaction_id',
-        'order_code',
-    ];
 
     protected $casts = [
         'schedule_ids'  => 'array',

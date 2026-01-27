@@ -9,7 +9,7 @@ class PackageSchedule extends Model
 {
     use HasFactory;
 
-    protected $table = 'package_schedules';
+    protected $table = 'package_schedules' ;
 
     /**
      * Kolom yang boleh diisi (penting untuk create / seed)

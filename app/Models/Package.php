@@ -21,10 +21,13 @@ class Package extends Model
 
     protected $fillable = [
         'name',
-        'price',
-        'duration',
-        'description',
         'slug',
+        'price',
+        'quota',
+        'class_id', // ← Tambahkan ini
+        'is_exclusive',
+        'requires_schedule',
+        'duration_days',
     ];
 
 
@@ -53,4 +56,11 @@ class Package extends Model
     {
         return $this->hasMany(ClassModel::class, 'package_id');
     }
+
+        // Tambahkan relasi
+    public function classModel()
+    {
+        return $this->belongsTo(ClassModel::class, 'class_id');
+    }
+
 }

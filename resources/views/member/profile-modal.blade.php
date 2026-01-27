@@ -27,9 +27,9 @@
    class="block px-4 py-2 rounded hover:bg-white/10">
     Book Class
 </a>
-            <a class="block px-4 py-2 rounded hover:bg-white/10">
-                My Classes
-            </a>
+         <a href="{{ route('member.my-classes') }}"
+         class="block px-4 py-2 rounded hover:bg-white/10">My Classes</a>
+
             <a class="block px-4 py-2 rounded hover:bg-white/10">
                 Transactions
             </a>

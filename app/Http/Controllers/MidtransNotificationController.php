@@ -138,54 +138,56 @@ class MidtransNotificationController extends Controller
                 Log::info("[Midtrans] Transaction updateOrCreate", ['id' => $transaction->id]);
             }
 
-            // Update order untuk menyimpan status & midtrans id
-            $order->update([
-                'status'               => $status,
-                'payment_type'         => $paymentTypeMapped,
-                'transaction_id'       => $midtransId,
-            ]);
-
-            // ⛔ EARLY GUARD: STOP CALLBACK GANDA
-if ($status === 'paid' && $order->quota_applied) {
-    Log::info('[Midtrans] Order already applied, skip', [
+           // ✅ GUARD PALING AWAL
+if ($order->status === 'active') {
+    Log::info('[Midtrans] Order already active, skip', [
         'order_id' => $order->id
     ]);
-    return response()->json(['message' => 'Already processed']);
+    return response()->json(['message' => 'Already active']);
 }
 
-
-           if ($status === 'paid' && $customer && $package) {
-    DB::transaction(function () use ($order, $customer, $package) {
-
-    $order = Order::where('id', $order->id)
-        ->lockForUpdate()
-        ->first();
-
-    $customer = Customer::where('id', $customer->id)
-        ->lockForUpdate()
-        ->first();
-
-
-        // ⛔ Cegah double callback
-        if ($order->quota_applied) {
-            return;
-        }
-
-        // ✅ 0️⃣ SET PACKAGE KE CUSTOMER (INI YANG HILANG)
-$customer->update([
-    'package_id' => $package->id,
+// Update order (set paid / failed)
+$order->update([
+    'status'               => $status,
+    'payment_type'         => $paymentTypeMapped,
+    'transaction_id'       => $midtransId,
 ]);
 
 
-        // 1️⃣ SIMPAN SCHEDULE (FINAL & AMAN)
-$scheduleIds = $order->schedule_ids;
 
-// kalau masih string JSON → decode
-if (is_string($scheduleIds)) {
-    $scheduleIds = json_decode($scheduleIds, true);
+          if (
+    $status === 'paid' &&
+    $package->schedule_mode === 'locked' &&
+    empty($order->schedule_ids)
+) {
+    Log::error('[Midtrans] LOCKED package but schedule_ids empty', [
+        'order_id'   => $order->id,
+        'package_id' => $package->id,
+    ]);
+
+    // ❗ JANGAN return
+    throw new \Exception('Locked package tapi schedule_ids kosong');
 }
 
-if (is_array($scheduleIds) && count($scheduleIds) > 0) {
+
+    DB::transaction(function () use ($order, $customer, $package) {
+
+    $order = Order::lockForUpdate()->find($order->id);
+    $customer = Customer::lockForUpdate()->find($customer->id);
+
+    // GUARD FINAL
+    if ($order->status === 'active') {
+        return;
+    }
+
+    // 1️⃣ SET PACKAGE
+    $customer->update([
+        'package_id' => $package->id,
+    ]);
+
+    // 2️⃣ APPLY SCHEDULE
+    $scheduleIds = json_decode($order->schedule_ids, true) ?? [];
+
     foreach ($scheduleIds as $scheduleId) {
         CustomerSchedule::updateOrCreate(
             [
@@ -199,35 +201,35 @@ if (is_array($scheduleIds) && count($scheduleIds) > 0) {
             ]
         );
     }
-}
+
+    // 3️⃣ QUOTA
+    if ($package->quota > 0) {
+        $customer->increment('quota', (int) $package->quota);
+    }
+
+    // 4️⃣ EXPIRED
+    if (!empty($package->duration_days)) {
+        $customer->update([
+            'quota_expired_at' => now()->addDays($package->duration_days),
+        ]);
+    }
+
+    // 5️⃣ FINAL STATE (PALING AKHIR)
+    $order->update([
+        'status'              => 'paid',
+        'quota_applied'       => true,
+        'quota_applied_at'    => now(),
+        'schedule_applied_at' => now(),
+    ]);
+});
 
 
-
-        // 2️⃣ TAMBAH QUOTA
-        if ($package->quota > 0) {
-            $customer->increment('quota', $package->quota);
-        }
-
-        // 3️⃣ EXPIRED QUOTA (JIKA ADA)
-        if (!empty($package->duration_days)) {
-            $customer->update([
-                'quota_expired_at' => now()->addDays($package->duration_days),
-            ]);
-        }
-
-        // 4️⃣ FLAG FINAL
-        $order->update([
-    'quota_applied' => true,
-    'status'        => 'paid',
-]);
-
-    });
 
     Log::info('[Midtrans] APPLY PACKAGE SUCCESS', [
         'order_id' => $order->id,
         'customer_id' => $customer->id,
     ]);
-}
+
 
 
 

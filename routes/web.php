@@ -31,6 +31,9 @@ use App\Http\Controllers\CustomerSignupController;
 use App\Http\Livewire\AdminDashboard;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\MemberBookingController;
+use App\Http\Controllers\Member\MyClassesController;
+
+
 
 
 /*
@@ -114,27 +117,62 @@ Route::middleware('auth:customer')->group(function () {
 });
 
 
-Route::middleware(['auth:customer'])
-    ->prefix('member')
+Route::prefix('member')
+    ->middleware('auth:customer')
     ->name('member.')
     ->group(function () {
 
+        // =====================
+        // DASHBOARD & PROFILE
+        // =====================
         Route::get('/dashboard', [ProfileController::class, 'show'])
             ->name('dashboard');
 
+        Route::get('/profile', [MemberProfileController::class, 'show'])
+            ->name('profile');
+
+        // =====================
+        // BOOKING CLASS
+        // =====================
         Route::get('/book-class', [MemberBookingController::class, 'index'])
             ->name('book');
 
         Route::post('/book-class', [MemberBookingController::class, 'store'])
             ->name('book.store');
 
-        Route::get('/my-classes', [MemberBookingController::class, 'myClasses'])
+        Route::get('/my-classes', [MyClassesController::class, 'index'])
             ->name('my-classes');
 
+        // =====================
+        // TRANSACTION & PROGRAM
+        // =====================
         Route::get('/transactions', [MemberTransactionController::class, 'index'])
             ->name('transactions');
-});
 
+        Route::get('/program-saya', [CustomerController::class, 'program'])
+            ->name('program');
+
+        // =====================
+        // CHECK-IN / CHECK-OUT
+        // =====================
+        Route::post('/check-in', [CheckInCheckOutController::class, 'checkIn'])
+            ->name('checkin');
+
+        Route::post('/check-out', [CheckInCheckOutController::class, 'checkOut'])
+            ->name('checkout');
+
+        // =====================
+        // ACCOUNT
+        // =====================
+        Route::get('/change-password', [MemberAuthController::class, 'showChangePasswordForm'])
+            ->name('password.form');
+
+        Route::post('/change-password', [MemberAuthController::class, 'changePassword'])
+            ->name('change-password');
+
+        Route::post('/logout', [MemberAuthController::class, 'logout'])
+            ->name('logout');
+    });
 
 
 /*
@@ -151,7 +189,7 @@ Route::get('/checkout/class/{id}/schedules', [CheckoutController::class, 'getSch
 | MIDTRANS CALLBACK (WAJIB DI LUAR AUTH)
 |--------------------------------------------------------------------------
 */
-Route::post('/midtrans/notification', [MidtransNotificationController::class, 'handle'])
+Route::post('/midtrans/notification', [CheckoutController::class, 'notification'])
     ->name('midtrans.notification');
 
 
@@ -209,19 +247,7 @@ Route::middleware('guest:customer')->group(function () {
 | MEMBER AREA
 |--------------------------------------------------------------------------
 */
-Route::prefix('member')->middleware('auth:customer')->group(function () {
 
-    Route::get('/profile', [MemberProfileController::class, 'show'])->name('member.profile');
-    Route::post('/check-in', [CheckInCheckOutController::class, 'checkIn'])->name('member.checkin');
-    Route::post('/check-out', [CheckInCheckOutController::class, 'checkOut'])->name('member.checkout');
-    Route::get('/transactions', [MemberTransactionController::class, 'index'])->name('member.transactions');
-    Route::get('/program-saya', [CustomerController::class, 'program'])->name('member.program');
-
-    Route::post('/logout', [MemberAuthController::class, 'logout'])->name('member.logout');
-    Route::get('/change-password', [MemberAuthController::class, 'showChangePasswordForm'])->name('member.password.form');
-    Route::post('/change-password', [MemberAuthController::class, 'changePassword'])->name('member.change-password');
-
-});
 
 
 /*

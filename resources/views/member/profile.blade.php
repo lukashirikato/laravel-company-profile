@@ -719,9 +719,11 @@ function closeLogoutModal() {
             Latihan kelompok privat dengan instruktur berpengalaman, cocok untuk komunitas atau teman-teman.
           </p>
           <div class="flex flex-col gap-1 mt-auto w-full justify-center">
-            <a href="https://wa.me/6287785767395" target="_blank" class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all text-sm font-semibold text-center">
-              Booking Sekarang
-            </a>
+            <a href="#"
+   onclick="event.preventDefault(); event.stopPropagation(); window.open('https://wa.me/6287785767395','_blank')"
+   class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all text-sm font-semibold text-center">
+   Booking Sekarang
+</a>
            
           </div>
         </div>
@@ -736,9 +738,12 @@ function closeLogoutModal() {
             Sesi latihan personal sesuai kebutuhan Anda, didampingi pelatih profesional untuk hasil optimal.
           </p>
           <div class="flex flex-col gap-1 mt-auto w-full justify-center">
-            <a href="https://wa.me/6287785767395" target="_blank" class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all text-sm font-semibold text-center">
-              Booking Sekarang
-            </a>
+            <a href="#"
+   onclick="event.preventDefault(); event.stopPropagation(); window.open('https://wa.me/6287785767395','_blank')"
+   class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all text-sm font-semibold text-center">
+   Booking Sekarang
+</a>
+
             
           </div>
         </div>
@@ -753,9 +758,12 @@ function closeLogoutModal() {
             Ikuti kelas tanpa harus menjadi member tetap. Fleksibel untuk Anda yang ingin mencoba atau punya jadwal padat.
           </p>
           <div class="flex flex-col gap-1 mt-auto w-full justify-center">
-            <a href="https://wa.me/6287785767395" target="_blank" class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all text-sm font-semibold text-center">
-              Booking Sekarang
-            </a>
+           <a href="#"
+   onclick="event.preventDefault(); event.stopPropagation(); window.open('https://wa.me/6287785767395','_blank')"
+   class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all text-sm font-semibold text-center">
+   Booking Sekarang
+</a>
+
             
           </div>
         </div>
@@ -770,9 +778,12 @@ function closeLogoutModal() {
             Latihan pilates dengan alat reformer untuk kekuatan, fleksibilitas, dan postur tubuh yang lebih baik.
           </p>
           <div class="flex flex-col gap-1 mt-auto w-full justify-center">
-            <a href="https://wa.me/6287785767395" target="_blank" class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all text-sm font-semibold text-center">
-              Booking Sekarang
-            </a>
+           <a href="#"
+   onclick="event.preventDefault(); event.stopPropagation(); window.open('https://wa.me/6287785767395','_blank')"
+   class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all text-sm font-semibold text-center">
+   Booking Sekarang
+</a>
+
             
           </div>
         </div>
@@ -787,9 +798,12 @@ function closeLogoutModal() {
             Program kelas eksklusif dengan materi pilihan, peserta terbatas, dan pendampingan intensif.
           </p>
           <div class="flex flex-col gap-1 mt-auto w-full justify-center">
-            <a href="https://wa.me/6287785767395" target="_blank" class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all text-sm font-semibold text-center">
-              Booking Sekarang
-            </a>
+            <a href="#"
+   onclick="event.preventDefault(); event.stopPropagation(); window.open('https://wa.me/6287785767395','_blank')"
+   class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all text-sm font-semibold text-center">
+   Booking Sekarang
+</a>
+
             
           </div>
         </div>
