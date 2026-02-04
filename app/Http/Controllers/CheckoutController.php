@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Package;
 use App\Models\Order;
 use App\Models\Transaction;
-use App\Models\ClassModel;
 use App\Models\Schedule;
 use App\Models\CustomerSchedule;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 use Midtrans\Config;
 use Midtrans\Snap;
@@ -21,7 +21,38 @@ use Midtrans\Notification as MidtransNotification;
 
 class CheckoutController extends Controller
 {
+    /**
+     * Payment status constants
+     */
+    private const STATUS_PENDING = 'pending';
+    private const STATUS_PAID = 'paid';
+    private const STATUS_ACTIVE = 'active';
+    private const STATUS_SETTLEMENT = 'settlement';
+    private const STATUS_SUCCESS = 'success';
+    private const STATUS_FAILED = 'failed';
+    private const STATUS_EXPIRED = 'expired';
+    private const STATUS_CANCELLED = 'cancelled';
+    
+    /**
+     * Schedule modes
+     */
+    private const MODE_LOCKED = 'locked';
+    private const MODE_BOOKING = 'booking';
+    
+    /**
+     * Payment check configuration
+     */
+    private const WEBHOOK_WAIT_SECONDS = 3;
+    
     public function __construct()
+    {
+        $this->configureMidtrans();
+    }
+    
+    /**
+     * Configure Midtrans settings
+     */
+    private function configureMidtrans(): void
     {
         Config::$serverKey    = env('MIDTRANS_SERVER_KEY');
         Config::$clientKey    = env('MIDTRANS_CLIENT_KEY');
@@ -30,485 +61,439 @@ class CheckoutController extends Controller
         Config::$is3ds        = true;
     }
 
-    /* ====================================
-     * HALAMAN CHECKOUT
-     * ==================================== */
+    /**
+     * Show checkout page
+     * 
+     * @param Package $package
+     * @return \Illuminate\View\View
+     */
     public function index(Package $package)
     {
-        // ✅ CEK APAKAH INI EXCLUSIVE CLASS PROGRAM (pakai field is_exclusive)
         $isExclusiveClass = (bool) $package->is_exclusive;
-        
         $classOptions = [];
         $canSelectSchedule = false;
 
-        // ✅ HANYA TAMPILKAN DROPDOWN UNTUK EXCLUSIVE CLASS
         if ($isExclusiveClass) {
-            $classOptions = [
-                'muaythai_intermediate' => [
-                    'label' => 'Muaythai Intermediate',
-                    'schedules' => [
-                        'Monday 19:00',
-                        'Thursday 19:00',
-                    ],
-                ],
-                'mat_pilates' => [
-                    'label' => 'Mat Pilates',
-                    'schedules' => [
-                        'Wednesday 09:00',
-                        'Friday 09:00',
-                    ],
-                ],
-                'mix_class_1' => [
-                    'label' => 'Mix Class (1)',
-                    'schedules' => [
-                        'Wednesday 19:00 – Mat Pilates',
-                        'Sunday 09:00 – Muaythai',
-                    ],
-                ],
-                'mix_class_2' => [
-                    'label' => 'Mix Class (2)',
-                    'schedules' => [
-                        'Tuesday 19:00 – Mat Pilates',
-                        'Saturday 09:30 – Muaythai',
-                    ],
-                ],
-                'mix_class_3' => [
-                    'label' => 'Mix Class (3)',
-                    'schedules' => [
-                        'Thursday 19:00 – Mat Pilates',
-                        'Sunday 11:00 – Body Shaping',
-                    ],
-                ],
-                'mix_class_4' => [
-                    'label' => 'Mix Class (4)',
-                    'schedules' => [
-                        'Friday 19:00 – Body Shaping',
-                        'Sunday 10:00 – Muaythai',
-                    ],
-                ],
-                'muaythai_beginner' => [
-                    'label' => 'Muaythai Beginner',
-                    'schedules' => [
-                        'Tuesday 19:00',
-                        'Saturday 08:00',
-                    ],
-                ],
-            ];
-            
+            $classOptions = $this->getExclusiveClassOptions();
             $canSelectSchedule = true;
         }
 
-        return view('checkout.index', [
-            'package'           => $package,
-            'classOptions'      => $classOptions,
-            'canSelectSchedule' => $canSelectSchedule,
+        return view('checkout.index', compact('package', 'classOptions', 'canSelectSchedule'));
+    }
+
+    /**
+     * Show payment success/pending page
+     * 
+     * @param string $order_code
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     */
+    public function success(string $order_code)
+    {
+        $order = Order::where('order_code', $order_code)
+            ->with('package')
+            ->firstOrFail();
+
+        // Wait for webhook to process (sometimes webhook is faster than redirect)
+        sleep(self::WEBHOOK_WAIT_SECONDS);
+        $order->refresh();
+
+        Log::info('🔍 Payment Success Page Accessed', [
+            'order_code' => $order_code,
+            'status' => $order->status,
+            'payment_type' => $order->payment_type,
+        ]);
+
+        return $this->handlePaymentRedirect($order);
+    }
+
+    /**
+     * Handle payment redirect based on order status
+     * 
+     * @param Order $order
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     */
+    private function handlePaymentRedirect(Order $order)
+    {
+        if ($order->status === self::STATUS_PENDING) {
+            Log::info('🟡 Showing PENDING page for order: ' . $order->order_code);
+            return view('checkout.pending', compact('order'));
+        }
+        
+        if ($this->isSuccessfulPayment($order->status)) {
+            Log::info('✅ Showing SUCCESS page for order: ' . $order->order_code);
+            return view('checkout.success', compact('order'));
+        }
+        
+        Log::warning('❌ Payment ' . $order->status . ' for order: ' . $order->order_code);
+        return redirect()
+            ->route('home')
+            ->with('error', 'Payment ' . $order->status . '. Please try again.');
+    }
+
+    /**
+     * Check if payment status is successful
+     * 
+     * @param string $status
+     * @return bool
+     */
+    private function isSuccessfulPayment(string $status): bool
+    {
+        return in_array($status, [
+            self::STATUS_PAID,
+            self::STATUS_ACTIVE,
+            self::STATUS_SETTLEMENT,
+            self::STATUS_SUCCESS
         ]);
     }
 
-    /* ====================================
-     * HALAMAN SUCCESS PEMBAYARAN
-     * ==================================== */
-    public function success($order_code)
-    {
-        $order = Order::where('order_code', $order_code)->firstOrFail();
-        return view('checkout.success', compact('order'));
-    }
-
-    /* ====================================
-     * PROSES CHECKOUT
-     * ==================================== */
+    /**
+     * Process checkout and create Midtrans transaction
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function process(Request $request)
     {
-        $customer = Auth::guard('customer')->user();
-        $package = Package::find($request->package_id);
-
-        if (!$package) {
-            return response()->json(['error' => 'Paket tidak ditemukan'], 404);
-        }
-
-        // ✅ CEK APAKAH INI EXCLUSIVE CLASS (pakai field is_exclusive)
-        $isExclusiveClass = (bool) $package->is_exclusive;
-        $classId = $request->input('class_id');
-
-        // ✅ VALIDASI class_id HANYA UNTUK EXCLUSIVE CLASS
-        if ($isExclusiveClass && !$classId) {
-            return response()->json([
-                'message' => 'Silakan pilih kelas terlebih dahulu'
-            ], 422);
-        }
-
-        // ✅ LOG UNTUK DEBUG
-        Log::info('📦 CHECKOUT PROCESS', [
-            'package_name' => $package->name,
-            'is_exclusive' => $isExclusiveClass,
-            'class_id' => $classId,
-            'customer_id' => $customer->id,
-        ]);
-
-        // HITUNG HARGA
-        $discount = 0;
-        // TODO: validasi voucher di sini kalau sudah siap
-        $totalPrice = (int) $package->price - $discount;
-
-        if ($totalPrice <= 0) {
-            return response()->json(['error' => 'Total price invalid'], 422);
-        }
-
-        $orderCode = 'ORD-' . Str::uuid();
-        $customerName = $customer->name ?: 'Tidak Diketahui';
-
         try {
-            DB::beginTransaction();
+            $customer = Auth::guard('customer')->user();
+            $package = Package::findOrFail($request->package_id);
 
-            /* CREATE ORDER */
-            $order = Order::create([
-                'customer_id'       => $customer->id,
-                'customer_name'     => $customerName,
-                'package_id'        => $package->id,
-                'amount'            => $totalPrice,
-                'voucher_code'      => $request->voucher_code,
-                'discount'          => $discount,
-                'selected_class_id' => $classId, // ✅ Bisa NULL untuk non-exclusive
-                'schedule_ids'      => null,
-                'status'            => 'pending',
-                'payment_type'      => null,
-                'order_code'        => $orderCode,
-                'quota_applied'     => false,
-            ]);
+            // Validate exclusive class selection
+            if ($package->is_exclusive && !$request->input('class_id')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Silakan pilih kelas terlebih dahulu'
+                ], 422);
+            }
 
-            /* CREATE TRANSACTION */
-            Transaction::create([
-                'order_id'                => $order->id,
-                'transaction_id'          => $orderCode,
-                'customer_id'             => $customer->id,
-                'customer_name'           => $customerName,
-                'package_id'              => $package->id,
-                'amount'                  => $totalPrice,
-                'description'             => 'Pembelian paket: ' . $package->name,
-                'status'                  => 'pending',
-                'payment_type'            => null,
-                'midtrans_transaction_id' => null,
-                'fraud_status'            => null,
-                'signature_key'           => null,
-            ]);
+            // Calculate pricing
+            $discount = $this->calculateDiscount($request->voucher_code);
+            $totalPrice = max(0, (int) $package->price - $discount);
 
-            DB::commit();
+            if ($totalPrice <= 0) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'Total price invalid'
+                ], 422);
+            }
 
-            /* MIDTRANS PARAMETER */
-            $params = [
-                'transaction_details' => [
-                    'order_id'     => $orderCode,
-                    'gross_amount' => $totalPrice,
-                ],
+            // Create order and transaction
+            $orderCode = $this->generateOrderCode();
+            $order = $this->createOrder($customer, $package, $request, $orderCode, $totalPrice, $discount);
+            $this->createTransaction($order, $customer, $package, $totalPrice, $orderCode);
 
-                'customer_details' => [
-                    'first_name' => $customerName,
-                    'email'      => $customer->email ?? 'email@dummy.com',
-                    'phone'      => $customer->phone_number ?? '08111111111',
-                ],
-
-                'item_details' => array_filter([
-                    [
-                        'id'       => 'PKG-' . $package->id,
-                        'price'    => (int) $package->price,
-                        'quantity' => 1,
-                        'name'     => $package->name,
-                    ],
-                    $discount > 0 ? [
-                        'id'       => 'DISCOUNT',
-                        'price'    => -$discount,
-                        'quantity' => 1,
-                        'name'     => 'Voucher Discount',
-                    ] : null
-                ]),
-
-                'callbacks' => [
-                    'finish' => route('payment.success', $orderCode),
-                ],
-            ];
-
-            Log::info("✅ Midtrans Params", $params);
-
-            $snapToken = Snap::getSnapToken($params);
+            // Generate Midtrans snap token
+            $snapToken = $this->generateSnapToken($order, $customer, $package, $totalPrice, $discount);
 
             return response()->json([
-                'success'   => true,
+                'success' => true,
                 'snapToken' => $snapToken,
-                'order_id'  => $orderCode,
+                'order_id' => $orderCode,
             ]);
 
         } catch (\Exception $e) {
-            DB::rollBack();
-
-            Log::error("❌ MIDTRANS ERROR: " . $e->getMessage(), [
+            Log::error("❌ CHECKOUT ERROR: " . $e->getMessage(), [
                 'trace' => $e->getTraceAsString()
             ]);
 
             return response()->json([
                 'success' => false,
-                'error'   => $e->getMessage(),
+                'error' => 'Checkout failed. Please try again.',
             ], 500);
         }
     }
 
+    /**
+     * Handle Midtrans payment notification webhook
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function notification(Request $request)
     {
-        Log::info('🔔🔔🔔 NOTIFICATION MASUK', [
-            'request_all' => $request->all(),
-            'php_version' => PHP_VERSION,
+        Log::info('🔔 MIDTRANS NOTIFICATION RECEIVED', [
+            'order_id' => $request->order_id ?? 'N/A',
+            'transaction_status' => $request->transaction_status ?? 'N/A',
+            'payment_type' => $request->payment_type ?? 'N/A',
             'timestamp' => now(),
         ]);
-        
+
         try {
             $notif = new MidtransNotification();
 
-            Log::info('[Midtrans] Callback diterima', [
-                'order_code'   => $notif->order_id,
-                'status'       => $notif->transaction_status,
+            Log::info('📦 Notification Details', [
+                'order_code' => $notif->order_id,
+                'status' => $notif->transaction_status,
                 'payment_type' => $notif->payment_type,
                 'fraud_status' => $notif->fraud_status,
-                'midtrans_id'  => $notif->transaction_id,
-                'raw'          => (array) $notif,
             ]);
 
             DB::transaction(function () use ($notif) {
-
-                $order = Order::where('order_code', $notif->order_id)
-                    ->lockForUpdate()
-                    ->first();
-
-                if (!$order) {
-                    throw new \Exception('Order tidak ditemukan');
-                }
-
-                $transaction = Transaction::where('transaction_id', $notif->order_id)->first();
-
-                $paidStatuses = ['settlement', 'capture'];
-                $isPaid = in_array($notif->transaction_status, $paidStatuses)
-                    && $notif->fraud_status !== 'deny';
-
-                $statusMap = [
-                    'capture'    => 'paid',
-                    'settlement' => 'paid',
-                    'pending'    => 'pending',
-                    'expire'     => 'expired',
-                    'cancel'     => 'cancelled',
-                    'deny'       => 'failed',
-                ];
-
-                $order->update([
-                    'status'       => $statusMap[$notif->transaction_status] ?? 'failed',
-                    'payment_type' => $notif->payment_type,
-                ]);
-
-                if ($transaction) {
-                    $transaction->update([
-                        'status'                  => $statusMap[$notif->transaction_status] ?? 'failed',
-                        'payment_type'            => $notif->payment_type,
-                        'midtrans_transaction_id' => $notif->transaction_id,
-                        'fraud_status'            => $notif->fraud_status,
-                        'signature_key'           => $notif->signature_key,
-                        'amount'                  => (int) $notif->gross_amount,
-                    ]);
-
-                    Log::info('[Midtrans] Transaction updateOrCreate', ['id' => $transaction->id]);
-                }
-
-                if (!$isPaid) {
-                    Log::info('[Midtrans] Payment belum settlement', ['status' => $notif->transaction_status]);
-                    return;
-                }
-
-                // ========== MULAI PROSES PAYMENT SUCCESS ==========
-                
-                $customer = $order->customer;
-                $package  = $order->package;
-
-                Log::info('[Midtrans] APPLY PACKAGE SUCCESS', [
-                    'order_id'    => $order->id,
-                    'customer_id' => $customer->id,
-                ]);
-
-                // Update customer package
-                $customer->update(['package_id' => $package->id]);
-
-                // ⚠️ CEK AUTO APPLY DULU
-                if (!$package->auto_apply) {
-                    $order->update(['status' => 'waiting_admin']);
-                    Log::info('⛔ Package tidak auto_apply');
-                    return;
-                }
-
-                // Apply quota
-                $customer->increment('quota', $package->quota);
-
-                if ($package->duration_days) {
-                    $customer->update([
-                        'quota_expired_at' => now()->addDays($package->duration_days),
-                    ]);
-                }
-
-                Log::info('🔍🔍🔍 DEBUG SCHEDULE INSERT', [
-                    'order_id'          => $order->id,
-                    'package_id'        => $package->id,
-                    'package_name'      => $package->name,
-                    'schedule_mode'     => $package->schedule_mode,
-                    'auto_apply'        => $package->auto_apply,
-                    'is_exclusive'      => $package->is_exclusive,
-                    'selected_class_id' => $order->selected_class_id,
-                    'quota_applied'     => $order->quota_applied,
-                ]);
-
-                // ========== HANDLE LOCKED MODE ==========
-                if ($package->schedule_mode === 'locked') {
-                    if (!$package->default_schedule_id) {
-                        throw new \Exception('Default schedule belum di-set');
-                    }
-
-                    CustomerSchedule::firstOrCreate([
-                        'customer_id' => $customer->id,
-                        'schedule_id' => $package->default_schedule_id,
-                        'order_id'    => $order->id,
-                    ], [
-                        'status'    => 'confirmed',
-                        'joined_at' => now(),
-                    ]);
-
-                    Log::info('✅ LOCKED Schedule inserted');
-                    
-                    $order->update([
-                        'quota_applied' => 1,
-                        'status'        => 'active',
-                    ]);
-                    
-                    return;
-                }
-
-                // ========== HANDLE BOOKING MODE ==========
-                if ($package->schedule_mode === 'booking') {
-
-                    $classKey = $order->selected_class_id;
-
-                    Log::info('🚀 BOOKING MODE START', [
-                        'class_key' => $classKey,
-                        'order_id'  => $order->id,
-                        'is_exclusive' => $package->is_exclusive,
-                    ]);
-
-                    // ✅ JIKA TIDAK ADA CLASS (PAKET REGULAR SEPERTI REFORMER PILATES), SKIP AUTO-INSERT
-                    if (!$classKey || !$package->is_exclusive) {
-                        Log::info('ℹ️ Paket regular (booking mode) - customer pilih jadwal sendiri', [
-                            'order_id' => $order->id,
-                            'package' => $package->name,
-                            'is_exclusive' => $package->is_exclusive,
-                        ]);
-                        
-                        $order->update([
-                            'quota_applied' => 1,
-                            'status'        => 'active',
-                        ]);
-                        
-                        return;
-                    }
-
-                    // ✅ JIKA ADA CLASS + EXCLUSIVE (EXCLUSIVE CLASS PROGRAM), AUTO-INSERT JADWAL
-                    $map = $this->posterScheduleMap();
-
-                    if (!isset($map[$classKey])) {
-                        Log::error('❌ Map tidak ada untuk class: ' . $classKey, [
-                            'available_keys' => array_keys($map),
-                        ]);
-                        throw new \Exception("Map tidak ada untuk: {$classKey}");
-                    }
-
-                    Log::info('📋 Map Found', ['schedules' => $map[$classKey]]);
-
-                    $insertedCount = 0;
-
-                    foreach ($map[$classKey] as $row) {
-
-    // ✅ NORMALISASI WAKTU
-    $timeFormatted = strlen($row['time']) === 5
-        ? $row['time'] . ':00'
-        : $row['time'];
-
-    Log::info('🔎 Looking for schedule', [
-        'class_id' => $row['class_id'],
-        'day'      => $row['day'],
-        'time'     => $timeFormatted,
-    ]);
-
-    $schedule = Schedule::where('class_id', $row['class_id'])
-        ->where('day', $row['day'])
-        ->whereTime('class_time', $timeFormatted)
-        ->first();
-
-    if (!$schedule) {
-        Log::error("❌ Schedule DB tidak ada", [
-            'class_id' => $row['class_id'],
-            'day'      => $row['day'],
-            'time'     => $timeFormatted,
-        ]);
-        throw new \Exception("Schedule tidak ada: {$row['day']} {$timeFormatted}");
-    }
-
-    $customerSchedule = CustomerSchedule::firstOrCreate(
-        [
-            'customer_id' => $customer->id,
-            'schedule_id' => $schedule->id,
-            'order_id'    => $order->id,
-        ],
-        [
-            'status'    => 'confirmed',
-            'joined_at' => now(),
-        ]
-    );
-
-    $insertedCount++;
-
-    Log::info('✅ Customer Schedule INSERTED', [
-        'customer_id' => $customer->id,
-        'schedule_id' => $schedule->id,
-        'day'         => $row['day'],
-        'time'        => $timeFormatted,
-        'new'         => $customerSchedule->wasRecentlyCreated,
-    ]);
-}
-
-                    $order->update([
-                        'quota_applied' => 1,
-                        'status'        => 'active',
-                    ]);
-
-                    Log::info('🎉🎉🎉 BOOKING SELESAI', [
-                        'order_id' => $order->id,
-                        'schedules_inserted' => $insertedCount,
-                    ]);
-                    
-                    return;
-                }
-
-                // ========== JIKA TIDAK ADA SCHEDULE MODE ==========
-                Log::warning('⚠️ Package tidak punya schedule_mode atau bukan booking/locked', [
-                    'package_id' => $package->id,
-                    'schedule_mode' => $package->schedule_mode,
-                ]);
-
+                $this->processPaymentNotification($notif);
             });
 
             return response()->json(['success' => true]);
 
         } catch (\Exception $e) {
-            Log::error("❌❌❌ NOTIFICATION ERROR: " . $e->getMessage());
-            Log::error("TRACE: " . $e->getTraceAsString());
-            return response()->json(['error' => 'Gagal'], 500);
+            Log::error("❌ NOTIFICATION ERROR: " . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json(['error' => 'Failed to process notification'], 500);
         }
     }
 
-    /* ====================================
-     * AJAX: GET SCHEDULE BY CLASS (CHECKOUT)
-     * ==================================== */
-    public function getSchedules($classId)
+    /**
+     * Process payment notification
+     * 
+     * @param MidtransNotification $notif
+     * @throws \Exception
+     */
+    private function processPaymentNotification($notif): void
+    {
+        $order = Order::where('order_code', $notif->order_id)
+            ->lockForUpdate()
+            ->firstOrFail();
+
+        $transaction = Transaction::where('transaction_id', $notif->order_id)->first();
+
+        $newStatus = $this->mapMidtransStatus($notif->transaction_status);
+        $isPaid = $this->isPaymentPaid($notif);
+
+        // Update order status
+        $order->update([
+            'status' => $newStatus,
+            'payment_type' => $notif->payment_type,
+        ]);
+
+        // Update transaction
+        if ($transaction) {
+            $this->updateTransaction($transaction, $notif, $newStatus);
+        }
+
+        // Process payment success
+        if ($isPaid) {
+            $this->processSuccessfulPayment($order, $notif);
+        } else {
+            Log::info('⏳ Payment not yet settled', ['status' => $notif->transaction_status]);
+        }
+    }
+
+    /**
+     * Process successful payment
+     * 
+     * @param Order $order
+     * @param MidtransNotification $notif
+     */
+    private function processSuccessfulPayment(Order $order, $notif): void
+    {
+        $customer = $order->customer;
+        $package = $order->package;
+
+        // Set package expiration date
+        $this->setPackageExpiration($order, $package);
+
+        Log::info('✅ APPLY PACKAGE SUCCESS', [
+            'order_id' => $order->id,
+            'customer_id' => $customer->id,
+        ]);
+
+        // Update customer package
+        $customer->update(['package_id' => $package->id]);
+
+        // Check auto apply
+        if (!$package->auto_apply) {
+            $order->update(['status' => 'waiting_admin']);
+            Log::info('⛔ Package requires admin approval');
+            return;
+        }
+
+        // Apply quota and expiration
+        $customer->increment('quota', $package->quota);
+        
+        if ($package->duration_days) {
+            $customer->update([
+                'quota_expired_at' => Carbon::now()->addDays($package->duration_days),
+            ]);
+        }
+
+        // Handle schedule assignment
+        $this->handleScheduleAssignment($order, $package, $customer);
+    }
+
+    /**
+     * Handle schedule assignment based on package mode
+     * 
+     * @param Order $order
+     * @param Package $package
+     * @param $customer
+     */
+    private function handleScheduleAssignment(Order $order, Package $package, $customer): void
+    {
+        Log::info('🔍 SCHEDULE ASSIGNMENT', [
+            'package_id' => $package->id,
+            'schedule_mode' => $package->schedule_mode,
+            'is_exclusive' => $package->is_exclusive,
+            'selected_class_id' => $order->selected_class_id,
+        ]);
+
+        if ($package->schedule_mode === self::MODE_LOCKED) {
+            $this->handleLockedSchedule($order, $package, $customer);
+        } elseif ($package->schedule_mode === self::MODE_BOOKING) {
+            $this->handleBookingSchedule($order, $package, $customer);
+        } else {
+            Log::warning('⚠️ No schedule mode configured', ['package_id' => $package->id]);
+        }
+    }
+
+    /**
+     * Handle locked schedule mode
+     * 
+     * @param Order $order
+     * @param Package $package
+     * @param $customer
+     * @throws \Exception
+     */
+    private function handleLockedSchedule(Order $order, Package $package, $customer): void
+    {
+        if (!$package->default_schedule_id) {
+            throw new \Exception('Default schedule not configured');
+        }
+
+        CustomerSchedule::firstOrCreate([
+            'customer_id' => $customer->id,
+            'schedule_id' => $package->default_schedule_id,
+            'order_id' => $order->id,
+        ], [
+            'status' => 'confirmed',
+            'joined_at' => now(),
+        ]);
+
+        Log::info('✅ LOCKED Schedule assigned');
+
+        $order->update([
+            'quota_applied' => true,
+            'status' => self::STATUS_ACTIVE,
+        ]);
+    }
+
+    /**
+     * Handle booking schedule mode
+     * 
+     * @param Order $order
+     * @param Package $package
+     * @param $customer
+     */
+    private function handleBookingSchedule(Order $order, Package $package, $customer): void
+    {
+        $classKey = $order->selected_class_id;
+
+        Log::info('🚀 BOOKING MODE START', [
+            'class_key' => $classKey,
+            'is_exclusive' => $package->is_exclusive,
+        ]);
+
+        // Regular packages (non-exclusive) - customer selects schedule themselves
+        if (!$classKey || !$package->is_exclusive) {
+            Log::info('ℹ️ Regular package - customer books schedule manually');
+            
+            $order->update([
+                'quota_applied' => true,
+                'status' => self::STATUS_ACTIVE,
+            ]);
+            
+            return;
+        }
+
+        // Exclusive class - auto-assign schedules
+        $this->assignExclusiveClassSchedules($order, $classKey, $customer);
+    }
+
+    /**
+     * Assign schedules for exclusive class
+     * 
+     * @param Order $order
+     * @param string $classKey
+     * @param $customer
+     * @throws \Exception
+     */
+    private function assignExclusiveClassSchedules(Order $order, string $classKey, $customer): void
+    {
+        $scheduleMap = $this->getExclusiveScheduleMap();
+
+        if (!isset($scheduleMap[$classKey])) {
+            Log::error('❌ Invalid class key', [
+                'class_key' => $classKey,
+                'available_keys' => array_keys($scheduleMap),
+            ]);
+            throw new \Exception("Invalid class key: {$classKey}");
+        }
+
+        $insertedCount = 0;
+
+        foreach ($scheduleMap[$classKey] as $scheduleData) {
+            $schedule = $this->findSchedule($scheduleData);
+
+            if (!$schedule) {
+                throw new \Exception(
+                    "Schedule not found: {$scheduleData['day']} {$scheduleData['time']}"
+                );
+            }
+
+            CustomerSchedule::firstOrCreate([
+                'customer_id' => $customer->id,
+                'schedule_id' => $schedule->id,
+                'order_id' => $order->id,
+            ], [
+                'status' => 'confirmed',
+                'joined_at' => now(),
+            ]);
+
+            $insertedCount++;
+
+            Log::info('✅ Schedule assigned', [
+                'schedule_id' => $schedule->id,
+                'day' => $scheduleData['day'],
+                'time' => $scheduleData['time'],
+            ]);
+        }
+
+        $order->update([
+            'quota_applied' => true,
+            'status' => self::STATUS_ACTIVE,
+        ]);
+
+        Log::info('🎉 BOOKING COMPLETED', [
+            'order_id' => $order->id,
+            'schedules_assigned' => $insertedCount,
+        ]);
+    }
+
+    /**
+     * Find schedule by class, day, and time
+     * 
+     * @param array $scheduleData
+     * @return Schedule|null
+     */
+    private function findSchedule(array $scheduleData): ?Schedule
+    {
+        $timeFormatted = strlen($scheduleData['time']) === 5
+            ? $scheduleData['time'] . ':00'
+            : $scheduleData['time'];
+
+        return Schedule::where('class_id', $scheduleData['class_id'])
+            ->where('day', $scheduleData['day'])
+            ->whereTime('class_time', $timeFormatted)
+            ->first();
+    }
+
+    /**
+     * Get schedules by class ID for AJAX
+     * 
+     * @param int $classId
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getSchedules(int $classId)
     {
         return Schedule::where('class_id', $classId)
             ->where('show_on_landing', 1)
@@ -522,66 +507,330 @@ class CheckoutController extends Controller
             ->get();
     }
 
-    /* ====================================
-     * CEK STATUS PEMBAYARAN
-     * ==================================== */
-    public function status($order_code)
+    /**
+     * Check payment status via AJAX
+     * 
+     * @param string $order_code
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function status(string $order_code)
     {
         $order = Order::where('order_code', $order_code)->first();
 
         if (!$order) {
-            return response()->json(['error' => 'Order tidak ditemukan'], 404);
+            return response()->json(['error' => 'Order not found'], 404);
         }
 
         return response()->json([
-            'status'        => $order->status,
-            'customer_name' => $order->customer_name ?? 'Tidak Diketahui',
-            'amount'        => $order->amount,
-            'payment_type'  => $order->payment_type,
+            'status' => $order->status,
+            'customer_name' => $order->customer_name ?? 'Unknown',
+            'amount' => $order->amount,
+            'payment_type' => $order->payment_type,
         ]);
     }
 
-    /* ===============================
-     * MAP JADWAL FIX SESUAI POSTER
-     * =============================== */
-    private function posterScheduleMap()
-{
-    return [
-        'muaythai_intermediate' => [
-            ['class_id' => 17, 'day' => 'Monday',   'time' => '19:00:00'],
-            ['class_id' => 17, 'day' => 'Thursday', 'time' => '19:00:00'],
-        ],
+    // ==================== HELPER METHODS ====================
 
-        'mat_pilates' => [
-            ['class_id' => 10, 'day' => 'Wednesday', 'time' => '09:00:00'],
-            ['class_id' => 10, 'day' => 'Friday',    'time' => '09:00:00'],
-        ],
+    /**
+     * Generate unique order code
+     * 
+     * @return string
+     */
+    private function generateOrderCode(): string
+    {
+        return 'ORD-' . Str::uuid();
+    }
 
-        'mix_class_1' => [
-            ['class_id' => 10, 'day' => 'Wednesday', 'time' => '19:00:00'], // Mat Pilates
-            ['class_id' => 17, 'day' => 'Sunday',    'time' => '09:00:00'], // Muaythai
-        ],
+    /**
+     * Calculate discount from voucher
+     * 
+     * @param string|null $voucherCode
+     * @return int
+     */
+    private function calculateDiscount(?string $voucherCode): int
+    {
+        // TODO: Implement voucher validation
+        return 0;
+    }
 
-        'mix_class_2' => [
-            ['class_id' => 10, 'day' => 'Tuesday',  'time' => '19:00:00'], // Mat Pilates
-            ['class_id' => 17, 'day' => 'Saturday', 'time' => '09:30:00'], // Muaythai
-        ],
+    /**
+     * Create order record
+     * 
+     * @param $customer
+     * @param Package $package
+     * @param Request $request
+     * @param string $orderCode
+     * @param int $totalPrice
+     * @param int $discount
+     * @return Order
+     */
+    private function createOrder($customer, Package $package, Request $request, string $orderCode, int $totalPrice, int $discount): Order
+    {
+        return Order::create([
+            'customer_id' => $customer->id,
+            'customer_name' => $customer->name ?: 'Unknown',
+            'package_id' => $package->id,
+            'amount' => $totalPrice,
+            'voucher_code' => $request->voucher_code,
+            'discount' => $discount,
+            'selected_class_id' => $request->input('class_id'),
+            'schedule_ids' => null,
+            'status' => self::STATUS_PENDING,
+            'payment_type' => null,
+            'order_code' => $orderCode,
+            'quota_applied' => false,
+            'expired_at' => null,
+        ]);
+    }
 
-        // 🔥 INI YANG KAMU TANYAIN (MIX CLASS 3)
-        'mix_class_3' => [
-            ['class_id' => 10, 'day' => 'Thursday', 'time' => '19:00:00'], // ✅ Mat Pilates
-            ['class_id' => 11, 'day' => 'Sunday',   'time' => '11:00:00'], // ✅ Body Shaping
-        ],
+    /**
+     * Create transaction record
+     * 
+     * @param Order $order
+     * @param $customer
+     * @param Package $package
+     * @param int $totalPrice
+     * @param string $orderCode
+     */
+    private function createTransaction(Order $order, $customer, Package $package, int $totalPrice, string $orderCode): void
+    {
+        Transaction::create([
+            'order_id' => $order->id,
+            'transaction_id' => $orderCode,
+            'customer_id' => $customer->id,
+            'customer_name' => $customer->name ?: 'Unknown',
+            'package_id' => $package->id,
+            'amount' => $totalPrice,
+            'description' => 'Package purchase: ' . $package->name,
+            'status' => self::STATUS_PENDING,
+            'payment_type' => null,
+            'midtrans_transaction_id' => null,
+            'fraud_status' => null,
+            'signature_key' => null,
+        ]);
+    }
 
-        'mix_class_4' => [
-            ['class_id' => 11, 'day' => 'Friday', 'time' => '19:00:00'], // Body Shaping
-            ['class_id' => 17, 'day' => 'Sunday', 'time' => '10:00:00'], // Muaythai
-        ],
+    /**
+     * Generate Midtrans snap token
+     * 
+     * @param Order $order
+     * @param $customer
+     * @param Package $package
+     * @param int $totalPrice
+     * @param int $discount
+     * @return string
+     */
+    private function generateSnapToken(Order $order, $customer, Package $package, int $totalPrice, int $discount): string
+    {
+        $params = [
+            'transaction_details' => [
+                'order_id' => $order->order_code,
+                'gross_amount' => $totalPrice,
+            ],
+            'customer_details' => [
+                'first_name' => $customer->name ?: 'Customer',
+                'email' => $customer->email ?? 'customer@example.com',
+                'phone' => $customer->phone_number ?? '08111111111',
+            ],
+            'item_details' => array_filter([
+                [
+                    'id' => 'PKG-' . $package->id,
+                    'price' => (int) $package->price,
+                    'quantity' => 1,
+                    'name' => $package->name,
+                ],
+                $discount > 0 ? [
+                    'id' => 'DISCOUNT',
+                    'price' => -$discount,
+                    'quantity' => 1,
+                    'name' => 'Voucher Discount',
+                ] : null
+            ]),
+            'callbacks' => [
+                'finish' => route('payment.success', $order->order_code),
+            ],
+        ];
 
-        'muaythai_beginner' => [
-            ['class_id' => 15, 'day' => 'Tuesday',  'time' => '19:00:00'],
-            ['class_id' => 15, 'day' => 'Saturday', 'time' => '08:00:00'],
-        ],
-    ];
-}
+        Log::info("✅ Midtrans Request", $params);
+
+        return Snap::getSnapToken($params);
+    }
+
+    /**
+     * Set package expiration date
+     * 
+     * @param Order $order
+     * @param Package $package
+     */
+    private function setPackageExpiration(Order $order, Package $package): void
+    {
+        if ($package->duration_days) {
+            $expiredAt = Carbon::now()->addDays($package->duration_days);
+            $order->update(['expired_at' => $expiredAt]);
+
+            Log::info('✅ Expiration date set', [
+                'order_id' => $order->id,
+                'duration_days' => $package->duration_days,
+                'expired_at' => $expiredAt->format('Y-m-d H:i:s'),
+            ]);
+        } else {
+            Log::info('ℹ️ Package has no duration (unlimited)', [
+                'package_id' => $package->id,
+            ]);
+        }
+    }
+
+    /**
+     * Update transaction record
+     * 
+     * @param Transaction $transaction
+     * @param MidtransNotification $notif
+     * @param string $newStatus
+     */
+    private function updateTransaction(Transaction $transaction, $notif, string $newStatus): void
+    {
+        $transaction->update([
+            'status' => $newStatus,
+            'payment_type' => $notif->payment_type,
+            'midtrans_transaction_id' => $notif->transaction_id,
+            'fraud_status' => $notif->fraud_status,
+            'signature_key' => $notif->signature_key,
+            'amount' => (int) $notif->gross_amount,
+        ]);
+
+        Log::info('📝 Transaction updated', ['transaction_id' => $transaction->id]);
+    }
+
+    /**
+     * Map Midtrans status to internal status
+     * 
+     * @param string $midtransStatus
+     * @return string
+     */
+    private function mapMidtransStatus(string $midtransStatus): string
+    {
+        $statusMap = [
+            'capture' => self::STATUS_PAID,
+            'settlement' => self::STATUS_PAID,
+            'pending' => self::STATUS_PENDING,
+            'expire' => self::STATUS_EXPIRED,
+            'cancel' => self::STATUS_CANCELLED,
+            'deny' => self::STATUS_FAILED,
+        ];
+
+        return $statusMap[$midtransStatus] ?? self::STATUS_FAILED;
+    }
+
+    /**
+     * Check if payment is paid based on Midtrans notification
+     * 
+     * @param MidtransNotification $notif
+     * @return bool
+     */
+    private function isPaymentPaid($notif): bool
+    {
+        $paidStatuses = ['settlement', 'capture'];
+        
+        return in_array($notif->transaction_status, $paidStatuses)
+            && $notif->fraud_status !== 'deny';
+    }
+
+    /**
+     * Get exclusive class options for dropdown
+     * 
+     * @return array
+     */
+    private function getExclusiveClassOptions(): array
+    {
+        return [
+            'muaythai_intermediate' => [
+                'label' => 'Muaythai Intermediate',
+                'schedules' => [
+                    'Monday 19:00',
+                    'Thursday 19:00',
+                ],
+            ],
+            'mat_pilates' => [
+                'label' => 'Mat Pilates',
+                'schedules' => [
+                    'Wednesday 09:00',
+                    'Friday 09:00',
+                ],
+            ],
+            'mix_class_1' => [
+                'label' => 'Mix Class (1)',
+                'schedules' => [
+                    'Wednesday 19:00 – Mat Pilates',
+                    'Sunday 09:00 – Muaythai',
+                ],
+            ],
+            'mix_class_2' => [
+                'label' => 'Mix Class (2)',
+                'schedules' => [
+                    'Tuesday 19:00 – Mat Pilates',
+                    'Saturday 09:30 – Muaythai',
+                ],
+            ],
+            'mix_class_3' => [
+                'label' => 'Mix Class (3)',
+                'schedules' => [
+                    'Thursday 19:00 – Mat Pilates',
+                    'Sunday 11:00 – Body Shaping',
+                ],
+            ],
+            'mix_class_4' => [
+                'label' => 'Mix Class (4)',
+                'schedules' => [
+                    'Friday 19:00 – Body Shaping',
+                    'Sunday 10:00 – Muaythai',
+                ],
+            ],
+            'muaythai_beginner' => [
+                'label' => 'Muaythai Beginner',
+                'schedules' => [
+                    'Tuesday 19:00',
+                    'Saturday 08:00',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get exclusive class schedule mapping
+     * 
+     * @return array
+     */
+    private function getExclusiveScheduleMap(): array
+    {
+        return [
+            'muaythai_intermediate' => [
+                ['class_id' => 17, 'day' => 'Monday', 'time' => '19:00:00'],
+                ['class_id' => 17, 'day' => 'Thursday', 'time' => '19:00:00'],
+            ],
+            'mat_pilates' => [
+                ['class_id' => 10, 'day' => 'Wednesday', 'time' => '09:00:00'],
+                ['class_id' => 10, 'day' => 'Friday', 'time' => '09:00:00'],
+            ],
+            'mix_class_1' => [
+                ['class_id' => 10, 'day' => 'Wednesday', 'time' => '19:00:00'],
+                ['class_id' => 17, 'day' => 'Sunday', 'time' => '09:00:00'],
+            ],
+            'mix_class_2' => [
+                ['class_id' => 10, 'day' => 'Tuesday', 'time' => '19:00:00'],
+                ['class_id' => 17, 'day' => 'Saturday', 'time' => '09:30:00'],
+            ],
+            'mix_class_3' => [
+                ['class_id' => 10, 'day' => 'Thursday', 'time' => '19:00:00'],
+                ['class_id' => 11, 'day' => 'Sunday', 'time' => '11:00:00'],
+            ],
+            'mix_class_4' => [
+                ['class_id' => 11, 'day' => 'Friday', 'time' => '19:00:00'],
+                ['class_id' => 17, 'day' => 'Sunday', 'time' => '10:00:00'],
+            ],
+            'muaythai_beginner' => [
+                ['class_id' => 15, 'day' => 'Tuesday', 'time' => '19:00:00'],
+                ['class_id' => 15, 'day' => 'Saturday', 'time' => '08:00:00'],
+            ],
+        ];
+    }
 }

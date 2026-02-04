@@ -463,7 +463,7 @@
 
 
     <!-- Features Section (Slider) -->
-<section class="py-20 bg-gray-50">
+<section id="packages" class="py-20 bg-gray-50">
   <div class="container mx-auto px-4">
     <div class="text-center mb-16">
       <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4">

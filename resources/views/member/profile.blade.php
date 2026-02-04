@@ -184,6 +184,7 @@
             <a href="#home" class="text-gray-700 hover:text-primary transition">Home</a>
             <a href="#about" class="text-gray-700 hover:text-primary transition">About</a>
             <a href="#Programs" class="text-gray-700 hover:text-primary transition">Programs</a>
+            <a href="#Packages" class="text-gray-700 hover:text-primary transition">Packages</a>
             <a href="#classes" class="text-gray-700 hover:text-primary transition">Classes</a>
             <a href="#schedule" class="text-gray-700 hover:text-primary transition">Schedule</a>
             <a href="#Facility" class="text-gray-700 hover:text-primary transition">Gallery</a>
@@ -958,7 +959,7 @@ function closeLogoutModal() {
 
 
  <!-- Pakeges & Pricing Section -->
-<section class="py-20 bg-gray-50">
+<section id="Packages" class="py-20 bg-gray-50">
   <div class="container mx-auto px-4">
     <div class="text-center mb-16">
       <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4">

@@ -1,6 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
+
+{{-- ⚠️ IMPORTANT: Redirect jika payment belum complete --}}
+@if(!in_array($order->status, ['paid', 'active', 'settlement']))
+    <script>
+        // Auto redirect jika user coba akses success page tapi statusnya bukan paid
+        window.location.href = "{{ route('payment.success', $order->order_code) }}";
+    </script>
+@endif
+
 <div class="min-h-screen bg-gray-100 flex items-center justify-center px-4">
 
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-5xl overflow-hidden grid grid-cols-1 md:grid-cols-2">
@@ -24,11 +33,12 @@
                 You now have full access to your selected program.
             </p>
 
-            <a href="{{ route('member.profile') }}"
-               class="mt-6 inline-block bg-green-600 text-white
-                      px-8 py-3 rounded-xl font-semibold hover:bg-green-700 transition">
-                Go to My Profile
+            <a href="{{ route('member.book') }}"
+            class="mt-6 inline-block bg-green-600 text-white
+                    px-8 py-3 rounded-xl font-semibold hover:bg-green-700 transition">
+                Book Class Schedule
             </a>
+
 
             @if(isset($order))
                 <a href="{{ route('invoice.show', $order->id) }}"
