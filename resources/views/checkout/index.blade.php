@@ -323,7 +323,8 @@ window.__PAYMENT_DONE__ = false;
 
     // ==================== UTILITY FUNCTIONS ====================
     function formatRupiah(amount) {
-        return 'Rp' + amount.toLocaleString('id-ID');
+        const num = parseInt(amount) || 0;
+        return 'Rp' + num.toLocaleString('id-ID');
     }
 
     function updatePaymentSummary() {
@@ -395,7 +396,10 @@ window.__PAYMENT_DONE__ = false;
                 "Content-Type": "application/json",
                 "X-CSRF-TOKEN": CONFIG.csrfToken
             },
-            body: JSON.stringify({ code })
+            body: JSON.stringify({ 
+                code,
+                package_id: parseInt(CONFIG.packageId)
+            })
         })
         .then(response => response.json())
         .then(data => {
@@ -408,9 +412,23 @@ window.__PAYMENT_DONE__ = false;
                 return;
             }
 
-            STATE.discount = data.type === "percent"
-                ? Math.min(Math.floor(CONFIG.originalPrice * data.value / 100), data.max_discount ?? Infinity)
-                : data.value;
+            // ✅ Data structure is now flat
+            const voucherValue = parseFloat(data.value) || 0;
+            const maxDiscount = data.max_discount ? parseFloat(data.max_discount) : Infinity;
+            
+            if (data.type === "percent") {
+                STATE.discount = Math.min(
+                    Math.floor(CONFIG.originalPrice * voucherValue / 100),
+                    maxDiscount
+                );
+            } else {
+                // nominal type
+                STATE.discount = maxDiscount !== Infinity
+                    ? Math.min(voucherValue, maxDiscount)
+                    : voucherValue;
+            }
+            
+            STATE.discount = Math.max(0, parseInt(STATE.discount) || 0);
 
             showMessage(DOM.voucherMessage, "Voucher berhasil digunakan ✓", 'success');
             updatePaymentSummary();

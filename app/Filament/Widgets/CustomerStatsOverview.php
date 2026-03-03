@@ -2,18 +2,18 @@
 
 namespace App\Filament\Widgets;
 
-use Filament\Widgets\StatsOverviewWidget as BaseWidget;
-use Filament\Widgets\StatsOverviewWidget\Card;
 use App\Models\Customer;
+use App\Models\Order;
+use Filament\Widgets\StatsOverviewWidget;
+use Filament\Widgets\StatsOverviewWidget\Card;
 
-class CustomerStatsOverview extends BaseWidget
+class CustomerStatsOverview extends StatsOverviewWidget
 {
     protected function getCards(): array
     {
         return [
-            Card::make('Total Customers', Customer::count()),
-            Card::make('Verified', Customer::where('is_verified', true)->count()),
-            Card::make('Quota Tersisa', Customer::sum('quota')),
+            Card::make('Customers', Customer::count()),
+            Card::make('Orders', Order::count()),
         ];
     }
 }

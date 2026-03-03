@@ -87,12 +87,12 @@
         }
 
         .stat-icon.blue { 
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-            color: #1e40af;
+            background: linear-gradient(135deg, #FAE0EE 0%, #F1CCE3 100%);
+            color: #793451;
         }
         .stat-icon.purple { 
-            background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
-            color: #7c3aed;
+            background: linear-gradient(135deg, #D2DCA5 0%, #C6E8E0 100%);
+            color: #08513C;
         }
 
         .classes-section h2 {
@@ -105,7 +105,7 @@
 
         .classes-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
             gap: 1.5rem;
         }
 
@@ -119,8 +119,8 @@
         }
 
         .class-card:hover {
-            border-color: #3b82f6;
-            box-shadow: 0 10px 40px rgba(59, 130, 246, 0.1);
+            border-color: #EA6993;
+            box-shadow: 0 10px 40px rgba(234, 105, 147, 0.12);
             transform: translateY(-4px);
         }
 
@@ -138,7 +138,7 @@
             left: 0;
             width: 100%;
             height: 4px;
-            background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+            background: linear-gradient(90deg, #793451 0%, #EA6993 100%);
         }
 
         .class-title {
@@ -183,8 +183,8 @@
 
         .schedule-info {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.75rem;
             margin-bottom: 1.25rem;
             padding-bottom: 1.25rem;
             border-bottom: 1px solid #f1f5f9;
@@ -193,25 +193,29 @@
         .schedule-item {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 0.625rem;
+            min-width: 0;
+            overflow: hidden;
         }
 
         .schedule-icon {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 38px;
-            height: 38px;
+            width: 32px;
+            height: 32px;
             border-radius: 8px;
-            background: #f1f5f9;
-            color: #3b82f6;
-            font-size: 0.875rem;
+            background: rgba(241,204,227,0.30);
+            color: #793451;
+            font-size: 0.8rem;
             flex-shrink: 0;
         }
 
         .schedule-details {
             display: flex;
             flex-direction: column;
+            min-width: 0;
+            overflow: hidden;
         }
 
         .schedule-label {
@@ -223,9 +227,12 @@
         }
 
         .schedule-value {
-            font-size: 0.95rem;
+            font-size: 0.8125rem;
             color: #0f172a;
             font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .instructor-info {
@@ -242,7 +249,7 @@
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, #793451 0%, #EA6993 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -340,7 +347,7 @@
             align-items: center;
             gap: 0.5rem;
             padding: 0.875rem 1.75rem;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            background: linear-gradient(135deg, #793451 0%, #EA6993 100%);
             color: white;
             border-radius: 10px;
             text-decoration: none;
@@ -353,7 +360,7 @@
 
         .btn-book:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 10px 25px rgba(121, 52, 81, 0.30);
         }
 
         @media (max-width: 1024px) {
@@ -362,7 +369,7 @@
             }
 
             .classes-grid {
-                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
             }
         }
 
@@ -394,11 +401,13 @@
 
 <div class="flex h-screen">
 
-    <!-- SIDEBAR -->
+    <!-- ========================================
+         SIDEBAR
+    ======================================== -->
     <aside class="w-64 bg-slate-900 text-white flex flex-col shrink-0">
-        <div class="px-6 py-5 text-xl font-bold border-b border-white/20">
+        <a href="{{ route('member.profile') }}" class="px-6 py-5 text-xl font-bold border-b border-white/20 hover:bg-slate-800 transition inline-block w-full">
             FTM SOCIETY
-        </div>
+        </a>
 
         <nav class="flex-1 px-4 py-6 space-y-1 text-sm">
             <a href="{{ route('member.dashboard') }}" 
@@ -417,7 +426,7 @@
             </a>
 
             <a href="{{ route('member.my-classes') }}"
-               class="block px-4 py-2 rounded bg-indigo-600 text-white font-medium">
+               class="block px-4 py-2 rounded text-white font-medium" style="background: linear-gradient(90deg, #793451 0%, #EA6993 100%); border-left: 3px solid #F1CCE3;">
                 <i class="fas fa-dumbbell mr-2"></i>My Classes
             </a>
 
@@ -426,14 +435,19 @@
                 <i class="fas fa-receipt mr-2"></i>Transactions
             </a>
 
-            <a href="{{ route('member.profile') }}" 
+            <a href="{{ route('member.attendance') }}" 
+               class="block px-4 py-2 rounded hover:bg-white/10 transition">
+                <i class="fas fa-calendar-check mr-2"></i>Attendance
+            </a>
+
+            <a href="{{ route('member.account') }}" 
                class="block px-4 py-2 rounded hover:bg-white/10 transition">
                 <i class="fas fa-user mr-2"></i>Profile
             </a>
         </nav>
 
         <div class="px-6 py-4 border-t border-white/20 text-xs text-white/60">
-            © {{ date('Y') }} FTM Society
+            &copy; {{ date('Y') }} FTM Society
         </div>
     </aside>
 
@@ -545,6 +559,16 @@
 
                                         <div class="schedule-item">
                                             <div class="schedule-icon">
+                                                <i class="fas fa-calendar"></i>
+                                            </div>
+                                            <div class="schedule-details">
+                                                <span class="schedule-label">Date</span>
+                                                <span class="schedule-value">{{ $item->schedule->schedule_date_formatted }}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="schedule-item">
+                                            <div class="schedule-icon">
                                                 <i class="fas fa-clock"></i>
                                             </div>
                                             <div class="schedule-details">
@@ -578,7 +602,6 @@
                     </div>
                 @endif
             </div>
-
         </div>
     </main>
 

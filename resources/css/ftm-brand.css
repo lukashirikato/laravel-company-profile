@@ -1,0 +1,619 @@
+/* ============================================================
+   FTM SOCIETY — DESIGN TOKEN SYSTEM
+   Visual Identity: Power Pink × Burnt Cherry × Patina Green
+   WCAG AA compliant contrast ratios maintained throughout
+   ============================================================ */
+
+/* ── DESIGN TOKENS (CSS Custom Properties) ───────────────── */
+:root {
+    /* Primary — Power Pink family */
+    --color-primary:          #EA6993;   /* Power Pink */
+    --color-primary-hover:    #D94E7A;   /* Darkened Pink */
+    --color-primary-active:   #793451;   /* Burnt Cherry */
+    --color-primary-soft:     #F1CCE3;   /* Soft Petals */
+    --color-primary-muted:    #FAE0EE;   /* Very light petal */
+    --color-primary-dark:     #793451;   /* Burnt Cherry */
+
+    /* Secondary — Patina Green family */
+    --color-secondary:        #00745F;   /* Patina Green */
+    --color-secondary-hover:  #006251;
+    --color-secondary-dark:   #08513C;   /* Springs Ivy */
+    --color-secondary-muted:  #C6E8E0;
+
+    /* Accents */
+    --color-sage:             #D2DCA5;   /* Grounded Green */
+    --color-sage-dark:        #88A020;
+
+    /* Background & Surface */
+    --color-bg:               #F4EEE6;   /* Rising — page background */
+    --color-surface:          #FFFFFF;   /* Cards / panels */
+    --color-surface-elevated: #FDF2F8;   /* Hover surface */
+    --color-surface-warm:     #FAF5EF;   /* Warm white */
+
+    /* Text */
+    --color-text-primary:     #26282B;   /* Layl — headings, strong text */
+    --color-text-secondary:   #793451;   /* Burnt Cherry — labels, accents */
+    --color-text-muted:       #6B6F72;   /* Softened Layl */
+    --color-text-inverse:     #F4EEE6;   /* On dark backgrounds */
+
+    /* Border */
+    --color-border:           #EAE0D8;   /* Soft warm border */
+    --color-border-strong:    #D5C5B5;   /* Visible border */
+    --color-border-brand:     #F1CCE3;   /* Pink-tinted border */
+
+    /* Semantic States */
+    --color-success:          #00745F;   /* Patina Green */
+    --color-success-bg:       rgba(0, 116, 95, 0.10);
+    --color-warning:          #B07D00;
+    --color-warning-bg:       rgba(210, 220, 165, 0.40);
+    --color-danger:           #C0334F;
+    --color-danger-bg:        rgba(192, 51, 79, 0.10);
+    --color-info:             #793451;
+    --color-info-bg:          rgba(121, 52, 81, 0.08);
+
+    /* Shadows */
+    --shadow-brand:           0 4px 16px rgba(121, 52, 81, 0.14);
+    --shadow-brand-md:        0 8px 28px rgba(121, 52, 81, 0.18);
+    --shadow-card:            0 1px 4px rgba(38, 40, 43, 0.06);
+    --shadow-card-hover:      0 8px 24px rgba(121, 52, 81, 0.12);
+
+    /* Gradients */
+    --gradient-primary:       linear-gradient(135deg, #793451 0%, #EA6993 100%);
+    --gradient-secondary:     linear-gradient(135deg, #08513C 0%, #00745F 100%);
+    --gradient-sidebar:       linear-gradient(160deg, #26282B 0%, #3D1A28 55%, #08513C 100%);
+    --gradient-card:          linear-gradient(135deg, #FDF2F8 0%, #F1CCE3 100%);
+    --gradient-hero:          linear-gradient(135deg, #793451 0%, #EA6993 60%, #00745F 100%);
+    --gradient-warm:          linear-gradient(135deg, #F4EEE6 0%, #F1CCE3 100%);
+}
+
+/* ── GLOBAL BASE ─────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ── SCROLLBAR ───────────────────────────────────────────── */
+::-webkit-scrollbar          { width: 7px; height: 7px; }
+::-webkit-scrollbar-track    { background: var(--color-bg); }
+::-webkit-scrollbar-thumb    { background: var(--color-primary); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-primary-dark); }
+
+/* ── SIDEBAR ─────────────────────────────────────────────── */
+.ftm-sidebar {
+    background: var(--gradient-sidebar);
+    border-right: 1px solid rgba(234, 105, 147, 0.15);
+}
+
+/* Override the Tailwind bg-slate-900 used on member sidebar */
+aside.w-64.bg-slate-900 {
+    background: var(--gradient-sidebar) !important;
+    border-right: 1px solid rgba(234, 105, 147, 0.12) !important;
+}
+
+/* Sidebar logo link */
+aside.w-64.bg-slate-900 > a:first-child {
+    border-bottom-color: rgba(241, 204, 227, 0.20) !important;
+    letter-spacing: 0.08em;
+}
+
+aside.w-64.bg-slate-900 > a:first-child:hover {
+    background-color: rgba(234, 105, 147, 0.15) !important;
+}
+
+/* Nav links — default state */
+aside.w-64.bg-slate-900 nav a {
+    color: rgba(241, 204, 227, 0.85) !important;
+    transition: background 0.18s ease, color 0.18s ease !important;
+}
+
+aside.w-64.bg-slate-900 nav a:hover {
+    background-color: rgba(234, 105, 147, 0.18) !important;
+    color: #F4EEE6 !important;
+}
+
+/* Active nav item — replaces bg-indigo-600 */
+aside.w-64.bg-slate-900 nav a.bg-indigo-600,
+aside.w-64.bg-slate-900 nav a.bg-indigo-700,
+aside.w-64.bg-slate-900 nav a[class*="bg-indigo"] {
+    background: linear-gradient(90deg, rgba(121,52,81,0.55) 0%, rgba(234,105,147,0.40) 100%) !important;
+    color: #F4EEE6 !important;
+    border-left: 3px solid #EA6993 !important;
+    font-weight: 600 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05) !important;
+}
+
+/* ── PAGE BACKGROUND ─────────────────────────────────────── */
+body.bg-gray-100,
+.bg-gray-100 {
+    background-color: var(--color-bg) !important;
+}
+
+main.flex-1.p-8.overflow-y-auto,
+main.flex-1.overflow-y-auto {
+    background-color: var(--color-bg);
+}
+
+/* ── STAT CARDS (Dashboard) ──────────────────────────────── */
+.bg-white.rounded-xl.p-6.shadow-sm,
+.bg-white.rounded-xl.shadow-sm {
+    background: var(--color-surface) !important;
+    border: 1px solid var(--color-border-brand) !important;
+    box-shadow: var(--shadow-card) !important;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease !important;
+}
+
+.bg-white.rounded-xl.p-6.shadow-sm:hover,
+.bg-white.rounded-xl.shadow-sm:hover {
+    box-shadow: var(--shadow-card-hover) !important;
+    border-color: rgba(234, 105, 147, 0.40) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* ── STAT ICONS ──────────────────────────────────────────── */
+.text-blue-500     { color: var(--color-primary) !important; }
+.text-purple-500   { color: var(--color-primary-dark) !important; }
+.text-green-500    { color: var(--color-secondary) !important; }
+.text-indigo-600   { color: var(--color-primary-dark) !important; }
+.text-green-600    { color: var(--color-secondary) !important; }
+.text-green-600.font-bold { color: var(--color-secondary) !important; }
+
+/* ── QR / MEMBER CARD ────────────────────────────────────── */
+.bg-gradient-to-br.from-slate-900.to-slate-800 {
+    background: var(--gradient-hero) !important;
+}
+
+/* Decorative circles in QR card */
+.bg-gradient-to-br.from-slate-900.to-slate-800 .bg-purple-500 {
+    background-color: rgba(241, 204, 227, 0.25) !important;
+}
+.bg-gradient-to-br.from-slate-900.to-slate-800 .bg-blue-500 {
+    background-color: rgba(0, 116, 95, 0.30) !important;
+}
+
+/* Avatar in QR card */
+.bg-gradient-to-br.from-purple-400.to-blue-400 {
+    background: linear-gradient(135deg, #F1CCE3 0%, #EA6993 100%) !important;
+    color: #793451 !important;
+}
+
+/* QR brand text */
+.text-purple-300 { color: #F1CCE3 !important; }
+
+/* QR active status */
+.bg-green-500\/30.text-green-300 {
+    background-color: rgba(0, 116, 95, 0.25) !important;
+    color: #D2DCA5 !important;
+}
+
+/* QR inactive */
+.bg-red-500\/30.text-red-300 {
+    background-color: rgba(192, 51, 79, 0.22) !important;
+    color: #F1CCE3 !important;
+}
+
+/* ── QR PREVIEW MODAL CARD ───────────────────────────────── */
+.rounded-3xl[style*="background: #F3C3C3"] {
+    background: linear-gradient(160deg, #F9E8F1 0%, #F1CCE3 60%, #D2DCA5 100%) !important;
+}
+
+/* ── QUICK ACTION BUTTONS ────────────────────────────────── */
+a.bg-purple-600,
+button.bg-purple-600 {
+    background: var(--gradient-primary) !important;
+    box-shadow: var(--shadow-brand) !important;
+    border: none !important;
+}
+a.bg-purple-600:hover,
+button.bg-purple-600:hover {
+    background: linear-gradient(135deg, #5A1F3A 0%, #D94E7A 100%) !important;
+    box-shadow: var(--shadow-brand-md) !important;
+    transform: translateY(-2px) !important;
+}
+
+a.bg-blue-600,
+button.bg-blue-600 {
+    background: var(--gradient-secondary) !important;
+    box-shadow: var(--shadow-brand) !important;
+    border: none !important;
+}
+a.bg-blue-600:hover,
+button.bg-blue-600:hover {
+    background: linear-gradient(135deg, #063D2D 0%, #006251 100%) !important;
+    box-shadow: 0 6px 20px rgba(0, 116, 95, 0.28) !important;
+    transform: translateY(-2px) !important;
+}
+
+a.bg-orange-600,
+button.bg-orange-600 {
+    background: linear-gradient(135deg, #793451 0%, #D94E7A 100%) !important;
+    box-shadow: var(--shadow-brand) !important;
+    border: none !important;
+}
+a.bg-orange-600:hover,
+button.bg-orange-600:hover {
+    background: linear-gradient(135deg, #5A1F3A 0%, #B83863 100%) !important;
+    box-shadow: var(--shadow-brand-md) !important;
+    transform: translateY(-2px) !important;
+}
+
+a.bg-green-600,
+button.bg-green-600 {
+    background: var(--gradient-secondary) !important;
+    box-shadow: 0 4px 12px rgba(0,116,95,0.22) !important;
+}
+a.bg-green-600:hover,
+button.bg-green-600:hover {
+    background: linear-gradient(135deg, #042A1F 0%, #08513C 100%) !important;
+}
+
+/* ── INFO GUIDE BOX ──────────────────────────────────────── */
+.bg-blue-50.border-l-4.border-blue-500 {
+    background-color: var(--color-primary-muted) !important;
+    border-left-color: var(--color-primary) !important;
+}
+.bg-blue-50.border-l-4.border-blue-500 h4.text-blue-900 {
+    color: var(--color-primary-dark) !important;
+}
+.bg-blue-50.border-l-4.border-blue-500 ol.text-blue-800 {
+    color: #4A2035 !important;
+}
+
+/* ── RECENT ATTENDANCE items ─────────────────────────────── */
+.bg-green-100.rounded-full {
+    background-color: rgba(0, 116, 95, 0.12) !important;
+}
+.text-green-600.inside-attendance {
+    color: var(--color-secondary) !important;
+}
+
+/* ── "VIEW ALL" LINKS ────────────────────────────────────── */
+a.text-indigo-600,
+a.text-indigo-700 {
+    color: var(--color-primary-dark) !important;
+}
+a.text-indigo-600:hover,
+a.text-indigo-700:hover {
+    color: var(--color-primary) !important;
+}
+
+/* ── PAGINATION ──────────────────────────────────────────── */
+nav[aria-label="Pagination Navigation"] span[aria-current="page"] > span,
+.pagination .active > * {
+    background-color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+    color: white !important;
+}
+nav[aria-label="Pagination Navigation"] a {
+    color: var(--color-primary-dark) !important;
+    border-color: var(--color-border-brand) !important;
+}
+nav[aria-label="Pagination Navigation"] a:hover {
+    background-color: var(--color-primary-muted) !important;
+    color: var(--color-primary-dark) !important;
+}
+
+/* ── TABLE OVERRIDES ─────────────────────────────────────── */
+table thead {
+    background: linear-gradient(90deg, var(--color-bg) 0%, #F1CCE3 100%);
+}
+table thead th {
+    color: var(--color-primary-dark);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 0.8125rem;
+}
+table tbody tr:hover {
+    background-color: rgba(241, 204, 227, 0.18) !important;
+}
+table tbody tr {
+    border-bottom: 1px solid var(--color-border) !important;
+}
+table tbody td {
+    color: var(--color-text-primary) !important;
+    font-size: 0.875rem !important;
+}
+
+/* ── STATUS BADGES (generic) ─────────────────────────────── */
+.status-badge.available,
+.badge-success {
+    background-color: var(--color-success-bg) !important;
+    color: var(--color-secondary) !important;
+    border: 1px solid rgba(0, 116, 95, 0.25) !important;
+}
+.badge-warning {
+    background-color: var(--color-warning-bg) !important;
+    color: var(--color-secondary-dark) !important;
+}
+
+/* ── INPUT FOCUS ─────────────────────────────────────────── */
+input:focus,
+select:focus,
+textarea:focus {
+    --tw-ring-color: rgba(234, 105, 147, 0.30) !important;
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 0 3px rgba(234, 105, 147, 0.18) !important;
+}
+
+/* Search input focus (attendance) */
+.focus\:ring-red-600:focus {
+    --tw-ring-color: rgba(234, 105, 147, 0.30) !important;
+    border-color: var(--color-primary) !important;
+}
+.focus\:border-red-600:focus {
+    border-color: var(--color-primary) !important;
+}
+
+/* ── BOOK CLASS page specifics ───────────────────────────── */
+.btn-primary {
+    background: var(--gradient-primary) !important;
+    color: var(--color-text-inverse) !important;
+    box-shadow: var(--shadow-brand) !important;
+    border: none !important;
+}
+.btn-primary:hover {
+    background: linear-gradient(135deg, #5A1F3A 0%, #B83863 100%) !important;
+    box-shadow: var(--shadow-brand-md) !important;
+    transform: translateY(-2px) !important;
+}
+
+.btn-success {
+    background: var(--gradient-secondary) !important;
+    color: white !important;
+    box-shadow: 0 4px 14px rgba(0,116,95,0.22) !important;
+}
+
+/* ── MY CLASSES page ─────────────────────────────────────── */
+.card-header::before {
+    background: var(--gradient-primary) !important;
+}
+
+.package-badge {
+    background: linear-gradient(135deg, rgba(241,204,227,0.6) 0%, rgba(234,105,147,0.15) 100%) !important;
+    border-color: rgba(234,105,147,0.35) !important;
+    color: var(--color-primary-dark) !important;
+}
+
+.instructor-avatar {
+    background: var(--gradient-primary) !important;
+}
+
+.btn-book {
+    background: var(--gradient-primary) !important;
+    box-shadow: var(--shadow-brand) !important;
+}
+.btn-book:hover {
+    box-shadow: var(--shadow-brand-md) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* ── TRANSACTION PAGE ────────────────────────────────────── */
+.payment-badge {
+    background: rgba(241,204,227,0.5) !important;
+    color: var(--color-primary-dark) !important;
+    border-color: rgba(234,105,147,0.30) !important;
+}
+
+/* ── ATTENDANCE PAGE — override red from ri-* icons ─────── */
+.text-red-600 { color: var(--color-primary) !important; }
+.bg-red-600   { background-color: var(--color-primary) !important; }
+.hover\:bg-red-700:hover { background-color: var(--color-primary-dark) !important; }
+.border-red-600 { border-color: var(--color-primary) !important; }
+.ring-red-600   { --tw-ring-color: rgba(234,105,147,0.4) !important; }
+
+/* ── ACCOUNT PAGE heading overrides ─────────────────────── */
+.text-indigo-500 { color: var(--color-primary) !important; }
+.bg-gradient-to-br.from-indigo-500.to-purple-500 {
+    background: var(--gradient-primary) !important;
+}
+
+/* ── EMERALD (used in account) ───────────────────────────── */
+.bg-emerald-500\/15 {
+    background-color: var(--color-success-bg) !important;
+}
+.border-emerald-500\/30 {
+    border-color: rgba(0,116,95,0.28) !important;
+}
+.text-emerald-700 { color: var(--color-secondary) !important; }
+.bg-emerald-500   { background-color: var(--color-secondary) !important; }
+
+/* ── STAT COLORS (account.blade) ─────────────────────────── */
+.sc-indigo .sc-icon   { background: rgba(234,105,147,0.12) !important; color: var(--color-primary-dark) !important; }
+.stat-card.sc-indigo::before { background: var(--gradient-primary) !important; }
+
+/* ── QR PREVIEW BRAND TEXT ───────────────────────────────── */
+.text-indigo-600.uppercase.mb-1,
+.text-\[10px\].font-extrabold.tracking-\[0\.3em\].text-indigo-600 {
+    color: var(--color-primary-dark) !important;
+}
+
+/* ── MODAL CONFIRM (book-class) ──────────────────────────── */
+#book-confirm-modal > div > div:first-child {
+    background: linear-gradient(135deg, var(--color-primary-muted) 0%, var(--color-accent) 100%) !important;
+    border-bottom-color: rgba(234,105,147,0.25) !important;
+}
+
+/* ── MY CLASSES page — stat icon overrides ───────────────── */
+/* Override blue/purple stat icons → brand colors */
+.stat-icon.blue {
+    background: linear-gradient(135deg, rgba(241,204,227,0.50) 0%, rgba(234,105,147,0.20) 100%) !important;
+    color: var(--color-primary-dark) !important;
+}
+.stat-icon.purple {
+    background: linear-gradient(135deg, rgba(210,220,165,0.50) 0%, rgba(0,116,95,0.20) 100%) !important;
+    color: var(--color-secondary-dark) !important;
+}
+.schedule-icon {
+    background: rgba(241, 204, 227, 0.25) !important;
+    color: var(--color-primary-dark) !important;
+}
+
+/* ── ACCOUNT PAGE — inline CSS overrides ─────────────────── */
+/* QR action button — print (was indigo gradient) */
+.qr-action-btn.btn-print {
+    background: var(--gradient-primary) !important;
+    color: #F4EEE6 !important;
+}
+.qr-action-btn.btn-print:hover {
+    background: linear-gradient(135deg, #5A1F3A 0%, #B83863 100%) !important;
+}
+/* QR action button — download (was dark/slate) */
+.qr-action-btn.btn-download {
+    background: linear-gradient(135deg, #26282B 0%, #3D1A28 100%) !important;
+    color: #F1CCE3 !important;
+}
+/* QR action button — regen (was light ghost) */
+.qr-action-btn.btn-regen {
+    background: var(--color-primary-muted) !important;
+    color: var(--color-primary-dark) !important;
+    border: 1px solid var(--color-border-brand) !important;
+}
+.qr-action-btn.btn-regen:hover {
+    background: var(--color-accent) !important;
+    border-color: var(--color-primary) !important;
+}
+/* QR preview inner circles/glows */
+.qp-inner::before,
+.qp-inner::after {
+    background: linear-gradient(135deg, rgba(234,105,147,0.25) 0%, rgba(121,52,81,0.20) 100%) !important;
+}
+/* QR preview action download button */
+.qp-btn-download {
+    background: rgba(234, 105, 147, 0.18) !important;
+    color: #F1CCE3 !important;
+    border: 1px solid rgba(241,204,227,0.30) !important;
+}
+/* QR preview button done */
+.qp-btn-done {
+    background: var(--gradient-primary) !important;
+    color: #F4EEE6 !important;
+}
+.qp-btn-done:hover {
+    background: linear-gradient(135deg, #5A1F3A 0%, #B83863 100%) !important;
+}
+/* QR preview status badge */
+.qp-status-badge {
+    background: var(--color-success-bg) !important;
+    color: var(--color-secondary) !important;
+    border-color: rgba(0, 116, 95, 0.25) !important;
+}
+.qp-status-badge .qp-dot { background: var(--color-secondary) !important; }
+
+/* Account member hero background — already uses brand colors (#793451/#08513C) */
+/* Override indigo avatar circle in account */
+.qp-avatar {
+    background: var(--gradient-primary) !important;
+}
+
+/* ── BOOK CLASS page — specific color overrides ───────────── */
+/* Time badge (was blue background) */
+.time-badge {
+    background: rgba(210, 220, 165, 0.35) !important;
+    color: var(--color-secondary-dark) !important;
+    border: 1px solid rgba(8, 81, 60, 0.20) !important;
+}
+/* Class icon (was blue gradient circle) */
+.class-icon {
+    background: linear-gradient(135deg, #F1CCE3 0%, #EA6993 100%) !important;
+    color: var(--color-primary-dark) !important;
+}
+/* Schedule table hover */
+.schedule-table tbody tr:hover {
+    background-color: rgba(241, 204, 227, 0.18) !important;
+}
+/* Schedule table header */
+.schedule-table thead {
+    background: linear-gradient(90deg, var(--color-bg) 0%, #F1CCE3 100%) !important;
+}
+/* Book confirm modal — was #eff6ff inline */
+/* (handled by #book-confirm-modal selector above) */
+/* Status card section */
+.status-icon {
+    background: rgba(234, 105, 147, 0.12) !important;
+}
+/* Status value "Belum dimulai" (inline style) */
+[style*="#1e40af"] {
+    color: var(--color-primary-dark) !important;
+}
+/* Status badge available */
+.status-badge.available {
+    background: var(--color-success-bg) !important;
+    color: var(--color-secondary) !important;
+    border: 1px solid rgba(0,116,95,0.20) !important;
+}
+.status-badge.booked {
+    background: rgba(241, 204, 227, 0.35) !important;
+    color: var(--color-primary-dark) !important;
+    border: 1px solid rgba(234,105,147,0.25) !important;
+}
+
+/* ── TABLE HEADER TR (attendance uses bg-gray-50 class) ──── */
+table thead tr.bg-gray-50,
+.schedule-table thead tr,
+thead tr.bg-gray-50 {
+    background: linear-gradient(90deg, var(--color-bg) 0%, rgba(241,204,227,0.40) 100%) !important;
+}
+
+/* ── ATTENTION: attendance page ri-* icon colors ─────────── */
+.text-red-600,
+i.text-red-600 { color: var(--color-primary) !important; }
+a.bg-red-600, button.bg-red-600,
+.bg-red-600    { background-color: var(--color-primary) !important; }
+a.hover\:bg-red-700:hover,
+button.hover\:bg-red-700:hover { background-color: var(--color-primary-dark) !important; }
+
+/* ── PACKAGE PAGE tweaks ─────────────────────────────────── */
+/* Any purchase/CTA button that was blue */
+a.bg-blue-600:not([class*="sidebar"]),
+button.bg-blue-600:not([class*="sidebar"]) {
+    background: var(--gradient-secondary) !important;
+    color: white !important;
+    box-shadow: 0 4px 14px rgba(0,116,95,0.22) !important;
+}
+
+/* ── PROFILE PAGE — feature icon boxes ──────────────────── */
+.bg-gradient-to-br.from-indigo-100.to-indigo-200 {
+    background: linear-gradient(135deg, rgba(241,204,227,0.50) 0%, rgba(234,105,147,0.25) 100%) !important;
+}
+.text-indigo-600,
+.from-indigo-100.to-indigo-200 .text-indigo-600 {
+    color: var(--color-primary-dark) !important;
+}
+.bg-gradient-to-br.from-blue-100.to-blue-200 {
+    background: linear-gradient(135deg, rgba(210,220,165,0.40) 0%, rgba(0,116,95,0.18) 100%) !important;
+}
+.text-blue-600 { color: var(--color-secondary) !important; }
+.bg-gradient-to-br.from-purple-100.to-purple-200 {
+    background: linear-gradient(135deg, rgba(241,204,227,0.50) 0%, rgba(121,52,81,0.15) 100%) !important;
+}
+.text-purple-600 { color: var(--color-primary-dark) !important; }
+
+/* ── MISC TAILWIND OVERRIDES ─────────────────────────────── */
+/* Borders */
+.border-blue-500  { border-color: var(--color-primary) !important; }
+.border-blue-200  { border-color: rgba(234,105,147,0.30) !important; }
+.border-indigo-500{ border-color: var(--color-primary-dark) !important; }
+
+/* "hover:shadow-lg" buttons retain */
+.hover\:shadow-lg:hover { box-shadow: var(--shadow-brand-md) !important; }
+
+/* Focus ring overrides (book-class select) */
+.focus\:border-blue-500:focus,
+.focus\:ring-blue-500:focus {
+    border-color: var(--color-primary) !important;
+    --tw-ring-color: rgba(234, 105, 147, 0.25) !important;
+}
+
+/* ── BOOK CONFIRM MODAL — header with inline style ───────── */
+#book-confirm-modal [style*="background:#eff6ff"],
+#book-confirm-modal [style*="background: #eff6ff"] {
+    background: linear-gradient(135deg, var(--color-primary-muted) 0%, var(--color-accent) 100%) !important;
+    border-bottom-color: rgba(234,105,147,0.25) !important;
+}

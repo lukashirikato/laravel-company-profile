@@ -2,23 +2,46 @@
 
 namespace App\Filament\Pages;
 
-use Filament\Pages\Page;
+use Filament\Pages\Dashboard as BaseDashboard;
 
-class Dashboard extends Page
+class Dashboard extends BaseDashboard
 {
     protected static ?string $navigationIcon = 'heroicon-o-home';
-    protected static ?string $navigationLabel = 'Dashboard';
-    protected static ?string $navigationGroup = 'FTM Admin';
+    
+    protected static ?int $navigationSort = -2;
+    
     protected static string $view = 'filament.pages.dashboard';
-
-    // Judul halaman
-    protected static ?string $title = 'FTM Admin Dashboard';
-
-    // Tambahkan widget statistik di dashboard
+    
+    protected static bool $shouldRegisterNavigation = false; // ← UBAH jadi FALSE
+protected ?string $heading = ''; // ← TAMBAHKAN ini
+    
+    public static function getNavigationLabel(): string
+    {
+        return 'Dashboard';
+    }
+    
+    public function getTitle(): string
+    {
+        return 'Dashboard';
+    }
+    
+    public function getHeading(): string
+    {
+        return 'Dashboard';
+    }
+    
+    public function getHeaderWidgets(): array
+    {
+        return [];
+    }
+    
+    public function getFooterWidgets(): array
+    {
+        return [];
+    }
+    
     protected function getWidgets(): array
     {
-        return [
-            \App\Filament\Widgets\CustomerStatsOverview::class,
-        ];
+        return [];
     }
 }

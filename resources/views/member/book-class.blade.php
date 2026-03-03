@@ -20,8 +20,8 @@
         
         body {
             font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #f5f7fa;
-            color: #2d3748;
+            background: #F4EEE6;
+            color: #26282B;
         }
         
         /* ============================================
@@ -56,13 +56,13 @@
         }
         
         .breadcrumb a {
-            color: #1e40af;
+            color: #793451;
             text-decoration: none;
             transition: color 0.2s;
         }
         
         .breadcrumb a:hover {
-            color: #1e3a8a;
+            color: #EA6993;
         }
         
         /* ============================================
@@ -79,7 +79,7 @@
         .page-header h1 {
             font-size: 2rem;
             font-weight: 600;
-            color: #1e3a8a;
+            color: #793451;
             margin-bottom: 0.5rem;
         }
         
@@ -97,7 +97,7 @@
             padding: 2rem;
             margin-bottom: 2rem;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            border-left: 4px solid #1e40af;
+            border-left: 4px solid #EA6993;
         }
         
         .status-grid {
@@ -115,7 +115,7 @@
         .status-icon {
             width: 48px;
             height: 48px;
-            background: #eff6ff;
+            background: rgba(241,204,227,0.35);
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -138,7 +138,7 @@
         .status-value {
             font-size: 1.5rem;
             font-weight: 600;
-            color: #1e3a8a;
+            color: #793451;
             line-height: 1.2;
         }
         
@@ -163,7 +163,7 @@
             display: block;
             font-weight: 600;
             margin-bottom: 0.75rem;
-            color: #1e3a8a;
+            color: #793451;
             font-size: 0.875rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -184,13 +184,13 @@
         }
         
         .package-selector select:hover {
-            border-color: #1e40af;
+            border-color: #EA6993;
         }
         
         .package-selector select:focus {
             outline: none;
-            border-color: #1e40af;
-            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+            border-color: #EA6993;
+            box-shadow: 0 0 0 3px rgba(234, 105, 147, 0.15);
         }
         
         /* ============================================
@@ -250,7 +250,7 @@
         }
         
         .day-badge {
-            background: #1e40af;
+            background: #793451;
             color: white;
             padding: 0.5rem 1rem;
             border-radius: 6px;
@@ -275,7 +275,7 @@
         }
         
         .schedule-table thead {
-            background: #f8fafc;
+            background: linear-gradient(90deg, #F4EEE6 0%, rgba(241,204,227,0.40) 100%);
         }
         
         .schedule-table th {
@@ -283,10 +283,10 @@
             text-align: left;
             font-size: 0.875rem;
             font-weight: 600;
-            color: #475569;
+            color: #793451;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            border-bottom: 2px solid #e2e8f0;
+            border-bottom: 2px solid rgba(234,105,147,0.25);
         }
         
         .schedule-table td {
@@ -299,7 +299,7 @@
         }
         
         .schedule-table tbody tr:hover {
-            background: #f8fafc;
+            background: rgba(241,204,227,0.15);
         }
         
         .class-info {
@@ -311,7 +311,7 @@
         .class-icon {
             width: 40px;
             height: 40px;
-            background: #eff6ff;
+            background: rgba(241,204,227,0.35);
             border-radius: 8px;
             display: flex;
             align-items: center;
@@ -322,7 +322,7 @@
         
         .class-name {
             font-weight: 600;
-            color: #1e3a8a;
+            color: #793451;
             font-size: 0.95rem;
         }
         
@@ -331,10 +331,10 @@
             align-items: center;
             gap: 0.5rem;
             padding: 0.5rem 1rem;
-            background: #f1f5f9;
+            background: rgba(210,220,165,0.30);
             border-radius: 6px;
             font-weight: 600;
-            color: #1e3a8a;
+            color: #08513C;
             font-size: 0.95rem;
         }
         
@@ -357,13 +357,13 @@
         }
         
         .status-badge.available {
-            background: #dbeafe;
-            color: #1e40af;
+            background: rgba(0,116,95,0.10);
+            color: #00745F;
         }
         
         .status-badge.booked {
-            background: #d1fae5;
-            color: #047857;
+            background: rgba(241,204,227,0.35);
+            color: #793451;
         }
         
         /* ============================================
@@ -383,14 +383,14 @@
         }
         
         .btn-primary {
-            background: #1e40af;
+            background: linear-gradient(135deg, #793451 0%, #EA6993 100%);
             color: white;
         }
         
         .btn-primary:hover {
-            background: #1e3a8a;
+            background: linear-gradient(135deg, #5A1F3A 0%, #B83863 100%);
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.4);
+            box-shadow: 0 4px 12px rgba(121, 52, 81, 0.35);
         }
         
         .btn-primary:active {
@@ -398,7 +398,7 @@
         }
         
         .btn-success {
-            background: #10b981;
+            background: linear-gradient(135deg, #08513C, #00745F);
             color: white;
             cursor: not-allowed;
         }
@@ -488,85 +488,55 @@
 
 <div class="flex h-screen">
 
-   {{-- ============================================
-     SIDEBAR COMPONENT
-     Usage: @include('layouts.member-sidebar')
-     ============================================ --}}
-
-@php
-    $currentRoute = Route::currentRouteName();
-@endphp
-
-<aside class="w-64 bg-slate-900 text-white flex flex-col shrink-0">
-    {{-- Brand Logo --}}
-    <div class="px-6 py-5 text-xl font-bold border-b border-white/20">
-        FTM SOCIETY
-    </div>
-
-    {{-- Navigation Menu --}}
-    <nav class="flex-1 px-4 py-6 space-y-1 text-sm">
-        
-        {{-- Dashboard --}}
-        <a href="{{ route('member.dashboard') }}" 
-           class="block px-4 py-2 rounded transition
-                  {{ $currentRoute === 'member.dashboard' ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/10' }}">
-            <i class="fas fa-home mr-2"></i>Dashboard
+    <!-- ========================================
+         SIDEBAR
+    ======================================== -->
+    <aside class="w-64 bg-slate-900 text-white flex flex-col shrink-0">
+        <a href="{{ route('member.profile') }}" class="px-6 py-5 text-xl font-bold border-b border-white/20 hover:bg-slate-800 transition inline-block w-full">
+            FTM SOCIETY
         </a>
 
-        {{-- My Packages --}}
-        <a href="{{ route('member.packages.index') }}" 
-           class="block px-4 py-2 rounded transition
-                  {{ str_starts_with($currentRoute, 'member.packages') ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/10' }}">
-            <i class="fas fa-box mr-2"></i>My Packages
-        </a>
+        <nav class="flex-1 px-4 py-6 space-y-1 text-sm">
+            <a href="{{ route('member.dashboard') }}" 
+               class="block px-4 py-2 rounded hover:bg-white/10 transition">
+                <i class="fas fa-home mr-2"></i>Dashboard
+            </a>
 
-        {{-- Book Class --}}
-        <a href="{{ route('member.book') }}"
-           class="block px-4 py-2 rounded transition
-                  {{ $currentRoute === 'member.book' ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/10' }}">
-            <i class="fas fa-calendar-plus mr-2"></i>Book Class
-        </a>
+            <a href="{{ route('member.packages.index') }}" 
+               class="block px-4 py-2 rounded hover:bg-white/10 transition">
+                <i class="fas fa-box mr-2"></i>My Packages
+            </a>
 
-        {{-- My Classes --}}
-        <a href="{{ route('member.my-classes') }}"
-           class="block px-4 py-2 rounded transition
-                  {{ $currentRoute === 'member.my-classes' ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/10' }}">
-            <i class="fas fa-dumbbell mr-2"></i>My Classes
-        </a>
+            <a href="{{ route('member.book') }}"
+               class="block px-4 py-2 rounded text-white font-medium" style="background: linear-gradient(90deg, #793451 0%, #EA6993 100%); border-left: 3px solid #F1CCE3;">
+                <i class="fas fa-calendar-plus mr-2"></i>Book Class
+            </a>
 
-        {{-- Transactions --}}
-        <a href="{{ route('member.transactions') }}" 
-           class="block px-4 py-2 rounded transition
-                  {{ $currentRoute === 'member.transactions' ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/10' }}">
-            <i class="fas fa-receipt mr-2"></i>Transactions
-        </a>
+            <a href="{{ route('member.my-classes') }}"
+               class="block px-4 py-2 rounded hover:bg-white/10 transition">
+                <i class="fas fa-dumbbell mr-2"></i>My Classes
+            </a>
 
-        {{-- Profile --}}
-        <a href="{{ route('member.profile') }}" 
-           class="block px-4 py-2 rounded transition
-                  {{ $currentRoute === 'member.profile' ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/10' }}">
-            <i class="fas fa-user mr-2"></i>Profile
-        </a>
+            <a href="{{ route('member.transactions') }}" 
+               class="block px-4 py-2 rounded hover:bg-white/10 transition">
+                <i class="fas fa-receipt mr-2"></i>Transactions
+            </a>
 
-        {{-- Divider --}}
-        <div class="border-t border-white/20 my-4"></div>
+            <a href="{{ route('member.attendance') }}" 
+               class="block px-4 py-2 rounded hover:bg-white/10 transition">
+                <i class="fas fa-calendar-check mr-2"></i>Attendance
+            </a>
 
-        {{-- Logout --}}
-        <form method="POST" action="{{ route('member.logout') }}">
-            @csrf
-            <button type="submit" 
-                    class="w-full text-left px-4 py-2 rounded hover:bg-red-600/20 text-red-300 transition">
-                <i class="fas fa-sign-out-alt mr-2"></i>Logout
-            </button>
-        </form>
+            <a href="{{ route('member.account') }}" 
+               class="block px-4 py-2 rounded hover:bg-white/10 transition">
+                <i class="fas fa-user mr-2"></i>Profile
+            </a>
+        </nav>
 
-    </nav>
-
-    {{-- Footer --}}
-    <div class="px-6 py-4 border-t border-white/20 text-xs text-white/60">
-        © {{ date('Y') }} FTM Society
-    </div>
-</aside>
+        <div class="px-6 py-4 border-t border-white/20 text-xs text-white/60">
+            &copy; {{ date('Y') }} FTM Society
+        </div>
+    </aside>
 
     {{-- ============================================
          MAIN CONTENT AREA
@@ -634,8 +604,15 @@
                     <div class="status-item">
                         <div class="status-icon">🎫</div>
                         <div class="status-info">
-                            <div class="status-label">Classes Remaining</div>
-                            <div class="status-value">{{ $customer->quota }}</div>
+                            <div class="status-label">Credit</div>
+                            <div class="status-value">
+                                @if($selectedPackage->is_exclusive)
+                                    0
+                                    <div class="status-meta">Jadwal sudah di-assign otomatis</div>
+                                @else
+                                    {{ $remainingClasses ?? $customer->quota }}
+                                @endif
+                            </div>
                         </div>
                     </div>
                     
@@ -645,6 +622,15 @@
                             <div class="status-info">
                                 <div class="status-label">Valid Until</div>
                                 <div class="status-value">{{ \Carbon\Carbon::parse($customer->quota_expired_at)->format('d M Y') }}</div>
+                            </div>
+                        </div>
+                    @elseif(isset($selectedPackage) && $selectedPackage->duration_days)
+                        <div class="status-item">
+                            <div class="status-icon">📅</div>
+                            <div class="status-info">
+                                <div class="status-label">Valid Until</div>
+                                <div class="status-value" style="font-size: 1rem; color: #793451;">Belum dimulai</div>
+                                <div class="status-meta">Aktif {{ $selectedPackage->duration_days }} hari saat booking pertama</div>
                             </div>
                         </div>
                     @endif
@@ -690,6 +676,7 @@
                         <thead>
                             <tr>
                                 <th>Class</th>
+                                <th>Date</th>
                                 <th>Time</th>
                                 <th>Coach</th>
                                 <th>Status</th>
@@ -733,6 +720,11 @@
                                         </div>
                                     </td>
                                     <td>
+                                        <div style="font-weight:600; color:#793451; font-size:0.95rem;">
+                                            {{ $s->schedule_date_formatted }}
+                                        </div>
+                                    </td>
+                                    <td>
                                         <div class="time-badge">
                                             <span>🕐</span>
                                             <span>{{ \Carbon\Carbon::parse($s->class_time)->format('H:i') }}</span>
@@ -754,10 +746,13 @@
                                         @elseif($isDisabled)
                                             <button class="btn btn-disabled" disabled>QUOTA EMPTY</button>
                                         @else
-                                            <form method="POST" action="{{ route('member.book.store') }}" style="display: inline;">
+                                            <form method="POST" action="{{ route('member.book.store') }}" style="display: inline;" id="book-form-{{ $s->id }}">
                                                 @csrf
                                                 <input type="hidden" name="schedule_id" value="{{ $s->id }}">
-                                                <button type="submit" class="btn btn-primary">BOOK NOW</button>
+                                                <button type="button" class="btn btn-primary" 
+                                                    onclick="showBookConfirm('{{ $s->classModel->class_name ?? 'Class' }}', '{{ $day }}', '{{ $s->schedule_date_formatted }}', '{{ \Carbon\Carbon::parse($s->class_time)->format('H:i') }}', '{{ $s->instructor ?? '-' }}', '{{ $s->id }}')">
+                                                    BOOK NOW
+                                                </button>
                                             </form>
                                         @endif
                                     </td>
@@ -786,6 +781,128 @@
 
 </div>
 {{-- End of flex wrapper --}}
+
+{{-- ============================================
+     BOOKING CONFIRMATION MODAL
+     ============================================ --}}
+<div id="book-confirm-modal" style="display:none; position:fixed; inset:0; z-index:100; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:1rem;">
+    <div style="background:white; border-radius:16px; max-width:440px; width:100%; box-shadow:0 25px 60px rgba(0,0,0,0.2); animation:modalIn 0.25s ease-out; overflow:hidden;">
+        
+        {{-- Header --}}
+        <div style="background: linear-gradient(135deg, rgba(241,204,227,0.30) 0%, rgba(244,238,230,1) 100%); padding:1.5rem 2rem; border-bottom:1px solid rgba(234,105,147,0.20); text-align:center;">
+            <div style="width:56px; height:56px; background: linear-gradient(135deg, #793451 0%, #EA6993 100%); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem; font-size:1.5rem; color:white;">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <h3 style="font-size:1.15rem; font-weight:700; color:#793451; margin:0;">Konfirmasi Booking</h3>
+            <p style="font-size:0.825rem; color:#64748b; margin-top:4px;">Apakah Anda yakin ingin booking jadwal ini?</p>
+        </div>
+
+        {{-- Class Details --}}
+        <div style="padding:1.5rem 2rem;">
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1.25rem; margin-bottom:1.25rem;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                    <div>
+                        <div style="font-size:0.65rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">Class</div>
+                        <div id="confirm-class" style="font-size:0.95rem; font-weight:700; color:#793451;">—</div>
+                    </div>
+                    <div>
+                        <div style="font-size:0.65rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">Day</div>
+                        <div id="confirm-day" style="font-size:0.95rem; font-weight:700; color:#793451;">—</div>
+                    </div>
+                    <div>
+                        <div style="font-size:0.65rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">Date</div>
+                        <div id="confirm-date" style="font-size:0.95rem; font-weight:700; color:#793451;">—</div>
+                    </div>
+                    <div>
+                        <div style="font-size:0.65rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">Time</div>
+                        <div id="confirm-time" style="font-size:0.95rem; font-weight:700; color:#793451;">—</div>
+                    </div>
+                    <div>
+                        <div style="font-size:0.65rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">Coach</div>
+                        <div id="confirm-coach" style="font-size:0.95rem; font-weight:700; color:#793451;">—</div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Warning --}}
+            <div style="background:#fef3c7; border-left:3px solid #f59e0b; border-radius:0 8px 8px 0; padding:0.75rem 1rem; font-size:0.8rem; color:#92400e; display:flex; gap:8px; align-items:flex-start; margin-bottom:1.25rem;">
+                <i class="fas fa-exclamation-triangle" style="margin-top:2px; flex-shrink:0;"></i>
+                <span>Booking ini akan mengurangi 1 kuota kelas Anda. Pastikan jadwal yang dipilih sudah benar.</span>
+            </div>
+
+            {{-- Buttons --}}
+            <div style="display:flex; gap:0.75rem;">
+                <button onclick="closeBookConfirm()" 
+                    style="flex:1; padding:0.8rem; border:2px solid #e2e8f0; background:white; color:#64748b; border-radius:10px; font-weight:600; font-size:0.875rem; cursor:pointer; transition:all 0.2s; font-family:inherit;"
+                    onmouseover="this.style.background='#f8fafc'; this.style.borderColor='#cbd5e1'" 
+                    onmouseout="this.style.background='white'; this.style.borderColor='#e2e8f0'">
+                    <i class="fas fa-times" style="margin-right:6px;"></i>Batal
+                </button>
+                <button id="confirm-book-btn" onclick="confirmBook()" 
+                    style="flex:1; padding:0.8rem; border:none; background:linear-gradient(135deg,#793451,#EA6993); color:white; border-radius:10px; font-weight:600; font-size:0.875rem; cursor:pointer; transition:all 0.2s; font-family:inherit; box-shadow:0 4px 12px rgba(121,52,81,0.30);"
+                    onmouseover="this.style.background='linear-gradient(135deg,#5A1F3A,#B83863)'" 
+                    onmouseout="this.style.background='linear-gradient(135deg,#793451,#EA6993)'">
+                    <i class="fas fa-check" style="margin-right:6px;"></i>Ya, Book Sekarang
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes modalIn {
+        0% { opacity: 0; transform: scale(0.95) translateY(10px); }
+        100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+</style>
+
+<script>
+    let pendingScheduleId = null;
+
+    function showBookConfirm(className, day, date, time, coach, scheduleId) {
+        document.getElementById('confirm-class').textContent = className;
+        document.getElementById('confirm-day').textContent = day;
+        document.getElementById('confirm-date').textContent = date;
+        document.getElementById('confirm-time').textContent = time;
+        document.getElementById('confirm-coach').textContent = coach;
+        pendingScheduleId = scheduleId;
+
+        const modal = document.getElementById('book-confirm-modal');
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeBookConfirm() {
+        const modal = document.getElementById('book-confirm-modal');
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+        pendingScheduleId = null;
+    }
+
+    function confirmBook() {
+        if (!pendingScheduleId) return;
+        const form = document.getElementById('book-form-' + pendingScheduleId);
+        if (form) {
+            // Disable button to prevent double-click
+            const btn = document.getElementById('confirm-book-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i>Booking...';
+            btn.style.opacity = '0.7';
+            btn.style.cursor = 'not-allowed';
+            form.submit();
+        }
+    }
+
+    // Close on clicking backdrop
+    document.getElementById('book-confirm-modal')?.addEventListener('click', function(e) {
+        if (e.target === this) closeBookConfirm();
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeBookConfirm();
+    });
+</script>
 
 </body>
 </html>

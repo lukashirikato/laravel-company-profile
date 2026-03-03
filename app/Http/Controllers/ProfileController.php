@@ -34,7 +34,27 @@ class ProfileController extends Controller
         // Ambil semua jadwal customer
         $schedules = $customer->schedules()->latest()->get() ?? collect();
 
-        return view('member.profile-modal', compact('customer', 'transactions', 'attendances', 'schedules'));
+        // Get active order to show class and quota tracking separately
+        $activeOrder = $customer->orders()
+            ->whereIn('status', ['paid', 'active', 'settlement', 'success'])
+            ->latest()
+            ->first();
+
+        // Remaining Quota: untuk check-in/checkout (dari customer.quota)
+        $remainingQuota = $customer->quota;
+        
+        // Remaining Classes: untuk booking class (dari order.remaining_classes)
+        $remainingClasses = $activeOrder?->remaining_classes ?? 0;
+
+        return view('member.profile-modal', compact(
+            'customer',
+            'transactions',
+            'attendances',
+            'schedules',
+            'remainingQuota',
+            'remainingClasses',
+            'activeOrder'
+        ));
     }
 
     /**

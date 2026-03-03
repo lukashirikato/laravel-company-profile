@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Member;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\View;
 use App\Models\Customer;
 use App\Models\Schedule;
-use App\Models\Transaction;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Eloquent\Model;
 
 class ProfileController extends Controller
 {
@@ -17,22 +20,31 @@ class ProfileController extends Controller
      */
     public function show()
     {
-        /** @var Customer $customer */
-        $customer = auth('customer')->user();
-
-        // Ambil semua jadwal
-        $schedules = Schedule::all();
-
-        // Ambil transaksi customer yang sedang login
-        $transactions = $customer->transactions()->latest()->get() ?? collect();
-
-        // Ambil presensi/attendances customer yang sedang login (cek dulu apakah tabel ada)
-        $attendances = collect();
-        if (Schema::hasTable('attendances')) {
-            $attendances = $customer->attendances()->latest()->get() ?? collect();
+        $authCustomer = Auth::guard('customer')->user();
+        if (!$authCustomer instanceof Customer) {
+            return Redirect::route('member.login');
         }
 
-        return view('member.profile', compact('customer', 'schedules', 'transactions', 'attendances'));
+        /** @var Customer&Model $customer */
+        $customer = $authCustomer;
+
+        // Eager-load relasi yang dipakai view untuk mencegah N+1 query
+        $customer->loadMissing(['schedules.classModel']);
+
+        // Ambil semua jadwal (cached) + classModel untuk pemakaian di Blade
+        $schedules = Cache::remember('member.profile.schedules.v1', 300, function () {
+            return Schedule::with('classModel:id,class_name')
+                ->select(['id', 'class_id', 'schedule_label', 'day', 'class_time', 'instructor'])
+                ->get();
+        });
+
+        // Tidak dipakai di view saat ini, diset kosong agar request lebih ringan
+        $transactions = [];
+
+        // Tidak dipakai di view saat ini; tetap jaga kompatibilitas variabel
+        $attendances = [];
+
+        return View::make('member.profile', compact('customer', 'schedules', 'transactions', 'attendances'));
     }
 
     /**
@@ -40,15 +52,21 @@ class ProfileController extends Controller
      */
     public function update(Request $request)
     {
-        /** @var Customer $customer */
-        $customer = auth('customer')->user();
+        $authCustomer = Auth::guard('customer')->user();
+        if (!$authCustomer instanceof Customer) {
+            return Redirect::route('member.login');
+        }
 
-        $request->validate([
+        /** @var Customer&Model $customer */
+        $customer = $authCustomer;
+
+        $validated = $request->validate([
             'name'  => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:customers,email,' . $customer->getKey(),
         ]);
 
-        $customer->fill($request->only('name', 'email'));
+        $customer->name = $validated['name'];
+        $customer->email = $validated['email'];
 
         // Jika email berubah, reset verifikasi email
         if ($customer->isDirty('email')) {
@@ -57,7 +75,7 @@ class ProfileController extends Controller
 
         $customer->save();
 
-        return redirect()->back()->with('status', 'Profil berhasil diperbarui.');
+        return Redirect::back()->with('status', 'Profil berhasil diperbarui.');
     }
 
     /**
@@ -65,21 +83,26 @@ class ProfileController extends Controller
      */
     public function changePassword(Request $request)
     {
-        /** @var Customer $customer */
-        $customer = auth('customer')->user();
+        $authCustomer = Auth::guard('customer')->user();
+        if (!$authCustomer instanceof Customer) {
+            return Redirect::route('member.login');
+        }
 
-        $request->validate([
+        /** @var Customer&Model $customer */
+        $customer = $authCustomer;
+
+        $validated = $request->validate([
             'current_password' => 'required',
             'new_password'     => 'required|confirmed|min:6',
         ]);
 
-        if (!Hash::check($request->current_password, $customer->getAuthPassword())) {
-            return back()->withErrors(['current_password' => 'Password lama salah.']);
+        if (!Hash::check($validated['current_password'], $customer->getAuthPassword())) {
+            return Redirect::back()->withErrors(['current_password' => 'Password lama salah.']);
         }
 
-        $customer->password = Hash::make($request->new_password);
+        $customer->password = Hash::make($validated['new_password']);
         $customer->save();
 
-        return back()->with('success', 'Password berhasil diubah.');
+        return Redirect::back()->with('success', 'Password berhasil diubah.');
     }
 }

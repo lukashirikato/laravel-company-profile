@@ -208,11 +208,13 @@ $order->update([
     }
 
     // 4️⃣ EXPIRED
-    if (!empty($package->duration_days)) {
-        $customer->update([
-            'quota_expired_at' => now()->addDays($package->duration_days),
-        ]);
-    }
+    // ❌ TIDAK lagi set quota_expired_at saat payment
+    // quota_expired_at akan di-set saat BOOKING PERTAMA di MemberBookingController::store()
+    // if (!empty($package->duration_days)) {
+    //     $customer->update([
+    //         'quota_expired_at' => now()->addDays($package->duration_days),
+    //     ]);
+    // }
 
     // 5️⃣ FINAL STATE (PALING AKHIR)
     $order->update([

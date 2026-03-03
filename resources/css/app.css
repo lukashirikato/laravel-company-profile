@@ -1,3 +1,9 @@
+/* ── FTM Society Design Token System ── */
+@import './ftm-brand.css';
+
+/* ── Custom Filament Theme ── */
+@import './filament-custom.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

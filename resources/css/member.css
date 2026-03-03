@@ -1,0 +1,234 @@
+/* FTM Society - Member CSS */
+/* Production-ready, compiled with Tailwind */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========================================= */
+/* BASE STYLES                               */
+/* ========================================= */
+
+@layer base {
+  body {
+    font-family: 'Poppins', sans-serif;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Poppins', serif;
+  }
+}
+
+/* ========================================= */
+/* COMPONENT STYLES                          */
+/* ========================================= */
+
+@layer components {
+  .logo {
+    font-family: 'Poppins', serif;
+  }
+
+  /* Navigation Link */
+  .nav-link {
+    position: relative;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: #c68e8f;
+    transition: width 0.3s;
+  }
+
+  .nav-link:hover::after {
+    width: 100%;
+  }
+
+  /* Card Hover Effects */
+  .class-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px -5px rgba(74, 43, 48, 0.1);
+  }
+
+  .feature-card:hover {
+    transform: translateY(-5px);
+  }
+
+  /* Form Focus States */
+  input:focus, 
+  textarea:focus {
+    outline: none;
+    border-color: #c68e8f;
+  }
+
+  /* Custom Checkbox */
+  .custom-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #4a2b30;
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .custom-checkbox:checked {
+    background-color: #4a2b30;
+  }
+
+  .custom-checkbox:checked::after {
+    content: '✓';
+    position: absolute;
+    color: white;
+    font-size: 14px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* FAQ Accordion */
+  .faq-item.active .faq-answer {
+    max-height: 1000px;
+    opacity: 1;
+    padding: 1rem 0;
+  }
+
+  .faq-item.active .faq-icon {
+    transform: rotate(180deg);
+  }
+
+  .faq-answer {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  /* Mobile Menu */
+  .mobile-menu {
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .mobile-menu.active {
+    transform: translateX(0);
+  }
+
+  /* Gallery Overlay */
+  .Facility-image:hover .overlay {
+    opacity: 1;
+  }
+
+  /* Scrollbar Hide */
+  #membershipList::-webkit-scrollbar,
+  #feature-slider::-webkit-scrollbar,
+  #service-slider::-webkit-scrollbar,
+  #facility-slider + div + div::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Facility Dots */
+  .facility-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background: #ddc4c5;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.35s ease;
+    flex-shrink: 0;
+  }
+
+  .facility-dot.active {
+    width: 28px;
+    background: #c68e8f;
+  }
+
+  /* Classes Group Isolation */
+  #classes .group {
+    isolation: isolate;
+  }
+
+  /* Button rounded */
+  .rounded-button {
+    border-radius: 8px;
+  }
+}
+
+/* ========================================= */
+/* ANIMATIONS                                */
+/* ========================================= */
+
+@layer utilities {
+  /* Scroll Animation */
+  .scroll-animate {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);
+  }
+
+  .scroll-animate.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Gradient Shift Animation */
+  @keyframes gradient-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .animate-gradient-shift {
+    animation: gradient-shift 4s ease infinite;
+  }
+
+  /* Fade In Animation */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease;
+  }
+
+  /* Fade In Up Animation */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fadeInUp {
+    animation: fadeInUp 0.7s cubic-bezier(.4,0,.2,1);
+  }
+
+  /* Partner Scroll Animation */
+  @keyframes partnerScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .partner-scroll-track {
+    animation: partnerScroll 24s linear infinite;
+  }
+
+  .partner-scroll-track:hover {
+    animation-play-state: paused;
+  }
+
+  /* Gradient Shift (alternative name) */
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+}

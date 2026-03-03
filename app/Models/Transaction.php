@@ -5,6 +5,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Models\Transaction
+ *
+ * @property int $id
+ * @property int $order_id
+ * @property int $customer_id
+ * @property string|null $customer_name
+ * @property int $package_id
+ * @property int $amount
+ * @property string|null $description
+ * @property string $status
+ * @property string|null $payment_type
+ * @property string|null $transaction_id
+ * @property string|null $midtrans_transaction_id
+ * @property string|null $fraud_status
+ * @property string|null $signature_key
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ */
 class Transaction extends Model
 {
     use HasFactory;

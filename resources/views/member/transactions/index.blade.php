@@ -312,7 +312,7 @@
             align-items: center;
             gap: 0.5rem;
             padding: 0.875rem 1.75rem;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            background: linear-gradient(135deg, #793451 0%, #EA6993 100%);
             color: white;
             border-radius: 10px;
             text-decoration: none;
@@ -323,7 +323,7 @@
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 10px 25px rgba(121, 52, 81, 0.28);
         }
 
         /* Responsive */
@@ -371,11 +371,13 @@
 
 <div class="flex h-screen">
 
-    <!-- SIDEBAR -->
+    <!-- ========================================
+         SIDEBAR
+    ======================================== -->
     <aside class="w-64 bg-slate-900 text-white flex flex-col shrink-0">
-        <div class="px-6 py-5 text-xl font-bold border-b border-white/20">
+        <a href="{{ route('member.profile') }}" class="px-6 py-5 text-xl font-bold border-b border-white/20 hover:bg-slate-800 transition inline-block w-full">
             FTM SOCIETY
-        </div>
+        </a>
 
         <nav class="flex-1 px-4 py-6 space-y-1 text-sm">
             <a href="{{ route('member.dashboard') }}" 
@@ -403,14 +405,19 @@
                 <i class="fas fa-receipt mr-2"></i>Transactions
             </a>
 
-            <a href="{{ route('member.profile') }}" 
+            <a href="{{ route('member.attendance') }}" 
+               class="block px-4 py-2 rounded hover:bg-white/10 transition">
+                <i class="fas fa-calendar-check mr-2"></i>Attendance
+            </a>
+
+            <a href="{{ route('member.account') }}" 
                class="block px-4 py-2 rounded hover:bg-white/10 transition">
                 <i class="fas fa-user mr-2"></i>Profile
             </a>
         </nav>
 
         <div class="px-6 py-4 border-t border-white/20 text-xs text-white/60">
-            © {{ date('Y') }} FTM Society
+            &copy; {{ date('Y') }} FTM Society
         </div>
     </aside>
 

@@ -10,8 +10,12 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Package;
 use App\Models\Order;
 use App\Models\Transaction;
+use App\Models\Voucher;
 use App\Models\Schedule;
 use App\Models\CustomerSchedule;
+use App\Services\WhatsAppService;
+use App\Notifications\PaymentSuccessNotification;
+use App\Notifications\BookingConfirmationNotification;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
@@ -54,9 +58,9 @@ class CheckoutController extends Controller
      */
     private function configureMidtrans(): void
     {
-        Config::$serverKey    = env('MIDTRANS_SERVER_KEY');
-        Config::$clientKey    = env('MIDTRANS_CLIENT_KEY');
-        Config::$isProduction = env('MIDTRANS_IS_PRODUCTION') === 'true';
+        Config::$serverKey    = config('midtrans.server_key');
+        Config::$clientKey    = config('midtrans.client_key');
+        Config::$isProduction = config('midtrans.is_production', false);
         Config::$isSanitized  = true;
         Config::$is3ds        = true;
     }
@@ -166,8 +170,8 @@ class CheckoutController extends Controller
                 ], 422);
             }
 
-            // Calculate pricing
-            $discount = $this->calculateDiscount($request->voucher_code);
+            // Calculate pricing (apply voucher if provided)
+            $discount = $this->calculateDiscount($request->voucher_code, (int) $package->price, $package->id);
             $totalPrice = max(0, (int) $package->price - $discount);
 
             if ($totalPrice <= 0) {
@@ -290,8 +294,29 @@ class CheckoutController extends Controller
         $customer = $order->customer;
         $package = $order->package;
 
-        // Set package expiration date
-        $this->setPackageExpiration($order, $package);
+        // ❌ TIDAK lagi set expired_at saat payment
+        // expired_at akan di-set saat BOOKING PERTAMA di MemberBookingController::store()
+        // $this->setPackageExpiration($order, $package);
+
+        // Ensure the order has remaining_quota and remaining_classes assigned from the package when payment is successful.
+        // remaining_quota = untuk check-in/checkout (berkurang saat check-in)
+        // remaining_classes = untuk booking class (TIDAK berkurang saat check-in, hanya saat booking)
+        if ((empty($order->remaining_quota) || empty($order->remaining_classes)) && $package) {
+            try {
+                $order->update([
+                    'remaining_quota' => (int) ($package->quota ?? 0),
+                    'remaining_classes' => (int) ($package->quota ?? 0),
+                    'quota_applied' => true,
+                ]);
+                Log::info('ℹ️ Order remaining_quota and remaining_classes initialized', [
+                    'order_id' => $order->id,
+                    'assigned_quota' => $package->quota,
+                    'assigned_classes' => $package->quota,
+                ]);
+            } catch (\Exception $e) {
+                Log::warning('Failed to initialize quota/classes for order: ' . $e->getMessage(), ['order_id' => $order->id]);
+            }
+        }
 
         Log::info('✅ APPLY PACKAGE SUCCESS', [
             'order_id' => $order->id,
@@ -301,6 +326,9 @@ class CheckoutController extends Controller
         // Update customer package
         $customer->update(['package_id' => $package->id]);
 
+        // 📱 Kirim notifikasi WhatsApp payment berhasil
+        $this->sendPaymentSuccessNotification($customer, $order);
+
         // Check auto apply
         if (!$package->auto_apply) {
             $order->update(['status' => 'waiting_admin']);
@@ -308,17 +336,31 @@ class CheckoutController extends Controller
             return;
         }
 
-        // Apply quota and expiration
+        // Apply quota (tanpa set expiration - akan di-set saat booking pertama)
         $customer->increment('quota', $package->quota);
         
-        if ($package->duration_days) {
-            $customer->update([
-                'quota_expired_at' => Carbon::now()->addDays($package->duration_days),
-            ]);
-        }
+        // ❌ TIDAK lagi set quota_expired_at saat payment
+        // quota_expired_at akan di-set saat BOOKING PERTAMA di MemberBookingController::store()
+        // if ($package->duration_days) {
+        //     $customer->update([
+        //         'quota_expired_at' => Carbon::now()->addDays($package->duration_days),
+        //     ]);
+        // }
 
         // Handle schedule assignment
         $this->handleScheduleAssignment($order, $package, $customer);
+
+        // If order used a voucher, increment its usage count (only after successful payment)
+        if (!empty($order->voucher_code)) {
+            try {
+                $vc = Voucher::whereRaw('UPPER(code) = ?', [strtoupper($order->voucher_code)])->first();
+                if ($vc) {
+                    $vc->increment('used_count');
+                }
+            } catch (\Exception $e) {
+                Log::warning('Failed to increment voucher used_count: ' . $e->getMessage());
+            }
+        }
     }
 
     /**
@@ -430,6 +472,7 @@ class CheckoutController extends Controller
         }
 
         $insertedCount = 0;
+        $firstSchedule = null;
 
         foreach ($scheduleMap[$classKey] as $scheduleData) {
             $schedule = $this->findSchedule($scheduleData);
@@ -440,14 +483,30 @@ class CheckoutController extends Controller
                 );
             }
 
-            CustomerSchedule::firstOrCreate([
-                'customer_id' => $customer->id,
-                'schedule_id' => $schedule->id,
-                'order_id' => $order->id,
-            ], [
-                'status' => 'confirmed',
-                'joined_at' => now(),
-            ]);
+            // Check if customer is already assigned to this schedule
+            $customerSchedule = CustomerSchedule::where('customer_id', $customer->id)
+                ->where('schedule_id', $schedule->id)
+                ->first();
+
+            if (!$customerSchedule) {
+                $customerSchedule = CustomerSchedule::create([
+                    'customer_id' => $customer->id,
+                    'schedule_id' => $schedule->id,
+                    'order_id' => $order->id,
+                    'status' => 'confirmed',
+                    'joined_at' => now(),
+                ]);
+            } else {
+                // Update existing entry
+                $customerSchedule->update([
+                    'status' => 'confirmed',
+                    'joined_at' => now(),
+                ]);
+            }
+
+            if ($insertedCount === 0) {
+                $firstSchedule = $customerSchedule;
+            }
 
             $insertedCount++;
 
@@ -458,14 +517,61 @@ class CheckoutController extends Controller
             ]);
         }
 
-        $order->update([
+        // 📅 Hitung expired_at dari tanggal jadwal pertama yang ter-assign
+        $expiredAt = null;
+        $package = $order->package;
+
+        if ($package && $package->duration_days) {
+            $assignedScheduleIds = CustomerSchedule::where('customer_id', $customer->id)
+                ->where('order_id', $order->id)
+                ->pluck('schedule_id');
+
+            $firstScheduleDate = Schedule::whereIn('id', $assignedScheduleIds)
+                ->whereNotNull('schedule_date')
+                ->orderBy('schedule_date', 'asc')
+                ->value('schedule_date');
+
+            if ($firstScheduleDate) {
+                $expiredAt = Carbon::parse($firstScheduleDate)->addDays($package->duration_days);
+
+                // Set quota_expired_at di customer
+                $customer->update([
+                    'quota_expired_at' => $expiredAt,
+                ]);
+
+                Log::info('📅 Masa aktif exclusive package dimulai dari jadwal pertama', [
+                    'order_id' => $order->id,
+                    'first_schedule_date' => $firstScheduleDate,
+                    'expired_at' => $expiredAt->toDateTimeString(),
+                    'duration_days' => $package->duration_days,
+                ]);
+            } else {
+                Log::warning('⚠️ Tidak ada schedule_date untuk exclusive package', [
+                    'order_id' => $order->id,
+                    'assigned_schedule_ids' => $assignedScheduleIds->toArray(),
+                ]);
+            }
+        }
+
+        $orderUpdate = [
             'quota_applied' => true,
             'status' => self::STATUS_ACTIVE,
-        ]);
+            'remaining_classes' => 0, // Exclusive: semua jadwal sudah di-assign saat checkout
+        ];
+
+        if ($expiredAt) {
+            $orderUpdate['expired_at'] = $expiredAt;
+        }
+
+        $order->update($orderUpdate);
+
+        // 📱 Kirim notifikasi WhatsApp booking berhasil dengan semua jadwal yang di-book
+        $this->sendBookingConfirmationNotification($customer, $order);
 
         Log::info('🎉 BOOKING COMPLETED', [
             'order_id' => $order->id,
             'schedules_assigned' => $insertedCount,
+            'expired_at' => $expiredAt ? $expiredAt->toDateTimeString() : null,
         ]);
     }
 
@@ -537,9 +643,10 @@ class CheckoutController extends Controller
      * @return string
      */
     private function generateOrderCode(): string
-    {
-        return 'ORD-' . Str::uuid();
-    }
+{
+    return 'FTM-' . substr(Str::uuid(), 0, 10);
+}
+
 
     /**
      * Calculate discount from voucher
@@ -547,10 +654,62 @@ class CheckoutController extends Controller
      * @param string|null $voucherCode
      * @return int
      */
-    private function calculateDiscount(?string $voucherCode): int
+    private function calculateDiscount(?string $voucherCode, int $price, int $packageId): int
     {
-        // TODO: Implement voucher validation
-        return 0;
+        if (empty($voucherCode)) {
+            return 0;
+        }
+
+        $code = strtoupper(trim($voucherCode));
+        $voucher = Voucher::whereRaw('UPPER(code) = ?', [$code])
+            ->where('active', 1)
+            ->with('packages')
+            ->first();
+
+        if (!$voucher) {
+            return 0;
+        }
+
+        // ✅ CHECK: Voucher applicable to this package?
+        if (!$voucher->isApplicableToPackage($packageId)) {
+            return 0;
+        }
+
+        // Date validity
+        if ($voucher->valid_from && now()->lt($voucher->valid_from)) {
+            return 0;
+        }
+
+        if ($voucher->valid_until && now()->gt($voucher->valid_until)) {
+            return 0;
+        }
+
+        // Usage limit
+        if ($voucher->usage_limit !== null && $voucher->used_count >= $voucher->usage_limit) {
+            return 0;
+        }
+
+        $discount = 0;
+
+        // Voucher types: percent | nominal (fixed amount)
+        $type = strtolower($voucher->type ?? 'nominal');
+
+        if ($type === 'percent') {
+            $percent = (float) $voucher->value;
+            $discount = (int) floor($price * ($percent / 100));
+
+            // cap by max_discount if set
+            if ($voucher->max_discount) {
+                $discount = min($discount, (int) $voucher->max_discount);
+            }
+        } else {
+            // nominal/fixed amount
+            $discount = (int) $voucher->value;
+            // cannot exceed price
+            $discount = min($discount, $price);
+        }
+
+        return max(0, $discount);
     }
 
     /**
@@ -832,5 +991,134 @@ class CheckoutController extends Controller
                 ['class_id' => 15, 'day' => 'Saturday', 'time' => '08:00:00'],
             ],
         ];
+    }
+
+    // ==================== WHATSAPP NOTIFICATION METHODS ====================
+
+    /**
+     * Send payment success notification via WhatsApp
+     * 
+     * @param $customer
+     * @param Order $order
+     */
+    private function sendPaymentSuccessNotification($customer, Order $order): void
+    {
+        try {
+            if (!$customer->phone_number) {
+                Log::warning('⚠️ Customer has no phone number', [
+                    'customer_id' => $customer->id,
+                ]);
+                return;
+            }
+
+            $whatsapp = new WhatsAppService();
+            
+            $result = $whatsapp->sendPaymentSuccessNotification(
+                $customer->phone_number,
+                [
+                    'customer_name' => $customer->name,
+                    'package_name' => $order->package->name,
+                    'amount' => $order->amount,
+                    'order_code' => $order->order_code,
+                    'package_days' => $order->package->duration_days ?? 'unlimited',
+                ]
+            );
+
+            if ($result['success']) {
+                Log::info('✅ Payment success WhatsApp notification sent', [
+                    'customer_id' => $customer->id,
+                    'order_id' => $order->id,
+                    'phone' => $customer->phone_number,
+                ]);
+            } else {
+                Log::warning('⚠️ Failed to send payment notification', [
+                    'customer_id' => $customer->id,
+                    'order_id' => $order->id,
+                    'message' => $result['message'],
+                ]);
+            }
+        } catch (\Exception $e) {
+            Log::error('❌ Payment notification error: ' . $e->getMessage(), [
+                'customer_id' => $customer->id,
+                'trace' => $e->getTraceAsString(),
+            ]);
+        }
+    }
+
+    /**
+     * Send booking confirmation notification via WhatsApp
+     * 
+     * @param $customer
+     * @param Order $order
+     */
+    private function sendBookingConfirmationNotification($customer, Order $order): void
+    {
+        try {
+            if (!$customer->phone_number) {
+                Log::warning('⚠️ Customer has no phone number', [
+                    'customer_id' => $customer->id,
+                ]);
+                return;
+            }
+
+            // Ambil semua schedule yang di-assign untuk order ini
+            $customerSchedules = CustomerSchedule::where('order_id', $order->id)
+                ->with(['schedule.classModel'])
+                ->get();
+
+            if ($customerSchedules->isEmpty()) {
+                Log::warning('⚠️ No schedules found for order', [
+                    'order_id' => $order->id,
+                ]);
+                return;
+            }
+
+            // Build array dari semua jadwal untuk dikirim ke WhatsApp
+            $schedulesList = [];
+            foreach ($customerSchedules as $cs) {
+                $schedule = $cs->schedule;
+                $class = $schedule->classModel;
+                
+                $schedulesList[] = [
+                    'day' => ucfirst($schedule->day ?? 'N/A'),
+                    'time' => $schedule->class_time ? Carbon::parse($schedule->class_time)->format('H:i') : '-',
+                    'class_name' => $class->class_name ?? 'Class',
+                    'level' => $class->level ?? '',
+                    'instructor' => $schedule->instructor ?? 'Instructor',
+                ];
+            }
+
+            $whatsapp = new WhatsAppService();
+            
+            $result = $whatsapp->sendBookingConfirmationNotification(
+                $customer->phone_number,
+                [
+                    'customer_name' => $customer->name,
+                    'package_name' => $order->package->name ?? 'Package',
+                    'schedules' => $schedulesList,
+                    'total_schedules' => count($schedulesList),
+                ]
+            );
+
+            if ($result['success']) {
+                Log::info('✅ Booking confirmation WhatsApp notification sent', [
+                    'customer_id' => $customer->id,
+                    'order_id' => $order->id,
+                    'phone' => $customer->phone_number,
+                    'schedules' => count($schedulesList),
+                ]);
+            } else {
+                Log::warning('⚠️ Failed to send booking notification', [
+                    'customer_id' => $customer->id,
+                    'order_id' => $order->id,
+                    'message' => $result['message'],
+                ]);
+            }
+        } catch (\Exception $e) {
+            Log::error('❌ Booking notification error: ' . $e->getMessage(), [
+                'customer_id' => $customer->id,
+                'trace' => $e->getTraceAsString(),
+            ]);
+        }
     }
 }

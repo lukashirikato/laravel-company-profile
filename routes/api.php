@@ -31,3 +31,24 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/midtrans/callback', [MidtransCallbackController::class, 'handle'])
     ->name('midtrans.callback');
+/*
+|--------------------------------------------------------------------------
+| MEMBER QR SCAN API (Protected)
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('auth:customer:sanctum')->group(function () {
+    Route::namespace('App\Http\Controllers\Api\Member')->group(function () {
+        // QR Scanning
+        Route::post('/member/scan-qr', 'ScanQRController@scanQR')
+            ->name('api.member.scan-qr');
+        
+        // Quota Info
+        Route::get('/member/quota-info', 'ScanQRController@getQuotaInfo')
+            ->name('api.member.quota-info');
+        
+        // Recent Check-in Status
+        Route::get('/member/recent-checkin', 'ScanQRController@getRecentCheckin')
+            ->name('api.member.recent-checkin');
+    });
+});

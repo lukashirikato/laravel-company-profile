@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Package;
+use App\Models\Attendance;
+use App\Models\CustomerSchedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -65,11 +67,11 @@ class CustomerPackageController extends Controller
     }
 
     /**
-     * Show package detail
+     * Show package detail (supports AJAX for modal)
      * 
      * @param int $id Order ID
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         try {
             $customerId = Auth::guard('customer')->id();
@@ -80,33 +82,102 @@ class CustomerPackageController extends Controller
                 ->where('customer_id', $customerId)
                 ->firstOrFail();
             
+            $pkg = $order->package;
+            
             // ✅ GUNAKAN METHOD DARI MODEL
             $isExpired = $order->isExpired();
             $remainingDays = $order->getRemainingDays();
             $remainingTime = $order->getRemainingTime();
             
-            // Get session history
-            $sessionHistory = $this->getSessionHistory($order->id);
+            // Get session history (attendance + booked schedules)
+            $attendanceHistory = $this->getAttendanceHistory($order->id);
+            $bookedSchedules = $this->getBookedSchedules($order->id);
             
             // Calculate progress
-            $totalSessions = $order->package->quota ?? 0;
-            $remainingSessions = $order->remaining_sessions ?? $totalSessions;
-            $usedSessions = $totalSessions - $remainingSessions;
-            $progressPercentage = $totalSessions > 0 
-                ? round(($usedSessions / $totalSessions) * 100) 
-                : 0;
+            $totalQuota = $pkg->quota ?? 0;
+            $classesLeft = $order->remaining_classes ?? $totalQuota;
+            $usedClasses = max(0, $totalQuota - $classesLeft);
+            $usagePercent = $totalQuota > 0 ? round(($usedClasses / $totalQuota) * 100) : 0;
             
-            return view('member.packages.detail', compact(
-                'order', 
-                'isExpired', 
-                'remainingDays',
-                'remainingTime',
-                'sessionHistory',
-                'usedSessions',
-                'progressPercentage'
-            ));
+            // ✅ AJAX request → return JSON for modal
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'order' => [
+                        'id' => $order->id,
+                        'order_code' => $order->order_code,
+                        'status' => $order->status,
+                        'amount' => $order->amount,
+                        'amount_formatted' => 'Rp ' . number_format($order->amount, 0, ',', '.'),
+                        'discount' => $order->discount ?? 0,
+                        'created_at' => $order->created_at?->format('d M Y'),
+                        'expired_at' => $order->expired_at ? $order->expired_at->format('d M Y') : null,
+                        'expired_at_full' => $order->expired_at ? $order->expired_at->translatedFormat('d F Y, H:i') : null,
+                        'is_expired' => $isExpired,
+                        'is_activated' => $order->isActivated(),
+                        'activation_info' => !$order->isActivated() && $pkg && $pkg->duration_days
+                            ? 'Masa aktif ' . $pkg->duration_days . ' hari dimulai saat booking pertama'
+                            : null,
+                        'remaining_days' => $remainingDays,
+                        'remaining_time' => $remainingTime,
+                        'remaining_classes' => $classesLeft,
+                        'remaining_quota' => $order->remaining_quota ?? 0,
+                    ],
+                    'package' => [
+                        'id' => $pkg->id ?? null,
+                        'name' => $pkg->name ?? 'Package Tidak Ditemukan',
+                        'description' => $pkg->description ?? '-',
+                        'price' => $pkg->price ?? 0,
+                        'price_formatted' => 'Rp ' . number_format($pkg->price ?? 0, 0, ',', '.'),
+                        'quota' => $totalQuota,
+                        'duration_days' => $pkg->duration_days ?? null,
+                        'schedule_mode' => $pkg->schedule_mode ?? 'booking',
+                    ],
+                    'usage' => [
+                        'total_quota' => $totalQuota,
+                        'used' => $usedClasses,
+                        'remaining' => $classesLeft,
+                        'percentage' => $usagePercent,
+                    ],
+                    'booked_schedules' => $bookedSchedules->map(function ($cs) {
+                        return [
+                            'id' => $cs->id,
+                            'schedule_name' => $cs->schedule->class_name ?? ($cs->schedule->schedule_label ?? '-'),
+                            'day' => $cs->schedule->day ?? '-',
+                            'date' => $cs->schedule->schedule_date ? Carbon::parse($cs->schedule->schedule_date)->format('d M Y') : '-',
+                            'time' => $cs->schedule->class_time ? Carbon::parse($cs->schedule->class_time)->format('H:i') : '-',
+                            'instructor' => $cs->schedule->instructor ?? '-',
+                            'status' => $cs->status ?? 'confirmed',
+                            'joined_at' => $cs->joined_at ? $cs->joined_at->format('d M Y') : '-',
+                        ];
+                    }),
+                    'attendance_history' => $attendanceHistory->map(function ($att) {
+                        return [
+                            'id' => $att->id,
+                            'program' => $att->program ?? '-',
+                            'location' => $att->location ?? '-',
+                            'check_in_at' => $att->check_in_at ? $att->check_in_at->format('d M Y, H:i') : '-',
+                            'check_out_at' => $att->check_out_at ? $att->check_out_at->format('H:i') : null,
+                            'duration' => $att->getFormattedDuration(),
+                            'short_duration' => $att->getShortDuration(),
+                            'check_in_type' => $att->check_in_type ?? '-',
+                            'attendance_status' => $att->attendance_status ?? 'present',
+                        ];
+                    }),
+                    'stats' => [
+                        'total_attendance' => $attendanceHistory->count(),
+                        'total_booked' => $bookedSchedules->count(),
+                    ],
+                ]);
+            }
+            
+            // Normal page request → redirect to index (modal-only approach)
+            return redirect()->route('member.packages.index');
             
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Paket tidak ditemukan.'], 404);
+            }
             return redirect()->route('member.packages.index')
                 ->with('error', 'Paket tidak ditemukan atau Anda tidak memiliki akses.');
                 
@@ -117,6 +188,9 @@ class CustomerPackageController extends Controller
                 'error' => $e->getMessage()
             ]);
             
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Gagal memuat detail paket.'], 500);
+            }
             return redirect()->route('member.packages.index')
                 ->with('error', 'Gagal memuat detail paket.');
         }
@@ -176,19 +250,26 @@ class CustomerPackageController extends Controller
     }
     
     /**
-     * Get session history for a package
-     * 
-     * @param int $orderId
+     * Get attendance history for an order
      */
-    private function getSessionHistory($orderId)
+    private function getAttendanceHistory($orderId)
     {
-        // TODO: Implement jika sudah ada tabel bookings/attendance
-        // return Booking::where('order_id', $orderId)
-        //     ->with('schedule')
-        //     ->orderBy('booking_date', 'desc')
-        //     ->get();
-        
-        return collect([]);
+        return Attendance::where('order_id', $orderId)
+            ->with('schedule')
+            ->orderByDesc('check_in_at')
+            ->limit(50)
+            ->get();
+    }
+
+    /**
+     * Get booked schedules for an order
+     */
+    private function getBookedSchedules($orderId)
+    {
+        return CustomerSchedule::where('order_id', $orderId)
+            ->with('schedule')
+            ->orderByDesc('joined_at')
+            ->get();
     }
     
     /**

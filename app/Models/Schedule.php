@@ -7,7 +7,24 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\ClassModel;
 use App\Models\Customer;
 use App\Models\Package;
+use Carbon\Carbon;
 
+/**
+ * App\Models\Schedule
+ *
+ * @property int $id
+ * @property int|null $package_id (deprecated - use packages pivot)
+ * @property int|null $class_id
+ * @property string|null $schedule_label (required - unique label for schedule)
+ * @property string|null $day
+ * @property date|null $schedule_date
+ * @property string|null $class_time
+ * @property string|null $instructor
+ * @property bool|null $show_on_landing
+ * @property-read \Illuminate\Database\Eloquent\Collection $packages (via pivot)
+ * @property-read \Illuminate\Database\Eloquent\Collection $customers (via pivot)
+ * @property-read ClassModel $classModel
+ */
 class Schedule extends Model
 {
     use HasFactory;
@@ -16,22 +33,106 @@ class Schedule extends Model
 
     // ✅ TAMBAHKAN SEMUA KOLOM YANG ADA DI DATABASE
     protected $fillable = [
-        'package_id',        // ✅ TAMBAH INI (ada di tinker output)
         'class_id',
-        'schedule_label',    // ✅ TAMBAH INI (ada di tinker output)
+        'schedule_label',
         'day',
+        'schedule_date',
         'class_time',
         'instructor',
         'show_on_landing',
     ];
 
+    // ℹ️ Tidak perlu mutator package_ids - Filament handle sync via relationship
+
+
     protected $casts = [
         'show_on_landing' => 'boolean',
-        'class_time' => 'datetime:H:i:s',  // ✅ TAMBAH INI untuk format waktu
+        'class_time' => 'string',
+        'schedule_date' => 'date',
     ];
 
-    // ✅ TAMBAH APPENDS untuk accessor
-    protected $appends = ['class_name'];
+    // ❌ REMOVE appends untuk mencegah N+1 queries di Filament
+    // protected $appends = ['class_name'];
+
+    // add the summary field so Filament can access it without needing to eager-load
+    protected $appends = ['packageNames', 'packageSummary'];
+
+
+    /**
+     * Relasi ke satu package (opsional, legacy)
+     */
+    public function package()
+    {
+        return $this->belongsTo(Package::class, 'package_id');
+    }
+
+    /**
+     * Accessor untuk nama package (multi-package support)
+     */
+    public function getPackageNamesAttribute()
+    {
+        // Jika relasi packages sudah di-load, ambil semua nama
+        if ($this->relationLoaded('packages')) {
+            return $this->packages->pluck('name')->implode(', ');
+        }
+        // Fallback ke relasi package_id (legacy)
+        return $this->package ? $this->package->name : '-';
+    }
+
+    /**
+     * Simplified summary for display in tables.
+     *
+     * Instead of listing every package associated with a schedule, this
+     * accessor returns a single representative label.  The rules are:
+     *
+     * 1. Prefer a known "category" if the package name contains one of the
+     *    keywords defined below (e.g. "Reformer Pilates", "Exclusive Class").
+     * 2. Otherwise use the first package's name, stripping any parenthetical
+     *    details and appending "+N" when more than one package is attached.
+     *
+     * This keeps the admin table compact and avoids the long, wrapped lists
+     * shown in the screenshot.
+     */
+    public function getPackageSummaryAttribute()
+    {
+        $packages = $this->relationLoaded('packages') ?
+            $this->packages : $this->packages()->get();
+
+        if ($packages->isEmpty()) {
+            return '—';
+        }
+
+        // look for a category keyword inside the first package name
+        $firstName = $packages->first()->name;
+        $categories = [
+            'Exclusive Class Program',
+            'Reformer Pilates',
+            'Single Visit Class',
+            'Private Program',
+            'Private Group Program',
+        ];
+        foreach ($categories as $cat) {
+            if (str_contains($firstName, $cat)) {
+                return $cat . ($packages->count() > 1 ? ' +' . ($packages->count() - 1) : '');
+            }
+        }
+
+        // no keyword matched – just strip parentheses and optionally append a count
+        $name = preg_replace('/\s*\(.*/', '', $firstName);
+        if ($packages->count() > 1) {
+            $name .= ' +' . ($packages->count() - 1);
+        }
+
+        return $name;
+    }
+
+    /**
+     * Accessor untuk nama class
+     */
+    public function getClassNameDisplayAttribute()
+    {
+        return $this->classModel ? $this->classModel->class_name : '-';
+    }
 
     /**
      * Accessor untuk class_name
@@ -46,6 +147,32 @@ class Schedule extends Model
     }
 
     /**
+     * Accessor untuk schedule_date_formatted
+     * Menggunakan kolom schedule_date dari DB jika ada,
+     * fallback ke kalkulasi otomatis dari kolom 'day'
+     * Format: d/M/Y (contoh: 27/Feb/2026)
+     */
+    public function getScheduleDateFormattedAttribute()
+    {
+        // Gunakan kolom DB jika terisi
+        if ($this->attributes['schedule_date'] ?? null) {
+            return Carbon::parse($this->attributes['schedule_date'])->format('d/M/Y');
+        }
+
+        // Fallback ke kalkulasi dari day
+        if (!$this->day) {
+            return '-';
+        }
+
+        try {
+            $date = Carbon::now()->startOfWeek()->next($this->day);
+            return $date->format('d/M/Y');
+        } catch (\Exception $e) {
+            return '-';
+        }
+    }
+
+    /**
      * Relationships
      */
     public function classModel()
@@ -53,10 +180,8 @@ class Schedule extends Model
         return $this->belongsTo(ClassModel::class, 'class_id');
     }
 
-    public function package()
-    {
-        return $this->belongsTo(Package::class, 'package_id');
-    }
+
+    // Hapus relasi package() jika tidak dipakai, gunakan packages() untuk multi-package
 
     public function packages()
     {
@@ -96,5 +221,83 @@ class Schedule extends Model
     public function scopeByClass($query, $classId)
     {
         return $query->where('class_id', $classId);
+    }
+
+    /**
+     * Get class start time (from class_time column)
+     * 
+     * @return \Carbon\Carbon|null
+     */
+    public function getClassStartTime(): ?Carbon
+    {
+        if (!$this->class_time || !$this->schedule_date) {
+            return null;
+        }
+
+        try {
+            return Carbon::parse($this->schedule_date->format('Y-m-d') . ' ' . $this->class_time);
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get class end time (assume 60 minutes duration)
+     * 
+     * @return \Carbon\Carbon|null
+     */
+    public function getClassEndTime(): ?Carbon
+    {
+        $classStart = $this->getClassStartTime();
+        if (!$classStart) {
+            return null;
+        }
+
+        return $classStart->copy()->addMinutes(60);
+    }
+
+    /**
+     * Check apakah jam sekarang dalam time window check-in
+     * Window: class_time sampai +30 menit (member boleh check-in mulai kelas dimulai)
+     * 
+     * Contoh: Class 10:00 → check-in valid 10:00 - 10:30
+     * 
+     * @return bool
+     */
+    public function isWithinTimeWindow(): bool
+    {
+        $classStart = $this->getClassStartTime();
+        if (!$classStart) {
+            return true; // Jika tidak ada jadwal lengkap, allow check-in
+        }
+
+        try {
+            $windowEnd = $classStart->copy()->addMinutes(30);
+
+            return now()->between($classStart, $windowEnd);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error checking schedule time window: ' . $e->getMessage());
+            return true; // Jika error, allow check-in
+        }
+    }
+
+    /**
+     * Get formatted time window untuk display
+     * 
+     * @return string Contoh: "10:00 - 10:30"
+     */
+    public function getTimeWindowFormatted(): string
+    {
+        $classStart = $this->getClassStartTime();
+        if (!$classStart) {
+            return '-';
+        }
+
+        try {
+            $windowEnd = $classStart->copy()->addMinutes(30);
+            return $classStart->format('H:i') . ' - ' . $windowEnd->format('H:i');
+        } catch (\Exception $e) {
+            return '-';
+        }
     }
 }

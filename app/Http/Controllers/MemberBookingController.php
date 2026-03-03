@@ -6,10 +6,12 @@ use App\Models\CustomerSchedule;
 use App\Models\Schedule;
 use App\Models\Order;
 use App\Models\ClassModel;
+use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class MemberBookingController extends Controller
 {
@@ -26,9 +28,9 @@ class MemberBookingController extends Controller
 
     // ✅ MAPPING PACKAGE GROUP - Packages yang share jadwal yang sama
     private const PACKAGE_GROUPS = [
-        // Reformer Pilates: Single, Double, Triple semua akses jadwal package_id 2
+        // Reformer Pilates: Single Visit (Single/Double/Triple) + Reformer Pilates Package (1 Visit, 4/15, 4/30, 8/30, 8/60)
         'reformer_pilates' => [
-            'package_ids' => [2, 3, 4], // Single, Double, Triple
+            'package_ids' => [2, 3, 4, 8, 9, 10, 11, 12], // Single Visit + Reformer Pilates Packages
             'schedule_package_id' => 2, // Ambil schedules dari package_id 2
         ],
         // Single Visit Class: semua variant akses jadwal yang sama
@@ -129,6 +131,7 @@ class MemberBookingController extends Controller
                 'package_name' => $package->name,
                 'total_schedules' => $schedules->count(),
                 'days' => $groupedSchedules->keys()->toArray(),
+                'classes_remaining' => $selectedOrder->remaining_classes,
                 'quota_remaining' => $customer->quota,
             ]);
 
@@ -139,6 +142,8 @@ class MemberBookingController extends Controller
                 'activeOrders' => $activeOrders,
                 'selectedOrderId' => $selectedOrderId,
                 'selectedPackage' => $package,
+                'remainingClasses' => $selectedOrder->remaining_classes ?? 0,
+                'remainingQuota' => $customer->quota,
             ]);
 
         } catch (\Exception $e) {
@@ -173,14 +178,35 @@ class MemberBookingController extends Controller
                 return back()->with('error', 'Silakan login ulang');
             }
 
-            // ✅ CEK QUOTA
-            if ($customer->quota <= 0) {
-                Log::warning('⚠️ Customer quota exhausted', [
+            // ✅ AMBIL SCHEDULE
+            $schedule = Schedule::find($validated['schedule_id']);
+
+            if (!$schedule) {
+                return back()->with('error', 'Jadwal tidak ditemukan');
+            }
+
+            // ✅ CARI ORDER YANG VALID (SEBELUM CEK CLASSES)
+            $validOrder = $this->findValidOrderForSchedule($customer, $schedule);
+
+            if (!$validOrder) {
+                Log::warning('⚠️ No valid order for schedule', [
                     'customer_id' => $customer->id,
-                    'quota' => $customer->quota,
+                    'schedule_id' => $schedule->id,
+                    'schedule_packages' => $schedule->packages->pluck('id')->toArray(),
                 ]);
 
-                return back()->with('error', 'Quota kamu sudah habis');
+                return back()->with('error', 'Anda tidak memiliki paket yang sesuai untuk jadwal ini.');
+            }
+
+            // ✅ CEK CLASSES REMAINING (dari order yang valid, untuk booking)
+            if ($validOrder->remaining_classes <= 0) {
+                Log::warning('⚠️ Customer classes remaining exhausted', [
+                    'customer_id' => $customer->id,
+                    'order_id' => $validOrder->id,
+                    'remaining_classes' => $validOrder->remaining_classes,
+                ]);
+
+                return back()->with('error', 'Classes remaining kamu sudah habis. Tidak bisa booking lagi');
             }
 
             // ✅ CEK DOUBLE BOOKING
@@ -198,26 +224,6 @@ class MemberBookingController extends Controller
                 return back()->with('error', 'Kamu sudah booking kelas ini');
             }
 
-            // ✅ AMBIL SCHEDULE
-            $schedule = Schedule::find($validated['schedule_id']);
-
-            if (!$schedule) {
-                return back()->with('error', 'Jadwal tidak ditemukan');
-            }
-
-            // ✅ CARI ORDER YANG VALID
-            $validOrder = $this->findValidOrderForSchedule($customer, $schedule);
-
-            if (!$validOrder) {
-                Log::warning('⚠️ No valid order for schedule', [
-                    'customer_id' => $customer->id,
-                    'schedule_id' => $schedule->id,
-                    'schedule_package_id' => $schedule->package_id,
-                ]);
-
-                return back()->with('error', 'Anda tidak memiliki paket yang sesuai untuk jadwal ini.');
-            }
-
             // ✅ TRANSACTION BOOKING
             DB::transaction(function () use ($customer, $validated, $schedule, $validOrder) {
                 CustomerSchedule::create([
@@ -228,7 +234,31 @@ class MemberBookingController extends Controller
                     'joined_at'   => now(),
                 ]);
 
-                $customer->decrement('quota');
+                // 🎫 Decrement CLASSES REMAINING (untuk booking)
+                // ❌ JANGAN decrement quota (itu hanya untuk check-in)
+                $validOrder->decrement('remaining_classes');
+
+                // 📅 AKTIVASI MASA AKTIF SAAT BOOKING PERTAMA
+                // Jika expired_at masih NULL dan package punya duration_days → mulai hitung masa aktif
+                if (!$validOrder->expired_at && $validOrder->package && $validOrder->package->duration_days) {
+                    $expiredAt = Carbon::now()->addDays($validOrder->package->duration_days);
+                    $validOrder->update(['expired_at' => $expiredAt]);
+
+                    // Update juga quota_expired_at di Customer
+                    $customer->update([
+                        'quota_expired_at' => $expiredAt,
+                    ]);
+
+                    Log::info('📅 Masa aktif dimulai dari booking pertama', [
+                        'customer_id' => $customer->id,
+                        'order_id' => $validOrder->id,
+                        'package' => $validOrder->package->name,
+                        'duration_days' => $validOrder->package->duration_days,
+                        'expired_at' => $expiredAt->format('Y-m-d H:i:s'),
+                    ]);
+                }
+
+                $validOrder->refresh();
 
                 Log::info('✅ Booking successful', [
                     'customer_id' => $customer->id,
@@ -237,9 +267,13 @@ class MemberBookingController extends Controller
                     'package' => $validOrder->package->name,
                     'day' => $schedule->day,
                     'time' => $schedule->class_time,
-                    'quota_remaining' => $customer->quota - 1,
+                    'classes_remaining' => $validOrder->remaining_classes,
+                    'quota_remaining' => $customer->quota,
                 ]);
             });
+
+            // 📱 Kirim notifikasi WhatsApp setelah booking berhasil
+            $this->sendMemberBookingNotification($customer, $validOrder);
 
             return back()->with('success', 'Class berhasil dibooking!');
 
@@ -319,7 +353,6 @@ class MemberBookingController extends Controller
         }
 
         $schedules = Schedule::whereIn('id', $assignedScheduleIds)
-            ->where('show_on_landing', 1)
             ->with('classModel')
             ->get();
 
@@ -333,21 +366,37 @@ class MemberBookingController extends Controller
     }
 
     /**
-     * ✅ UPDATED: Get schedules for regular package - SUPPORT PACKAGE GROUPS
+     * ✅ UPDATED: Get schedules for regular package - SUPPORT MULTI-PACKAGE SCHEDULES
+     * Menampilkan SEMUA jadwal yang terhubung ke package (tidak filter visibility)
      */
     private function getRegularSchedules($package)
     {
-        // ✅ 1. Cek apakah package ini bagian dari package group
-        $schedulePackageIds = $this->getSchedulePackageIds($package);
+        // ✅ 1. Query schedules yang terhubung ke package ini via pivot table packages_schedules
+        // TIDAK filter show_on_landing - tampilkan semua jadwal
+        $schedules = Schedule::whereHas('packages', function ($query) use ($package) {
+            $query->where('package_id', $package->id);
+        })
+        ->with(['classModel', 'packages'])
+        ->orderBy('schedule_date')
+        ->orderBy('class_time')
+        ->get();
 
-        // ✅ 2. Query schedules berdasarkan package_id
-        $schedules = Schedule::whereIn('package_id', $schedulePackageIds)
-            ->where('show_on_landing', 1)
+        // ✅ 2. Fallback: jika paket bagian dari group, query dari grouped packages
+        if ($schedules->isEmpty()) {
+            $schedulePackageIds = $this->getSchedulePackageIds($package);
+            
+            $schedules = Schedule::whereHas('packages', function ($query) use ($schedulePackageIds) {
+                $query->whereIn('package_id', $schedulePackageIds);
+            })
+            ->with(['classModel', 'packages'])
+            ->orderBy('schedule_date')
+            ->orderBy('class_time')
             ->get();
+        }
 
-        // ✅ 3. Attach classModel data manually untuk display
+        // ✅ 3. Attach classModel data manually untuk display jika tidak ada
         $schedules = $schedules->map(function ($schedule) {
-            if ($schedule->class_id) {
+            if (!$schedule->classModel && $schedule->class_id) {
                 $schedule->classModel = ClassModel::find($schedule->class_id);
             }
             
@@ -364,8 +413,8 @@ class MemberBookingController extends Controller
         Log::info('✅ Loaded regular package schedules', [
             'package_id' => $package->id,
             'package_name' => $package->name,
-            'schedule_package_ids' => $schedulePackageIds,
             'count' => $schedules->count(),
+            'note' => 'All schedules including hidden ones (tidak filter show_on_landing)',
         ]);
 
         return $schedules;
@@ -411,7 +460,7 @@ class MemberBookingController extends Controller
     }
 
     /**
-     * ✅ UPDATED: Find valid order for schedule - SUPPORT PACKAGE GROUPS
+     * ✅ UPDATED: Find valid order for schedule - SUPPORT MULTI-PACKAGE SCHEDULES
      */
     private function findValidOrderForSchedule($customer, $schedule)
     {
@@ -435,18 +484,38 @@ class MemberBookingController extends Controller
                     return $order;
                 }
             }
-            // ✅ UNTUK PAKET REGULAR
+            // ✅ UNTUK PAKET REGULAR - check via packages pivot table
             else {
-                // Cek apakah schedule package_id valid untuk package ini
-                $validSchedulePackageIds = $this->getSchedulePackageIds($package);
+                // Cek apakah schedule memiliki relasi dengan package ini via pivot
+                $packageConnected = $schedule->packages()
+                    ->where('package_id', $package->id)
+                    ->exists();
                 
-                if (in_array($schedule->package_id, $validSchedulePackageIds)) {
-                    Log::info('✅ Found matching order', [
+                if ($packageConnected) {
+                    Log::info('✅ Found matching order via packages pivot', [
                         'order_id' => $order->id,
                         'package_id' => $package->id,
-                        'schedule_package_id' => $schedule->package_id,
+                        'schedule_id' => $schedule->id,
                     ]);
                     return $order;
+                }
+                
+                // ✅ Fallback: Cek apakah package bagian dari group
+                $schedulePackageIds = $this->getSchedulePackageIds($package);
+                foreach ($schedulePackageIds as $schedulePackageId) {
+                    $groupConnected = $schedule->packages()
+                        ->where('package_id', $schedulePackageId)
+                        ->exists();
+                    
+                    if ($groupConnected) {
+                        Log::info('✅ Found matching order via package group', [
+                            'order_id' => $order->id,
+                            'package_id' => $package->id,
+                            'schedule_package_id' => $schedulePackageId,
+                            'schedule_id' => $schedule->id,
+                        ]);
+                        return $order;
+                    }
                 }
             }
         }
@@ -454,7 +523,7 @@ class MemberBookingController extends Controller
         Log::warning('⚠️ No matching order found', [
             'customer_id' => $customer->id,
             'schedule_id' => $schedule->id,
-            'schedule_package_id' => $schedule->package_id ?? 'NULL',
+            'schedule_packages' => $schedule->packages->pluck('id')->toArray(),
         ]);
 
         return null;
@@ -494,5 +563,84 @@ class MemberBookingController extends Controller
             'selectedOrderId' => $selectedOrderId,
             'selectedPackage' => $package,
         ])->with('error', $errorMessage);
+    }
+
+    /**
+     * Send WhatsApp notification untuk member yang baru booking (dari halaman book class)
+     * 
+     * @param $customer
+     * @param Order $order
+     */
+    private function sendMemberBookingNotification($customer, Order $order): void
+    {
+        try {
+            if (!$customer->phone_number) {
+                Log::warning('⚠️ Customer has no phone number for booking notification', [
+                    'customer_id' => $customer->id,
+                ]);
+                return;
+            }
+
+            // Ambil semua schedule yang di-assign untuk order ini
+            $customerSchedules = CustomerSchedule::where('order_id', $order->id)
+                ->with(['schedule.classModel'])
+                ->get();
+
+            if ($customerSchedules->isEmpty()) {
+                Log::warning('⚠️ No schedules found for booking notification', [
+                    'customer_id' => $customer->id,
+                    'order_id' => $order->id,
+                ]);
+                return;
+            }
+
+            // Build array dari semua jadwal untuk dikirim ke WhatsApp
+            $schedulesList = [];
+            foreach ($customerSchedules as $cs) {
+                $schedule = $cs->schedule;
+                $class = $schedule->classModel;
+                
+                $schedulesList[] = [
+                    'day' => ucfirst($schedule->day ?? 'N/A'),
+                    'time' => $schedule->class_time ? Carbon::parse($schedule->class_time)->format('H:i') : '-',
+                    'class_name' => $class->class_name ?? 'Class',
+                    'level' => $class->level ?? '',
+                    'instructor' => $schedule->instructor ?? 'Instructor',
+                ];
+            }
+
+            $whatsapp = new WhatsAppService();
+            
+            $result = $whatsapp->sendBookingConfirmationNotification(
+                $customer->phone_number,
+                [
+                    'customer_name' => $customer->name,
+                    'package_name' => $order->package->name ?? 'Package',
+                    'schedules' => $schedulesList,
+                    'total_schedules' => count($schedulesList),
+                ]
+            );
+
+            if ($result['success']) {
+                Log::info('✅ Member booking WhatsApp notification sent', [
+                    'customer_id' => $customer->id,
+                    'order_id' => $order->id,
+                    'phone' => $customer->phone_number,
+                    'schedules' => count($schedulesList),
+                ]);
+            } else {
+                Log::warning('⚠️ Failed to send member booking notification', [
+                    'customer_id' => $customer->id,
+                    'order_id' => $order->id,
+                    'message' => $result['message'],
+                ]);
+            }
+        } catch (\Exception $e) {
+            Log::error('❌ Member booking notification error: ' . $e->getMessage(), [
+                'customer_id' => $customer->id,
+                'order_id' => $order->id,
+                'trace' => $e->getTraceAsString(),
+            ]);
+        }
     }
 }

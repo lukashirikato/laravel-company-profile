@@ -32,6 +32,8 @@ use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\MemberBookingController;
 use App\Http\Controllers\Member\MyClassesController;
 use App\Http\Controllers\Customer\CustomerPackageController;
+use App\Http\Controllers\QRScannerController;
+use App\Http\Controllers\QRApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,16 +44,21 @@ use App\Http\Controllers\Customer\CustomerPackageController;
 
 // Landing Page
 Route::get('/', function () {
-    $schedules = Schedule::with('classModel')
-        ->where('show_on_landing', 1)
-        ->orderBy('day')
-        ->orderBy('class_time')
-        ->get()
-        ->groupBy('day');
+    try {
+        $schedules = Schedule::with('classModel')
+            ->where('show_on_landing', 1)
+            ->limit(100)
+            ->orderBy('day')
+            ->orderBy('class_time')
+            ->get()
+            ->groupBy('day');
 
-    $customer = auth('customer')->check() ? auth('customer')->user() : null;
+        $customer = auth('customer')->check() ? auth('customer')->user() : null;
 
-    return view('welcome', compact('schedules', 'customer'));
+        return view('welcome', compact('schedules', 'customer'));
+    } catch (\Exception $e) {
+        return view('welcome', ['schedules' => collect(), 'customer' => null, 'error' => $e->getMessage()]);
+    }
 })->name('home');
 
 // Public API Endpoints
@@ -313,13 +320,56 @@ Route::prefix('member')
 
         /*
         |--------------------------------------------------------------------------
+        | QR CODE SCANNER - ATTENDANCE
+        |--------------------------------------------------------------------------
+        | Member QR code scanning untuk check-in/out
+        */
+        Route::prefix('qr')->name('qr.')->group(function () {
+            // Show QR scanner page
+            Route::get('/scanner', [QRScannerController::class, 'index'])
+                ->name('scanner');
+            
+            // Process QR scan (AJAX)
+            Route::post('/scan', [QRScannerController::class, 'scan'])
+                ->name('scan');
+            
+            // Check-out from class (AJAX)
+            Route::post('/checkout', [QRScannerController::class, 'checkOut'])
+                ->name('checkout');
+            
+            // Get active attendance (for checkout list)
+            Route::get('/active', [QRScannerController::class, 'getActiveAttendance'])
+                ->name('active');
+        });
+
+        /*
+        |--------------------------------------------------------------------------
         | PROFILE & SETTINGS
         |--------------------------------------------------------------------------
         */
         Route::get('/profile', [MemberProfileController::class, 'show'])
             ->name('profile');
+        Route::get('/account', function () {
+            return view('member.account');
+        })->name('account');
+        Route::get('/attendance', function () {
+            return view('member.attendance');
+        })->name('attendance');
         Route::get('/program-saya', [CustomerController::class, 'program'])
             ->name('program');
+
+        /*
+        |--------------------------------------------------------------------------
+        | QR CODE API - Generate, Regenerate, Disable, Enable
+        |--------------------------------------------------------------------------
+        */
+        Route::prefix('api/qr')->name('api.qr.')->group(function () {
+            Route::post('/generate', [QRApiController::class, 'generate'])->name('generate');
+            Route::post('/regenerate', [QRApiController::class, 'regenerate'])->name('regenerate');
+            Route::post('/disable', [QRApiController::class, 'disable'])->name('disable');
+            Route::post('/enable', [QRApiController::class, 'enable'])->name('enable');
+            Route::get('/status', [QRApiController::class, 'status'])->name('status');
+        });
 
         /*
         |--------------------------------------------------------------------------
@@ -339,6 +389,19 @@ Route::prefix('member')
         Route::post('/logout', [MemberAuthController::class, 'logout'])
             ->name('logout');
     });
+
+/*
+|--------------------------------------------------------------------------
+| STAFF / ADMIN SCANNER ROUTES
+|--------------------------------------------------------------------------
+| Scanner untuk check-in member - accessible oleh authenticated users
+*/
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    // Scanner Interface
+    Route::get('/scanner', function () {
+        return view('admin.scanner');
+    })->name('scanner');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -419,4 +482,47 @@ if (config('app.debug')) {
             'success_url' => route('payment.success', $order_code),
         ]);
     })->name('test.notification');
+    
+    // Test WhatsApp Notification
+    Route::get('/test-whatsapp', function () {
+        try {
+            $whatsapp = new \App\Services\WhatsAppService();
+            
+            // Test 1: Simple message
+            $result1 = $whatsapp->send(
+                '6288219775687',  // Sender number (test)
+                'Halo! Ini test WhatsApp dari FTM Society. Sistem notifikasi berhasil! 🎉'
+            );
+            
+            // Test 2: Payment success simulation
+            $result2 = $whatsapp->sendPaymentSuccessNotification(
+                '6288219775698',
+                [
+                    'customer_name' => 'Admin Test',
+                    'package_name' => 'Test Package',
+                    'amount' => 100000,
+                    'order_code' => 'TEST-001',
+                    'package_days' => 30,
+                ]
+            );
+            
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Test WhatsApp terkirim!',
+                'simple_test' => $result1,
+                'payment_test' => $result2,
+                'config' => [
+                    'token_exists' => !empty(config('fonnte.api_token')),
+                    'enabled' => config('fonnte.enabled'),
+                    'api_url' => config('fonnte.api_url'),
+                ]
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ], 500);
+        }
+    })->name('test.whatsapp');
 }

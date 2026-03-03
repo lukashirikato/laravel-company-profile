@@ -7,46 +7,66 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        /* Brand Palette: Burnt Cherry #793451 | Power Pink #EA6993 |
+           Soft Petals #F1CCE3 | Patina Green #00745F | Springs Ivy #08513C |
+           Grounded Green #D2DCA5 | Layl #26282B | Rising #F4EEE6 */
+
         .custom-gradient {
-            background: linear-gradient(135deg, #BD8686 0%, #F7C6C6 35%, #D7B9A3 100%);
+            background: linear-gradient(135deg, #793451 0%, #EA6993 55%, #F1CCE3 100%);
+        }
+
+        .card-glass {
+            background: rgba(244, 238, 230, 0.97);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
 
         .input-focus:focus {
-            border-color: #8C5A5A;
-            box-shadow: 0 0 0 3px rgba(140, 90, 90, 0.1);
+            border-color: #EA6993;
+            box-shadow: 0 0 0 3px rgba(234, 105, 147, 0.18);
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #603943 0%, #8C5A5A 100%);
+            background: linear-gradient(135deg, #793451 0%, #EA6993 100%);
             transition: all 0.3s ease;
         }
 
         .btn-primary:hover {
-            background: linear-gradient(135deg, #432129 0%, #603943 100%);
+            background: linear-gradient(135deg, #26282B 0%, #793451 100%);
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(67, 33, 41, 0.3);
+            box-shadow: 0 8px 25px rgba(121, 52, 81, 0.35);
         }
 
         .logo-shadow {
-            box-shadow: 0 4px 12px rgba(140, 90, 90, 0.15);
+            box-shadow: 0 4px 16px rgba(121, 52, 81, 0.25);
         }
 
         .success-alert {
-            background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+            background: linear-gradient(135deg, #00745F 0%, #08513C 100%);
         }
 
         .error-alert {
-            background: linear-gradient(135deg, #EF4444 0%, #F87171 100%);
+            background: linear-gradient(135deg, #793451 0%, #EA6993 100%);
+        }
+
+        hr { border-color: #F1CCE3; }
+
+        a.brand-link {
+            color: #793451;
+            font-weight: 600;
+        }
+        a.brand-link:hover {
+            color: #EA6993;
         }
     </style>
 </head>
 <body class="custom-gradient min-h-screen flex items-center justify-center px-4">
 
-    <div class="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md">
+    <div class="card-glass shadow-2xl rounded-2xl p-8 w-full max-w-md border border-[#F1CCE3]">
         <div class="text-center mb-6">
             <img src="{{ asset('icons/logo-ftm.jpg') }}" alt="Logo Gym" class="w-20 h-20 mx-auto mb-3 rounded-full logo-shadow">
-            <h1 class="text-3xl font-bold text-gray-800">Selamat Datang</h1>
-            <p class="text-sm text-gray-500">FTM Society</p>
+            <h1 class="text-3xl font-bold text-[#793451]">Selamat Datang</h1>
+            <p class="text-sm text-[#26282B]/60">FTM Society</p>
         </div>
 
         {{-- Notifikasi sukses --}}
@@ -74,21 +94,21 @@
             @csrf
 
             <div>
-                <label for="login" class="block text-sm text-gray-700 mb-1">Email atau Nomor HP</label>
+                <label for="login" class="block text-sm text-[#26282B]/80 mb-1 font-medium">Email atau Nomor HP</label>
                 <input type="text" name="login" id="login" value="{{ old('login') }}" required autofocus
                     placeholder="Masukkan email atau nomor HP"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none input-focus transition-all duration-200 bg-white">
+                    class="w-full px-4 py-3 border border-[#F1CCE3] rounded-lg focus:outline-none input-focus transition-all duration-200 bg-[#F4EEE6] text-[#26282B] placeholder-[#26282B]/40">
             </div>
 
             <div>
-                <label for="password" class="block text-sm text-gray-700 mb-1">Password</label>
+                <label for="password" class="block text-sm text-[#26282B]/80 mb-1 font-medium">Password</label>
                 <div class="relative">
                     <input type="password" name="password" id="password" required
                         placeholder="Masukkan password"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none input-focus transition-all duration-200 bg-white pr-12">
+                        class="w-full px-4 py-3 border border-[#F1CCE3] rounded-lg focus:outline-none input-focus transition-all duration-200 bg-[#F4EEE6] text-[#26282B] placeholder-[#26282B]/40 pr-12">
                     <button type="button" 
                             id="togglePassword"
-                            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+                            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#26282B]/40 hover:text-[#793451] transition-colors">
                         <i class="fa fa-eye" id="eyeIcon"></i>
                     </button>
                 </div>
@@ -105,10 +125,10 @@
 
         <div class="text-center text-sm">
             Belum memiliki akun?
-            <a href="{{ route('home') }}#join" class="text-purple-700 font-semibold hover:underline">Daftar Sekarang</a>
+            <a href="{{ route('home') }}#join" class="brand-link hover:underline">Daftar Sekarang</a>
         </div>
 
-        <p class="text-center text-xs text-gray-400 mt-4">
+        <p class="text-center text-xs text-[#26282B]/40 mt-4">
             Data Anda aman dan terlindungi
         </p>
     </div>

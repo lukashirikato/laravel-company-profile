@@ -1,0 +1,73 @@
+/* ==================== SIDEBAR - LIGHT MODERN VERSION ==================== */
+
+aside {
+    background: linear-gradient(
+        180deg,
+        #FFFFFF 0%,
+        #F8FAFC 100%
+    ) !important;
+    
+    border-right: 1px solid #E5E7EB !important;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Logo */
+.fi-logo {
+    color: #111827 !important;
+    font-weight: 700 !important;
+    font-size: 1.25rem !important;
+    padding: 1rem !important;
+}
+
+/* Sidebar Items */
+aside .fi-sidebar-item {
+    margin: 4px 8px !important;
+    padding: 10px 12px !important;
+    border-radius: 10px !important;
+    transition: all 0.2s ease !important;
+    color: #374151 !important;
+}
+
+/* Label */
+aside .fi-sidebar-item-label {
+    color: #374151 !important;
+    font-weight: 500 !important;
+    font-size: 0.9rem !important;
+}
+
+/* Icon */
+aside .fi-sidebar-item-icon {
+    color: #6B7280 !important;
+}
+
+/* Hover */
+aside .fi-sidebar-item:hover {
+    background: #E0E7FF !important;
+    transform: translateX(3px);
+}
+
+/* Active Item */
+aside .fi-sidebar-item-active {
+    background: #6366F1 !important;
+    color: white !important;
+    border-radius: 10px !important;
+}
+
+aside .fi-sidebar-item-active .fi-sidebar-item-label {
+    color: white !important;
+    font-weight: 600 !important;
+}
+
+aside .fi-sidebar-item-active .fi-sidebar-item-icon {
+    color: white !important;
+}
+
+/* Group Label */
+aside .fi-sidebar-group-label {
+    color: #9CA3AF !important;
+    font-size: 0.7rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    padding: 0.5rem 1rem !important;
+}

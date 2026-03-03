@@ -33,6 +33,23 @@ class Kernel extends ConsoleKernel
             });
 
         // ========================================
+        // AUTO-CHECKOUT ATTENDANCE (QR SYSTEM)
+        // ========================================
+        // Jalankan setiap 30 menit untuk auto-checkout member yang sudah melewati 60 menit
+        // Waktu operasional: 06:00 - 22:00 (jam operasional gym)
+        $schedule->command('attendance:process-auto-checkout')
+            ->everyThirtyMinutes()
+            ->between('06:00', '22:00')
+            ->timezone('Asia/Jakarta')
+            ->withoutOverlapping()
+            ->onSuccess(function () {
+                \Log::info('✅ Auto-checkout scheduler berhasil dijalankan');
+            })
+            ->onFailure(function () {
+                \Log::error('❌ Auto-checkout scheduler gagal dijalankan');
+            });
+
+        // ========================================
         // REMINDER PAKET AKAN EXPIRED (OPTIONAL)
         // ========================================
         // Kirim notifikasi untuk paket yang akan expired dalam 3 hari
