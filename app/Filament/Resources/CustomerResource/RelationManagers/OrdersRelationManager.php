@@ -8,6 +8,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 
 class OrdersRelationManager extends RelationManager
 {
@@ -84,6 +85,51 @@ class OrdersRelationManager extends RelationManager
                 ->columns(2)
                 ->collapsible(),
         ]);
+    }
+
+    /**
+     * ✅ SYNC QUOTA WHEN EDITED FROM ORDER RELATIONMANAGER
+     * Ensures order.remaining_quota stays in sync with customer.quota
+     */
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        // Get the order being edited
+        $order = $this->ownerRecord->orders()->find($this->record->id);
+        
+        if ($order && isset($data['remaining_quota'])) {
+            $newQuota = (int) $data['remaining_quota'];
+            
+            \Illuminate\Support\Facades\Log::info('🔄 OrdersRelationManager: Syncing quota', [
+                'order_id' => $order->id,
+                'order_code' => $order->order_code,
+                'customer_id' => $order->customer_id,
+                'old_quota' => $order->remaining_quota,
+                'new_quota' => $newQuota,
+            ]);
+            
+            // Also update customer.quota to keep it in sync
+            try {
+                $order->customer->update(['quota' => $newQuota]);
+                
+                \Illuminate\Support\Facades\Log::info('✅ OrdersRelationManager: Quota synced to customer', [
+                    'customer_id' => $order->customer_id,
+                    'customer_quota' => $newQuota,
+                ]);
+                
+                Notification::make()
+                    ->title('✅ Order & Customer Quota Updated')
+                    ->body("Order {$order->order_code}: {$order->remaining_quota} → {$newQuota}")
+                    ->success()
+                    ->send();
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('❌ OrdersRelationManager: Quota sync failed', [
+                    'error' => $e->getMessage(),
+                    'order_id' => $order->id,
+                ]);
+            }
+        }
+        
+        return $data;
     }
 
     public static function table(Table $table): Table
@@ -181,21 +227,47 @@ class OrdersRelationManager extends RelationManager
                     ->action(function ($record, array $data) {
                         $oldClasses = $record->remaining_classes;
                         $oldQuota = $record->remaining_quota;
+                        $newQuota = (int) $data['remaining_quota'];
 
-                        $record->update([
-                            'remaining_classes' => $data['remaining_classes'],
-                            'remaining_quota' => $data['remaining_quota'],
-                        ]);
+                        try {
+                            $record->update([
+                                'remaining_classes' => $data['remaining_classes'],
+                                'remaining_quota' => $newQuota,
+                            ]);
+                            
+                            // ✅ SYNC: Also update customer.quota to keep consistent
+                            $record->customer->update([
+                                'quota' => $newQuota,
+                            ]);
+                            
+                            Log::info('✅ Quick Adjust: Order & Customer quota synced', [
+                                'order_id' => $record->id,
+                                'customer_id' => $record->customer_id,
+                                'old_quota' => $oldQuota,
+                                'new_quota' => $newQuota,
+                                'reason' => $data['reason'],
+                            ]);
 
-                        Notification::make()
-                            ->title('Classes & Quota Diperbarui')
-                            ->body(
-                                "Classes: {$oldClasses} → {$data['remaining_classes']}, " .
-                                "Quota: {$oldQuota} → {$data['remaining_quota']}. " .
-                                "Alasan: {$data['reason']}"
-                            )
-                            ->success()
-                            ->send();
+                            Notification::make()
+                                ->title('✅ Classes & Quota Updated & Synced')
+                                ->body(
+                                    "Order {$record->order_code}: Classes {$oldClasses} → {$data['remaining_classes']}, " .
+                                    "Quota {$oldQuota} → {$newQuota}. Alasan: {$data['reason']}"
+                                )
+                                ->success()
+                                ->send();
+                        } catch (\Exception $e) {
+                            Log::error('❌ Quick Adjust failed', [
+                                'error' => $e->getMessage(),
+                                'order_id' => $record->id,
+                            ]);
+                            
+                            Notification::make()
+                                ->title('❌ Update Failed')
+                                ->body('Error: ' . $e->getMessage())
+                                ->danger()
+                                ->send();
+                        }
                     })
                     ->requiresConfirmation()
                     ->modalHeading('Adjust Classes & Quota')

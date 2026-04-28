@@ -10,16 +10,77 @@
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Sidebar Responsive Styles */
+        .sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        /* Mobile: Hide sidebar by default */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                z-index: 50;
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 40;
+            }
+            
+            .sidebar-overlay.active {
+                display: block;
+            }
+            
+            .main-content {
+                margin-left: 0 !important;
+            }
+            
+            .hamburger-btn {
+                display: flex !important;
+            }
+        }
+        
+        /* Desktop: Show sidebar always */
+        @media (min-width: 769px) {
+            .sidebar {
+                position: relative;
+            }
+            
+            .sidebar-overlay {
+                display: none !important;
+            }
+            
+            .hamburger-btn {
+                display: none !important;
+            }
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100 h-screen overflow-hidden">
+
+<!-- Sidebar Overlay (Mobile Only) -->
+<div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
 <div class="flex h-screen">
 
     <!-- ========================================
          SIDEBAR
     ======================================== -->
-    <aside class="w-64 bg-slate-900 text-white flex flex-col shrink-0">
+    <aside id="sidebar" class="sidebar w-64 bg-slate-900 text-white flex flex-col shrink-0">
         <a href="{{ route('member.profile') }}" class="px-6 py-5 text-xl font-bold border-b border-white/20 hover:bg-slate-800 transition inline-block w-full">
             FTM SOCIETY
         </a>
@@ -76,61 +137,72 @@
     <!-- ========================================
          MAIN CONTENT
     ======================================== -->
-    <main class="flex-1 p-8 overflow-y-auto">
+    <main class="main-content flex-1 p-4 md:p-8 overflow-y-auto">
+
+        <!-- Mobile Hamburger Button -->
+        <button id="hamburger-btn" class="hamburger-btn hidden fixed top-4 left-4 z-30 w-10 h-10 bg-slate-900 text-white rounded-lg items-center justify-center shadow-lg hover:bg-slate-800 transition" onclick="toggleSidebar()">
+            <i class="fas fa-bars text-lg"></i>
+        </button>
 
         <!-- HEADER -->
-        <div class="mb-8">
-            <h1 class="text-2xl font-bold text-gray-800">
+        <div class="mb-6 md:mb-8 mt-12 md:mt-0">
+            <h1 class="text-xl md:text-2xl font-bold text-gray-800">
                 Member Dashboard
             </h1>
-            <p class="text-sm text-gray-500">
+            <p class="text-xs md:text-sm text-gray-500">
                 Welcome back, {{ $customer->name }}
             </p>
         </div>
 
         <!-- STATS CARDS -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-10">
             <!-- Classes Remaining Card (untuk booking) -->
-            <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div class="bg-white rounded-xl p-4 md:p-6 shadow-sm hover:shadow-md transition-shadow">
                 <div class="flex items-center justify-between mb-2">
-                    <p class="text-sm text-gray-500 font-medium">Credit</p>
-                    <i class="fas fa-calendar-check text-blue-500 text-xl"></i>
+                    <p class="text-xs md:text-sm text-gray-500 font-medium">Credit</p>
+                    <i class="fas fa-calendar-check text-blue-500 text-lg md:text-xl"></i>
                 </div>
-                <p class="text-2xl font-bold text-gray-800">
+                
+                <!-- ✅ Display total remaining classes from ALL active orders -->
+                <p class="text-xl md:text-2xl font-bold text-gray-800">
                     {{ $remainingClasses }}
                 </p>
-                <p class="text-xs text-gray-500 mt-1">For booking</p>
+                
+                <p class="text-[10px] md:text-xs text-gray-500 mt-1">For booking</p>
             </div>
 
             <!-- Remaining Quota Card (untuk check-in) -->
-            <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div class="bg-white rounded-xl p-4 md:p-6 shadow-sm hover:shadow-md transition-shadow">
                 <div class="flex items-center justify-between mb-2">
-                    <p class="text-sm text-gray-500 font-medium">Remaining Quota</p>
-                    <i class="fas fa-ticket-alt text-purple-500 text-xl"></i>
+                    <p class="text-xs md:text-sm text-gray-500 font-medium">Remaining Quota</p>
+                    <i class="fas fa-ticket-alt text-purple-500 text-lg md:text-xl"></i>
                 </div>
-                <p class="text-2xl font-bold text-gray-800">
+                
+                <!-- ✅ Display total remaining quota from ALL active orders -->
+                <p class="text-xl md:text-2xl font-bold text-gray-800">
                     {{ $remainingQuota }}
                 </p>
-                <p class="text-xs text-gray-500 mt-1">For check-in/out</p>
+                
+                <p class="text-[10px] md:text-xs text-gray-500 mt-1">For check-in/out</p>
             </div>
 
             <!-- Status Card -->
-            <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div class="bg-white rounded-xl p-4 md:p-6 shadow-sm hover:shadow-md transition-shadow">
                 <div class="flex items-center justify-between mb-2">
-                    <p class="text-sm text-gray-500 font-medium">Status</p>
-                    <i class="fas fa-check-circle text-green-500 text-xl"></i>
+                    <p class="text-xs md:text-sm text-gray-500 font-medium">Status</p>
+                    <i class="fas fa-check-circle text-green-500 text-lg md:text-xl"></i>
                 </div>
-                <p class="text-2xl font-bold text-green-600">
+                <p class="text-xl md:text-2xl font-bold text-green-600">
                     Active
                 </p>
             </div>
         </div>
 
         <!-- QR CARD + QUICK ACTIONS -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-10">
 
             <!-- MEMBER QR CARD -->
-            <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl shadow-lg p-6 text-center text-white relative overflow-hidden" style="min-height: 400px;">
+            <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl shadow-lg p-4 md:p-6 text-center text-white relative overflow-hidden" style="min-height: 350px;">
                 <!-- Card Background Pattern -->
                 <div class="absolute inset-0 opacity-10">
                     <div class="absolute top-0 right-0 w-40 h-40 bg-purple-500 rounded-full"></div>
@@ -146,26 +218,26 @@
                     </div>
 
                     <!-- Member Info -->
-                    <div class="flex-1 flex flex-col justify-center mb-6">
+                    <div class="flex-1 flex flex-col justify-center mb-4 md:mb-6">
                         <div class="text-center">
-                            <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-purple-400 to-blue-400 flex items-center justify-center text-3xl font-bold shadow-lg mb-3">
+                            <div class="w-16 h-16 md:w-20 md:h-20 mx-auto rounded-full bg-gradient-to-br from-purple-400 to-blue-400 flex items-center justify-center text-2xl md:text-3xl font-bold shadow-lg mb-2 md:mb-3">
                                 {{ substr($customer->name, 0, 1) }}
                             </div>
-                            <h3 class="text-xl font-bold">{{ $customer->name }}</h3>
-                            <p class="text-sm text-gray-300 mt-1">Member ID: <span class="font-mono font-bold">{{ str_pad($customer->id, 4, '0', STR_PAD_LEFT) }}</span></p>
+                            <h3 class="text-lg md:text-xl font-bold">{{ $customer->name }}</h3>
+                            <p class="text-xs md:text-sm text-gray-300 mt-1">Member ID: <span class="font-mono font-bold">{{ str_pad($customer->id, 4, '0', STR_PAD_LEFT) }}</span></p>
                         </div>
                     </div>
 
                     <!-- QR Code Section -->
-                    <div class="mb-4 bg-white rounded-lg p-3 flex justify-center" style="height: 140px;">
+                    <div class="mb-3 md:mb-4 bg-white rounded-lg p-2 md:p-3 flex justify-center" style="height: 120px; min-height: 120px;">
                         @if($customer->qr_token && $customer->qr_active)
                             <div class="flex items-center justify-center w-full cursor-pointer" onclick="openQRPreview()" title="Click to enlarge QR Code">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data={{ urlencode($customer->getQRData()) }}" alt="QR Code" style="max-width: 130px;" class="hover:scale-105 transition-transform duration-200">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data={{ urlencode($customer->getQRData()) }}" alt="QR Code" style="max-width: 110px; max-height: 110px;" class="hover:scale-105 transition-transform duration-200">
                             </div>
                         @else
                             <div class="flex items-center justify-center w-full text-gray-400">
                                 <div class="text-center">
-                                    <i class="fas fa-qrcode text-4xl mb-2" style="color: #ccc;"></i>
+                                    <i class="fas fa-qrcode text-3xl md:text-4xl mb-2" style="color: #ccc;"></i>
                                     <p class="text-xs">No QR Code</p>
                                 </div>
                             </div>
@@ -173,37 +245,39 @@
                     </div>
                     <!-- Tap hint -->
                     @if($customer->qr_token && $customer->qr_active)
-                    <p class="text-[10px] text-gray-400 -mt-2 mb-2"><i class="fas fa-expand-alt mr-1"></i>Tap QR to enlarge</p>
+                    <p class="text-[9px] md:text-[10px] text-gray-400 -mt-2 mb-2"><i class="fas fa-expand-alt mr-1"></i>Tap QR to enlarge</p>
                     @endif
 
                     <!-- Status -->
-                    <div class="text-xs text-center text-gray-300 border-t border-white/20 pt-3">
+                    <div class="text-xs text-center text-gray-300 border-t border-white/20 pt-2 md:pt-3">
                         @if($customer->qr_active)
-                            <span class="inline-block bg-green-500/30 text-green-300 px-3 py-1 rounded-full text-xs font-bold">✓ QR ACTIVE</span>
+                            <span class="inline-block bg-green-500/30 text-green-300 px-2 md:px-3 py-1 rounded-full text-[10px] md:text-xs font-bold">✓ QR ACTIVE</span>
                         @else
-                            <span class="inline-block bg-red-500/30 text-red-300 px-3 py-1 rounded-full text-xs font-bold">✗ QR INACTIVE</span>
+                            <span class="inline-block bg-red-500/30 text-red-300 px-2 md:px-3 py-1 rounded-full text-[10px] md:text-xs font-bold">✗ QR INACTIVE</span>
                         @endif
                     </div>
                 </div>
             </div>
 
             <!-- ACTION BUTTONS + ATTENDANCE -->
-            <div class="lg:col-span-2 space-y-6">
+            <div class="lg:col-span-2 space-y-4 md:space-y-6">
                 <!-- Quick Action Buttons -->
-                <div class="bg-white rounded-xl shadow-sm p-6">
-                    <h3 class="font-bold text-lg mb-4 text-gray-800">Quick Actions</h3>
-                    <div class="grid grid-cols-2 gap-3">
-                        <a href="{{ route('member.account') }}" class="bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg transition font-semibold shadow-md hover:shadow-lg flex items-center justify-center gap-2">
-                            <i class="fas fa-qrcode"></i>
-                            <span>My QR Card</span>
+                <div class="bg-white rounded-xl shadow-sm p-4 md:p-6">
+                    <h3 class="font-bold text-base md:text-lg mb-3 md:mb-4 text-gray-800">Quick Actions</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-2 md:gap-3">
+                        <a href="{{ route('member.account') }}" class="bg-purple-600 hover:bg-purple-700 text-white py-2.5 md:py-3 rounded-lg transition text-sm md:text-base font-semibold shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                            <i class="fas fa-qrcode text-sm md:text-base"></i>
+                            <span class="hidden sm:inline">My QR Card</span>
+                            <span class="sm:hidden">QR Card</span>
                         </a>
-                        <a href="{{ route('member.attendance') }}" class="bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition font-semibold shadow-md hover:shadow-lg flex items-center justify-center gap-2">
-                            <i class="fas fa-history"></i>
+                        <a href="{{ route('member.attendance') }}" class="bg-blue-600 hover:bg-blue-700 text-white py-2.5 md:py-3 rounded-lg transition text-sm md:text-base font-semibold shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                            <i class="fas fa-history text-sm md:text-base"></i>
                             <span>History</span>
                         </a>
-                        <a href="{{ route('member.book') }}" class="bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-lg transition font-semibold shadow-md hover:shadow-lg flex items-center justify-center gap-2">
-                            <i class="fas fa-calendar-plus"></i>
-                            <span>Book Now</span>
+                        <a href="{{ route('member.book') }}" class="bg-orange-600 hover:bg-orange-700 text-white py-2.5 md:py-3 rounded-lg transition text-sm md:text-base font-semibold shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                            <i class="fas fa-calendar-plus text-sm md:text-base"></i>
+                            <span class="hidden sm:inline">Book Now</span>
+                            <span class="sm:hidden">Book</span>
                         </a>
                     </div>
                 </div>
@@ -225,43 +299,43 @@
         </div>
 
         <!-- ATTENDANCE HISTORY -->
-        <div class="bg-white rounded-xl shadow-sm p-6">
-            <h3 class="font-bold text-lg mb-4 text-gray-800 flex items-center gap-2">
-                <i class="fas fa-history text-indigo-600"></i>
+        <div class="bg-white rounded-xl shadow-sm p-4 md:p-6">
+            <h3 class="font-bold text-base md:text-lg mb-3 md:mb-4 text-gray-800 flex items-center gap-2">
+                <i class="fas fa-history text-indigo-600 text-sm md:text-base"></i>
                 Recent Attendance
             </h3>
 
             <div class="divide-y divide-gray-100">
                 @forelse($attendances->take(5) as $a)
-                    <div class="py-4 flex justify-between items-center hover:bg-gray-50 px-2 rounded transition">
-                        <div class="flex items-center gap-3 flex-1">
-                            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                                <i class="fas fa-check text-green-600"></i>
+                    <div class="py-3 md:py-4 flex justify-between items-center hover:bg-gray-50 px-2 rounded transition">
+                        <div class="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
+                            <div class="w-8 h-8 md:w-10 md:h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-check text-green-600 text-xs md:text-sm"></i>
                             </div>
-                            <div>
-                                <p class="text-gray-800 font-semibold">{{ $a->program ?? 'General' }}</p>
+                            <div class="min-w-0 flex-1">
+                                <p class="text-gray-800 font-semibold text-sm md:text-base truncate">{{ $a->program ?? 'General' }}</p>
                                 <p class="text-xs text-gray-500">{{ $a->check_in_type ?? 'system' }}</p>
                             </div>
                         </div>
-                        <div class="text-right">
-                            <p class="text-gray-800 font-semibold">{{ $a->getFormattedDuration() ?? '-' }}</p>
-                            <p class="text-gray-500 text-sm">
+                        <div class="text-right flex-shrink-0 ml-2">
+                            <p class="text-gray-800 font-semibold text-xs md:text-sm whitespace-nowrap">{{ $a->getFormattedDuration() ?? '-' }}</p>
+                            <p class="text-gray-500 text-xs md:text-sm whitespace-nowrap">
                                 {{ $a->created_at->format('d M Y') }}
                             </p>
                         </div>
                     </div>
                 @empty
-                    <div class="text-center py-12">
-                        <div class="w-20 h-20 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                            <i class="fas fa-clipboard-list text-4xl text-gray-400"></i>
+                    <div class="text-center py-8 md:py-12">
+                        <div class="w-16 h-16 md:w-20 md:h-20 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-3 md:mb-4">
+                            <i class="fas fa-clipboard-list text-3xl md:text-4xl text-gray-400"></i>
                         </div>
-                        <p class="text-gray-500 font-medium">
+                        <p class="text-gray-500 font-medium text-sm md:text-base">
                             No attendance yet.
                         </p>
-                        <p class="text-sm text-gray-400 mt-1">
+                        <p class="text-xs md:text-sm text-gray-400 mt-1">
                             Scan your QR code to record attendance
                         </p>
-                        <a href="{{ route('member.qr.scanner') }}" class="inline-block mt-4 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition font-semibold">
+                        <a href="{{ route('member.qr.scanner') }}" class="inline-block mt-3 md:mt-4 bg-green-600 hover:bg-green-700 text-white px-4 md:px-6 py-2 rounded-lg transition font-semibold text-sm md:text-base">
                             Start Scanning
                         </a>
                     </div>
@@ -269,8 +343,8 @@
             </div>
 
             @if($attendances->count() > 5)
-                <div class="text-center mt-4 pt-4 border-t border-gray-100">
-                    <a href="{{ route('member.attendance') }}" class="text-indigo-600 hover:text-indigo-700 font-semibold text-sm">
+                <div class="text-center mt-3 md:mt-4 pt-3 md:pt-4 border-t border-gray-100">
+                    <a href="{{ route('member.attendance') }}" class="text-indigo-600 hover:text-indigo-700 font-semibold text-xs md:text-sm">
                         View All Attendance Records →
                     </a>
                 </div>
@@ -383,6 +457,75 @@
     });
 </script>
 @endif
+
+<!-- ═══════════════════════════════════════════
+     SIDEBAR TOGGLE SCRIPT
+═══════════════════════════════════════════ -->
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const hamburger = document.getElementById('hamburger-btn');
+        
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+        
+        // Change hamburger icon
+        const icon = hamburger.querySelector('i');
+        if (sidebar.classList.contains('active')) {
+            icon.classList.remove('fa-bars');
+            icon.classList.add('fa-times');
+        } else {
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
+        
+        // Prevent body scroll when sidebar is open on mobile
+        if (window.innerWidth <= 768) {
+            if (sidebar.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+    }
+    
+    // Close sidebar when clicking on a link (mobile only)
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebarLinks = document.querySelectorAll('#sidebar a');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    const sidebar = document.getElementById('sidebar');
+                    const overlay = document.getElementById('sidebar-overlay');
+                    const hamburger = document.getElementById('hamburger-btn');
+                    
+                    if (sidebar.classList.contains('active')) {
+                        sidebar.classList.remove('active');
+                        overlay.classList.remove('active');
+                        document.body.style.overflow = '';
+                        
+                        const icon = hamburger.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                }
+            });
+        });
+    });
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        
+        if (window.innerWidth > 768) {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+</script>
 
 </body>
 </html>

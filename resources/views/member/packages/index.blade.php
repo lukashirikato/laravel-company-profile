@@ -127,6 +127,55 @@
         }
         .status-active { background: #dcfce7; color: #166534; }
         .status-expired { background: #fee2e2; color: #991b1b; }
+
+        /* ═══════════════════════════════════════════ RESPONSIVE SIDEBAR ═══════════════════════════════════════════ */
+        .sidebar {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 20;
+            backdrop-filter: blur(4px);
+        }
+
+        .hamburger-btn {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                z-index: 30;
+                transform: translateX(-100%);
+                box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .sidebar-overlay.active {
+                display: block;
+            }
+
+            .hamburger-btn {
+                display: flex !important;
+            }
+
+            body.sidebar-open {
+                overflow: hidden;
+            }
+        }
     </style>
 </head>
 
@@ -143,7 +192,7 @@
     <!-- ========================================
          SIDEBAR
     ======================================== -->
-    <aside class="w-64 bg-slate-900 text-white flex flex-col shrink-0">
+    <aside id="sidebar" class="sidebar w-64 bg-slate-900 text-white flex flex-col shrink-0">
         <a href="{{ route('member.profile') }}" class="px-6 py-5 text-xl font-bold border-b border-white/20 hover:bg-slate-800 transition inline-block w-full">
             FTM SOCIETY
         </a>
@@ -190,11 +239,19 @@
         </div>
     </aside>
 
+    <!-- Mobile Sidebar Overlay -->
+    <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
 {{-- ================= MAIN ================= --}}
-<main class="flex-1 p-8 overflow-y-auto">
+<main class="flex-1 p-4 md:p-8 overflow-y-auto">
+
+    <!-- Mobile Hamburger Button -->
+    <button id="hamburger-btn" class="hamburger-btn fixed top-4 left-4 z-30 w-10 h-10 bg-slate-900 text-white rounded-lg items-center justify-center shadow-lg hover:bg-slate-800 transition" onclick="toggleSidebar()">
+        <i class="fas fa-bars text-lg"></i>
+    </button>
 
 {{-- ================= HEADER ================= --}}
-<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-10">
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-8 mb-6 md:mb-10 mt-12 md:mt-0">
     <div class="flex items-center justify-between">
         <div>
             <div class="flex items-center gap-3 mb-2">
@@ -207,7 +264,7 @@
         </div>
         
         {{-- ✅ TOMBOL REDIRECT KE PRICING --}}
-        <a href="{{ route('member.profile') }}#Packages" 
+        <a href="{{ route('member.profile') }}#Packages" class="text-sm md:text-base" 
            class="bg-gradient-to-r from-primary-dark to-primary hover:from-[#5A1F3A] hover:to-[#B83863] text-white px-6 py-3 rounded-xl font-semibold transition-all inline-flex items-center shadow-lg hover:shadow-xl hover:-translate-y-0.5">
             <i class="fas fa-plus-circle mr-2"></i>
             Beli Paket Lagi
@@ -866,6 +923,51 @@ function populateModal(data) {
     switchTab('info');
     document.querySelectorAll('.tab-panel.active').forEach(p => p.style.display = 'block');
 }
+
+// ===== SIDEBAR TOGGLE FUNCTION =====
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    const hamburger = document.getElementById('hamburger-btn');
+    
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('active');
+    
+    if (sidebar.classList.contains('open')) {
+        document.body.style.overflow = 'hidden';
+        hamburger.innerHTML = '<i class="fas fa-times text-lg"></i>';
+    } else {
+        document.body.style.overflow = '';
+        hamburger.innerHTML = '<i class="fas fa-bars text-lg"></i>';
+    }
+}
+
+// Close sidebar when clicking on a nav link
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = document.querySelectorAll('aside nav a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                toggleSidebar();
+            }
+        });
+    });
+});
+
+// Reset sidebar on window resize
+window.addEventListener('resize', function() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    const hamburger = document.getElementById('hamburger-btn');
+    
+    if (window.innerWidth > 768) {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('active');
+        hamburger.innerHTML = '<i class="fas fa-bars text-lg"></i>';
+        document.body.style.overflow = '';
+    }
+});
+
 </script>
 
 </body>

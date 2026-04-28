@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
     <!-- favicon  -->
     <link rel="icon" type="image/png" href="{{ asset('icon/favicon.jpg') }}" />
     <!-- end favicon  -->
@@ -12,13 +12,7 @@
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    
-    <!-- NORD Heading Font -->
-    <link href="https://fonts.googleapis.com/css2?family=NORD:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Instrument Serif Accent Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
-    <!-- Poppins Body Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
     
     <!-- Remix Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
@@ -29,7 +23,530 @@
     <!-- Hero Background Style (dynamic) -->
     <!-- Typography system is now handled via Tailwind classes: font-heading, font-accent, font-body -->
     <style>
-      body { scroll-behavior: smooth; }
+      /* ========================================= */
+      /* BASE STYLES                               */
+      /* ========================================= */
+      
+      * {
+        box-sizing: border-box;
+      }
+      
+      body {
+        font-family: 'Poppins', sans-serif !important;
+        font-size: 16px;
+        line-height: 1.6;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+      }
+
+      body * {
+        font-family: 'Poppins', sans-serif !important;
+      }
+
+      p {
+        font-weight: 500;
+        line-height: 1.6;
+        letter-spacing: 0.3px;
+      }
+
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Poppins', sans-serif !important;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0.5px;
+      }
+
+      nav,
+      button,
+      a,
+      span,
+      label {
+        font-family: 'Poppins', sans-serif !important;
+        letter-spacing: 0.3px;
+      }
+
+      nav a,
+      button {
+        font-weight: 600;
+      }
+
+      input,
+      select,
+      textarea,
+      option,
+      summary,
+      .logo,
+      .font-heading,
+      .font-body,
+      .font-accent,
+      .accent-serif {
+        font-family: 'Poppins', sans-serif !important;
+      }
+
+      i[class^="ri-"],
+      i[class*=" ri-"] {
+        font-family: 'remixicon' !important;
+      }
+      
+      body { 
+        scroll-behavior: smooth;
+        overflow-x: hidden;
+        width: 100%;
+        max-width: 100vw;
+      }
+      
+      html {
+        overflow-x: hidden;
+        width: 100%;
+      }
+      
+      /* Prevent horizontal scroll */
+      section {
+        max-width: 100vw;
+        overflow-x: hidden;
+      }
+      
+      .container {
+        max-width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      
+      /* ========================================= */
+      /* MOBILE MENU RESPONSIVE CSS                */
+      /* ========================================= */
+      
+      /* Mobile Menu Slide Animation */
+      .mobile-menu {
+        transform: translateX(100%);
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: transform;
+        max-width: 90vw;
+      }
+      
+      .mobile-menu.active {
+        transform: translateX(0) !important;
+      }
+      
+      /* Mobile Backdrop */
+      #mobile-backdrop {
+        opacity: 0;
+        transition: opacity 0.25s ease-in-out;
+      }
+      
+      #mobile-backdrop.block {
+        opacity: 1;
+      }
+      
+      /* Prevent body scroll when menu is open */
+      body.overflow-hidden {
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
+      }
+      
+      /* ========================================= */
+      /* HEADER RESPONSIVE                         */
+      /* ========================================= */
+      
+      header {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+      }
+      
+      @media (max-width: 767px) {
+        header {
+          padding: 0.75rem 0;
+        }
+        
+        header .container {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+        
+        header .logo {
+          font-size: 1.25rem !important;
+        }
+        
+        header .logo .font-accent {
+          font-size: 1.5rem !important;
+        }
+      }
+      
+      /* ========================================= */
+      /* HERO SECTION RESPONSIVE                   */
+      /* ========================================= */
+      
+      @media (max-width: 767px) {
+        #home {
+          min-height: 100vh;
+          padding-top: 70px !important;
+          padding-left: 0 !important;
+          padding-right: 0 !important;
+        }
+        
+        #home .container {
+          padding-left: 1.25rem !important;
+          padding-right: 1.25rem !important;
+        }
+        
+        /* Hero Typography Mobile */
+        #home h1 {
+          font-size: 2.25rem !important;
+          line-height: 1.15 !important;
+          word-break: break-word;
+        }
+        
+        #home .text-5xl,
+        #home .text-6xl,
+        #home .text-7xl,
+        #home .text-8xl {
+          font-size: 2.25rem !important;
+        }
+        
+        #home .text-xl {
+          font-size: 1rem !important;
+        }
+        
+        #home .text-2xl {
+          font-size: 1.15rem !important;
+        }
+        
+        #home .text-3xl {
+          font-size: 1.35rem !important;
+        }
+        
+        #home .text-4xl {
+          font-size: 1.5rem !important;
+        }
+        
+        /* Hero Buttons */
+        #home a[href="#join"],
+        #home a[href="#about"] {
+          padding: 0.85rem 1.75rem !important;
+          font-size: 0.95rem !important;
+          width: 100%;
+          max-width: 280px;
+        }
+        
+        /* Premium badge */
+        #home .inline-flex.items-center.gap-3 {
+          padding: 0.7rem 1.4rem !important;
+          font-size: 0.75rem !important;
+        }
+        
+        /* Button container */
+        #home .flex.flex-wrap.gap-4 {
+          flex-direction: column;
+          align-items: center;
+          gap: 0.75rem !important;
+        }
+        
+        /* Hide scroll indicator on mobile */
+        #home .absolute.bottom-8 {
+          display: none !important;
+        }
+        
+        /* Background decorative elements - reduce size */
+        #home .absolute.w-96 {
+          width: 200px !important;
+          height: 200px !important;
+        }
+      }
+      
+      /* ========================================= */
+      /* SECTIONS GENERAL RESPONSIVE               */
+      /* ========================================= */
+      
+      @media (max-width: 767px) {
+        section {
+          padding-top: 3rem !important;
+          padding-bottom: 3rem !important;
+          padding-left: 1rem !important;
+          padding-right: 1rem !important;
+        }
+        
+        section h2 {
+          font-size: 1.875rem !important;
+          line-height: 1.2 !important;
+        }
+        
+        section h3 {
+          font-size: 1.25rem !important;
+        }
+        
+        section .text-4xl {
+          font-size: 1.75rem !important;
+        }
+        
+        section .text-5xl {
+          font-size: 2rem !important;
+        }
+        
+        section .text-6xl {
+          font-size: 2.25rem !important;
+        }
+        
+        section .text-7xl {
+          font-size: 2.5rem !important;
+        }
+        
+        /* Section containers */
+        section .container {
+          padding-left: 1rem !important;
+          padding-right: 1rem !important;
+        }
+      }
+      
+      /* ========================================= */
+      /* GRID LAYOUTS RESPONSIVE                   */
+      /* ========================================= */
+      
+      @media (max-width: 767px) {
+        /* Force all grids to single column on mobile */
+        .grid-cols-2,
+        .grid-cols-3,
+        .grid-cols-4,
+        .md\\:grid-cols-2,
+        .md\\:grid-cols-3,
+        .lg\\:grid-cols-2,
+        .lg\\:grid-cols-3,
+        .lg\\:grid-cols-4,
+        .lg\\:grid-cols-12 {
+          grid-template-columns: 1fr !important;
+          gap: 1rem !important;
+        }
+        
+        /* Flexbox to column */
+        .flex-row {
+          flex-direction: column !important;
+        }
+      }
+      
+      /* ========================================= */
+      /* CARDS & CONTAINERS RESPONSIVE             */
+      /* ========================================= */
+      
+      @media (max-width: 767px) {
+        .rounded-xl,
+        .rounded-2xl,
+        .rounded-3xl {
+          border-radius: 1rem !important;
+        }
+        
+        .p-8 {
+          padding: 1.5rem !important;
+        }
+        
+        .p-6 {
+          padding: 1.25rem !important;
+        }
+        
+        .p-4 {
+          padding: 1rem !important;
+        }
+        
+        .px-8 {
+          padding-left: 1.5rem !important;
+          padding-right: 1.5rem !important;
+        }
+        
+        .px-6 {
+          padding-left: 1.25rem !important;
+          padding-right: 1.25rem !important;
+        }
+        
+        .py-20,
+        .py-28,
+        .py-32 {
+          padding-top: 3rem !important;
+          padding-bottom: 3rem !important;
+        }
+        
+        /* Gaps */
+        .gap-8,
+        .gap-12 {
+          gap: 1.25rem !important;
+        }
+        
+        .gap-6 {
+          gap: 1rem !important;
+        }
+        
+        /* Margins */
+        .mb-16,
+        .mb-24 {
+          margin-bottom: 2.5rem !important;
+        }
+        
+        .mb-12 {
+          margin-bottom: 2rem !important;
+        }
+      }
+      
+      /* ========================================= */
+      /* MODALS RESPONSIVE                         */
+      /* ========================================= */
+      
+      @media (max-width: 767px) {
+        .modal-box,
+        #service-detail-box,
+        #logout-modal > div {
+          margin: 1rem !important;
+          max-width: calc(100vw - 2rem) !important;
+          padding: 1.5rem !important;
+        }
+        
+        .modal-box h3,
+        .modal-box h4 {
+          font-size: 1.125rem !important;
+        }
+        
+        .modal-box p {
+          font-size: 0.875rem !important;
+        }
+      }
+      
+      /* ========================================= */
+      /* IMAGES & MEDIA RESPONSIVE                 */
+      /* ========================================= */
+      
+      @media (max-width: 767px) {
+        img {
+          max-width: 100%;
+          height: auto;
+        }
+        
+        .bg-cover {
+          background-size: cover;
+          background-position: center;
+        }
+        
+        iframe,
+        video {
+          max-width: 100%;
+          height: auto;
+        }
+        
+        /* Hide large decorative elements on mobile */
+        .absolute.w-96.h-96,
+        .absolute.w-80.h-80 {
+          display: none;
+        }
+      }
+      
+      /* ========================================= */
+      /* MOBILE MENU VISIBILITY                    */
+      /* ========================================= */
+      
+      @media (max-width: 767px) {
+        #mobile-menu-button {
+          display: flex !important;
+        }
+      }
+      
+      @media (min-width: 768px) {
+        #mobile-menu-button {
+          display: none !important;
+        }
+        
+        #mobile-menu,
+        #mobile-backdrop {
+          display: none !important;
+        }
+      }
+      
+      /* ========================================= */
+      /* TOUCH OPTIMIZATION                        */
+      /* ========================================= */
+      
+      @media (hover: none) and (pointer: coarse) {
+        button,
+        a {
+          min-height: 44px;
+        }
+        
+        * {
+          -webkit-tap-highlight-color: rgba(121, 52, 81, 0.1);
+        }
+      }
+      
+      /* ========================================= */
+      /* LANDSCAPE MOBILE ORIENTATION              */
+      /* ========================================= */
+      
+      @media (max-width: 900px) and (orientation: landscape) {
+        #home {
+          min-height: auto;
+          padding-top: 70px !important;
+          padding-bottom: 2rem !important;
+        }
+        
+        #home h1 {
+          font-size: 2rem !important;
+        }
+        
+        header {
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+        }
+        
+        section {
+          padding-top: 2rem !important;
+          padding-bottom: 2rem !important;
+        }
+      }
+      
+      /* ========================================= */
+      /* TABLET OPTIMIZATIONS                      */
+      /* ========================================= */
+      
+      @media (min-width: 640px) and (max-width: 767px) {
+        #home h1 {
+          font-size: 3rem !important;
+        }
+        
+        .lg\\:grid-cols-3,
+        .lg\\:grid-cols-4 {
+          grid-template-columns: repeat(2, 1fr) !important;
+        }
+      }
+      
+      @media (min-width: 768px) and (max-width: 1023px) {
+        #home h1 {
+          font-size: 3.5rem !important;
+        }
+        
+        .container {
+          padding-left: 1.5rem;
+          padding-right: 1.5rem;
+        }
+      }
+      
+      /* ========================================= */
+      /* UTILITY CLASSES                           */
+      /* ========================================= */
+      
+      @media (max-width: 767px) {
+        .mobile-hidden {
+          display: none !important;
+        }
+        
+        .mobile-full-width {
+          width: 100% !important;
+        }
+        
+        .mobile-text-center {
+          text-align: center !important;
+        }
+        
+        .mobile-no-padding {
+          padding: 0 !important;
+        }
+      }
     </style>
   </head>
   <body class="bg-[#F4EEE6] text-[#26282B] font-body">
@@ -43,7 +560,7 @@
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
 
         <!-- LOGO -->
-        <a href="{{ route('member.dashboard') }}" class="logo text-primary text-2xl font-heading font-bold hover:text-secondary transition tracking-tight">
+        <a href="{{ route('member.dashboard') }}" class="logo text-[#EA6993] text-2xl font-heading font-bold hover:text-[#793451] transition tracking-tight">
           <span class="font-accent italic text-3xl align-top mr-1">FTM <span class="font-accent italic text-3xl align-top ml-1">SOCIETY</span>
         </a>
 
@@ -51,18 +568,18 @@
         <nav class="hidden md:flex items-center space-x-8">
 
             <!-- MENU UMUM -->
-            <a href="#home" class="text-[#26282B]/80 hover:text-primary transition font-heading font-medium">Home</a>
-            <a href="#about" class="text-[#26282B]/80 hover:text-primary transition font-heading font-medium">About</a>
-            <a href="#Programs" class="text-[#26282B]/80 hover:text-primary transition font-heading font-medium">Programs</a>
-            <a href="#Packages" class="text-[#26282B]/80 hover:text-primary transition font-heading font-medium">Packages</a>
-            <a href="#classes" class="text-[#26282B]/80 hover:text-primary transition font-heading font-medium">Classes</a>
-            <a href="#schedule" class="text-[#26282B]/80 hover:text-primary transition font-heading font-medium">Schedule</a>
-            <a href="#Facility" class="text-[#26282B]/80 hover:text-primary transition font-heading font-medium">Gallery</a>
-            <a href="#contact" class="text-[#26282B]/80 hover:text-primary transition font-heading font-medium">Contact</a>
+            <a href="#home" class="text-[#26282B] hover:text-[#EA6993] transition font-heading font-medium">Home</a>
+            <a href="#about" class="text-[#26282B] hover:text-[#EA6993] transition font-heading font-medium">About</a>
+            <a href="#Programs" class="text-[#26282B] hover:text-[#EA6993] transition font-heading font-medium">Programs</a>
+            <a href="#Packages" class="text-[#26282B] hover:text-[#EA6993] transition font-heading font-medium">Packages</a>
+            <a href="#classes" class="text-[#26282B] hover:text-[#EA6993] transition font-heading font-medium">Classes</a>
+            <a href="#schedule" class="text-[#26282B] hover:text-[#EA6993] transition font-heading font-medium">Schedule</a>
+            <a href="#Facility" class="text-[#26282B] hover:text-[#EA6993] transition font-heading font-medium">Gallery</a>
+            <a href="#contact" class="text-[#26282B] hover:text-[#EA6993] transition font-heading font-medium">Contact</a>
 
             <!-- PROFIL -->
             <a href="{{ route('member.profile.modal') }}"
-         class="flex items-center gap-2 text-[#26282B]/80 hover:text-primary transition font-heading font-medium">
+         class="flex items-center gap-2 text-[#26282B]/80 hover:text-[#EA6993] transition font-heading font-medium">
         <i class="ri-user-3-line text-xl"></i> Profil
       </a>
 
@@ -78,7 +595,7 @@
                 </button>
             @else
                 <a href="{{ route('member.login') }}"
-                    class="bg-primary text-white px-6 py-2 rounded-button hover:bg-secondary hover:scale-105 transition font-heading font-bold">
+                    class="bg-[#EA6993] text-white px-6 py-2 rounded-button hover:bg-[#793451] hover:scale-105 transition font-heading font-bold">
                     Login
                 </a>
             @endauth
@@ -88,7 +605,7 @@
         <!-- Mobile button (visible on small screens) -->
         <div class="md:hidden flex items-center">
           <button id="mobile-menu-button"
-              class="w-10 h-10 flex items-center justify-center text-primary"
+              class="w-10 h-10 flex items-center justify-center text-[#EA6993]"
               aria-label="Toggle mobile menu">
             <i class="ri-menu-line ri-lg"></i>
           </button>
@@ -100,8 +617,8 @@
 
 <div id="logout-modal" class="fixed inset-0 bg-[#26282B] bg-opacity-50 hidden items-center justify-center z-50">
     <div class="bg-[#F4EEE6] rounded-xl shadow-lg max-w-sm w-full p-8 relative flex flex-col items-center">
-        <h3 class="text-xl font-heading font-bold text-primary mb-4">Konfirmasi Logout</h3>
-        <p class="mb-6 text-[#26282B]/80 text-center font-body"><span class="accent-serif">Anda yakin ingin logout?</span><br>Pilih <span class="accent-serif">"Reset Password"</span> jika ingin mengganti password Anda.</p>
+        <h3 class="text-xl font-heading font-bold text-[#EA6993] mb-4">Konfirmasi Logout</h3>
+        <p class="mb-6 text-[#26282B] text-center font-body"><span class="accent-serif">Anda yakin ingin logout?</span><br>Pilih <span class="accent-serif">"Reset Password"</span> jika ingin mengganti password Anda.</p>
         <div class="flex flex-col sm:flex-row gap-3 w-full">
             <form method="POST" action="{{ route('member.logout') }}" class="w-full">
                 @csrf
@@ -111,7 +628,7 @@
 </button>
 </form>
 <a href="{{ route('member.password.form') }}"
-    class="w-full bg-primary text-white px-4 py-2 rounded-button font-semibold text-center">
+    class="w-full bg-[#EA6993] text-white px-4 py-2 rounded-button font-semibold text-center">
     Reset Password
 </a>
         </div>
@@ -126,7 +643,7 @@
     <div id="mobile-backdrop" class="fixed inset-0 bg-[#26282B] bg-opacity-40 hidden" style="z-index:9998; transition: opacity .25s; pointer-events:none;"></div>
     <div id="mobile-menu" class="mobile-menu fixed top-16 bottom-0 right-0 w-72 bg-[#F4EEE6] shadow-lg p-6 transform overflow-y-auto" style="z-index:9999;">
       <div class="flex items-center justify-between mb-6">
-        <a href="{{ route('member.dashboard') }}" class="logo text-primary font-heading font-bold hover:text-secondary transition tracking-tight">
+        <a href="{{ route('member.dashboard') }}" class="logo text-[#EA6993] font-heading font-bold hover:text-[#793451] transition tracking-tight">
           <span class="font-accent italic text-2xl align-top mr-1">F</span>TM <span class="font-accent italic text-2xl align-top ml-1">SOCIETY</span>
         </a>
         <button id="close-menu-button" type="button" aria-label="Tutup menu" class="w-9 h-9 inline-flex items-center justify-center rounded-md text-[#26282B]/80 hover:bg-[#F1CCE3]" style="position:relative; z-index:10001; pointer-events:auto;">
@@ -138,27 +655,27 @@
 
       <nav class="flex flex-col gap-3 font-heading font-medium">
         @auth('customer')
-          <a href="#" onclick="showProfilePopup(); return false;" class="block px-4 py-3 rounded-md text-[#26282B] hover:bg-primary hover:text-white transition font-semibold">Profile</a>
-          <a href="{{ route('member.password.form') }}" class="block px-4 py-3 rounded-md text-[#26282B] hover:bg-primary hover:text-white transition font-semibold">Ubah Password</a>
+          <a href="{{ route('member.dashboard') }}" class="block px-4 py-3 rounded-md text-[#26282B] hover:bg-[#EA6993] hover:text-white transition font-semibold">Profile</a>
+          <a href="{{ route('member.password.form') }}" class="block px-4 py-3 rounded-md text-[#26282B] hover:bg-[#EA6993] hover:text-white transition font-semibold">Ubah Password</a>
           <form method="POST" action="{{ route('member.logout') }}" class="px-4">
             @csrf
             <button type="submit" class="w-full text-left px-4 py-3 rounded-md text-[#26282B] hover:bg-[#793451] hover:text-white transition font-semibold">Logout ({{ Auth::guard('customer')->user()->name }})</button>
           </form>
         @else
-          <a href="{{ route('member.login') }}" class="block px-4 py-3 rounded-md text-[#26282B] hover:bg-primary hover:text-white transition font-semibold">Login</a>
-          <a href="{{ route('member.register') }}" class="block px-4 py-3 rounded-md text-[#26282B] hover:bg-primary hover:text-white transition font-semibold">Register</a>
+          <a href="{{ route('member.login') }}" class="block px-4 py-3 rounded-md text-[#26282B] hover:bg-[#EA6993] hover:text-white transition font-semibold">Login</a>
+          <a href="{{ route('member.register') }}" class="block px-4 py-3 rounded-md text-[#26282B] hover:bg-[#EA6993] hover:text-white transition font-semibold">Register</a>
         @endauth
 
         <hr class="my-2">
-        <a href="{{ route('member.dashboard') }}" class="block px-4 py-3 rounded-md text-[#26282B]/80 hover:bg-primary hover:text-white transition">Dashboard</a>
-        <a href="{{ route('member.account') }}" class="block px-4 py-3 rounded-md text-[#26282B]/80 hover:bg-primary hover:text-white transition">My QR Card</a>
-        <a href="{{ route('member.attendance') }}" class="block px-4 py-3 rounded-md text-[#26282B]/80 hover:bg-primary hover:text-white transition">Attendance</a>
-        <a href="#about" class="block px-4 py-3 rounded-md text-[#26282B]/80 hover:bg-primary hover:text-white transition">About</a>
-        <a href="#Programs" class="block px-4 py-3 rounded-md text-[#26282B]/80 hover:bg-primary hover:text-white transition">Programs</a>
-        <a href="#Classes" class="block px-4 py-3 rounded-md text-[#26282B]/80 hover:bg-primary hover:text-white transition">Classes</a>
-        <a href="#schedule" class="block px-4 py-3 rounded-md text-[#26282B]/80 hover:bg-primary hover:text-white transition">Schedule</a>
-        <a href="#Facility" class="block px-4 py-3 rounded-md text-[#26282B]/80 hover:bg-primary hover:text-white transition">Facility</a>
-        <a href="#contact" class="block px-4 py-3 rounded-md text-[#26282B]/80 hover:bg-primary hover:text-white transition">Contact</a>
+        <a href="{{ route('member.dashboard') }}" class="block px-4 py-3 rounded-md text-[#26282B] hover:bg-[#EA6993] hover:text-white transition">Dashboard</a>
+        <a href="{{ route('member.account') }}" class="block px-4 py-3 rounded-md text-[#26282B] hover:bg-[#EA6993] hover:text-white transition">My QR Card</a>
+        <a href="{{ route('member.attendance') }}" class="block px-4 py-3 rounded-md text-[#26282B] hover:bg-[#EA6993] hover:text-white transition">Attendance</a>
+        <a href="#about" class="block px-4 py-3 rounded-md text-[#26282B] hover:bg-[#EA6993] hover:text-white transition">About</a>
+        <a href="#Programs" class="block px-4 py-3 rounded-md text-[#26282B] hover:bg-[#EA6993] hover:text-white transition">Programs</a>
+        <a href="#Classes" class="block px-4 py-3 rounded-md text-[#26282B] hover:bg-[#EA6993] hover:text-white transition">Classes</a>
+        <a href="#schedule" class="block px-4 py-3 rounded-md text-[#26282B] hover:bg-[#EA6993] hover:text-white transition">Schedule</a>
+        <a href="#Facility" class="block px-4 py-3 rounded-md text-[#26282B] hover:bg-[#EA6993] hover:text-white transition">Facility</a>
+        <a href="#contact" class="block px-4 py-3 rounded-md text-[#26282B] hover:bg-[#EA6993] hover:text-white transition">Contact</a>
 
       </nav>
     </div>
@@ -169,99 +686,106 @@
 
 <section id="home" class="relative min-h-screen flex items-center overflow-hidden">
     
-    <!-- Background Image Layer -->
-    <div class="absolute inset-0 z-0">
-        <div id="hero-bg" 
-             class="absolute inset-0 bg-cover bg-center transition-all duration-700 scale-105"
-             style="background-image: url('/images/bg.JPG');"></div>
+  <!-- Background Image Layer with Premium Effects -->
+  <div class="absolute inset-0 z-0">
+    <div id="hero-bg" 
+       class="absolute inset-0 bg-cover bg-center transition-all duration-700 scale-105 backdrop-blur-xs"
+       style="background-image: url('/images/bg.JPG');"></div>
         
-        <!-- Enhanced Gradient Overlay -->
-        <div class="absolute inset-0 bg-gradient-to-r from-[#793451]/90 via-[#793451]/75 to-transparent"></div>
-    </div>
+    <!-- Luxury Gradient Overlay - Rose/Burgundy Blend -->
+    <div class="absolute inset-0 bg-gradient-to-br from-[#793451]/85 via-[#EA6993]/70 to-[#26282B]/80"></div>
+        
+    <!-- Premium Dark Accent Layer for Text Contrast -->
+    <div class="absolute inset-0 bg-gradient-to-t from-[#26282B]/40 via-transparent to-transparent"></div>
+  </div>
 
-    <!-- Decorative Background Elements -->
-    <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <div class="absolute top-1/4 -right-48 w-96 h-96 bg-secondary/20 rounded-full blur-[120px] animate-pulse"></div>
-        <div class="absolute bottom-1/4 -left-48 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-pulse" style="animation-delay: 1.5s;"></div>
-    </div>
+  <!-- Decorative Background Elements - Soft Luxury Ambiance -->
+  <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+    <div class="absolute top-1/4 -right-48 w-96 h-96 bg-[#F1CCE3]/15 rounded-full blur-3xl opacity-60 animate-pulse" style="animation-duration: 6s;"></div>
+    <div class="absolute bottom-1/4 -left-48 w-96 h-96 bg-[#F4EEE6]/10 rounded-full blur-3xl opacity-50 animate-pulse" style="animation-duration: 7s; animation-delay: 1.5s;"></div>
+  </div>
 
-    <!-- Main Content Container -->
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center min-h-[calc(100vh-80px)]">
+  <!-- Main Content Container -->
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center min-h-[calc(100vh-80px)]">
             
-            <!-- LEFT COLUMN - Text Content (Enhanced) -->
-            <div class="lg:col-span-7 text-center lg:text-left space-y-6 md:space-y-8">
+      <!-- LEFT COLUMN - Text Content -->
+      <div class="lg:col-span-7 text-center lg:text-left space-y-6 md:space-y-8 animate-fade-in">
                 
-                <!-- Premium Badge -->
-                <div data-aos="fade-right" 
-                   class="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-[#F4EEE6]/10 backdrop-blur-md border border-white/20 shadow-xl hover:bg-[#F4EEE6]/20 transition-all duration-300">
-                  <span class="relative flex h-3 w-3">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-3 w-3 bg-secondary"></span>
-                  </span>
-                  <span class="text-white text-sm md:text-base font-accent italic tracking-wide">
-                    Muslimah-Only Fitness Community
-                  </span>
-                </div>
+        <!-- Premium Glass Effect Badge -->
+        <div data-aos="fade-right" 
+           class="inline-flex items-center gap-3 px-6 py-3 rounded-full backdrop-blur-xl bg-white/[0.08] border-2 border-white/30 shadow-2xl hover:bg-white/[0.12] hover:border-white/50 transition-all duration-300 group">
+          <span class="relative flex h-3 w-3">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#F1CCE3] opacity-80"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-[#F1CCE3] shadow-lg"></span>
+          </span>
+          <span class="text-white text-sm md:text-base font-semibold tracking-widest uppercase opacity-95">
+            Muslimah-Only Fitness
+          </span>
+        </div>
 
-                <!-- Main Heading - Enhanced Typography -->
-                <div data-aos="fade-right" data-aos-delay="100" class="space-y-4">
-                    <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-heading font-bold text-white leading-[1.1] tracking-tight">
-                      YOUR<br/>
-                      <span class="relative inline-block my-2">
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-secondary via-[#EA6993] to-secondary bg-[length:200%_auto] animate-gradient-shift font-heading font-black">
-                          PRODUCTIVE
-                        </span>
-                        <!-- Decorative Underline -->
-                        <svg class="absolute -bottom-2 left-0 w-full h-3" viewBox="0 0 200 8" fill="none">
-                          <path d="M1 5.5C20 3.5 50 1 100 5.5C150 1 180 3.5 199 5.5" 
-                              stroke="#EA6993" stroke-width="3" stroke-linecap="round"/>
-                        </svg>
-                      </span><br/>
-                      <span class="font-accent italic">SISTER</span>
-                    </h1>
-                </div>
+        <!-- Main Heading - Premium Typography with Gradient & Shadow -->
+        <div data-aos="fade-right" data-aos-delay="100" class="space-y-6">
+          <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white leading-[0.95] tracking-tighter drop-shadow-2xl" style="text-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+            YOUR<br/>
+            <span class="relative inline-block my-3">
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#F1CCE3] via-[#EA6993] to-[#F1CCE3] bg-[length:200%_auto] animate-gradient-shift drop-shadow-2xl" style="text-shadow: 0 10px 30px rgba(234, 105, 147, 0.4); filter: drop-shadow(0 20px 40px rgba(121, 52, 81, 0.3));">
+                PRODUCTIVE
+              </span>
+              <!-- Elegant Gradient Underline -->
+              <div class="absolute -bottom-4 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-[#F1CCE3] to-transparent rounded-full opacity-80 blur-sm"></div>
+              <div class="absolute -bottom-3 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#EA6993] to-transparent rounded-full"></div>
+            </span><br/>
+            <span class="bg-gradient-to-r from-white to-[#F4EEE6] bg-clip-text text-transparent">SISTER</span>
+          </h1>
+        </div>
 
-                <!-- Subtitle - Enhanced -->
-                <div data-aos="fade-right" data-aos-delay="200" class="space-y-2 pt-2">
-                    <p class="text-xl sm:text-2xl md:text-3xl text-white/95 font-accent italic leading-relaxed">
-                      Good Habit inside
-                    </p>
-                    <p class="text-2xl sm:text-3xl md:text-4xl font-heading font-bold text-secondary drop-shadow-lg">
-                      Productive Muslimah
-                    </p>
-                </div>
+        <!-- Subtitle - Refined Spacing & Hierarchy -->
+        <div data-aos="fade-right" data-aos-delay="200" class="space-y-3 pt-4">
+          <p class="text-xl sm:text-2xl md:text-3xl text-white font-semibold leading-relaxed tracking-wide">
+            Good Habit inside
+          </p>
+          <p class="text-2xl sm:text-3xl md:text-4xl font-black bg-gradient-to-r from-[#F1CCE3] to-[#EA6993] bg-clip-text text-transparent drop-shadow-lg" style="text-shadow: 0 8px 20px rgba(234, 105, 147, 0.3);">
+            Productive Muslimah
+          </p>
+        </div>
 
-                <!-- CTA Button - Enhanced -->
-                <div data-aos="fade-right" data-aos-delay="300" 
-                     class="flex flex-wrap gap-4 justify-center lg:justify-start pt-4">
-                    @auth('customer')
-                    @else
-                        <a href="#join" 
-                           class="group relative inline-flex items-center justify-center gap-3 px-8 py-4 text-lg font-heading font-bold text-primary bg-[#F4EEE6] rounded-full overflow-hidden shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-secondary/50">
-                            <span class="relative z-10">Join Now</span>
-                            <i class="ri-arrow-right-line text-xl relative z-10 transition-transform group-hover:translate-x-1"></i>
-                            <div class="absolute inset-0 bg-gradient-to-r from-secondary to-[#F1CCE3] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        </a>
-                    @endauth
+        <!-- CTA Buttons - Premium Styling & Effects -->
+        <div data-aos="fade-right" data-aos-delay="300" 
+           class="flex flex-wrap gap-4 justify-center lg:justify-start pt-6">
+          @auth('customer')
+          @else
+            <a href="#join" 
+               class="group relative inline-flex items-center justify-center gap-3 px-8 py-4 text-lg font-black text-white bg-gradient-to-r from-[#EA6993] to-[#793451] rounded-full overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-300 ease-out hover:scale-105 hover:-translate-y-1">
+              <span class="relative z-10 tracking-wide">Join Now</span>
+              <i class="ri-arrow-right-line text-xl relative z-10 transition-all group-hover:translate-x-2 group-hover:scale-110"></i>
+              <div class="absolute inset-0 bg-gradient-to-r from-[#793451] to-[#EA6993] opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+              <div class="absolute inset-0 rounded-full opacity-0 group-hover:opacity-20 bg-white group-hover:scale-150 transition-all duration-500"></div>
+            </a>
+          @endauth
                     
-                    <a href="#about" 
-                       class="group inline-flex items-center justify-center gap-3 px-8 py-4 text-lg font-heading font-bold text-white bg-transparent border-2 border-white rounded-full transition-all duration-300 hover:bg-[#F4EEE6] hover:text-primary hover:scale-105">
-                        <span>Learn More</span>
-                        <i class="ri-arrow-down-line text-xl transition-transform group-hover:translate-y-1"></i>
-                    </a>
-                </div>
+          <a href="#about" 
+             class="group inline-flex items-center justify-center gap-3 px-8 py-4 text-lg font-bold text-white bg-white/10 backdrop-blur-sm border-2 border-white/60 rounded-full hover:bg-[#F4EEE6] hover:text-[#EA6993] hover:border-[#F4EEE6] transition-all duration-300 ease-out hover:scale-105 hover:-translate-y-1">
+            <span>Learn More</span>
+            <i class="ri-arrow-down-line text-xl transition-all group-hover:translate-y-2"></i>
+          </a>
+        </div>
 
-                
-
-           
-    <!-- Scroll Indicator -->
-    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 hidden md:block">
-        <a href="#about" class="flex flex-col items-center gap-2 text-white/60 hover:text-white transition-all animate-bounce cursor-pointer">
-            <span class="text-xs uppercase tracking-widest font-medium">Scroll</span>
-            <i class="ri-arrow-down-line text-2xl"></i>
-        </a>
+      </div>
     </div>
+  </div>
+
+  <!-- Scroll Indicator - Perfectly Centered (Auto Hide on Scroll) -->
+  <div id="scroll-indicator" class="fixed bottom-10 left-0 right-0 z-20 hidden md:flex justify-center pointer-events-none opacity-100 transition-opacity duration-300">
+    <a href="#about" class="flex flex-col items-center justify-center gap-5 pointer-events-auto cursor-pointer">
+      <span class="text-xs font-black uppercase tracking-[0.15em] text-white hover:text-white transition-all duration-300 whitespace-nowrap">Scroll Down</span>
+      <div class="flex flex-col items-center justify-center" style="animation: bounce-smooth 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;">
+        <div class="w-6 h-9 border-2 border-white/50 rounded-full flex flex-col items-center justify-start pt-2 hover:border-white/90 transition-all duration-300">
+          <div class="w-1 h-1.5 bg-white/70 rounded-full" style="animation: scroll-dot-bounce 1.5s ease-in-out infinite;"></div>
+        </div>
+      </div>
+    </a>
+  </div>
 
 </section>
 
@@ -287,9 +811,9 @@
 
   <!-- Floating Gradient Orbs -->
   <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-    <div class="absolute -top-48 -left-48 w-96 h-96 bg-gradient-to-br from-secondary/20 to-[#F1CCE3]/20 rounded-full blur-3xl animate-pulse" style="animation-duration: 4s;"></div>
-    <div class="absolute top-1/3 -right-64 w-[500px] h-[500px] bg-gradient-to-tl from-primary/15 to-[#EA6993]/15 rounded-full blur-3xl animate-pulse" style="animation-duration: 6s; animation-delay: 1s;"></div>
-    <div class="absolute -bottom-32 left-1/3 w-80 h-80 bg-gradient-to-tr from-[#EA6993]/20 to-secondary/20 rounded-full blur-3xl animate-pulse" style="animation-duration: 5s; animation-delay: 2s;"></div>
+    <div class="absolute -top-48 -left-48 w-96 h-96 bg-gradient-to-br from-[#793451]/20 to-[#F1CCE3]/20 rounded-full blur-3xl animate-pulse" style="animation-duration: 4s;"></div>
+    <div class="absolute top-1/3 -right-64 w-[500px] h-[500px] bg-gradient-to-tl from-[#EA6993]/15 to-[#EA6993]/15 rounded-full blur-3xl animate-pulse" style="animation-duration: 6s; animation-delay: 1s;"></div>
+    <div class="absolute -bottom-32 left-1/3 w-80 h-80 bg-gradient-to-tr from-[#EA6993]/20 to-[#793451]/20 rounded-full blur-3xl animate-pulse" style="animation-duration: 5s; animation-delay: 2s;"></div>
   </div>
 
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -298,36 +822,36 @@
     <div class="text-center mb-16 md:mb-24" data-aos="fade-up">
             
       <!-- Top Badge with Shimmer Effect -->
-      <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-secondary/10 via-[#F1CCE3]/50 to-secondary/10 rounded-full border border-secondary/20 shadow-lg backdrop-blur-sm">
+      <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-[#793451]/10 via-[#F1CCE3]/50 to-[#793451]/10 rounded-full border border-[#793451]/20 shadow-lg backdrop-blur-sm">
         <div class="relative">
-          <div class="w-2 h-2 bg-secondary rounded-full animate-ping absolute"></div>
-          <div class="w-2 h-2 bg-secondary rounded-full relative"></div>
+          <div class="w-2 h-2 bg-[#793451] rounded-full animate-ping absolute"></div>
+          <div class="w-2 h-2 bg-[#793451] rounded-full relative"></div>
         </div>
-        <span class="text-sm md:text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary">
+        <span class="text-sm md:text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993]">
           Tentang Kami
         </span>
       </div>
 
       <!-- Main Title with Gradient -->
       <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight">
-        <span class="text-primary">About</span>
-        <span class="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-[#EA6993] animate-gradient-shift bg-[length:200%_auto]">
+        <span class="text-[#EA6993]">About</span>
+        <span class="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993] animate-gradient-shift bg-[length:200%_auto]">
           FTM Society
         </span>
       </h2>
 
       <!-- Decorative Divider -->
       <div class="flex items-center justify-center gap-3 mb-6">
-        <div class="w-16 h-0.5 bg-gradient-to-r from-transparent to-secondary rounded-full"></div>
-        <div class="w-3 h-3 bg-secondary rounded-full animate-pulse"></div>
-        <div class="w-24 h-1 bg-gradient-to-r from-secondary via-primary to-secondary rounded-full"></div>
-        <div class="w-3 h-3 bg-primary rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
-        <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-primary rounded-full"></div>
+        <div class="w-16 h-0.5 bg-gradient-to-r from-transparent to-[#793451] rounded-full"></div>
+        <div class="w-3 h-3 bg-[#793451] rounded-full animate-pulse"></div>
+        <div class="w-24 h-1 bg-gradient-to-r from-[#793451] via-[#EA6993] to-[#793451] rounded-full"></div>
+        <div class="w-3 h-3 bg-[#EA6993] rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
+        <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-[#EA6993] rounded-full"></div>
       </div>
 
       <!-- Subtitle -->
-      <p class="text-lg md:text-xl text-[#26282B]/70 max-w-3xl mx-auto leading-relaxed font-light">
-        Ruang bagi muslimah untuk hidup <span class="font-semibold text-primary">aktif</span>, <span class="font-semibold text-secondary">produktif</span>, dan sesuai <span class="font-semibold text-primary">syariat</span>
+      <p class="text-lg md:text-xl text-[#26282B] max-w-3xl mx-auto leading-relaxed font-light">
+        Ruang bagi muslimah untuk hidup <span class="font-semibold text-[#EA6993]">aktif</span>, <span class="font-semibold text-[#793451]">produktif</span>, dan sesuai <span class="font-semibold text-[#EA6993]">syariat</span>
       </p>
     </div>
 
@@ -342,7 +866,7 @@
           <div class="relative group">
                         
             <!-- Decorative Border Frame -->
-            <div class="absolute -inset-4 bg-gradient-to-r from-secondary via-[#EA6993] to-primary rounded-[2rem] opacity-20 group-hover:opacity-30 blur-xl transition-all duration-500"></div>
+            <div class="absolute -inset-4 bg-gradient-to-r from-[#793451] via-[#EA6993] to-[#EA6993] rounded-[2rem] opacity-20 group-hover:opacity-30 blur-xl transition-all duration-500"></div>
                         
             <!-- Main Image Container -->
                         <div class="relative rounded-[2rem] overflow-hidden shadow-2xl ring-4 ring-white/50 transform group-hover:scale-[1.02] transition-all duration-500">
@@ -351,7 +875,7 @@
                              class="w-full h-auto object-cover" />
                             
               <!-- Gradient Overlay -->
-              <div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div class="absolute inset-0 bg-gradient-to-t from-[#EA6993]/80 via-[#EA6993]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                             
               <!-- Hover Content -->
               <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
@@ -366,17 +890,17 @@
                     
 
           <!-- Floating Trust Badge -->
-          <div class="absolute -top-6 -left-6 bg-[#F4EEE6] rounded-2xl shadow-xl p-4 border-2 border-secondary/20 backdrop-blur-sm hidden lg:block"
+          <div class="absolute -top-6 -left-6 bg-[#F4EEE6] rounded-2xl shadow-xl p-4 border-2 border-[#793451]/20 backdrop-blur-sm hidden lg:block"
              data-aos="fade-down" data-aos-delay="300">
             <div class="flex items-center gap-2">
-              <div class="w-3 h-3 bg-secondary rounded-full animate-pulse"></div>
-              <span class="font-bold text-primary text-sm">Trusted Community</span>
+              <div class="w-3 h-3 bg-[#793451] rounded-full animate-pulse"></div>
+              <span class="font-bold text-[#EA6993] text-sm">Trusted Community</span>
             </div>
           </div>
 
           <!-- Decorative Blur Elements -->
-          <div class="absolute -top-8 -left-8 w-32 h-32 bg-secondary/30 rounded-full blur-3xl -z-10"></div>
-          <div class="absolute -bottom-8 -right-8 w-40 h-40 bg-primary/30 rounded-full blur-3xl -z-10"></div>
+          <div class="absolute -top-8 -left-8 w-32 h-32 bg-[#793451]/30 rounded-full blur-3xl -z-10"></div>
+          <div class="absolute -bottom-8 -right-8 w-40 h-40 bg-[#EA6993]/30 rounded-full blur-3xl -z-10"></div>
                     
         </div>
       </div>
@@ -386,24 +910,24 @@
                 
         <!-- Title with Icon -->
         <div class="flex items-start gap-4">
-          <div class="flex-shrink-0 w-1 h-16 bg-gradient-to-b from-primary via-secondary to-[#EA6993] rounded-full"></div>
+          <div class="flex-shrink-0 w-1 h-16 bg-gradient-to-b from-[#EA6993] via-[#793451] to-[#EA6993] rounded-full"></div>
           <div>
-            <h3 class="text-3xl md:text-4xl lg:text-5xl font-black text-primary mb-2">
+            <h3 class="text-3xl md:text-4xl lg:text-5xl font-black text-[#EA6993] mb-2">
               Vision & Mission
             </h3>
-            <p class="text-sm text-[#26282B]/55 font-medium uppercase tracking-wider">Our Purpose & Goals</p>
+            <p class="text-sm text-[#26282B] font-medium uppercase tracking-wider">Our Purpose & Goals</p>
           </div>
         </div>
 
         <!-- Description with Enhanced Typography -->
         <div class="space-y-5 pl-5">
-          <p class="text-[#26282B]/80 leading-relaxed text-base md:text-lg relative">
-            <span class="absolute -left-5 top-2 w-2 h-2 bg-secondary rounded-full"></span>
-            <span class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">FTM Society</span> adalah memberikan ruang bagi para muslimah untuk memiliki gaya hidup <span class="font-semibold text-primary">aktif</span> dan <span class="font-semibold text-secondary">produktif</span> yang sesuai dengan syariat Islam.
+          <p class="text-[#26282B] leading-relaxed text-base md:text-lg relative">
+            <span class="absolute -left-5 top-2 w-2 h-2 bg-[#793451] rounded-full"></span>
+            <span class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#EA6993] to-[#793451]">FTM Society</span> adalah memberikan ruang bagi para muslimah untuk memiliki gaya hidup <span class="font-semibold text-[#EA6993]">aktif</span> dan <span class="font-semibold text-[#793451]">produktif</span> yang sesuai dengan syariat Islam.
           </p>
-          <p class="text-[#26282B]/80 leading-relaxed text-base md:text-lg relative">
-            <span class="absolute -left-5 top-2 w-2 h-2 bg-primary rounded-full"></span>
-            Oleh karena itu, FTM Society hadir menyelenggarakan kegiatan olahraga dan kegiatan aktif sosial lainnya, seperti <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-secondary/10 text-secondary font-semibold rounded-md text-sm"><i class="ri-presentation-line"></i>webinar</span> dan <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-primary/10 text-primary font-semibold rounded-md text-sm"><i class="ri-calendar-event-line"></i>event</span>.
+          <p class="text-[#26282B] leading-relaxed text-base md:text-lg relative">
+            <span class="absolute -left-5 top-2 w-2 h-2 bg-[#EA6993] rounded-full"></span>
+            Oleh karena itu, FTM Society hadir menyelenggarakan kegiatan olahraga dan kegiatan aktif sosial lainnya, seperti <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-[#793451]/10 text-[#793451] font-semibold rounded-md text-sm"><i class="ri-presentation-line"></i>webinar</span> dan <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-[#EA6993]/10 text-[#EA6993] font-semibold rounded-md text-sm"><i class="ri-calendar-event-line"></i>event</span>.
           </p>
         </div>
 
@@ -411,7 +935,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
                     
           <!-- Feature Card 1 - Enhanced -->
-          <div class="group relative bg-[#F4EEE6] rounded-2xl p-5 shadow-lg hover:shadow-2xl border border-[#F1CCE3]/40 hover:border-secondary/30 transition-all duration-300 overflow-hidden cursor-pointer"
+          <div class="group relative bg-[#F4EEE6] rounded-2xl p-5 shadow-lg hover:shadow-2xl border border-[#F1CCE3]/40 hover:border-[#793451]/30 transition-all duration-300 overflow-hidden cursor-pointer"
              data-aos="fade-up" data-aos-delay="300">
                         
             <!-- Gradient Background on Hover -->
@@ -423,25 +947,25 @@
                 <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-gradient-to-br from-[#F1CCE3] to-[#F1CCE3] text-[#793451] group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
                   <i class="ri-shield-check-line text-3xl"></i>
                 </div>
-                <div class="absolute -top-1 -right-1 w-4 h-4 bg-secondary rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="absolute -top-1 -right-1 w-4 h-4 bg-[#793451] rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
                             
               <!-- Content -->
               <div class="flex-1">
-                <h4 class="font-black text-[#26282B] text-base mb-1 group-hover:text-primary transition-colors duration-300">
+                <h4 class="font-black text-[#26282B] text-base mb-1 group-hover:text-[#EA6993] transition-colors duration-300">
                   Muslimah Only
                 </h4>
-                <p class="text-sm text-[#26282B]/70 leading-relaxed">
+                <p class="text-sm text-[#26282B] leading-relaxed">
                   100% Private & Safe Environment
                 </p>
                 <!-- Decorative Line -->
-                <div class="mt-2 h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-secondary to-transparent transition-all duration-500"></div>
+                <div class="mt-2 h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-[#793451] to-transparent transition-all duration-500"></div>
               </div>
             </div>
           </div>
 
           <!-- Feature Card 2 - Enhanced -->
-          <div class="group relative bg-[#F4EEE6] rounded-2xl p-5 shadow-lg hover:shadow-2xl border border-[#F1CCE3]/40 hover:border-primary/30 transition-all duration-300 overflow-hidden cursor-pointer"
+          <div class="group relative bg-[#F4EEE6] rounded-2xl p-5 shadow-lg hover:shadow-2xl border border-[#F1CCE3]/40 hover:border-[#EA6993]/30 transition-all duration-300 overflow-hidden cursor-pointer"
              data-aos="fade-up" data-aos-delay="400">
                         
             <div class="absolute inset-0 bg-gradient-to-br from-[#F1CCE3] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -451,23 +975,23 @@
                 <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-gradient-to-br from-[#F1CCE3] to-[#EA6993] text-[#793451] group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
                   <i class="ri-heart-pulse-line text-3xl"></i>
                 </div>
-                <div class="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="absolute -top-1 -right-1 w-4 h-4 bg-[#EA6993] rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
                             
               <div class="flex-1">
-                <h4 class="font-black text-[#26282B] text-base mb-1 group-hover:text-primary transition-colors duration-300">
+                <h4 class="font-black text-[#26282B] text-base mb-1 group-hover:text-[#EA6993] transition-colors duration-300">
                   Certified Trainers
                 </h4>
-                <p class="text-sm text-[#26282B]/70 leading-relaxed">
+                <p class="text-sm text-[#26282B] leading-relaxed">
                   Professional Muslimah Coaches
                 </p>
-                <div class="mt-2 h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary to-transparent transition-all duration-500"></div>
+                <div class="mt-2 h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-[#EA6993] to-transparent transition-all duration-500"></div>
               </div>
             </div>
           </div>
 
           <!-- Feature Card 3 - Full Width Enhanced -->
-          <div class="group relative bg-[#F4EEE6] rounded-2xl p-5 shadow-lg hover:shadow-2xl border border-[#F1CCE3]/40 hover:border-secondary/30 transition-all duration-300 overflow-hidden cursor-pointer sm:col-span-2"
+          <div class="group relative bg-[#F4EEE6] rounded-2xl p-5 shadow-lg hover:shadow-2xl border border-[#F1CCE3]/40 hover:border-[#793451]/30 transition-all duration-300 overflow-hidden cursor-pointer sm:col-span-2"
              data-aos="fade-up" data-aos-delay="500">
                         
             <div class="absolute inset-0 bg-gradient-to-br from-[#F1CCE3] via-[#F1CCE3] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -477,17 +1001,17 @@
                 <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-100 to-indigo-200 text-indigo-600 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
                   <i class="ri-pray-line text-3xl"></i>
                 </div>
-                <div class="absolute -top-1 -right-1 w-4 h-4 bg-secondary rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="absolute -top-1 -right-1 w-4 h-4 bg-[#793451] rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
                             
               <div class="flex-1">
-                <h4 class="font-black text-[#26282B] text-base mb-1 group-hover:text-primary transition-colors duration-300">
+                <h4 class="font-black text-[#26282B] text-base mb-1 group-hover:text-[#EA6993] transition-colors duration-300">
                   No Music & No Camera
                 </h4>
-                <p class="text-sm text-[#26282B]/70 leading-relaxed">
+                <p class="text-sm text-[#26282B] leading-relaxed">
                   Fully Islamic-Compliant Environment for Your Comfort
                 </p>
-                <div class="mt-2 h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-transparent transition-all duration-500"></div>
+                <div class="mt-2 h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-[#793451] via-[#EA6993] to-transparent transition-all duration-500"></div>
               </div>
             </div>
           </div>
@@ -533,9 +1057,9 @@
 
     <!-- Floating Gradient Orbs -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute -top-32 -left-32 w-80 h-80 bg-gradient-to-br from-secondary/20 to-[#EA6993]/20 rounded-full blur-3xl animate-pulse" style="animation-duration: 5s;"></div>
-        <div class="absolute top-1/2 -right-48 w-96 h-96 bg-gradient-to-tl from-primary/15 to-[#EA6993]/15 rounded-full blur-3xl animate-pulse" style="animation-duration: 7s; animation-delay: 1.5s;"></div>
-        <div class="absolute -bottom-24 left-1/4 w-72 h-72 bg-gradient-to-tr from-[#F1CCE3]/20 to-secondary/20 rounded-full blur-3xl animate-pulse" style="animation-duration: 6s; animation-delay: 0.5s;"></div>
+        <div class="absolute -top-32 -left-32 w-80 h-80 bg-gradient-to-br from-[#793451]/20 to-[#EA6993]/20 rounded-full blur-3xl animate-pulse" style="animation-duration: 5s;"></div>
+        <div class="absolute top-1/2 -right-48 w-96 h-96 bg-gradient-to-tl from-[#EA6993]/15 to-[#EA6993]/15 rounded-full blur-3xl animate-pulse" style="animation-duration: 7s; animation-delay: 1.5s;"></div>
+        <div class="absolute -bottom-24 left-1/4 w-72 h-72 bg-gradient-to-tr from-[#F1CCE3]/20 to-[#793451]/20 rounded-full blur-3xl animate-pulse" style="animation-duration: 6s; animation-delay: 0.5s;"></div>
     </div>
 
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -544,35 +1068,35 @@
         <div class="text-center mb-16 md:mb-20" data-aos="fade-up">
             
             <!-- Top Badge -->
-            <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 rounded-full border border-primary/20 shadow-lg backdrop-blur-sm">
+            <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-[#EA6993]/10 via-[#793451]/10 to-[#EA6993]/10 rounded-full border border-[#EA6993]/20 shadow-lg backdrop-blur-sm">
                 <div class="relative">
-                    <div class="w-2 h-2 bg-primary rounded-full animate-ping absolute"></div>
-                    <div class="w-2 h-2 bg-primary rounded-full relative"></div>
+                    <div class="w-2 h-2 bg-[#EA6993] rounded-full animate-ping absolute"></div>
+                    <div class="w-2 h-2 bg-[#EA6993] rounded-full relative"></div>
                 </div>
-                <span class="text-sm md:text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary">
+                <span class="text-sm md:text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993]">
                     Our Advantages
                 </span>
             </div>
 
             <!-- Main Title -->
             <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight">
-                <span class="text-primary">Why Choose</span>
-                <span class="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-secondary via-[#EA6993] to-secondary animate-gradient-shift bg-[length:200%_auto]">
+                <span class="text-[#EA6993]">Why Choose</span>
+                <span class="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-[#793451] via-[#EA6993] to-[#793451] animate-gradient-shift bg-[length:200%_auto]">
                     FTM Society
                 </span>
             </h2>
 
             <!-- Decorative Divider -->
             <div class="flex items-center justify-center gap-3 mb-6">
-                <div class="w-16 h-0.5 bg-gradient-to-r from-transparent to-primary rounded-full"></div>
-                <div class="w-3 h-3 bg-primary rounded-full animate-pulse"></div>
-                <div class="w-24 h-1 bg-gradient-to-r from-primary via-secondary to-primary rounded-full"></div>
-                <div class="w-3 h-3 bg-secondary rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
-                <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-secondary rounded-full"></div>
+                <div class="w-16 h-0.5 bg-gradient-to-r from-transparent to-[#EA6993] rounded-full"></div>
+                <div class="w-3 h-3 bg-[#EA6993] rounded-full animate-pulse"></div>
+                <div class="w-24 h-1 bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993] rounded-full"></div>
+                <div class="w-3 h-3 bg-[#793451] rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
+                <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-[#793451] rounded-full"></div>
             </div>
 
             <!-- Subtitle -->
-            <p class="text-lg md:text-xl text-[#26282B]/70 max-w-3xl mx-auto leading-relaxed">
+            <p class="text-lg md:text-xl text-[#26282B] max-w-3xl mx-auto leading-relaxed">
                 Temukan keunggulan yang membuat FTM Society menjadi pilihan terbaik untuk muslimah aktif
             </p>
         </div>
@@ -584,7 +1108,7 @@
             <button
                 type="button"
                 onclick="slideFeature(-1)"
-                class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 items-center justify-center w-14 h-14 bg-[#F4EEE6] text-primary rounded-full shadow-xl hover:shadow-2xl hover:bg-gradient-to-br hover:from-primary hover:to-secondary hover:text-white transition-all duration-300 z-20 group"
+                class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 items-center justify-center w-14 h-14 bg-[#F4EEE6] text-[#EA6993] rounded-full shadow-xl hover:shadow-2xl hover:bg-gradient-to-br hover:from-[#EA6993] hover:to-[#793451] hover:text-white transition-all duration-300 z-20 group"
                 aria-label="Scroll Left"
                 id="featureScrollLeft"
                 style="display:none"
@@ -601,7 +1125,7 @@
             >
                 <!-- Feature Card 1 - Enhanced -->
                 <div class="min-w-[300px] sm:min-w-[340px] max-w-[360px] flex-shrink-0" data-aos="fade-up" data-aos-delay="100">
-                    <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-[#F1CCE3]/40 hover:border-secondary/30 overflow-hidden h-full flex flex-col">
+                    <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-[#F1CCE3]/40 hover:border-[#793451]/30 overflow-hidden h-full flex flex-col">
                         
                         <!-- Gradient Background on Hover -->
                         <div class="absolute inset-0 bg-gradient-to-br from-[#F1CCE3]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -615,13 +1139,13 @@
                                     <i class="ri-women-line text-4xl"></i>
                                 </div>
                                 <!-- Decorative Ring -->
-                                <div class="absolute -inset-2 rounded-2xl border-2 border-secondary/20 group-hover:border-secondary/40 group-hover:scale-110 transition-all duration-500"></div>
+                                <div class="absolute -inset-2 rounded-2xl border-2 border-[#793451]/20 group-hover:border-[#793451]/40 group-hover:scale-110 transition-all duration-500"></div>
                                 <!-- Floating Dot -->
-                                <div class="absolute -top-1 -right-1 w-5 h-5 bg-secondary rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
+                                <div class="absolute -top-1 -right-1 w-5 h-5 bg-[#793451] rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
                             </div>
 
                             <!-- Title -->
-                            <h3 class="text-xl md:text-2xl font-black text-primary mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all duration-300">
+                            <h3 class="text-xl md:text-2xl font-black text-[#EA6993] mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#EA6993] group-hover:to-[#793451] transition-all duration-300">
                                 Muslimah-Only Space
                             </h3>
 
@@ -631,14 +1155,14 @@
                             </p>
 
                             <!-- Bottom Accent Line -->
-                            <div class="mt-6 h-1 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-secondary rounded-full transition-all duration-500"></div>
+                            <div class="mt-6 h-1 w-0 group-hover:w-full bg-gradient-to-r from-[#793451] via-[#EA6993] to-[#793451] rounded-full transition-all duration-500"></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Feature Card 2 - Enhanced -->
                 <div class="min-w-[300px] sm:min-w-[340px] max-w-[360px] flex-shrink-0" data-aos="fade-up" data-aos-delay="200">
-                    <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-[#F1CCE3]/40 hover:border-primary/30 overflow-hidden h-full flex flex-col">
+                    <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-[#F1CCE3]/40 hover:border-[#EA6993]/30 overflow-hidden h-full flex flex-col">
                         
                         <div class="absolute inset-0 bg-gradient-to-br from-[#F1CCE3]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         
@@ -648,11 +1172,11 @@
                                 <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-[#F1CCE3] to-[#EA6993] text-[#793451] group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
                                     <i class="ri-user-star-line text-4xl"></i>
                                 </div>
-                                <div class="absolute -inset-2 rounded-2xl border-2 border-primary/20 group-hover:border-primary/40 group-hover:scale-110 transition-all duration-500"></div>
-                                <div class="absolute -top-1 -right-1 w-5 h-5 bg-primary rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
+                                <div class="absolute -inset-2 rounded-2xl border-2 border-[#EA6993]/20 group-hover:border-[#EA6993]/40 group-hover:scale-110 transition-all duration-500"></div>
+                                <div class="absolute -top-1 -right-1 w-5 h-5 bg-[#EA6993] rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
                             </div>
 
-                            <h3 class="text-xl md:text-2xl font-black text-primary mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all duration-300">
+                            <h3 class="text-xl md:text-2xl font-black text-[#EA6993] mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#EA6993] group-hover:to-[#793451] transition-all duration-300">
                                 Certified Muslimah Trainer
                             </h3>
 
@@ -660,14 +1184,14 @@
                                 Dibimbing langsung oleh coach tersertifikasi dengan pengalaman profesional dan pemahaman mendalam tentang kebutuhan muslimah.
                             </p>
 
-                            <div class="mt-6 h-1 w-0 group-hover:w-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full transition-all duration-500"></div>
+                            <div class="mt-6 h-1 w-0 group-hover:w-full bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993] rounded-full transition-all duration-500"></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Feature Card 3 - Enhanced -->
                 <div class="min-w-[300px] sm:min-w-[340px] max-w-[360px] flex-shrink-0" data-aos="fade-up" data-aos-delay="300">
-                    <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-[#F1CCE3]/40 hover:border-secondary/30 overflow-hidden h-full flex flex-col">
+                    <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-[#F1CCE3]/40 hover:border-[#793451]/30 overflow-hidden h-full flex flex-col">
                         
                         <div class="absolute inset-0 bg-gradient-to-br from-indigo-50/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         
@@ -677,11 +1201,11 @@
                                 <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-100 to-indigo-200 text-indigo-600 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
                                     <i class="ri-shield-user-line text-4xl"></i>
                                 </div>
-                                <div class="absolute -inset-2 rounded-2xl border-2 border-secondary/20 group-hover:border-secondary/40 group-hover:scale-110 transition-all duration-500"></div>
-                                <div class="absolute -top-1 -right-1 w-5 h-5 bg-secondary rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
+                                <div class="absolute -inset-2 rounded-2xl border-2 border-[#793451]/20 group-hover:border-[#793451]/40 group-hover:scale-110 transition-all duration-500"></div>
+                                <div class="absolute -top-1 -right-1 w-5 h-5 bg-[#793451] rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
                             </div>
 
-                            <h3 class="text-xl md:text-2xl font-black text-primary mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all duration-300">
+                            <h3 class="text-xl md:text-2xl font-black text-[#EA6993] mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#EA6993] group-hover:to-[#793451] transition-all duration-300">
                                 Privacy is Our Priority
                             </h3>
 
@@ -689,14 +1213,14 @@
                                 Ruang latihan khusus muslimah, tanpa kamera dan tanpa musik. Kami mengutamakan kenyamanan, keamanan, dan privasimu saat berolahraga.
                             </p>
 
-                            <div class="mt-6 h-1 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-secondary rounded-full transition-all duration-500"></div>
+                            <div class="mt-6 h-1 w-0 group-hover:w-full bg-gradient-to-r from-[#793451] via-[#EA6993] to-[#793451] rounded-full transition-all duration-500"></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Feature Card 4 - Enhanced -->
                 <div class="min-w-[300px] sm:min-w-[340px] max-w-[360px] flex-shrink-0" data-aos="fade-up" data-aos-delay="400">
-                    <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-[#F1CCE3]/40 hover:border-primary/30 overflow-hidden h-full flex flex-col">
+                    <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-[#F1CCE3]/40 hover:border-[#EA6993]/30 overflow-hidden h-full flex flex-col">
                         
                         <div class="absolute inset-0 bg-gradient-to-br from-rose-50/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         
@@ -706,11 +1230,11 @@
                                 <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-rose-100 to-rose-200 text-rose-600 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
                                     <i class="ri-user-heart-line text-4xl"></i>
                                 </div>
-                                <div class="absolute -inset-2 rounded-2xl border-2 border-primary/20 group-hover:border-primary/40 group-hover:scale-110 transition-all duration-500"></div>
-                                <div class="absolute -top-1 -right-1 w-5 h-5 bg-primary rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
+                                <div class="absolute -inset-2 rounded-2xl border-2 border-[#EA6993]/20 group-hover:border-[#EA6993]/40 group-hover:scale-110 transition-all duration-500"></div>
+                                <div class="absolute -top-1 -right-1 w-5 h-5 bg-[#EA6993] rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
                             </div>
 
-                            <h3 class="text-xl md:text-2xl font-black text-primary mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all duration-300">
+                            <h3 class="text-xl md:text-2xl font-black text-[#EA6993] mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#EA6993] group-hover:to-[#793451] transition-all duration-300">
                                 Muslimah Friendly
                             </h3>
 
@@ -718,7 +1242,7 @@
                                 Dirancang khusus untuk muslimah: area khusus wanita, pelatih perempuan bersertifikat, dan suasana nyaman sesuai nilai-nilai islami.
                             </p>
 
-                            <div class="mt-6 h-1 w-0 group-hover:w-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full transition-all duration-500"></div>
+                            <div class="mt-6 h-1 w-0 group-hover:w-full bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993] rounded-full transition-all duration-500"></div>
                         </div>
                     </div>
                 </div>
@@ -729,7 +1253,7 @@
             <button
                 type="button"
                 onclick="slideFeature(1)"
-                class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 items-center justify-center w-14 h-14 bg-[#F4EEE6] text-primary rounded-full shadow-xl hover:shadow-2xl hover:bg-gradient-to-br hover:from-primary hover:to-secondary hover:text-white transition-all duration-300 z-20 group"
+                class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 items-center justify-center w-14 h-14 bg-[#F4EEE6] text-[#EA6993] rounded-full shadow-xl hover:shadow-2xl hover:bg-gradient-to-br hover:from-[#EA6993] hover:to-[#793451] hover:text-white transition-all duration-300 z-20 group"
                 aria-label="Scroll Right"
                 id="featureScrollRight"
             >
@@ -740,16 +1264,16 @@
 
         <!-- Slider Indicators (Optional) -->
         <div class="flex justify-center gap-2 mt-12" data-aos="fade-up" data-aos-delay="500">
-            <div class="w-2 h-2 bg-primary rounded-full"></div>
-            <div class="w-8 h-2 bg-secondary rounded-full"></div>
-            <div class="w-2 h-2 bg-primary/40 rounded-full"></div>
-            <div class="w-2 h-2 bg-primary/40 rounded-full"></div>
+            <div class="w-2 h-2 bg-[#EA6993] rounded-full"></div>
+            <div class="w-8 h-2 bg-[#793451] rounded-full"></div>
+            <div class="w-2 h-2 bg-[#EA6993]/40 rounded-full"></div>
+            <div class="w-2 h-2 bg-[#EA6993]/40 rounded-full"></div>
         </div>
 
         <!-- Bottom CTA (Optional) -->
         <div class="text-center mt-16" data-aos="fade-up" data-aos-delay="600">
             <a href="#join" 
-               class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_auto] text-white font-bold rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 group">
+               class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993] bg-[length:200%_auto] text-white font-bold rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 group">
                 <span>Bergabung Sekarang</span>
                 <i class="ri-arrow-right-line text-xl group-hover:translate-x-1 transition-transform"></i>
             </a>
@@ -780,9 +1304,9 @@
 
   <!-- Floating Gradient Orbs -->
   <div class="absolute inset-0 overflow-hidden pointer-events-none">
-    <div class="absolute top-20 -left-40 w-96 h-96 bg-gradient-to-br from-secondary/15 to-[#F1CCE3]/15 rounded-full blur-3xl animate-pulse" style="animation-duration: 6s;"></div>
-    <div class="absolute -top-20 right-1/4 w-80 h-80 bg-gradient-to-tl from-primary/10 to-[#EA6993]/10 rounded-full blur-3xl animate-pulse" style="animation-duration: 8s; animation-delay: 2s;"></div>
-    <div class="absolute bottom-0 left-1/3 w-72 h-72 bg-gradient-to-tr from-[#EA6993]/15 to-secondary/15 rounded-full blur-3xl animate-pulse" style="animation-duration: 7s; animation-delay: 1s;"></div>
+    <div class="absolute top-20 -left-40 w-96 h-96 bg-gradient-to-br from-[#793451]/15 to-[#F1CCE3]/15 rounded-full blur-3xl animate-pulse" style="animation-duration: 6s;"></div>
+    <div class="absolute -top-20 right-1/4 w-80 h-80 bg-gradient-to-tl from-[#EA6993]/10 to-[#EA6993]/10 rounded-full blur-3xl animate-pulse" style="animation-duration: 8s; animation-delay: 2s;"></div>
+    <div class="absolute bottom-0 left-1/3 w-72 h-72 bg-gradient-to-tr from-[#EA6993]/15 to-[#793451]/15 rounded-full blur-3xl animate-pulse" style="animation-duration: 7s; animation-delay: 1s;"></div>
   </div>
 
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -791,34 +1315,34 @@
     <div class="text-center mb-16 md:mb-20">
             
       <!-- Top Badge -->
-      <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-secondary/10 via-[#F1CCE3]/50 to-secondary/10 rounded-full border border-secondary/20 shadow-lg backdrop-blur-sm">
+      <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-[#793451]/10 via-[#F1CCE3]/50 to-[#793451]/10 rounded-full border border-[#793451]/20 shadow-lg backdrop-blur-sm">
         <div class="relative">
-          <div class="w-2 h-2 bg-secondary rounded-full animate-ping absolute"></div>
-          <div class="w-2 h-2 bg-secondary rounded-full relative"></div>
+          <div class="w-2 h-2 bg-[#793451] rounded-full animate-ping absolute"></div>
+          <div class="w-2 h-2 bg-[#793451] rounded-full relative"></div>
         </div>
-        <span class="text-sm md:text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary">
+        <span class="text-sm md:text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993]">
           Our Program 
         </span>
       </div>
 
       <!-- Main Title -->
       <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight">
-        <span class="block text-transparent bg-clip-text bg-gradient-to-r from-secondary via-[#EA6993] to-secondary animate-gradient-shift bg-[length:200%_auto]">
+        <span class="block text-transparent bg-clip-text bg-gradient-to-r from-[#793451] via-[#EA6993] to-[#793451] animate-gradient-shift bg-[length:200%_auto]">
           Programs
         </span>
       </h2>
 
       <!-- Decorative Divider -->
       <div class="flex items-center justify-center gap-3 mb-6">
-        <div class="w-16 h-0.5 bg-gradient-to-r from-transparent to-secondary rounded-full"></div>
-        <div class="w-3 h-3 bg-secondary rounded-full animate-pulse"></div>
-        <div class="w-24 h-1 bg-gradient-to-r from-secondary via-primary to-secondary rounded-full"></div>
-        <div class="w-3 h-3 bg-primary rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
-        <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-primary rounded-full"></div>
+        <div class="w-16 h-0.5 bg-gradient-to-r from-transparent to-[#793451] rounded-full"></div>
+        <div class="w-3 h-3 bg-[#793451] rounded-full animate-pulse"></div>
+        <div class="w-24 h-1 bg-gradient-to-r from-[#793451] via-[#EA6993] to-[#793451] rounded-full"></div>
+        <div class="w-3 h-3 bg-[#EA6993] rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
+        <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-[#EA6993] rounded-full"></div>
       </div>
 
       <!-- Subtitle -->
-      <p class="text-lg md:text-xl text-[#26282B]/70 max-w-3xl mx-auto leading-relaxed">
+      <p class="text-lg md:text-xl text-[#26282B] max-w-3xl mx-auto leading-relaxed">
         Temukan program yang sesuai dengan kebutuhan dan gaya hidup Anda
       </p>
     </div>
@@ -830,7 +1354,7 @@
       <button
         type="button"
         onclick="slideService(-1)"
-        class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 items-center justify-center w-14 h-14 bg-[#F4EEE6] text-primary rounded-full shadow-xl hover:shadow-2xl hover:bg-gradient-to-br hover:from-primary hover:to-secondary hover:text-white transition-all duration-300 z-20 group"
+        class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 items-center justify-center w-14 h-14 bg-[#F4EEE6] text-[#EA6993] rounded-full shadow-xl hover:shadow-2xl hover:bg-gradient-to-br hover:from-[#EA6993] hover:to-[#793451] hover:text-white transition-all duration-300 z-20 group"
         aria-label="Scroll Left"
         id="serviceScrollLeft"
         style="display:none"
@@ -850,7 +1374,7 @@
         <!-- FIX: Hapus data-aos dari wrapper -->
         <!-- ================================ -->
         <div class="min-w-[85vw] sm:min-w-[300px] max-w-[320px] flex-shrink-0 flex">
-          <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-[#F1CCE3]/40 hover:border-secondary/30 overflow-hidden w-full flex flex-col">
+          <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-[#F1CCE3]/40 hover:border-[#793451]/30 overflow-hidden w-full flex flex-col">
                         
             <div class="absolute inset-0 bg-gradient-to-br from-[#F1CCE3]/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                         
@@ -861,13 +1385,13 @@
                 <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-[#F1CCE3] to-[#F1CCE3] text-[#793451] shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
                   <i class="ri-team-line text-4xl"></i>
                 </div>
-                <div class="absolute -inset-2 rounded-2xl border-2 border-secondary/20 group-hover:border-secondary/40 transition-colors duration-300"></div>
-                <div class="absolute -top-2 -right-2 bg-gradient-to-r from-secondary to-[#EA6993] text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div class="absolute -inset-2 rounded-2xl border-2 border-[#793451]/20 group-hover:border-[#793451]/40 transition-colors duration-300"></div>
+                <div class="absolute -top-2 -right-2 bg-gradient-to-r from-[#793451] to-[#EA6993] text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   Popular
                 </div>
               </div>
 
-              <h4 class="text-xl font-black text-primary mb-3 text-center group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all duration-300">
+              <h4 class="text-xl font-black text-[#EA6993] mb-3 text-center group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#EA6993] group-hover:to-[#793451] transition-all duration-300">
                 Private Group Class
               </h4>
 
@@ -877,21 +1401,21 @@
 
               <div class="w-full mb-6 space-y-2 text-xs text-[#26282B]/55">
                 <div class="flex items-center gap-2">
-                  <i class="ri-check-line text-secondary"></i>
+                  <i class="ri-check-line text-[#793451]"></i>
                   <span>Max 8-10 orang</span>
                 </div>
                 <div class="flex items-center gap-2">
-                  <i class="ri-check-line text-secondary"></i>
+                  <i class="ri-check-line text-[#793451]"></i>
                   <span>Jadwal fleksibel</span>
                 </div>
               </div>
 
               <!-- Bottom Accent -->
-              <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-secondary rounded-full transition-all duration-300 mb-3"></div>
+              <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-[#793451] via-[#EA6993] to-[#793451] rounded-full transition-all duration-300 mb-3"></div>
 
               <!-- FIX: Hapus hover:scale-105 dari button -->
               <a href="https://wa.me/6287785767395" target="_blank" 
-                 class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-full hover:shadow-xl transition-shadow duration-300 text-sm font-bold text-center flex items-center justify-center gap-2 mt-auto">
+                 class="w-full bg-gradient-to-r from-[#EA6993] to-[#793451] text-white px-6 py-3 rounded-full hover:shadow-xl transition-shadow duration-300 text-sm font-bold text-center flex items-center justify-center gap-2 mt-auto">
                 <i class="ri-whatsapp-line text-lg"></i>
                 <span>Booking Sekarang</span>
               </a>
@@ -903,7 +1427,7 @@
         <!-- Card 2: Private Training         -->
         <!-- ================================ -->
         <div class="min-w-[85vw] sm:min-w-[300px] max-w-[320px] flex-shrink-0 flex">
-          <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-[#F1CCE3]/40 hover:border-primary/30 overflow-hidden w-full flex flex-col">
+          <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-[#F1CCE3]/40 hover:border-[#EA6993]/30 overflow-hidden w-full flex flex-col">
                         
             <div class="absolute inset-0 bg-gradient-to-br from-[#F1CCE3]/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                         
@@ -913,13 +1437,13 @@
                 <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-[#F1CCE3] to-[#EA6993] text-[#793451] shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
                   <i class="ri-user-heart-line text-4xl"></i>
                 </div>
-                <div class="absolute -inset-2 rounded-2xl border-2 border-primary/20 group-hover:border-primary/40 transition-colors duration-300"></div>
-                <div class="absolute -top-2 -right-2 bg-gradient-to-r from-primary to-[#EA6993] text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div class="absolute -inset-2 rounded-2xl border-2 border-[#EA6993]/20 group-hover:border-[#EA6993]/40 transition-colors duration-300"></div>
+                <div class="absolute -top-2 -right-2 bg-gradient-to-r from-[#EA6993] to-[#EA6993] text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   1-on-1
                 </div>
               </div>
 
-              <h4 class="text-xl font-black text-primary mb-3 text-center group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all duration-300">
+              <h4 class="text-xl font-black text-[#EA6993] mb-3 text-center group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#EA6993] group-hover:to-[#793451] transition-all duration-300">
                 Private Training
               </h4>
 
@@ -929,19 +1453,19 @@
 
               <div class="w-full mb-6 space-y-2 text-xs text-[#26282B]/55">
                 <div class="flex items-center gap-2">
-                  <i class="ri-check-line text-primary"></i>
+                  <i class="ri-check-line text-[#EA6993]"></i>
                   <span>Personal attention</span>
                 </div>
                 <div class="flex items-center gap-2">
-                  <i class="ri-check-line text-primary"></i>
+                  <i class="ri-check-line text-[#EA6993]"></i>
                   <span>Custom program</span>
                 </div>
               </div>
 
-              <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full transition-all duration-300 mb-3"></div>
+              <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993] rounded-full transition-all duration-300 mb-3"></div>
 
               <a href="https://wa.me/6287785767395" target="_blank" 
-                 class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-full hover:shadow-xl transition-shadow duration-300 text-sm font-bold text-center flex items-center justify-center gap-2 mt-auto">
+                 class="w-full bg-gradient-to-r from-[#EA6993] to-[#793451] text-white px-6 py-3 rounded-full hover:shadow-xl transition-shadow duration-300 text-sm font-bold text-center flex items-center justify-center gap-2 mt-auto">
                 <i class="ri-whatsapp-line text-lg"></i>
                 <span>Booking Sekarang</span>
               </a>
@@ -953,7 +1477,7 @@
         <!-- Card 3: Single Visit Class       -->
         <!-- ================================ -->
         <div class="min-w-[85vw] sm:min-w-[300px] max-w-[320px] flex-shrink-0 flex">
-          <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-[#F1CCE3]/40 hover:border-secondary/30 overflow-hidden w-full flex flex-col">
+          <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-[#F1CCE3]/40 hover:border-[#793451]/30 overflow-hidden w-full flex flex-col">
                         
             <div class="absolute inset-0 bg-gradient-to-br from-blue-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                         
@@ -963,13 +1487,13 @@
                 <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200 text-blue-600 shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
                   <i class="ri-calendar-check-line text-4xl"></i>
                 </div>
-                <div class="absolute -inset-2 rounded-2xl border-2 border-secondary/20 group-hover:border-secondary/40 transition-colors duration-300"></div>
-                <div class="absolute -top-2 -right-2 bg-gradient-to-r from-secondary to-blue-400 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div class="absolute -inset-2 rounded-2xl border-2 border-[#793451]/20 group-hover:border-[#793451]/40 transition-colors duration-300"></div>
+                <div class="absolute -top-2 -right-2 bg-gradient-to-r from-[#793451] to-blue-400 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   Flexible
                 </div>
               </div>
 
-              <h4 class="text-xl font-black text-primary mb-3 text-center group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all duration-300">
+              <h4 class="text-xl font-black text-[#EA6993] mb-3 text-center group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#EA6993] group-hover:to-[#793451] transition-all duration-300">
                 Single Visit Class
               </h4>
 
@@ -979,19 +1503,19 @@
 
               <div class="w-full mb-6 space-y-2 text-xs text-[#26282B]/55">
                 <div class="flex items-center gap-2">
-                  <i class="ri-check-line text-secondary"></i>
+                  <i class="ri-check-line text-[#793451]"></i>
                   <span>No commitment</span>
                 </div>
                 <div class="flex items-center gap-2">
-                  <i class="ri-check-line text-secondary"></i>
+                  <i class="ri-check-line text-[#793451]"></i>
                   <span>Try first</span>
                 </div>
               </div>
 
-              <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-secondary rounded-full transition-all duration-300 mb-3"></div>
+              <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-[#793451] via-[#EA6993] to-[#793451] rounded-full transition-all duration-300 mb-3"></div>
 
               <a href="https://wa.me/6287785767395" target="_blank" 
-                 class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-full hover:shadow-xl transition-shadow duration-300 text-sm font-bold text-center flex items-center justify-center gap-2 mt-auto">
+                 class="w-full bg-gradient-to-r from-[#EA6993] to-[#793451] text-white px-6 py-3 rounded-full hover:shadow-xl transition-shadow duration-300 text-sm font-bold text-center flex items-center justify-center gap-2 mt-auto">
                 <i class="ri-whatsapp-line text-lg"></i>
                 <span>Booking Sekarang</span>
               </a>
@@ -1003,23 +1527,23 @@
         <!-- Card 4: Reformer Pilates         -->
         <!-- ================================ -->
         <div class="min-w-[85vw] sm:min-w-[300px] max-w-[320px] flex-shrink-0 flex">
-          <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-[#F1CCE3]/40 hover:border-primary/30 overflow-hidden w-full flex flex-col">
+          <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-[#F1CCE3]/40 hover:border-[#EA6993]/30 overflow-hidden w-full flex flex-col">
                         
-            <div class="absolute inset-0 bg-gradient-to-br from-green-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+            <div class="absolute inset-0 bg-gradient-to-br from-[#F1CCE3]/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                         
             <div class="relative z-10 flex flex-col items-center flex-1">
                             
               <div class="relative mb-6">
-                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-green-100 to-green-200 text-green-600 shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
+                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-[#F1CCE3] to-[#EA6993] text-[#793451] shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
                   <i class="ri-group-line text-4xl"></i>
                 </div>
-                <div class="absolute -inset-2 rounded-2xl border-2 border-primary/20 group-hover:border-primary/40 transition-colors duration-300"></div>
-                <div class="absolute -top-2 -right-2 bg-gradient-to-r from-primary to-green-400 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div class="absolute -inset-2 rounded-2xl border-2 border-[#EA6993]/20 group-hover:border-[#EA6993]/40 transition-colors duration-300"></div>
+                <div class="absolute -top-2 -right-2 bg-gradient-to-r from-[#EA6993] to-[#793451] text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   Trending
                 </div>
               </div>
 
-              <h4 class="text-xl font-black text-primary mb-3 text-center group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all duration-300">
+              <h4 class="text-xl font-black text-[#EA6993] mb-3 text-center group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#EA6993] group-hover:to-[#793451] transition-all duration-300">
                 Reformer Pilates
               </h4>
 
@@ -1029,19 +1553,19 @@
 
               <div class="w-full mb-6 space-y-2 text-xs text-[#26282B]/55">
                 <div class="flex items-center gap-2">
-                  <i class="ri-check-line text-primary"></i>
+                  <i class="ri-check-line text-[#EA6993]"></i>
                   <span>Alat reformer</span>
                 </div>
                 <div class="flex items-center gap-2">
-                  <i class="ri-check-line text-primary"></i>
+                  <i class="ri-check-line text-[#EA6993]"></i>
                   <span>Improve posture</span>
                 </div>
               </div>
 
-              <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full transition-all duration-300 mb-3"></div>
+              <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993] rounded-full transition-all duration-300 mb-3"></div>
 
               <a href="https://wa.me/6287785767395" target="_blank" 
-                 class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-full hover:shadow-xl transition-shadow duration-300 text-sm font-bold text-center flex items-center justify-center gap-2 mt-auto">
+                 class="w-full bg-gradient-to-r from-[#EA6993] to-[#793451] text-white px-6 py-3 rounded-full hover:shadow-xl transition-shadow duration-300 text-sm font-bold text-center flex items-center justify-center gap-2 mt-auto">
                 <i class="ri-whatsapp-line text-lg"></i>
                 <span>Booking Sekarang</span>
               </a>
@@ -1054,7 +1578,7 @@
         <!-- FIX: Hapus hover:scale-105 btn  -->
         <!-- ================================ -->
         <div class="min-w-[85vw] sm:min-w-[300px] max-w-[320px] flex-shrink-0 flex">
-          <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-[#F1CCE3]/40 hover:border-secondary/30 overflow-hidden w-full flex flex-col">
+          <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-[#F1CCE3]/40 hover:border-[#793451]/30 overflow-hidden w-full flex flex-col">
                         
             <div class="absolute inset-0 bg-gradient-to-br from-amber-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                         
@@ -1064,13 +1588,13 @@
                 <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-amber-100 to-amber-200 text-amber-600 shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
                   <i class="ri-award-line text-4xl"></i>
                 </div>
-                <div class="absolute -inset-2 rounded-2xl border-2 border-secondary/20 group-hover:border-secondary/40 transition-colors duration-300"></div>
-                <div class="absolute -top-2 -right-2 bg-gradient-to-r from-secondary to-amber-400 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div class="absolute -inset-2 rounded-2xl border-2 border-[#793451]/20 group-hover:border-[#793451]/40 transition-colors duration-300"></div>
+                <div class="absolute -top-2 -right-2 bg-gradient-to-r from-[#793451] to-amber-400 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   Premium
                 </div>
               </div>
 
-              <h4 class="text-xl font-black text-primary mb-3 text-center group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all duration-300">
+              <h4 class="text-xl font-black text-[#EA6993] mb-3 text-center group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#EA6993] group-hover:to-[#793451] transition-all duration-300">
                 Exclusive Class Program
               </h4>
 
@@ -1080,20 +1604,20 @@
 
               <div class="w-full mb-6 space-y-2 text-xs text-[#26282B]/55">
                 <div class="flex items-center gap-2">
-                  <i class="ri-check-line text-secondary"></i>
+                  <i class="ri-check-line text-[#793451]"></i>
                   <span>Limited seats</span>
                 </div>
                 <div class="flex items-center gap-2">
-                  <i class="ri-check-line text-secondary"></i>
+                  <i class="ri-check-line text-[#793451]"></i>
                   <span>Intensive coaching</span>
                 </div>
               </div>
 
-              <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-secondary rounded-full transition-all duration-300 mb-3"></div>
+              <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-[#793451] via-[#EA6993] to-[#793451] rounded-full transition-all duration-300 mb-3"></div>
 
               <!-- FIX: hover:scale-105 dihapus -->
               <a href="https://wa.me/6287785767395" target="_blank" 
-                 class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-full hover:shadow-xl transition-shadow duration-300 text-sm font-bold text-center flex items-center justify-center gap-2 mt-auto">
+                 class="w-full bg-gradient-to-r from-[#EA6993] to-[#793451] text-white px-6 py-3 rounded-full hover:shadow-xl transition-shadow duration-300 text-sm font-bold text-center flex items-center justify-center gap-2 mt-auto">
                 <i class="ri-whatsapp-line text-lg"></i>
                 <span>Booking Sekarang</span>
               </a>
@@ -1107,7 +1631,7 @@
       <button
         type="button"
         onclick="slideService(1)"
-        class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 items-center justify-center w-14 h-14 bg-[#F4EEE6] text-primary rounded-full shadow-xl hover:shadow-2xl hover:bg-gradient-to-br hover:from-primary hover:to-secondary hover:text-white transition-all duration-300 z-20 group"
+        class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 items-center justify-center w-14 h-14 bg-[#F4EEE6] text-[#EA6993] rounded-full shadow-xl hover:shadow-2xl hover:bg-gradient-to-br hover:from-[#EA6993] hover:to-[#793451] hover:text-white transition-all duration-300 z-20 group"
         aria-label="Scroll Right"
         id="serviceScrollRight"
       >
@@ -1118,13 +1642,13 @@
 
     <!-- Bottom CTA -->
     <div class="mt-16 text-center">
-      <p class="text-[#26282B]/70 mb-6">
-        Tidak yakin program mana yang cocok? <span class="font-semibold text-primary">Konsultasi gratis</span> dengan tim kami
+      <p class="text-[#26282B] mb-6">
+        Tidak yakin program mana yang cocok? <span class="font-semibold text-[#EA6993]">Konsultasi gratis</span> dengan tim kami
       </p>
       <!-- FIX: hover:scale-105 dihapus dari CTA ini juga -->
       <a href="https://wa.me/6287785767395" 
          target="_blank"
-         class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_auto] text-white font-bold rounded-full shadow-xl hover:shadow-2xl transition-shadow duration-300 group">
+         class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993] bg-[length:200%_auto] text-white font-bold rounded-full shadow-xl hover:shadow-2xl transition-shadow duration-300 group">
         <i class="ri-customer-service-2-line text-xl"></i>
         <span>Hubungi Kami</span>
         <i class="ri-arrow-right-line text-xl group-hover:translate-x-1 transition-transform"></i>
@@ -1145,13 +1669,13 @@
   >
     <button 
       onclick="closeServiceDetail()" 
-      class="absolute top-2 right-2 text-[#26282B]/55 hover:text-primary text-2xl"
+      class="absolute top-2 right-2 text-[#26282B]/55 hover:text-[#EA6993] text-2xl"
       aria-label="Close Modal"
     >
       &times;
     </button>
 
-    <h3 id="service-detail-title" class="text-xl font-bold text-primary mb-4"></h3>
+    <h3 id="service-detail-title" class="text-xl font-bold text-[#EA6993] mb-4"></h3>
     <div id="service-detail-content" class="text-[#26282B]/80 text-sm leading-relaxed"></div>
   </div>
 </div>
@@ -1178,38 +1702,38 @@
 
     <!-- Floating Gradient Orbs -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute -top-48 left-0 w-96 h-96 bg-gradient-to-br from-secondary/15 to-[#EA6993]/15 rounded-full blur-3xl animate-pulse" style="animation-duration: 7s;"></div>
-        <div class="absolute top-1/3 -right-32 w-[500px] h-[500px] bg-gradient-to-tl from-primary/10 to-[#EA6993]/10 rounded-full blur-3xl animate-pulse" style="animation-duration: 9s; animation-delay: 2s;"></div>
-        <div class="absolute -bottom-32 left-1/4 w-80 h-80 bg-gradient-to-tr from-[#F1CCE3]/15 to-secondary/15 rounded-full blur-3xl animate-pulse" style="animation-duration: 8s; animation-delay: 1s;"></div>
+        <div class="absolute -top-48 left-0 w-96 h-96 bg-gradient-to-br from-[#793451]/15 to-[#EA6993]/15 rounded-full blur-3xl animate-pulse" style="animation-duration: 7s;"></div>
+        <div class="absolute top-1/3 -right-32 w-[500px] h-[500px] bg-gradient-to-tl from-[#EA6993]/10 to-[#EA6993]/10 rounded-full blur-3xl animate-pulse" style="animation-duration: 9s; animation-delay: 2s;"></div>
+        <div class="absolute -bottom-32 left-1/4 w-80 h-80 bg-gradient-to-tr from-[#F1CCE3]/15 to-[#793451]/15 rounded-full blur-3xl animate-pulse" style="animation-duration: 8s; animation-delay: 1s;"></div>
     </div>
 
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         <!-- Section Header -->
         <div class="text-center mb-16 md:mb-24">
-            <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 rounded-full border border-primary/20 shadow-lg backdrop-blur-sm">
+            <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-[#EA6993]/10 via-[#793451]/10 to-[#EA6993]/10 rounded-full border border-[#EA6993]/20 shadow-lg backdrop-blur-sm">
                 <div class="relative">
-                    <div class="w-2 h-2 bg-primary rounded-full animate-ping absolute"></div>
-                    <div class="w-2 h-2 bg-primary rounded-full relative"></div>
+                    <div class="w-2 h-2 bg-[#EA6993] rounded-full animate-ping absolute"></div>
+                    <div class="w-2 h-2 bg-[#EA6993] rounded-full relative"></div>
                 </div>
-                <span class="text-sm md:text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary">
+                <span class="text-sm md:text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993]">
                     The Best Investment for Your Health
                 </span>
             </div>
 
             <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight">
-                <span class="text-primary">Packages &</span>
-                <span class="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-secondary via-[#EA6993] to-secondary animate-gradient-shift bg-[length:200%_auto]">
+                <span class="text-[#EA6993]">Packages &</span>
+                <span class="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-[#793451] via-[#EA6993] to-[#793451] animate-gradient-shift bg-[length:200%_auto]">
                     Pricing
                 </span>
             </h2>
 
             <div class="flex items-center justify-center gap-3 mb-6">
-                <div class="w-16 h-0.5 bg-gradient-to-r from-transparent to-primary rounded-full"></div>
-                <div class="w-3 h-3 bg-primary rounded-full animate-pulse"></div>
-                <div class="w-24 h-1 bg-gradient-to-r from-primary via-secondary to-primary rounded-full"></div>
-                <div class="w-3 h-3 bg-secondary rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
-                <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-secondary rounded-full"></div>
+                <div class="w-16 h-0.5 bg-gradient-to-r from-transparent to-[#EA6993] rounded-full"></div>
+                <div class="w-3 h-3 bg-[#EA6993] rounded-full animate-pulse"></div>
+                <div class="w-24 h-1 bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993] rounded-full"></div>
+                <div class="w-3 h-3 bg-[#793451] rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
+                <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-[#793451] rounded-full"></div>
             </div>
 
             <p class="text-lg md:text-xl text-[#26282B]/70 max-w-3xl mx-auto leading-relaxed">
@@ -1222,7 +1746,7 @@
 
             <!-- Nav Left -->
             <button type="button" onclick="slideMembership(-1)"
-                class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 items-center justify-center w-14 h-14 bg-[#F4EEE6] text-primary rounded-full shadow-xl hover:shadow-2xl hover:bg-gradient-to-br hover:from-primary hover:to-secondary hover:text-white transition-all duration-300 z-20 group"
+                class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 items-center justify-center w-14 h-14 bg-[#F4EEE6] text-[#EA6993] rounded-full shadow-xl hover:shadow-2xl hover:bg-gradient-to-br hover:from-[#EA6993] hover:to-[#793451] hover:text-white transition-all duration-300 z-20 group"
                 aria-label="Scroll Left" id="membershipScrollLeft" style="display:none">
                 <i class="ri-arrow-left-s-line text-3xl group-hover:scale-110 transition-transform"></i>
             </button>
@@ -1233,407 +1757,90 @@
                  style="scrollbar-width:none; -ms-overflow-style:none;"
                  onscroll="toggleMembershipScroll()">
 
-                <!-- Card 1 : Exclusive Class Program -->
-                <div class="min-w-[90vw] sm:min-w-[340px] max-w-[360px] flex-shrink-0 flex">
-                    <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-xl
-                                hover:shadow-2xl transition-shadow duration-300
-                                border-2 border-secondary/30 overflow-hidden w-full flex flex-col">
+                {{-- Dynamic Packages from Admin Panel --}}
+                @if(isset($packages) && $packages->count() > 0)
+                    @foreach($packages as $package)
+                    <div class="min-w-[90vw] sm:min-w-[340px] max-w-[360px] flex-shrink-0 flex">
+                        <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg
+                                    hover:shadow-2xl transition-shadow duration-300
+                                    border-2 border-[#F1CCE3]/40 hover:border-[#EA6993]/30
+                                    overflow-hidden w-full flex flex-col">
 
-                        <div class="absolute top-6 right-6 z-20">
-                            <div class="relative">
-                                <div class="absolute inset-0 bg-gradient-to-r from-primary to-secondary blur-md opacity-75 rounded-full"></div>
-                                <div class="relative bg-gradient-to-r from-primary to-secondary text-white text-xs font-black px-4 py-2 rounded-full shadow-xl">
-                                    BEST VALUE
+                            {{-- Hover gradient overlay --}}
+                            <div class="absolute inset-0 bg-gradient-to-br from-[#F1CCE3]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"></div>
+
+                            {{-- Content --}}
+                            <div class="relative z-10 flex flex-col h-full">
+
+                                {{-- Badge: Dynamic Package --}}
+                                <div class="mb-4">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-[#EA6993] to-[#793451] text-white text-xs font-bold rounded-full shadow-md">
+                                        <i class="ri-heart-pulse-fill"></i>
+                                        <span>EKSKLUSIF</span>
+                                    </span>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="absolute inset-0 bg-gradient-to-br from-[#F1CCE3]/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                                {{-- Package Name --}}
+                                <h3 class="text-2xl font-black text-[#EA6993] mb-3 leading-tight group-hover:text-[#793451] transition-colors">
+                                    {{ $package->name }}
+                                </h3>
 
-                        <div class="relative z-10 flex flex-col items-center flex-1">
-                            <div class="relative mb-6">
-                                <div class="w-24 h-24 flex items-center justify-center rounded-3xl
-                                            bg-gradient-to-br from-[#F1CCE3] to-[#F1CCE3] text-[#793451]
-                                            shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
-                                     style="will-change:transform;">
-                                    <i class="ri-star-smile-line text-5xl"></i>
+                                {{-- Price --}}
+                                <div class="mb-6">
+                                    <div class="flex items-baseline gap-2">
+                                        <span class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993]">
+                                            Rp {{ number_format($package->price, 0, ',', '.') }}
+                                        </span>
+                                    </div>
+                                    @if($package->duration_days)
+                                        <p class="text-[#26282B]/60 text-sm mt-1">Valid {{ $package->duration_days }} hari</p>
+                                    @endif
                                 </div>
-                                <div class="absolute -inset-2 rounded-3xl border-2 border-secondary/20 group-hover:border-secondary/40 transition-colors duration-300"></div>
-                            </div>
 
-                            <h3 class="text-2xl font-black text-primary mb-3 text-center
-                                       group-hover:text-transparent group-hover:bg-clip-text
-                                       group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary
-                                       transition-all duration-300">
-                                Exclusive Class Program
-                            </h3>
+                                {{-- Features --}}
+                                <ul class="w-full space-y-3 mb-6 flex-1">
+                                    @if($package->quota)
+                                    <li class="flex items-center gap-3 text-sm text-[#26282B]/80">
+                                        <i class="ri-checkbox-circle-fill text-xl text-[#793451] flex-shrink-0"></i>
+                                        <span>{{ $package->quota }} Sessions</span>
+                                    </li>
+                                    @endif
+                                    @if($package->description)
+                                    <li class="flex items-start gap-3 text-sm text-[#26282B]/80">
+                                        <i class="ri-information-fill text-xl text-[#EA6993] flex-shrink-0 mt-0.5"></i>
+                                        <span class="break-words">{{ $package->description }}</span>
+                                    </li>
+                                    @endif
+                                </ul>
 
-                            <div class="mb-6 text-center">
-                                <div class="text-4xl font-black text-primary">IDR 850K</div>
-                                <div class="text-sm text-[#26282B]/55 font-medium">per Month</div>
-                            </div>
+                                <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993] rounded-full transition-all duration-500 mb-4"></div>
 
-                            <ul class="w-full space-y-3 mb-6 flex-1">
-                                <li class="flex items-center gap-3 text-sm text-[#26282B]/80">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Muaythai</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-[#26282B]/80">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Mat Pilates</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-[#26282B]/80">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Body Shaping</span>
-                                </li>
-                            </ul>
-
-                            <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-secondary rounded-full transition-all duration-500 mb-4"></div>
-
-                            <div class="w-full space-y-2 mt-auto">
-                                <a href="{{ route('join.package', ['package' => 'exclusive-class-program']) }}"
-                                   class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 rounded-full hover:shadow-xl hover:brightness-110 transition-all font-bold flex items-center justify-center gap-2">
-                                    <i class="ri-check-line text-xl"></i>
-                                    <span>Beli Sekarang</span>
-                                </a>
-                                <button type="button" onclick="showServiceDetail('exclusive-program')"
-                                        class="w-full text-secondary text-sm font-semibold hover:text-primary transition-colors py-1">
-                                    Lihat Selengkapnya ->
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2 : Reformer Pilates Single Visit -->
-                <div class="min-w-[90vw] sm:min-w-[340px] max-w-[360px] flex-shrink-0 flex">
-                    <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg
-                                hover:shadow-2xl transition-shadow duration-300
-                                border-2 border-[#F1CCE3]/40 hover:border-primary/30 overflow-hidden w-full flex flex-col">
-
-                        <div class="absolute inset-0 bg-gradient-to-br from-[#F1CCE3]/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-
-                        <div class="relative z-10 flex flex-col items-center flex-1">
-                            <div class="relative mb-6">
-                                <div class="w-24 h-24 flex items-center justify-center rounded-3xl
-                                            bg-gradient-to-br from-[#F1CCE3] to-[#EA6993] text-[#793451]
-                                            shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
-                                     style="will-change:transform;">
-                                    <i class="ri-group-line text-5xl"></i>
+                                {{-- CTA Button --}}
+                                <div class="w-full mt-auto">
+                                    @auth('customer')
+                                        <a href="{{ route('join.package', ['package' => $package->slug ?? $package->id]) }}"
+                                           class="w-full bg-gradient-to-r from-[#EA6993] to-[#793451] text-white px-6 py-4 rounded-full hover:shadow-xl hover:brightness-110 transition-all font-bold text-center block">
+                                            Daftar Sekarang
+                                        </a>
+                                    @else
+                                        <a href="{{ route('member.login') }}"
+                                           class="w-full bg-gradient-to-r from-[#EA6993] to-[#793451] text-white px-6 py-4 rounded-full hover:shadow-xl hover:brightness-110 transition-all font-bold text-center block">
+                                            Login untuk Membeli
+                                        </a>
+                                    @endauth
                                 </div>
-                                <div class="absolute -inset-2 rounded-3xl border-2 border-primary/20 group-hover:border-primary/40 transition-colors duration-300"></div>
-                            </div>
 
-                            <h3 class="text-2xl font-black text-primary mb-3 text-center
-                                       group-hover:text-transparent group-hover:bg-clip-text
-                                       group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary
-                                       transition-all duration-300">
-                                Reformer Pilates
-                            </h3>
-                            <div class="mb-6">
-                                <div class="text-lg font-bold text-primary text-center">Single Visit Group Class</div>
-                            </div>
-
-                            <ul class="w-full space-y-3 mb-6 flex-1">
-                                <li class="flex items-center gap-3 text-sm text-[#26282B]/80">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>IDR 400K / Single</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-[#26282B]/80">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>IDR 700K / Double</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-[#26282B]/80">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>IDR 900K / Triple</span>
-                                </li>
-                            </ul>
-
-                            <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full transition-all duration-500 mb-4"></div>
-
-                            <div class="w-full space-y-2 mt-auto">
-                                <?php $reformer_variants = [
-                                    ['label' => 'Single - IDR 400K', 'url' => route('join.package', ['package' => 2])],
-                                    ['label' => 'Double - IDR 700K', 'url' => route('join.package', ['package' => 3])],
-                                    ['label' => 'Triple - IDR 900K', 'url' => route('join.package', ['package' => 4])],
-                                ]; ?>
-                                <button type="button"
-                                        class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 rounded-full hover:shadow-xl hover:brightness-110 transition-all font-bold flex items-center justify-center gap-2 join-btn"
-                                        data-variants='{!! json_encode($reformer_variants) !!}'>
-                                    <i class="ri-check-line text-xl"></i>
-                                    <span>Beli Sekarang</span>
-                                </button>
-                                <button type="button" onclick="showServiceDetail('reformer-pilates')"
-                                        class="w-full text-secondary text-sm font-semibold hover:text-primary transition-colors py-1">
-                                    Lihat Selengkapnya ->
-                                </button>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Card 3 : Single Visit Class -->
-                <div class="min-w-[90vw] sm:min-w-[340px] max-w-[360px] flex-shrink-0 flex">
-                    <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg
-                                hover:shadow-2xl transition-shadow duration-300
-                                border-2 border-[#F1CCE3]/40 hover:border-secondary/30 overflow-hidden w-full flex flex-col">
-
-                        <div class="absolute inset-0 bg-gradient-to-br from-blue-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-
-                        <div class="relative z-10 flex flex-col items-center flex-1">
-                            <div class="relative mb-6">
-                                <div class="w-24 h-24 flex items-center justify-center rounded-3xl
-                                            bg-gradient-to-br from-blue-100 to-blue-200 text-blue-600
-                                            shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
-                                     style="will-change:transform;">
-                                    <i class="ri-door-open-line text-5xl"></i>
-                                </div>
-                                <div class="absolute -inset-2 rounded-3xl border-2 border-secondary/20 group-hover:border-secondary/40 transition-colors duration-300"></div>
-                            </div>
-
-                            <h3 class="text-2xl font-black text-primary mb-6 text-center
-                                       group-hover:text-transparent group-hover:bg-clip-text
-                                       group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary
-                                       transition-all duration-300">
-                                Single Visit Class
-                            </h3>
-
-                            <ul class="w-full space-y-3 mb-6 flex-1">
-                                <li class="flex items-center gap-3 text-sm text-[#26282B]/80">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Single Class: IDR 150K</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-[#26282B]/80">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Bundle 2 Class: IDR 275K</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-[#26282B]/80">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Bundle 4 Class: IDR 525K</span>
-                                </li>
-                            </ul>
-
-                            <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-secondary rounded-full transition-all duration-500 mb-4"></div>
-
-                            <div class="w-full space-y-2 mt-auto">
-                                <?php $single_visit_variants = [
-                                    ['label' => 'Single Class - IDR 150K', 'url' => route('join.package', ['package' => 5])],
-                                    ['label' => 'Bundle 2 - IDR 275K', 'url' => route('join.package', ['package' => 6])],
-                                    ['label' => 'Bundle 4 - IDR 525K', 'url' => route('join.package', ['package' => 7])],
-                                ]; ?>
-                                <button type="button"
-                                        class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 rounded-full hover:shadow-xl hover:brightness-110 transition-all font-bold flex items-center justify-center gap-2 join-btn"
-                                        data-variants='{!! json_encode($single_visit_variants) !!}'>
-                                    <i class="ri-check-line text-xl"></i>
-                                    <span>Beli Sekarang</span>
-                                </button>
-                                <button type="button" onclick="showServiceDetail('single-visit')"
-                                        class="w-full text-secondary text-sm font-semibold hover:text-primary transition-colors py-1">
-                                    Lihat Selengkapnya ->
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 4 : Reformer Pilates Packages -->
-                <div class="min-w-[90vw] sm:min-w-[340px] max-w-[360px] flex-shrink-0 flex">
-                    <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg
-                                hover:shadow-2xl transition-shadow duration-300
-                                border-2 border-[#F1CCE3]/40 hover:border-primary/30 overflow-hidden w-full flex flex-col">
-
-                        <div class="absolute inset-0 bg-gradient-to-br from-green-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-
-                        <div class="relative z-10 flex flex-col items-center flex-1">
-                            <div class="relative mb-6">
-                                <div class="w-24 h-24 flex items-center justify-center rounded-3xl
-                                            bg-gradient-to-br from-green-100 to-green-200 text-green-600
-                                            shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
-                                     style="will-change:transform;">
-                                    <i class="ri-calendar-check-line text-5xl"></i>
-                                </div>
-                                <div class="absolute -inset-2 rounded-3xl border-2 border-primary/20 group-hover:border-primary/40 transition-colors duration-300"></div>
-                            </div>
-
-                            <h3 class="text-2xl font-black text-primary mb-3 text-center
-                                       group-hover:text-transparent group-hover:bg-clip-text
-                                       group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary
-                                       transition-all duration-300">
-                                Reformer Pilates
-                            </h3>
-                            <div class="mb-6">
-                                <div class="text-lg font-bold text-primary text-center">Packages</div>
-                            </div>
-
-                            <ul class="w-full space-y-2 mb-6 flex-1 text-xs">
-                                <li class="flex items-start gap-2 text-[#26282B]/80">
-                                    <i class="ri-checkbox-circle-fill text-base text-secondary flex-shrink-0 mt-0.5"></i>
-                                    <span>IDR 400K / Single Visit</span>
-                                </li>
-                                <li class="flex items-start gap-2 text-[#26282B]/80">
-                                    <i class="ri-checkbox-circle-fill text-base text-secondary flex-shrink-0 mt-0.5"></i>
-                                    <span>IDR 1.400K / 4 Sessions 15 Days</span>
-                                </li>
-                                <li class="flex items-start gap-2 text-[#26282B]/80">
-                                    <i class="ri-checkbox-circle-fill text-base text-secondary flex-shrink-0 mt-0.5"></i>
-                                    <span>IDR 1.540K / 4 Sessions 30 Days</span>
-                                </li>
-                                <li class="flex items-start gap-2 text-[#26282B]/80">
-                                    <i class="ri-checkbox-circle-fill text-base text-secondary flex-shrink-0 mt-0.5"></i>
-                                    <span>IDR 2.200K / 8 Sessions 30 Days</span>
-                                </li>
-                                <li class="flex items-start gap-2 text-[#26282B]/80">
-                                    <i class="ri-checkbox-circle-fill text-base text-secondary flex-shrink-0 mt-0.5"></i>
-                                    <span>IDR 2.640K / 8 Sessions 60 Days</span>
-                                </li>
-                            </ul>
-
-                            <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full transition-all duration-500 mb-4"></div>
-
-                            <div class="w-full space-y-2 mt-auto">
-                                <?php $reformer_packages_variants = [
-                                    ['label' => '1 Visit - IDR 400K', 'url' => route('join.package', ['package' => 8])],
-                                    ['label' => '4 Sessions / 15 Days - IDR 1.400K', 'url' => route('join.package', ['package' => 9])],
-                                    ['label' => '4 Sessions / 30 Days - IDR 1.540K', 'url' => route('join.package', ['package' => 10])],
-                                    ['label' => '8 Sessions / 30 Days - IDR 2.200K', 'url' => route('join.package', ['package' => 11])],
-                                    ['label' => '8 Sessions / 60 Days - IDR 2.640K', 'url' => route('join.package', ['package' => 12])],
-                                ]; ?>
-                                <button type="button"
-                                        class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 rounded-full hover:shadow-xl hover:brightness-110 transition-all font-bold flex items-center justify-center gap-2 join-btn"
-                                        data-variants='{!! json_encode($reformer_packages_variants) !!}'>
-                                    <i class="ri-check-line text-xl"></i>
-                                    <span>Beli Sekarang</span>
-                                </button>
-                                <button type="button" onclick="showServiceDetail('reformer-pilates')"
-                                        class="w-full text-secondary text-sm font-semibold hover:text-primary transition-colors py-1">
-                                    Lihat Selengkapnya ->
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 5 : Private Program -->
-                <div class="min-w-[90vw] sm:min-w-[340px] max-w-[360px] flex-shrink-0 flex">
-                    <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg
-                                hover:shadow-2xl transition-shadow duration-300
-                                border-2 border-[#F1CCE3]/40 hover:border-secondary/30 overflow-hidden w-full flex flex-col">
-
-                        <div class="absolute inset-0 bg-gradient-to-br from-amber-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-
-                        <div class="relative z-10 flex flex-col items-center flex-1">
-                            <div class="relative mb-6">
-                                <div class="w-24 h-24 flex items-center justify-center rounded-3xl
-                                            bg-gradient-to-br from-amber-100 to-amber-200 text-amber-600
-                                            shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
-                                     style="will-change:transform;">
-                                    <i class="ri-user-line text-5xl"></i>
-                                </div>
-                                <div class="absolute -inset-2 rounded-3xl border-2 border-secondary/20 group-hover:border-secondary/40 transition-colors duration-300"></div>
-                            </div>
-
-                            <h3 class="text-2xl font-black text-primary mb-6 text-center
-                                       group-hover:text-transparent group-hover:bg-clip-text
-                                       group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary
-                                       transition-all duration-300">
-                                Private Program
-                            </h3>
-
-                            <ul class="w-full space-y-3 mb-6 flex-1">
-                                <li class="flex items-center gap-3 text-sm text-[#26282B]/80">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Muaythai</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-[#26282B]/80">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Mat Pilates</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-[#26282B]/80">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Body Shaping</span>
-                                </li>
-                            </ul>
-
-                            <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-secondary rounded-full transition-all duration-500 mb-4"></div>
-
-                            <div class="w-full space-y-2 mt-auto">
-                                <a href="{{ route('join.package', ['package' => 'private-program']) }}"
-                                   class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 rounded-full hover:shadow-xl hover:brightness-110 transition-all font-bold flex items-center justify-center gap-2">
-                                    <i class="ri-whatsapp-line text-xl"></i>
-                                    <span>Hubungi Tim Kami</span>
-                                </a>
-                                <button type="button" onclick="showServiceDetail('private-training')"
-                                        class="w-full text-secondary text-sm font-semibold hover:text-primary transition-colors py-1">
-                                    Lihat Selengkapnya ->
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 6 : Private Group Program -->
-                <div class="min-w-[90vw] sm:min-w-[340px] max-w-[360px] flex-shrink-0 flex">
-                    <div class="group relative bg-[#F4EEE6] rounded-3xl p-8 shadow-lg
-                                hover:shadow-2xl transition-shadow duration-300
-                                border-2 border-[#F1CCE3]/40 hover:border-primary/30 overflow-hidden w-full flex flex-col">
-
-                        <div class="absolute inset-0 bg-gradient-to-br from-rose-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-
-                        <div class="relative z-10 flex flex-col items-center flex-1">
-                            <div class="relative mb-6">
-                                <div class="w-24 h-24 flex items-center justify-center rounded-3xl
-                                            bg-gradient-to-br from-rose-100 to-rose-200 text-rose-600
-                                            shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
-                                     style="will-change:transform;">
-                                    <i class="ri-team-line text-5xl"></i>
-                                </div>
-                                <div class="absolute -inset-2 rounded-3xl border-2 border-primary/20 group-hover:border-primary/40 transition-colors duration-300"></div>
-                            </div>
-
-                            <h3 class="text-2xl font-black text-primary mb-6 text-center
-                                       group-hover:text-transparent group-hover:bg-clip-text
-                                       group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary
-                                       transition-all duration-300">
-                                Private Group Program
-                            </h3>
-
-                            <ul class="w-full space-y-3 mb-6 flex-1">
-                                <li class="flex items-center gap-3 text-sm text-[#26282B]/80">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Muaythai</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-[#26282B]/80">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Mat Pilates</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-[#26282B]/80">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Body Shaping</span>
-                                </li>
-                            </ul>
-
-                            <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full transition-all duration-500 mb-4"></div>
-
-                            <div class="w-full space-y-2 mt-auto">
-                                <a href="{{ route('join.package', ['package' => 'private-group-program']) }}"
-                                   class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 rounded-full hover:shadow-xl hover:brightness-110 transition-all font-bold flex items-center justify-center gap-2">
-                                    <i class="ri-whatsapp-line text-xl"></i>
-                                    <span>Hubungi Tim Kami</span>
-                                </a>
-                                <button type="button" onclick="showServiceDetail('private-group')"
-                                        class="w-full text-secondary text-sm font-semibold hover:text-primary transition-colors py-1">
-                                    Lihat Selengkapnya ->
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    @endforeach
+                @endif
 
             </div>
 
             <!-- Nav Right -->
             <button type="button" onclick="slideMembership(1)"
-                class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 items-center justify-center w-14 h-14 bg-[#F4EEE6] text-primary rounded-full shadow-xl hover:shadow-2xl hover:bg-gradient-to-br hover:from-primary hover:to-secondary hover:text-white transition-all duration-300 z-20 group"
+                class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 items-center justify-center w-14 h-14 bg-[#F4EEE6] text-[#EA6993] rounded-full shadow-xl hover:shadow-2xl hover:bg-gradient-to-br hover:from-[#EA6993] hover:to-[#793451] hover:text-white transition-all duration-300 z-20 group"
                 aria-label="Scroll Right" id="membershipScrollRight">
                 <i class="ri-arrow-right-s-line text-3xl group-hover:scale-110 transition-transform"></i>
             </button>
@@ -1652,7 +1859,7 @@
 <div id="package-variant-modal" class="fixed inset-0 bg-[#26282B] bg-opacity-60 hidden items-center justify-center z-50">
   <div class="bg-[#F4EEE6] rounded-lg shadow-xl max-w-md w-full p-6 mx-4">
     <div class="flex items-center justify-between mb-4">
-      <h3 class="text-lg font-bold text-primary">Pilih Paket</h3>
+      <h3 class="text-lg font-bold text-[#EA6993]">Pilih Paket</h3>
       <button type="button" onclick="closeVariantModal()" class="text-[#26282B]/70 text-2xl">&times;</button>
     </div>
     <div id="package-variant-list" class="flex flex-col gap-3"></div>
@@ -1683,9 +1890,9 @@
 
     <!-- Floating Gradient Orbs -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute -top-32 -left-32 w-96 h-96 bg-gradient-to-br from-secondary/15 to-[#EA6993]/15 rounded-full blur-3xl animate-pulse" style="animation-duration:7s;"></div>
-        <div class="absolute top-1/2 -right-40 w-[500px] h-[500px] bg-gradient-to-tl from-primary/10 to-[#EA6993]/10 rounded-full blur-3xl animate-pulse" style="animation-duration:9s; animation-delay:2s;"></div>
-        <div class="absolute -bottom-20 left-1/3 w-80 h-80 bg-gradient-to-tr from-[#F1CCE3]/15 to-secondary/15 rounded-full blur-3xl animate-pulse" style="animation-duration:8s; animation-delay:1s;"></div>
+        <div class="absolute -top-32 -left-32 w-96 h-96 bg-gradient-to-br from-[#793451]/15 to-[#EA6993]/15 rounded-full blur-3xl animate-pulse" style="animation-duration:7s;"></div>
+        <div class="absolute top-1/2 -right-40 w-[500px] h-[500px] bg-gradient-to-tl from-[#EA6993]/10 to-[#EA6993]/10 rounded-full blur-3xl animate-pulse" style="animation-duration:9s; animation-delay:2s;"></div>
+        <div class="absolute -bottom-20 left-1/3 w-80 h-80 bg-gradient-to-tr from-[#F1CCE3]/15 to-[#793451]/15 rounded-full blur-3xl animate-pulse" style="animation-duration:8s; animation-delay:1s;"></div>
     </div>
 
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -1694,12 +1901,12 @@
         <div class="text-center mb-16 md:mb-20">
 
             <!-- Badge -->
-            <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 rounded-full border border-primary/20 shadow-lg backdrop-blur-sm">
+            <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-[#EA6993]/10 via-[#793451]/10 to-[#EA6993]/10 rounded-full border border-[#EA6993]/20 shadow-lg backdrop-blur-sm">
                 <span class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#793451] opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-[#793451]"></span>
                 </span>
-                <span class="text-sm md:text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary">
+                <span class="text-sm md:text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993]">
                     Our Class Program
                 </span>
             </div>
@@ -1707,18 +1914,18 @@
             <!-- Title -->
             <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight">
                 
-                <span class="block mt-1 text-transparent bg-clip-text bg-gradient-to-r from-secondary via-[#EA6993] to-secondary animate-gradient-shift bg-[length:200%_auto]">
+                <span class="block mt-1 text-transparent bg-clip-text bg-gradient-to-r from-[#793451] via-[#EA6993] to-[#793451] animate-gradient-shift bg-[length:200%_auto]">
                     Classes
                 </span>
             </h2>
 
             <!-- Decorative Divider -->
             <div class="flex items-center justify-center gap-3 mb-6">
-                <div class="w-16 h-0.5 bg-gradient-to-r from-transparent to-primary rounded-full"></div>
-                <div class="w-3 h-3 bg-primary rounded-full animate-pulse"></div>
-                <div class="w-24 h-1 bg-gradient-to-r from-primary via-secondary to-primary rounded-full"></div>
-                <div class="w-3 h-3 bg-secondary rounded-full animate-pulse" style="animation-delay:0.5s;"></div>
-                <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-secondary rounded-full"></div>
+                <div class="w-16 h-0.5 bg-gradient-to-r from-transparent to-[#EA6993] rounded-full"></div>
+                <div class="w-3 h-3 bg-[#EA6993] rounded-full animate-pulse"></div>
+                <div class="w-24 h-1 bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993] rounded-full"></div>
+                <div class="w-3 h-3 bg-[#793451] rounded-full animate-pulse" style="animation-delay:0.5s;"></div>
+                <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-[#793451] rounded-full"></div>
             </div>
 
             <p class="text-lg md:text-xl text-[#26282B]/70 max-w-2xl mx-auto leading-relaxed">
@@ -1735,7 +1942,7 @@
             <!-- ══════════════════════════ -->
             <div class="group relative bg-[#F4EEE6] rounded-3xl overflow-hidden
                         shadow-lg hover:shadow-2xl transition-shadow duration-300
-                        border-2 border-[#F1CCE3]/40 hover:border-secondary/30 flex flex-col">
+                        border-2 border-[#F1CCE3]/40 hover:border-[#793451]/30 flex flex-col">
 
                 <!-- Hover tint -->
                 <div class="absolute inset-0 bg-gradient-to-br from-[#F1CCE3]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"></div>
@@ -1747,11 +1954,11 @@
                     <!-- Gradient overlay -->
                     <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
                     <!-- Badge -->
-                    <div class="absolute top-3 left-3 bg-gradient-to-r from-secondary to-[#EA6993] text-white text-xs font-black px-3 py-1 rounded-full shadow-lg">
+                    <div class="absolute top-3 left-3 bg-gradient-to-r from-[#793451] to-[#EA6993] text-white text-xs font-black px-3 py-1 rounded-full shadow-lg">
                         Popular
                     </div>
                     <!-- Duration chip -->
-                    <div class="absolute bottom-3 right-3 bg-[#F4EEE6]/90 backdrop-blur-sm text-primary text-xs font-bold px-2.5 py-1 rounded-full shadow">
+                    <div class="absolute bottom-3 right-3 bg-[#F4EEE6]/90 backdrop-blur-sm text-[#EA6993] text-xs font-bold px-2.5 py-1 rounded-full shadow">
                         45 min
                     </div>
                 </div>
@@ -1769,9 +1976,9 @@
                             <i class="ri-boxing-line text-lg"></i>
                         </div>
                         <div>
-                            <h3 class="text-lg font-black text-primary leading-tight
+                            <h3 class="text-lg font-black text-[#EA6993] leading-tight
                                        group-hover:text-transparent group-hover:bg-clip-text
-                                       group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary
+                                       group-hover:bg-gradient-to-r group-hover:from-[#EA6993] group-hover:to-[#793451]
                                        transition-all duration-300">
                                 Muaythai
                             </h3>
@@ -1784,11 +1991,11 @@
                     </p>
 
                     <!-- Bottom accent line -->
-                    <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-secondary rounded-full transition-all duration-500 mb-4"></div>
+                    <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-[#793451] via-[#EA6993] to-[#793451] rounded-full transition-all duration-500 mb-4"></div>
 
                     <!-- CTA — hapus hover:scale-105 -->
                     <button onclick="openModal('muaythai')"
-                            class="w-full bg-gradient-to-r from-primary to-secondary text-white px-4 py-3 rounded-full
+                            class="w-full bg-gradient-to-r from-[#EA6993] to-[#793451] text-white px-4 py-3 rounded-full
                                    hover:shadow-xl hover:brightness-110 transition-all text-sm font-bold
                                    flex items-center justify-center gap-2 mt-auto">
                         <i class="ri-eye-line text-base"></i>
@@ -1802,7 +2009,7 @@
             <!-- ══════════════════════════ -->
             <div class="group relative bg-[#F4EEE6] rounded-3xl overflow-hidden
                         shadow-lg hover:shadow-2xl transition-shadow duration-300
-                        border-2 border-[#F1CCE3]/40 hover:border-primary/30 flex flex-col">
+                        border-2 border-[#F1CCE3]/40 hover:border-[#EA6993]/30 flex flex-col">
 
                 <div class="absolute inset-0 bg-gradient-to-br from-[#F1CCE3]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"></div>
 
@@ -1810,7 +2017,7 @@
                     <img src="{{ asset('images/body shaping.png') }}" alt="Body Shaping" loading="lazy"
                          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                     <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-                    <div class="absolute bottom-3 right-3 bg-[#F4EEE6]/90 backdrop-blur-sm text-primary text-xs font-bold px-2.5 py-1 rounded-full shadow">
+                    <div class="absolute bottom-3 right-3 bg-[#F4EEE6]/90 backdrop-blur-sm text-[#EA6993] text-xs font-bold px-2.5 py-1 rounded-full shadow">
                         30 min
                     </div>
                 </div>
@@ -1825,9 +2032,9 @@
                             <i class="ri-body-scan-line text-lg"></i>
                         </div>
                         <div>
-                            <h3 class="text-lg font-black text-primary leading-tight
+                            <h3 class="text-lg font-black text-[#EA6993] leading-tight
                                        group-hover:text-transparent group-hover:bg-clip-text
-                                       group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary
+                                       group-hover:bg-gradient-to-r group-hover:from-[#EA6993] group-hover:to-[#793451]
                                        transition-all duration-300">
                                 Body Shaping
                             </h3>
@@ -1839,10 +2046,10 @@
                         Kelas strength training full body workout untuk toning dan shaping tubuh — dari calisthenics hingga gerakan dengan beban dan equipment pendukung.
                     </p>
 
-                    <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full transition-all duration-500 mb-4"></div>
+                    <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993] rounded-full transition-all duration-500 mb-4"></div>
 
                     <button onclick="openModal('body-shaping')"
-                            class="w-full bg-gradient-to-r from-primary to-secondary text-white px-4 py-3 rounded-full
+                            class="w-full bg-gradient-to-r from-[#EA6993] to-[#793451] text-white px-4 py-3 rounded-full
                                    hover:shadow-xl hover:brightness-110 transition-all text-sm font-bold
                                    flex items-center justify-center gap-2 mt-auto">
                         <i class="ri-eye-line text-base"></i>
@@ -1856,7 +2063,7 @@
             <!-- ══════════════════════════ -->
             <div class="group relative bg-[#F4EEE6] rounded-3xl overflow-hidden
                         shadow-lg hover:shadow-2xl transition-shadow duration-300
-                        border-2 border-[#F1CCE3]/40 hover:border-secondary/30 flex flex-col">
+                        border-2 border-[#F1CCE3]/40 hover:border-[#793451]/30 flex flex-col">
 
                 <div class="absolute inset-0 bg-gradient-to-br from-blue-50/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"></div>
 
@@ -1864,7 +2071,7 @@
                     <img src="{{ asset('images/mat pilates.png') }}" alt="Mat Pilates" loading="lazy"
                          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                     <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-                    <div class="absolute bottom-3 right-3 bg-[#F4EEE6]/90 backdrop-blur-sm text-primary text-xs font-bold px-2.5 py-1 rounded-full shadow">
+                    <div class="absolute bottom-3 right-3 bg-[#F4EEE6]/90 backdrop-blur-sm text-[#EA6993] text-xs font-bold px-2.5 py-1 rounded-full shadow">
                         60 min
                     </div>
                 </div>
@@ -1879,9 +2086,9 @@
                             <i class="ri-mental-health-line text-lg"></i>
                         </div>
                         <div>
-                            <h3 class="text-lg font-black text-primary leading-tight
+                            <h3 class="text-lg font-black text-[#EA6993] leading-tight
                                        group-hover:text-transparent group-hover:bg-clip-text
-                                       group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary
+                                       group-hover:bg-gradient-to-r group-hover:from-[#EA6993] group-hover:to-[#793451]
                                        transition-all duration-300">
                                 Mat Pilates
                             </h3>
@@ -1893,10 +2100,10 @@
                         Latihan di atas matras fokus pada kekuatan inti (core), stabilitas, postur, pernapasan, dan fleksibilitas — dilakukan secara perlahan dan terkontrol.
                     </p>
 
-                    <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-secondary rounded-full transition-all duration-500 mb-4"></div>
+                    <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-[#793451] via-[#EA6993] to-[#793451] rounded-full transition-all duration-500 mb-4"></div>
 
                     <button onclick="openModal('mat-pilates')"
-                            class="w-full bg-gradient-to-r from-primary to-secondary text-white px-4 py-3 rounded-full
+                            class="w-full bg-gradient-to-r from-[#EA6993] to-[#793451] text-white px-4 py-3 rounded-full
                                    hover:shadow-xl hover:brightness-110 transition-all text-sm font-bold
                                    flex items-center justify-center gap-2 mt-auto">
                         <i class="ri-eye-line text-base"></i>
@@ -1910,19 +2117,19 @@
             <!-- ══════════════════════════════ -->
             <div class="group relative bg-[#F4EEE6] rounded-3xl overflow-hidden
                         shadow-lg hover:shadow-2xl transition-shadow duration-300
-                        border-2 border-[#F1CCE3]/40 hover:border-primary/30 flex flex-col">
+                        border-2 border-[#F1CCE3]/40 hover:border-[#EA6993]/30 flex flex-col">
 
-                <div class="absolute inset-0 bg-gradient-to-br from-green-50/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"></div>
+                <div class="absolute inset-0 bg-gradient-to-br from-[#F1CCE3]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"></div>
 
                 <div class="relative h-52 overflow-hidden flex-shrink-0">
                     <img src="{{ asset('images/revormer pilates.png') }}" alt="Reformer Pilates" loading="lazy"
                          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                     <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
                     <!-- Badge -->
-                    <div class="absolute top-3 left-3 bg-gradient-to-r from-primary to-secondary text-white text-xs font-black px-3 py-1 rounded-full shadow-lg">
+                    <div class="absolute top-3 left-3 bg-gradient-to-r from-[#EA6993] to-[#793451] text-white text-xs font-black px-3 py-1 rounded-full shadow-lg">
                         Popular
                     </div>
-                    <div class="absolute bottom-3 right-3 bg-[#F4EEE6]/90 backdrop-blur-sm text-primary text-xs font-bold px-2.5 py-1 rounded-full shadow">
+                    <div class="absolute bottom-3 right-3 bg-[#F4EEE6]/90 backdrop-blur-sm text-[#EA6993] text-xs font-bold px-2.5 py-1 rounded-full shadow">
                         45 min
                     </div>
                 </div>
@@ -1931,15 +2138,15 @@
 
                     <div class="flex items-center gap-3 mb-3">
                         <div class="w-10 h-10 flex items-center justify-center rounded-xl
-                                    bg-gradient-to-br from-green-100 to-green-200 text-green-600
+                                    bg-gradient-to-br from-[#F1CCE3] to-[#EA6993] text-[#793451]
                                     shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
                              style="will-change:transform; flex-shrink:0;">
                             <i class="ri-focus-3-line text-lg"></i>
                         </div>
                         <div>
-                            <h3 class="text-lg font-black text-primary leading-tight
+                            <h3 class="text-lg font-black text-[#EA6993] leading-tight
                                        group-hover:text-transparent group-hover:bg-clip-text
-                                       group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary
+                                       group-hover:bg-gradient-to-r group-hover:from-[#EA6993] group-hover:to-[#793451]
                                        transition-all duration-300">
                                 Reformer Pilates
                             </h3>
@@ -1951,10 +2158,10 @@
                         Menggunakan alat reformer dengan pegas dan tali untuk resistensi tambahan — variasi Mat Pilates yang dibantu alat untuk hasil lebih optimal.
                     </p>
 
-                    <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full transition-all duration-500 mb-4"></div>
+                    <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993] rounded-full transition-all duration-500 mb-4"></div>
 
                     <button onclick="openModal('reformer-pilates')"
-                            class="w-full bg-gradient-to-r from-primary to-secondary text-white px-4 py-3 rounded-full
+                            class="w-full bg-gradient-to-r from-[#EA6993] to-[#793451] text-white px-4 py-3 rounded-full
                                    hover:shadow-xl hover:brightness-110 transition-all text-sm font-bold
                                    flex items-center justify-center gap-2 mt-auto">
                         <i class="ri-eye-line text-base"></i>
@@ -1976,7 +2183,7 @@
     <div class="bg-[#F4EEE6] w-full max-w-lg rounded-3xl shadow-2xl relative overflow-hidden">
 
         <!-- Modal gradient top bar -->
-        <div class="h-1.5 w-full bg-gradient-to-r from-primary via-secondary to-primary"></div>
+        <div class="h-1.5 w-full bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993]"></div>
 
         <!-- Close Button -->
         <button onclick="closeModal()"
@@ -1986,7 +2193,7 @@
 
         <!-- Modal Content -->
         <div class="p-7">
-            <h3 id="modal-title" class="text-2xl font-black text-primary mb-1"></h3>
+            <h3 id="modal-title" class="text-2xl font-black text-[#EA6993] mb-1"></h3>
             <div id="modal-content" class="text-sm text-[#26282B]/70 mt-3"></div>
 
             <!-- WA Button — hapus hover:scale-105 -->
@@ -1994,7 +2201,7 @@
                 <a id="modal-wa-btn"
                    href="#"
                    target="_blank"
-                   class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-3.5 rounded-full
+                   class="w-full bg-gradient-to-r from-[#EA6993] to-[#793451] text-white px-6 py-3.5 rounded-full
                           hover:shadow-xl hover:brightness-110 transition-all font-bold
                           flex items-center justify-center gap-2 text-sm">
                     <i class="ri-whatsapp-line text-xl"></i>
@@ -2064,13 +2271,13 @@ window.classSchedules = {
   >
     <button 
       onclick="closeServiceDetail()" 
-      class="absolute top-2 right-2 text-[#26282B]/55 hover:text-primary text-2xl"
+      class="absolute top-2 right-2 text-[#26282B]/55 hover:text-[#EA6993] text-2xl"
       aria-label="Close Modal"
     >
       &times;
     </button>
 
-    <h3 id="service-detail-title" class="text-xl font-bold text-primary mb-4"></h3>
+    <h3 id="service-detail-title" class="text-xl font-bold text-[#EA6993] mb-4"></h3>
 
     <p id="service-detail-desc" class="text-[#26282B]/80 leading-relaxed"></p>
   </div>
@@ -2082,7 +2289,7 @@ window.classSchedules = {
 
     <!-- Tambahan: tampilkan membership -->
     <div class="mb-4 text-center text-lg font-semibold text-[#26282B]/80">
-        Membership Anda: <span class="text-primary">{{ $customer->membership }}</span>
+        Membership Anda: <span class="text-[#EA6993]">{{ $customer->membership }}</span>
     </div>
 
     @if ($schedules->count())
@@ -2136,9 +2343,9 @@ window.classSchedules = {
 
     {{-- Floating Gradient Orbs --}}
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute -top-32 -right-32 w-96 h-96 bg-gradient-to-bl from-secondary/15 to-[#EA6993]/15 rounded-full blur-3xl animate-pulse" style="animation-duration:7s;"></div>
-        <div class="absolute top-1/2 -left-40 w-[500px] h-[500px] bg-gradient-to-tr from-primary/10 to-[#EA6993]/10 rounded-full blur-3xl animate-pulse" style="animation-duration:9s; animation-delay:2s;"></div>
-        <div class="absolute -bottom-20 right-1/3 w-80 h-80 bg-gradient-to-tl from-[#F1CCE3]/15 to-secondary/15 rounded-full blur-3xl animate-pulse" style="animation-duration:8s; animation-delay:1s;"></div>
+        <div class="absolute -top-32 -right-32 w-96 h-96 bg-gradient-to-bl from-[#793451]/15 to-[#EA6993]/15 rounded-full blur-3xl animate-pulse" style="animation-duration:7s;"></div>
+        <div class="absolute top-1/2 -left-40 w-[500px] h-[500px] bg-gradient-to-tr from-[#EA6993]/10 to-[#EA6993]/10 rounded-full blur-3xl animate-pulse" style="animation-duration:9s; animation-delay:2s;"></div>
+        <div class="absolute -bottom-20 right-1/3 w-80 h-80 bg-gradient-to-tl from-[#F1CCE3]/15 to-[#793451]/15 rounded-full blur-3xl animate-pulse" style="animation-duration:8s; animation-delay:1s;"></div>
     </div>
 
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -2147,30 +2354,30 @@ window.classSchedules = {
         <div class="text-center mb-16 md:mb-20">
 
             {{-- Badge --}}
-            <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 rounded-full border border-primary/20 shadow-lg backdrop-blur-sm">
+            <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-[#EA6993]/10 via-[#793451]/10 to-[#EA6993]/10 rounded-full border border-[#EA6993]/20 shadow-lg backdrop-blur-sm">
                 <span class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#793451] opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-[#793451]"></span>
                 </span>
-                <span class="text-sm md:text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary">
+                <span class="text-sm md:text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993]">
                     Our Facilities
                 </span>
             </div>
 
             {{-- Title --}}
             <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight">
-                <span class="block text-transparent bg-clip-text bg-gradient-to-r from-secondary via-[#EA6993] to-secondary" style="background-size:200% auto; animation: gradientShift 4s ease infinite;">
+                <span class="block text-transparent bg-clip-text bg-gradient-to-r from-[#793451] via-[#EA6993] to-[#793451]" style="background-size:200% auto; animation: gradientShift 4s ease infinite;">
                     Our Gallery
                 </span>
             </h2>
 
             {{-- Decorative Divider --}}
             <div class="flex items-center justify-center gap-3 mb-6">
-                <div class="w-16 h-0.5 bg-gradient-to-r from-transparent to-primary rounded-full"></div>
-                <div class="w-3 h-3 bg-primary rounded-full animate-pulse"></div>
-                <div class="w-24 h-1 bg-gradient-to-r from-primary via-secondary to-primary rounded-full"></div>
-                <div class="w-3 h-3 bg-secondary rounded-full animate-pulse" style="animation-delay:0.5s;"></div>
-                <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-secondary rounded-full"></div>
+                <div class="w-16 h-0.5 bg-gradient-to-r from-transparent to-[#EA6993] rounded-full"></div>
+                <div class="w-3 h-3 bg-[#EA6993] rounded-full animate-pulse"></div>
+                <div class="w-24 h-1 bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993] rounded-full"></div>
+                <div class="w-3 h-3 bg-[#793451] rounded-full animate-pulse" style="animation-delay:0.5s;"></div>
+                <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-[#793451] rounded-full"></div>
             </div>
 
             <p class="text-lg md:text-xl text-[#26282B]/70 max-w-2xl mx-auto leading-relaxed">
@@ -2315,8 +2522,8 @@ window.classSchedules = {
     </div>
 
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-secondary/10 to-[#F1CCE3]/10 rounded-full blur-3xl animate-pulse" style="animation-duration:8s;"></div>
-        <div class="absolute bottom-0 right-1/4 w-80 h-80 bg-gradient-to-tl from-primary/10 to-[#EA6993]/10 rounded-full blur-3xl animate-pulse" style="animation-duration:6s; animation-delay:1.5s;"></div>
+        <div class="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-[#793451]/10 to-[#F1CCE3]/10 rounded-full blur-3xl animate-pulse" style="animation-duration:8s;"></div>
+        <div class="absolute bottom-0 right-1/4 w-80 h-80 bg-gradient-to-tl from-[#EA6993]/10 to-[#EA6993]/10 rounded-full blur-3xl animate-pulse" style="animation-duration:6s; animation-delay:1.5s;"></div>
     </div>
 
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -2324,28 +2531,28 @@ window.classSchedules = {
         {{-- Header --}}
         <div class="text-center mb-14">
 
-            <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 rounded-full border border-primary/20 shadow-lg backdrop-blur-sm">
+            <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-[#EA6993]/10 via-[#793451]/10 to-[#EA6993]/10 rounded-full border border-[#EA6993]/20 shadow-lg backdrop-blur-sm">
                 <span class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#793451] opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-[#793451]"></span>
                 </span>
-                <span class="text-sm md:text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary">
+                <span class="text-sm md:text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993]">
                     Trusted By
                 </span>
             </div>
 
             <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight">
-                <span class="block text-transparent bg-clip-text bg-gradient-to-r from-secondary via-[#EA6993] to-secondary" style="background-size:200% auto; animation: gradientShift 4s ease infinite;">
+                <span class="block text-transparent bg-clip-text bg-gradient-to-r from-[#793451] via-[#EA6993] to-[#793451]" style="background-size:200% auto; animation: gradientShift 4s ease infinite;">
                     Our Partners
                 </span>
             </h2>
 
             <div class="flex items-center justify-center gap-3 mb-6">
-                <div class="w-16 h-0.5 bg-gradient-to-r from-transparent to-primary rounded-full"></div>
-                <div class="w-3 h-3 bg-primary rounded-full animate-pulse"></div>
-                <div class="w-24 h-1 bg-gradient-to-r from-primary via-secondary to-primary rounded-full"></div>
-                <div class="w-3 h-3 bg-secondary rounded-full animate-pulse" style="animation-delay:0.5s;"></div>
-                <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-secondary rounded-full"></div>
+                <div class="w-16 h-0.5 bg-gradient-to-r from-transparent to-[#EA6993] rounded-full"></div>
+                <div class="w-3 h-3 bg-[#EA6993] rounded-full animate-pulse"></div>
+                <div class="w-24 h-1 bg-gradient-to-r from-[#EA6993] via-[#793451] to-[#EA6993] rounded-full"></div>
+                <div class="w-3 h-3 bg-[#793451] rounded-full animate-pulse" style="animation-delay:0.5s;"></div>
+                <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-[#793451] rounded-full"></div>
             </div>
 
             <p class="text-lg md:text-xl text-[#26282B]/70 max-w-2xl mx-auto leading-relaxed">
@@ -2380,7 +2587,7 @@ window.classSchedules = {
                 {{-- Card identik dengan card Classes --}}
                 <div class="group relative flex-shrink-0 mx-4 px-7 py-5 rounded-3xl
                             bg-[#F4EEE6] border-2 border-[#F1CCE3]/40
-                            shadow-lg transition-shadow duration-300 hover:shadow-2xl hover:border-secondary/30"
+                            shadow-lg transition-shadow duration-300 hover:shadow-2xl hover:border-[#793451]/30"
                      style="cursor:default; min-height:100px; display:flex; align-items:center; justify-content:center;">
                     {{-- Hover tint sama dengan Classes --}}
                     <div class="absolute inset-0 bg-gradient-to-br from-[#F1CCE3]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-3xl pointer-events-none"></div>
@@ -2405,25 +2612,25 @@ window.classSchedules = {
     <section id="contact" class="py-20 bg-[#F4EEE6]">
       <div class="container mx-auto px-4">
         <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4">
+          <h2 class="text-3xl md:text-4xl font-bold text-[#EA6993] mb-4">
             Get in Touch
           </h2>
           <p class="text-[#26282B]/70 max-w-2xl mx-auto">
             Have questions or want to learn more? We're here to help you on your
             fitness journey.
           </p>
-          <div class="w-24 h-1 bg-secondary mx-auto mt-4"></div>
+          <div class="w-24 h-1 bg-[#793451] mx-auto mt-4"></div>
         </div>
         <div class="flex flex-col md:flex-row gap-10">
           <div class="md:w-1/2">
             <div class="bg-[#F4EEE6] p-8 rounded-lg shadow-md h-full">
-              <h3 class="text-2xl font-semibold text-primary mb-6">
+              <h3 class="text-2xl font-semibold text-[#EA6993] mb-6">
                 Contact Information
               </h3>
               <div class="space-y-6">
                 <div class="flex items-start space-x-4">
                   <div
-                    class="w-10 h-10 flex items-center justify-center rounded-full bg-primary bg-opacity-10 text-primary flex-shrink-0"
+                    class="w-10 h-10 flex items-center justify-center rounded-full bg-[#EA6993] bg-opacity-10 text-[#EA6993] flex-shrink-0"
                   >
                     <i class="ri-map-pin-line ri-lg"></i>
                   </div>
@@ -2440,7 +2647,7 @@ window.classSchedules = {
                 </div>
                 <div class="flex items-start space-x-4">
                   <div
-                    class="w-10 h-10 flex items-center justify-center rounded-full bg-primary bg-opacity-10 text-primary flex-shrink-0"
+                    class="w-10 h-10 flex items-center justify-center rounded-full bg-[#EA6993] bg-opacity-10 text-[#EA6993] flex-shrink-0"
                   >
                     <i class="ri-time-line ri-lg"></i>
                   </div>
@@ -2453,7 +2660,7 @@ window.classSchedules = {
                 </div>
                 <div class="flex items-start space-x-4">
                   <div
-                    class="w-10 h-10 flex items-center justify-center rounded-full bg-primary bg-opacity-10 text-primary flex-shrink-0"
+                    class="w-10 h-10 flex items-center justify-center rounded-full bg-[#EA6993] bg-opacity-10 text-[#EA6993] flex-shrink-0"
                   >
                     <i class="ri-phone-line ri-lg"></i>
                   </div>
@@ -2462,7 +2669,7 @@ window.classSchedules = {
                     <p class="text-[#26282B]/70">+62 877-8576-7395</p>
                     <a
                      href="https://wa.me/6287785767395"
-                      class="inline-flex items-center text-secondary mt-2 hover:underline"
+                      class="inline-flex items-center text-[#793451] mt-2 hover:underline"
                     >
                       <i class="ri-whatsapp-line mr-2"></i> Message us on
                       WhatsApp
@@ -2471,7 +2678,7 @@ window.classSchedules = {
                 </div>
                 <div class="flex items-start space-x-4">
                   <div
-                    class="w-10 h-10 flex items-center justify-center rounded-full bg-primary bg-opacity-10 text-primary flex-shrink-0"
+                    class="w-10 h-10 flex items-center justify-center rounded-full bg-[#EA6993] bg-opacity-10 text-[#EA6993] flex-shrink-0"
                   >
                     <i class="ri-mail-line ri-lg"></i>
                   </div>
@@ -2486,24 +2693,24 @@ window.classSchedules = {
                 <div class="flex space-x-4">
                   <a
                     href="https://www.instagram.com/ftmsociety.id"
-                    class="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white 
-                    hover:bg-secondary hover:scale-105 hover:shadow-lg 
+                    class="w-10 h-10 flex items-center justify-center rounded-full bg-[#EA6993] text-white 
+                    hover:bg-[#793451] hover:scale-105 hover:shadow-lg 
                     transition-all text-sm font-semibold"
                   >
                     <i class="ri-instagram-line"></i>
                   </a>
                   <a
                     href="https://www.facebook.com/share/129JRu5DDXa/"
-                    class="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white 
-                    hover:bg-secondary hover:scale-105 hover:shadow-lg 
+                    class="w-10 h-10 flex items-center justify-center rounded-full bg-[#EA6993] text-white 
+                    hover:bg-[#793451] hover:scale-105 hover:shadow-lg 
                     transition-all text-sm font-semibold"
                   >
                     <i class="ri-facebook-fill"></i>
                   </a>
                 <a
                     href="https://www.tiktok.com/@ftm.society"
-                    class="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white 
-                    hover:bg-secondary hover:scale-105 hover:shadow-lg 
+                    class="w-10 h-10 flex items-center justify-center rounded-full bg-[#EA6993] text-white 
+                    hover:bg-[#793451] hover:scale-105 hover:shadow-lg 
                     transition-all text-sm font-semibold"
                     target="_blank" rel="noopener"
                   >
@@ -2515,7 +2722,7 @@ window.classSchedules = {
           </div>
           <div class="md:w-1/2">
             <div class="bg-[#F4EEE6] p-8 rounded-lg shadow-md">
-              <h3 class="text-2xl font-semibold text-primary mb-6">
+              <h3 class="text-2xl font-semibold text-[#EA6993] mb-6">
                 Send Us a Message
               </h3>
               <form class="space-y-6" method="POST" action="{{ route('feedback.store') }}">
@@ -2526,7 +2733,7 @@ window.classSchedules = {
                     type="text"
                     id="contact-name"
                     name="name"
-                    class="w-full px-4 py-3 rounded border border-[#F1CCE3] focus:border-secondary"
+                    class="w-full px-4 py-3 rounded border border-[#F1CCE3] focus:border-[#793451]"
                     placeholder="Your name"
                     required
                   />
@@ -2537,7 +2744,7 @@ window.classSchedules = {
                     type="email"
                     id="contact-email"
                     name="email"
-                    class="w-full px-4 py-3 rounded border border-[#F1CCE3] focus:border-secondary"
+                    class="w-full px-4 py-3 rounded border border-[#F1CCE3] focus:border-[#793451]"
                     placeholder="your.email@example.com"
                     required
                   />
@@ -2547,7 +2754,7 @@ window.classSchedules = {
                   <select
                     id="subject"
                     name="subject"
-                    class="w-full px-4 py-3 rounded border border-[#F1CCE3] focus:border-secondary pr-8 appearance-none bg-[#F4EEE6]"
+                    class="w-full px-4 py-3 rounded border border-[#F1CCE3] focus:border-[#793451] pr-8 appearance-none bg-[#F4EEE6]"
                     required
                   >
                     <option value="" selected disabled>Select a subject</option>
@@ -2564,15 +2771,15 @@ window.classSchedules = {
                     id="message"
                     name="message"
                     rows="5"
-                    class="w-full px-4 py-3 rounded border border-[#F1CCE3] focus:border-secondary"
+                    class="w-full px-4 py-3 rounded border border-[#F1CCE3] focus:border-[#793451]"
                     placeholder="How can we help you?"
                     required
                   ></textarea>
                 </div>
                 <button
                   type="submit"
-                class="w-full py-3 text-white bg-primary rounded-button 
-                hover:bg-secondary hover:scale-105 hover:shadow-lg 
+                class="w-full py-3 text-white bg-[#EA6993] rounded-button 
+                hover:bg-[#793451] hover:scale-105 hover:shadow-lg 
                 transition-all duration-200 text-sm font-semibold text-center shadow-lg">     
                   Send Message
                 </button>
@@ -2600,7 +2807,7 @@ window.classSchedules = {
   </div>
 </section>
    <!-- Footer -->
-<footer class="bg-primary text-white pt-16 pb-8">
+<footer class="bg-[#EA6993] text-white pt-16 pb-8">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
 
@@ -2616,13 +2823,13 @@ window.classSchedules = {
       <div>
         <h4 class="text-lg font-semibold mb-6">Navigasi Cepat</h4>
         <ul class="space-y-3">
-          <li><a href="#home" class="text-white text-opacity-80 hover:text-secondary transition-colors">Beranda</a></li>
-          <li><a href="#about" class="text-white text-opacity-80 hover:text-secondary transition-colors">Tentang Kami</a></li>
-          <li><a href="#classes" class="text-white text-opacity-80 hover:text-secondary transition-colors">Kelas</a></li>
-          <li><a href="#Programs" class="text-white text-opacity-80 hover:text-secondary transition-colors">Program</a></li>
-          <li><a href="#schedule" class="text-white text-opacity-80 hover:text-secondary transition-colors">Jadwal</a></li>
-          <li><a href="#Facility" class="text-white text-opacity-80 hover:text-secondary transition-colors">Fasilitas</a></li>
-          <li><a href="#contact" class="text-white text-opacity-80 hover:text-secondary transition-colors">Hubungi Kami</a></li>
+          <li><a href="#home" class="text-white text-opacity-80 hover:text-[#793451] transition-colors">Beranda</a></li>
+          <li><a href="#about" class="text-white text-opacity-80 hover:text-[#793451] transition-colors">Tentang Kami</a></li>
+          <li><a href="#classes" class="text-white text-opacity-80 hover:text-[#793451] transition-colors">Kelas</a></li>
+          <li><a href="#Programs" class="text-white text-opacity-80 hover:text-[#793451] transition-colors">Program</a></li>
+          <li><a href="#schedule" class="text-white text-opacity-80 hover:text-[#793451] transition-colors">Jadwal</a></li>
+          <li><a href="#Facility" class="text-white text-opacity-80 hover:text-[#793451] transition-colors">Fasilitas</a></li>
+          <li><a href="#contact" class="text-white text-opacity-80 hover:text-[#793451] transition-colors">Hubungi Kami</a></li>
         </ul>
       </div>
 
@@ -2630,11 +2837,11 @@ window.classSchedules = {
       <div>
         <h4 class="text-lg font-semibold mb-6">Program Unggulan</h4>
         <ul class="space-y-3">
-          <li><a href="#Programs" class="text-white text-opacity-80 hover:text-secondary transition-colors">Private Group Class</a></li>
-          <li><a href="#Programs" class="text-white text-opacity-80 hover:text-secondary transition-colors">Private Training</a></li>
-          <li><a href="#Programs" class="text-white text-opacity-80 hover:text-secondary transition-colors">Single Visit Class</a></li>
-          <li><a href="#Programs" class="text-white text-opacity-80 hover:text-secondary transition-colors">Reformer Pilates</a></li>
-          <li><a href="#Programs" class="text-white text-opacity-80 hover:text-secondary transition-colors">Exclusive Class Program</a></li>
+          <li><a href="#Programs" class="text-white text-opacity-80 hover:text-[#793451] transition-colors">Private Group Class</a></li>
+          <li><a href="#Programs" class="text-white text-opacity-80 hover:text-[#793451] transition-colors">Private Training</a></li>
+          <li><a href="#Programs" class="text-white text-opacity-80 hover:text-[#793451] transition-colors">Single Visit Class</a></li>
+          <li><a href="#Programs" class="text-white text-opacity-80 hover:text-[#793451] transition-colors">Reformer Pilates</a></li>
+          <li><a href="#Programs" class="text-white text-opacity-80 hover:text-[#793451] transition-colors">Exclusive Class Program</a></li>
         </ul>
       </div>
 
@@ -2653,7 +2860,7 @@ window.classSchedules = {
             />
             <button
               type="submit"
-              class="bg-secondary text-white px-4 py-2 rounded-r hover:bg-opacity-90 transition-all whitespace-nowrap"
+              class="bg-[#793451] text-white px-4 py-2 rounded-r hover:bg-opacity-90 transition-all whitespace-nowrap"
             >
               Langganan
             </button>
@@ -2671,9 +2878,9 @@ window.classSchedules = {
           &copy; 2025 FTM Society. Empowering Muslimah. Elevating Wellness.
         </p>
         <div class="flex space-x-6">
-          <a href="#" class="text-white text-opacity-60 text-sm hover:text-secondary transition-colors">Kebijakan Privasi</a>
-          <a href="#" class="text-white text-opacity-60 text-sm hover:text-secondary transition-colors">Syarat & Ketentuan</a>
-          <a href="#" class="text-white text-opacity-60 text-sm hover:text-secondary transition-colors">Kontak Bantuan</a>
+          <a href="#" class="text-white text-opacity-60 text-sm hover:text-[#793451] transition-colors">Kebijakan Privasi</a>
+          <a href="#" class="text-white text-opacity-60 text-sm hover:text-[#793451] transition-colors">Syarat & Ketentuan</a>
+          <a href="#" class="text-white text-opacity-60 text-sm hover:text-[#793451] transition-colors">Kontak Bantuan</a>
         </div>
       </div>
     </div>
@@ -2687,10 +2894,30 @@ window.classSchedules = {
       window.homeRoute = '{{ route('home') }}';
     </script>
 
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const scrollIndicator = document.getElementById('scroll-indicator');
+        if (!scrollIndicator) return;
+
+        const updateScrollIndicator = function () {
+          const shouldHide = window.scrollY > 24;
+          scrollIndicator.style.opacity = shouldHide ? '0' : '1';
+          scrollIndicator.style.visibility = shouldHide ? 'hidden' : 'visible';
+          scrollIndicator.style.pointerEvents = shouldHide ? 'none' : 'auto';
+        };
+
+        updateScrollIndicator();
+        window.addEventListener('scroll', updateScrollIndicator, { passive: true });
+      });
+    </script>
+
     <!-- Compiled JavaScript via Vite -->
     @vite(['resources/js/member.js'])
   </body>
 </html>
+
+
+
 
 
 

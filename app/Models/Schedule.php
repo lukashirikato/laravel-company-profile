@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\ClassModel;
 use App\Models\Customer;
 use App\Models\Package;
@@ -21,6 +23,10 @@ use Carbon\Carbon;
  * @property string|null $class_time
  * @property string|null $instructor
  * @property bool|null $show_on_landing
+ * @property int|null $series_id
+ * @property int|null $parent_schedule_id
+ * @property bool $is_series_parent
+ * @property bool $expand_to_month
  * @property-read \Illuminate\Database\Eloquent\Collection $packages (via pivot)
  * @property-read \Illuminate\Database\Eloquent\Collection $customers (via pivot)
  * @property-read ClassModel $classModel
@@ -40,6 +46,10 @@ class Schedule extends Model
         'class_time',
         'instructor',
         'show_on_landing',
+        'series_id',
+        'parent_schedule_id',
+        'is_series_parent',
+        'expand_to_month',
     ];
 
     // ℹ️ Tidak perlu mutator package_ids - Filament handle sync via relationship
@@ -49,6 +59,8 @@ class Schedule extends Model
         'show_on_landing' => 'boolean',
         'class_time' => 'string',
         'schedule_date' => 'date',
+        'is_series_parent' => 'boolean',
+        'expand_to_month' => 'boolean',
     ];
 
     // ❌ REMOVE appends untuk mencegah N+1 queries di Filament
@@ -56,6 +68,56 @@ class Schedule extends Model
 
     // add the summary field so Filament can access it without needing to eager-load
     protected $appends = ['packageNames', 'packageSummary'];
+
+    /**
+     * Relasi parent schedule untuk series.
+     */
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'parent_schedule_id');
+    }
+
+    /**
+     * Relasi child schedules untuk series.
+     */
+    public function children(): HasMany
+    {
+        return $this->hasMany(self::class, 'parent_schedule_id');
+    }
+
+    /**
+     * Ambil seluruh schedule dalam series yang sama.
+     */
+    public function getSeries()
+    {
+        if (!$this->series_id) {
+            return collect([$this]);
+        }
+
+        return self::query()
+            ->where('series_id', $this->series_id)
+            ->orderBy('schedule_date')
+            ->orderBy('class_time')
+            ->get();
+    }
+
+    /**
+     * Status series untuk tampilan tabel.
+     */
+    public function getSeriesStatusAttribute(): string
+    {
+        if ($this->is_series_parent) {
+            $childCount = $this->children_count ?? $this->children()->count();
+
+            return '👑 Parent' . ($childCount > 0 ? ' (' . $childCount . ')' : '');
+        }
+
+        if ($this->parent_schedule_id) {
+            return '📅 Child';
+        }
+
+        return 'Single';
+    }
 
 
     /**

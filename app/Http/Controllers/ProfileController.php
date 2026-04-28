@@ -15,6 +15,7 @@ class ProfileController extends Controller
 {
     /**
      * Tampilkan profil customer beserta transaksi, presensi, dan jadwal.
+     * ✅ FIXED: Sum semua active orders untuk support multiple package purchases
      */
     public function show(): View|RedirectResponse
     {
@@ -34,17 +35,46 @@ class ProfileController extends Controller
         // Ambil semua jadwal customer
         $schedules = $customer->schedules()->latest()->get() ?? collect();
 
-        // Get active order to show class and quota tracking separately
-        $activeOrder = $customer->orders()
+        // ✅ GET ALL ACTIVE ORDERS - support multiple package purchases
+        // Sum semua remaining_quota dan remaining_classes dari semua active orders
+        $activeOrders = $customer->orders()
             ->whereIn('status', ['paid', 'active', 'settlement', 'success'])
+            ->where(function ($q) {
+                $q->whereNull('expired_at')
+                  ->orWhere('expired_at', '>', now());
+            })
             ->latest()
-            ->first();
+            ->get();
 
-        // Remaining Quota: untuk check-in/checkout (dari customer.quota)
-        $remainingQuota = $customer->quota;
+        // ✅ CALCULATE TOTALS FROM ALL ACTIVE ORDERS
+        $remainingQuota = 0;
+        $remainingClasses = 0;
+        $totalQuota = 0;
+        $totalClasses = 0;
         
-        // Remaining Classes: untuk booking class (dari order.remaining_classes)
-        $remainingClasses = $activeOrder?->remaining_classes ?? 0;
+        foreach ($activeOrders as $order) {
+            $remainingQuota += (int) ($order->remaining_quota ?? 0);
+            $remainingClasses += (int) ($order->remaining_classes ?? 0);
+            $totalQuota += (int) ($order->total_quota ?? $order->package?->quota ?? 0);
+            $totalClasses += (int) ($order->total_classes ?? $order->package?->quota ?? 0);
+        }
+        
+        \Illuminate\Support\Facades\Log::info('📊 Dashboard quota calculation', [
+            'customer_id' => $customer->id,
+            'active_orders_count' => $activeOrders->count(),
+            'total_remaining_quota' => $remainingQuota,
+            'total_remaining_classes' => $remainingClasses,
+            'orders' => $activeOrders->map(fn($o) => [
+                'order_id' => $o->id,
+                'order_code' => $o->order_code,
+                'package' => $o->package?->name,
+                'remaining_quota' => $o->remaining_quota,
+                'remaining_classes' => $o->remaining_classes,
+            ])->toArray(),
+        ]);
+
+        // Get most recent order for display purposes
+        $activeOrder = $activeOrders->first();
 
         return view('member.profile-modal', compact(
             'customer',
@@ -53,6 +83,9 @@ class ProfileController extends Controller
             'schedules',
             'remainingQuota',
             'remainingClasses',
+            'totalQuota',
+            'totalClasses',
+            'activeOrders',
             'activeOrder'
         ));
     }

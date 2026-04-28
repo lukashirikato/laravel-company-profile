@@ -594,4 +594,99 @@
             </div>
         </div>
     </div>
+
+    {{-- ===== SCHEDULE SELECTOR MODAL ===== --}}
+    @if($showScheduleSelector && !empty($todaySchedules))
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-2xl mx-4 max-h-[80vh] overflow-y-auto">
+            {{-- Header --}}
+            <div class="mb-6 border-b pb-4">
+                <h3 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                    <svg class="w-7 h-7 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    Pilih Kelas untuk Check-in
+                </h3>
+                <p class="text-sm text-gray-500 mt-1">Member memiliki {{ count($todaySchedules) }} kelas hari ini</p>
+            </div>
+
+            {{-- Class List --}}
+            <div class="space-y-3">
+                @foreach($todaySchedules as $schedule)
+                <button 
+                    wire:click="confirmScheduleSelection({{ $schedule['schedule_id'] }})"
+                    class="w-full text-left border-2 border-gray-200 rounded-xl p-4 hover:border-indigo-500 hover:bg-indigo-50 transition-all group">
+                    
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            {{-- Class Name + Time Window Badge --}}
+                            <div class="flex items-center gap-3 mb-2">
+                                <h4 class="text-lg font-bold text-gray-800 group-hover:text-indigo-600">
+                                    {{ $schedule['class_name'] }}
+                                </h4>
+                                @if($schedule['is_within_window'])
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Time Window Aktif
+                                </span>
+                                @endif
+                            </div>
+
+                            {{-- Details Grid --}}
+                            <div class="grid grid-cols-2 gap-3 text-sm text-gray-600">
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <span class="font-medium">{{ $schedule['class_time'] }}</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                    <span>{{ $schedule['location'] }}</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                    </svg>
+                                    <span>{{ $schedule['instructor'] }}</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                    </svg>
+                                    <span>{{ $schedule['booked'] }} / {{ $schedule['capacity'] }} peserta</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Arrow Icon --}}
+                        <div class="ml-4 flex items-center text-gray-400 group-hover:text-indigo-600 transition-transform group-hover:translate-x-1">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </div>
+                    </div>
+                </button>
+                @endforeach
+            </div>
+
+            {{-- Cancel Button --}}
+            <div class="mt-6 pt-4 border-t">
+                <button 
+                    wire:click="resetForm"
+                    class="w-full px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                    Batal
+                </button>
+            </div>
+        </div>
+    </div>
+    @endif
 </x-filament::page>

@@ -133,10 +133,11 @@ class CustomerResource extends Resource
                 ])
                 ->collapsible(),
 
-            Forms\Components\Section::make('Classes Remaining (Active Order)')
+            Forms\Components\Section::make('Manage Remaining Quota')
                 ->schema([
+                    // Show current active order info
                     Forms\Components\Placeholder::make('active_order_info')
-                        ->label('Order Aktif')
+                        ->label('Order Aktif Saat Ini')
                         ->content(function ($record) {
                             if (!$record) return 'Simpan customer terlebih dahulu.';
                             $activeOrder = $record->orders()
@@ -149,8 +150,45 @@ class CustomerResource extends Resource
                                 ->first();
                             if (!$activeOrder) return 'Tidak ada order aktif.';
                             return "Order: {$activeOrder->order_code} | Package: " . ($activeOrder->package->name ?? '-') . " | Classes Remaining: {$activeOrder->remaining_classes} | Quota Remaining: {$activeOrder->remaining_quota}";
-                        }),
+                        })
+                        ->visibleOn('edit'),
 
+                    // Edit field for customer quota (legacy field)
+                    Forms\Components\TextInput::make('quota')
+                        ->label('Customer Quota (Legacy Field)')
+                        ->numeric()
+                        ->minValue(0)
+                        ->helperText('Field lama - akan disinkronkan dengan orders.remaining_quota saat disimpan. Gunakan field di bawah untuk update.')
+                        ->disabled()
+                        ->visibleOn('edit'),
+
+                    // Edit field for remaining quota on active order
+                    Forms\Components\TextInput::make('remaining_quota_to_update')
+                        ->label('Remaining Quota (Active Order)')
+                        ->numeric()
+                        ->minValue(0)
+                        ->helperText('Ubah nilai ini untuk update quota pada order aktif. Akan disinkronkan ke customers.quota juga.')
+                        ->default(function ($record) {
+                            if (!$record) return 0;
+                            $activeOrder = $record->orders()
+                                ->whereIn('status', ['active', 'completed', 'paid'])
+                                ->where(function ($q) {
+                                    $q->whereNull('expired_at')
+                                      ->orWhere('expired_at', '>', now());
+                                })
+                                ->latest()
+                                ->first();
+                            return $activeOrder ? $activeOrder->remaining_quota : 0;
+                        })
+                        ->dehydrated(false)
+                        ->visibleOn('edit'),
+                ])
+                ->columns(1)
+                ->collapsible()
+                ->visibleOn('edit'),
+
+            Forms\Components\Section::make('Classes Remaining (Active Order)')
+                ->schema([
                     Forms\Components\Placeholder::make('adjust_hint')
                         ->label('')
                         ->content('Untuk mengubah Classes Remaining, gunakan tab "Orders & Classes Remaining" di bawah form ini, atau gunakan tombol "Adjust Classes" di tabel customer.')
@@ -552,5 +590,28 @@ Selamat berlatih 💪"
             'Membership' => $record->membership,
             'Package' => $record->package?->name ?? 'Belum beli package',
         ];
+    }
+
+    /**
+     * ✅ SYNC QUOTA: Síncronizar customers.quota ↔ orders.remaining_quota
+     * Ketika admin mengubah remaining_quota_to_update, kedua field akan update bersamaan
+     */
+    public static function mutateFormDataBeforeSave(array $data): array
+    {
+        // Hanya proses jika ada nilai yang diubah
+        if (!isset($data['remaining_quota_to_update'])) {
+            return $data;
+        }
+
+        $newQuota = (int) $data['remaining_quota_to_update'];
+
+        // ✅ UPDATE 1: Update customers.quota (legacy field)
+        $data['quota'] = $newQuota;
+
+        // ✅ UPDATE 2: Update orders.remaining_quota (active order)
+        // Dilakukan di EditCustomer page untuk akses ke $record
+        // (akan dihandle di hook page-level)
+
+        return $data;
     }
 }

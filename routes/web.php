@@ -55,9 +55,12 @@ Route::get('/', function () {
 
         $customer = auth('customer')->check() ? auth('customer')->user() : null;
 
-        return view('welcome', compact('schedules', 'customer'));
+        // Query dynamic packages untuk ditampilkan di landing
+        $packages = Package::active()->latest()->get();
+
+        return view('welcome', compact('schedules', 'customer', 'packages'));
     } catch (\Exception $e) {
-        return view('welcome', ['schedules' => collect(), 'customer' => null, 'error' => $e->getMessage()]);
+        return view('welcome', ['schedules' => collect(), 'customer' => null, 'packages' => collect(), 'error' => $e->getMessage()]);
     }
 })->name('home');
 
@@ -525,4 +528,8 @@ if (config('app.debug')) {
             ], 500);
         }
     })->name('test.whatsapp');
+    
+    // API endpoint untuk customer list (untuk dashboard admin)
+    Route::get('/api/customers', [\App\Http\Controllers\Api\CustomerApiController::class, 'getList'])
+        ->name('api.customers.list');
 }

@@ -761,6 +761,265 @@
                 font-size: 1.5rem;
             }
         }
+
+        /* ==================== MODAL STYLING ==================== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            width: 90%;
+            max-width: 900px;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 2px solid var(--gray-100);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: var(--white);
+            z-index: 10;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin: 0;
+        }
+
+        .modal-close {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-600);
+            transition: color 0.2s;
+            background: none;
+            border: none;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            color: var(--gray-900);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-filters {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--gray-200);
+            background: var(--white);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        .customer-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .customer-item {
+            padding: 1rem;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+        }
+
+        .customer-item:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
+        }
+
+        .customer-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .customer-name {
+            font-weight: 700;
+            color: var(--gray-900);
+            font-size: 1.05rem;
+        }
+
+        .customer-status {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-sm);
+        }
+
+        .customer-status.active {
+            background: var(--secondary-light);
+            color: var(--secondary);
+        }
+
+        .customer-status.inactive {
+            background: var(--warning-light);
+            color: var(--warning);
+        }
+
+        .customer-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .customer-info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .customer-info-label {
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 0.25rem;
+        }
+
+        .customer-info-value {
+            color: var(--gray-900);
+        }
+
+        .customer-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+        }
+
+        .action-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .action-link.whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        .action-link.whatsapp:hover {
+            background: #20BA5A;
+            transform: translateY(-2px);
+        }
+
+        .action-link.view {
+            background: var(--info-light);
+            color: var(--info);
+        }
+
+        .action-link.view:hover {
+            background: var(--info);
+            color: white;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray-600);
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--gray-200);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .empty-state-modal {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray-600);
+        }
+
+        .empty-icon-modal {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+    
     </style>
     
     <div class="dashboard-wrapper">
@@ -786,7 +1045,7 @@
         <!-- ==================== KPI METRICS ==================== -->
         <div class="kpi-grid">
             <!-- Total Members -->
-            <div class="kpi-card primary">
+            <div class="kpi-card primary" onclick="openCustomerModal('all')" style="cursor: pointer;">
                 <div class="kpi-card-header">
                     <div class="kpi-icon-wrapper">
                         👥
@@ -803,7 +1062,7 @@
             </div>
             
             <!-- Active Members -->
-            <div class="kpi-card success">
+            <div class="kpi-card success" onclick="openCustomerModal('active')" style="cursor: pointer;">
                 <div class="kpi-card-header">
                     <div class="kpi-icon-wrapper">
                         ✅
@@ -820,7 +1079,7 @@
             </div>
             
             <!-- Inactive Members -->
-            <div class="kpi-card warning">
+            <div class="kpi-card warning" onclick="openCustomerModal('inactive')" style="cursor: pointer;">
                 <div class="kpi-card-header">
                     <div class="kpi-icon-wrapper">
                         ⏸️
@@ -976,4 +1235,240 @@
             </div>
         </div>
     </div>
+
+    <!-- ==================== CUSTOMER LIST MODAL ==================== -->
+    <div id="customerModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Member</h2>
+                <button class="modal-close" onclick="closeCustomerModal()">✕</button>
+            </div>
+           
+                
+                <div id="customerListContainer">
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        <p>Memuat data...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentFilter = 'all';
+
+        /**
+         * Buka modal dengan menampilkan customer list
+         */
+        function openCustomerModal(filterType = 'all') {
+            currentFilter = filterType;
+            document.getElementById('customerModal').classList.add('active');
+            updateModalTitle(filterType);
+            loadCustomers(filterType);
+        }
+
+        /**
+         * Tutup modal
+         */
+        function closeCustomerModal() {
+            document.getElementById('customerModal').classList.remove('active');
+        }
+
+        /**
+         * Update title modal sesuai filter
+         */
+        function updateModalTitle(filterType) {
+            const titles = {
+                'all': '📊 Daftar Semua Member',
+                'active': '✅ Member Aktif',
+                'inactive': '⏸️ Member Tidak Aktif - Follow Up Required',
+                'no-package': '🎁 Member Belum Beli Package - Follow Up'
+            };
+            document.getElementById('modalTitle').textContent = titles[filterType] || 'Member';
+        }
+
+        /**
+         * Filter customers dan update list
+         */
+        function filterCustomers(filterType) {
+            currentFilter = filterType;
+            
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            updateModalTitle(filterType);
+            loadCustomers(filterType);
+        }
+
+        /**
+         * Load customer list from server
+         */
+        function loadCustomers(filterType) {
+            const container = document.getElementById('customerListContainer');
+            container.innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>Memuat data...</p></div>';
+
+            console.log('Loading customers with filter:', filterType);
+
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+            console.log('CSRF Token available:', !!csrfToken);
+
+            fetch(`/api/customers?status=${filterType}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'include' // Include cookies for authentication
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Received data:', data);
+                if (data.customers && data.customers.length > 0) {
+                    console.log(`Found ${data.customers.length} customers`);
+                    renderCustomerList(data.customers, filterType);
+                } else {
+                    const emptyMessages = {
+                        'all': 'Tidak ada member yang ditemukan',
+                        'active': 'Tidak ada member aktif',
+                        'inactive': 'Tidak ada member tidak aktif',
+                        'no-package': 'Tidak ada member yang belum membeli package'
+                    };
+                    
+                    container.innerHTML = `
+                        <div class="empty-state-modal">
+                            <div class="empty-icon-modal">📭</div>
+                            <h3>Tidak Ada Data</h3>
+                            <p>${emptyMessages[filterType] || 'Tidak ada data'}</p>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error loading customers:', error);
+                console.error('Error message:', error.message);
+                container.innerHTML = `
+                    <div class="empty-state-modal">
+                        <div class="empty-icon-modal">⚠️</div>
+                        <h3>Error</h3>
+                        <p>Gagal memuat data. Silakan coba lagi. (${error.message})</p>
+                    </div>
+                `;
+            });
+        }
+
+        /**
+         * Render customer list
+         */
+        function renderCustomerList(customers, filterType) {
+            const container = document.getElementById('customerListContainer');
+            
+            let html = '<div class="modal-filters">';
+            html += '<button class="filter-btn ' + (currentFilter === 'all' ? 'active' : '') + '" onclick="filterCustomers(\'all\')">📊 Semua Member</button>';
+            html += '<button class="filter-btn ' + (currentFilter === 'active' ? 'active' : '') + '" onclick="filterCustomers(\'active\')">✅ Member Aktif</button>';
+            html += '<button class="filter-btn ' + (currentFilter === 'inactive' ? 'active' : '') + '" onclick="filterCustomers(\'inactive\')">⏸️ Member Tidak Aktif</button>';
+           
+            html += '</div>';
+            
+            html += '<ul class="customer-list">';
+
+            customers.forEach(customer => {
+                const isActive = customer.is_login_active === 1;
+                const statusBadge = isActive 
+                    ? '<span class="customer-status active">✅ Aktif</span>' 
+                    : '<span class="customer-status inactive">⏸️ Tidak Aktif</span>';
+
+                const lastActive = customer.last_activity 
+                    ? `${customer.last_activity}` 
+                    : 'Tidak ada activity';
+
+                const joinDate = customer.created_at || 'N/A';
+                const phone = customer.phone_number || 'N/A';
+                
+                // WhatsApp action - show for all customers with phone
+                let whatsappAction = '';
+                if (customer.phone_number && customer.whatsapp_url) {
+                    whatsappAction = `
+                        <a href="${customer.whatsapp_url}" 
+                           target="_blank" 
+                           class="action-link whatsapp"
+                           title="Kirim pesan follow-up via WhatsApp">
+                            💬 Kirim WhatsApp
+                        </a>
+                    `;
+                }
+
+                html += `
+                    <li class="customer-item">
+                        <div class="customer-item-header">
+                            <div class="customer-name">${customer.name || 'N/A'}</div>
+                            ${statusBadge}
+                        </div>
+
+                        <div class="customer-info">
+                            <div class="customer-info-item">
+                                <span class="customer-info-label">📧 Email</span>
+                                <span class="customer-info-value">${customer.email || 'N/A'}</span>
+                            </div>
+                            <div class="customer-info-item">
+                                <span class="customer-info-label">📱 Telepon</span>
+                                <span class="customer-info-value">${phone}</span>
+                            </div>
+                            <div class="customer-info-item">
+                                <span class="customer-info-label">📅 Bergabung</span>
+                                <span class="customer-info-value">${joinDate}</span>
+                            </div>
+                            <div class="customer-info-item">
+                                <span class="customer-info-label">⏱️ Aktivitas Terakhir</span>
+                                <span class="customer-info-value">${lastActive}</span>
+                            </div>
+                        </div>
+
+                        <div class="customer-actions">
+                            <a href="/filament/resources/customers/${customer.id}" class="action-link view">👁️ Lihat Detail</a>
+                            ${whatsappAction}
+                        </div>
+                    </li>
+                `;
+            });
+
+            html += '</ul>';
+            container.innerHTML = html;
+        }
+
+        /**
+         * Generate WhatsApp URL dengan message template
+         */
+        function getWhatsAppUrl(phoneNumber, customerName) {
+            if (!phoneNumber) return '#';
+
+            // Ensure phone format
+            let phone = phoneNumber.replace(/^0/, '62').replace(/[^0-9]/g, '');
+            
+            // Default message template
+            const message = `Halo ${customerName}! 👋\n\nKami rindu Anda di FTM Society! 💪\n\nApakah ada yang bisa kami bantu terkait membership Anda? Kami memiliki program spesial untuk member setia seperti Anda.\n\nJangan ragu untuk menghubungi kami ya! 😊\n\nhttp://ftmsociety.id`;
+
+            return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+        }
+
+        /**
+         * Close modal ketika klik overlay
+         */
+        document.getElementById('customerModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCustomerModal();
+            }
+        });
+    </script>
 </x-filament::page>

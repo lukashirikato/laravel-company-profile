@@ -120,4 +120,31 @@ class Package extends Model
         })
         ->get();
     }
+
+    /**
+     * Scope untuk mengambil package aktif
+     * Sementara tanpa filter, semua package dianggap aktif
+     */
+    public function scopeActive($query)
+    {
+        return $query;
+    }
+
+    /**
+     * Accessor untuk mapping field requirement ke kolom database
+     */
+    public function getSessionQuotaAttribute()
+    {
+        return $this->quota;
+    }
+
+    public function getValidityDaysAttribute()
+    {
+        return $this->duration_days;
+    }
+
+    public function getPackageTypeAttribute()
+    {
+        return $this->type;
+    }
 }

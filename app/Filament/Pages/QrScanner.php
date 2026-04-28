@@ -6,6 +6,7 @@ use Filament\Pages\Page;
 use Livewire\Attributes\Reactive;
 use App\Models\Order;
 use App\Models\Attendance;
+use App\Models\Customer;
 use App\Models\CustomerSchedule;
 use App\Models\Schedule;
 use App\Services\WhatsAppService;
@@ -93,14 +94,36 @@ class QrScanner extends Page
         }
 
         try {
-            // Parse QR token untuk mendapatkan customer_id
+            // ✅ ENHANCED: Parse QR token dengan multiple format support
             $token = trim($this->qrToken);
-            $customerId = (int) $token;
+            $customerId = null;
 
-            if ($customerId <= 0) {
-                $this->errorMessage = 'Member ID tidak valid';
-                $this->qrToken = '';
-                return;
+            // Format 1: Plain customer ID (e.g., "34")
+            if (is_numeric($token)) {
+                $customerId = (int) $token;
+            }
+            // Format 2: QR token format (e.g., "MEMBER_34_194w3H7jIcUOVCBm")
+            elseif (str_contains($token, 'MEMBER_')) {
+                // Extract customer ID dari format MEMBER_XX_...
+                preg_match('/MEMBER_(\d+)_/', $token, $matches);
+                if (!empty($matches[1])) {
+                    $customerId = (int) $matches[1];
+                }
+            }
+
+            // Format 3: Fallback - cari di database berdasarkan qr_token
+            if (!$customerId || $customerId <= 0) {
+                $customer = Customer::where('qr_token', $token)
+                    ->where('qr_active', true)
+                    ->first();
+                
+                if ($customer) {
+                    $customerId = $customer->id;
+                } else {
+                    $this->errorMessage = 'Member ID tidak valid atau QR belum diaktifkan';
+                    $this->qrToken = '';
+                    return;
+                }
             }
 
             // Gunakan enhanced QRCheckInController
@@ -112,8 +135,22 @@ class QrScanner extends Page
                 // ✅ SUCCESS CASES
                 $data = $result['data'] ?? [];
 
-                if ($result['type'] === 'check_in_success') {
+                if ($result['type'] === 'multiple_bookings_found') {
+                    // Member has multiple bookings today - show selector
+                    $this->todaySchedules = $data['bookings'] ?? [];
+                    $this->showScheduleSelector = true;
+
+                    \Filament\Notifications\Notification::make()
+                        ->title('ℹ️ Pilih Kelas')
+                        ->body("{$data['member_name']} memiliki " . count($this->todaySchedules) . " kelas hari ini. Pilih kelas untuk check-in.")
+                        ->info()
+                        ->send();
+
+                    return; // Don't clear qrToken yet, needed for confirmScheduleSelection
+
+                } elseif ($result['type'] === 'check_in_success') {
                     // Normal check-in
+                    $isExclusive = $data['is_exclusive'] ?? false;
                     $this->scanResults = [
                         'success' => true,
                         'member_name' => $data['member_name'] ?? '-',
@@ -121,7 +158,7 @@ class QrScanner extends Page
                         'program' => $data['program'] ?? '-',
                         'class_name' => $data['class_name'] ?? '-',
                         'package_name' => $data['package_name'] ?? '-',
-                        'is_exclusive' => false,
+                        'is_exclusive' => $isExclusive,
                         'total_quota' => $data['total_quota'] ?? 0,
                         'remaining_quota' => $data['remaining_quota'] ?? 0,
                         'check_in_time' => $data['check_in_time'] ?? '-',
@@ -131,9 +168,16 @@ class QrScanner extends Page
                         'status' => 'success',
                     ];
 
+                    $notificationBody = $data['member_name'] . ' – ' . $data['class_name'];
+                    if (!$isExclusive) {
+                        $notificationBody .= ' – Quota: ' . $data['remaining_quota'];
+                    } else {
+                        $notificationBody .= ' (Exclusive)';
+                    }
+
                     \Filament\Notifications\Notification::make()
                         ->title('✅ Check-in Berhasil!')
-                        ->body("{$data['member_name']} – {$data['class_name']}")
+                        ->body($notificationBody)
                         ->success()
                         ->send();
 
@@ -214,8 +258,36 @@ class QrScanner extends Page
         $this->selectedScheduleId   = $scheduleId;
 
         try {
-            $token      = trim($this->qrToken);
-            $customerId = (int) $token;
+            // ✅ ENHANCED: Parse QR token dengan multiple format support
+            $token = trim($this->qrToken);
+            $customerId = null;
+
+            // Format 1: Plain customer ID
+            if (is_numeric($token)) {
+                $customerId = (int) $token;
+            }
+            // Format 2: QR token dengan MEMBER_XX_...
+            elseif (str_contains($token, 'MEMBER_')) {
+                preg_match('/MEMBER_(\d+)_/', $token, $matches);
+                if (!empty($matches[1])) {
+                    $customerId = (int) $matches[1];
+                }
+            }
+
+            // Format 3: Database fallback
+            if (!$customerId || $customerId <= 0) {
+                $customer = Customer::where('qr_token', $token)
+                    ->where('qr_active', true)
+                    ->first();
+                
+                if ($customer) {
+                    $customerId = $customer->id;
+                } else {
+                    $this->errorMessage = 'Member ID tidak valid';
+                    $this->qrToken = '';
+                    return;
+                }
+            }
 
             $order = Order::where(function ($q) use ($customerId, $token) {
                     $q->where('customer_id', $customerId)
@@ -261,57 +333,81 @@ class QrScanner extends Page
      */
     private function processCheckIn($customer, $order, CustomerSchedule $booking): void
     {
-        $schedule    = $booking->schedule;
-        $scheduleId  = $booking->schedule_id;
-        $isExclusive = (bool) ($booking->order->package->is_exclusive
-            ?? $order->package->is_exclusive
-            ?? false);
+        try {
+            // ✅ Safe initialization
+            $schedule    = $booking->schedule;
+            $scheduleId  = $booking->schedule_id;
+            $classStart  = null;
+            
+            // ✅ Safe check for package exclusivity with null coalescing
+            $isExclusive = false;
+            if ($booking->order && $booking->order->package) {
+                $isExclusive = (bool) $booking->order->package->is_exclusive;
+            } elseif ($order && $order->package) {
+                $isExclusive = (bool) $order->package->is_exclusive;
+            }
 
-        // ── TIME WINDOW CHECK (±60 minutes from class start) ───────────
-        if ($schedule->class_time) {
-            $classStart = Carbon::parse($schedule->schedule_date->format('Y-m-d') . ' ' . $schedule->class_time);
-            $windowStart = $classStart->copy()->subMinutes(60);
-            $windowEnd   = $classStart->copy()->addMinutes(60);
+            // ── TIME WINDOW CHECK (±60 minutes from class start) ───────────
+            if ($schedule && $schedule->class_time && $schedule->schedule_date) {
+                try {
+                    $classStart = Carbon::parse($schedule->schedule_date->format('Y-m-d') . ' ' . $schedule->class_time);
+                    $windowStart = $classStart->copy()->subMinutes(60);
+                    $windowEnd   = $classStart->copy()->addMinutes(60);
 
-            if (!now()->between($windowStart, $windowEnd)) {
-                $this->errorMessage = 'Di luar waktu check-in. ' .
-                    'Kelas mulai ' . $classStart->format('H:i') . '. ' .
-                    'Check-in dibuka ' . $windowStart->format('H:i') . ' – ' . $windowEnd->format('H:i') . '.';
-                $this->recordScan($order, false, 'Di luar waktu check-in');
+                    if (!now()->between($windowStart, $windowEnd)) {
+                        $this->errorMessage = 'Di luar waktu check-in. ' .
+                            'Kelas mulai ' . $classStart->format('H:i') . '. ' .
+                            'Check-in dibuka ' . $windowStart->format('H:i') . ' – ' . $windowEnd->format('H:i') . '.';
+                        $this->recordScan($order, false, 'Di luar waktu check-in');
+                        $this->qrToken = '';
+                        return;
+                    }
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::warning('⚠️ Time window check failed', [
+                        'schedule_id' => $scheduleId,
+                        'error' => $e->getMessage(),
+                    ]);
+                    // Continue without time window validation if parsing fails
+                }
+            }
+
+            // ── DUPLICATE CHECK (per schedule per day) ─────────────────────
+            $alreadyCheckedIn = Attendance::where('customer_id', $customer->id)
+                ->where('schedule_id', $scheduleId)
+                ->whereDate('check_in_at', today())
+                ->exists();
+
+            if ($alreadyCheckedIn) {
+                $className = 'kelas ini';
+                if ($schedule && $schedule->classModel) {
+                    $className = $schedule->classModel->name ?? $schedule->classModel->class_name ?? $className;
+                }
+                $this->errorMessage = 'Member sudah check-in untuk ' . $className . ' hari ini.';
+                $this->recordScan($order, false, 'Duplikat check-in per kelas');
                 $this->qrToken = '';
                 return;
             }
-        }
 
-        // ── DUPLICATE CHECK (per schedule per day) ─────────────────────
-        $alreadyCheckedIn = Attendance::where('customer_id', $customer->id)
-            ->where('schedule_id', $scheduleId)
-            ->whereDate('check_in_at', today())
-            ->exists();
+            // ── QUOTA CHECK (only for non-exclusive packages) ─────────────
+            if (!$isExclusive && (int) $order->remaining_quota <= 0) {
+                $this->errorMessage = 'Quota member habis. Perpanjang paket untuk check-in.';
+                $this->recordScan($order, false, 'Quota habis');
+                $this->qrToken = '';
+                return;
+            }
 
-        if ($alreadyCheckedIn) {
-            $className = $schedule->classModel->name ?? $schedule->classModel->class_name ?? 'kelas ini';
-            $this->errorMessage = 'Member sudah check-in untuk ' . $className . ' hari ini.';
-            $this->recordScan($order, false, 'Duplikat check-in per kelas');
-            $this->qrToken = '';
-            return;
-        }
-
-        // ── QUOTA CHECK (only for non-exclusive packages) ─────────────
-        if (!$isExclusive && (int) $customer->quota <= 0) {
-            $this->errorMessage = 'Quota member habis. Perpanjang paket untuk check-in.';
-            $this->recordScan($order, false, 'Quota habis');
-            $this->qrToken = '';
-            return;
-        }
-
-        // ── SUCCESS ────────────────────────────────────────────────────
-        \DB::beginTransaction();
-        try {
-            $className = $schedule->classModel->name
-                ?? $schedule->classModel->class_name
-                ?? $order->package->name
-                ?? 'General Fitness';
+            // ── SUCCESS ────────────────────────────────────────────────────
+            \DB::beginTransaction();
+            
+            // ✅ Safe class name extraction with multiple fallbacks
+            $className = 'General Fitness';
+            if ($schedule && $schedule->classModel) {
+                $className = $schedule->classModel->name 
+                    ?? $schedule->classModel->class_name 
+                    ?? $className;
+            } elseif ($order && $order->package && $order->package->name) {
+                $className = $order->package->name;
+            }
 
             $program = $this->selectedProgram ?: $className;
 
@@ -322,19 +418,16 @@ class QrScanner extends Page
                 'check_in_time'     => now(),
                 'check_in_at'       => now(),
                 'program'           => $program,
-                'location'          => $this->selectedLocation,
+                'location'          => $this->selectedLocation ?? 'FTM SOCIETY',
                 'check_in_type'     => 'qr',
                 'attendance_status' => 'present',
                 'quota_deducted'    => !$isExclusive,
             ]);
 
-            // Deduct quota only for non-exclusive packages
+            // ✅ Deduct quota only for non-exclusive packages
             if (!$isExclusive) {
-                $customer->decrement('quota');
-                $customer->refresh();
-                $order->update(['remaining_quota' => $customer->quota]);
-            } else {
-                $customer->refresh();
+                $order->decrement('remaining_quota');
+                $order->refresh();
             }
 
             \DB::commit();
@@ -343,17 +436,18 @@ class QrScanner extends Page
 
             $this->scanResults = [
                 'success'         => true,
-                'member_name'     => $customer->name,
+                'member_name'     => $customer->name ?? 'Member',
                 'member_id'       => $customer->id,
                 'program'         => $program,
                 'class_name'      => $className,
-                'package_name'    => $order->package->name,
+                'package_name'    => $order->package->name ?? 'Package',
                 'is_exclusive'    => $isExclusive,
                 'total_quota'     => $order->package->quota ?? 0,
-                'remaining_quota' => $customer->quota,
+                'remaining_quota' => $order->remaining_quota,
                 'check_in_time'   => now()->format('H:i:s'),
                 'check_in_date'   => now()->format('d/m/Y'),
-                'schedule_time'   => isset($classStart) ? $classStart->format('H:i') : '-',
+                'schedule_time'   => $classStart ? $classStart->format('H:i') : '-',
+                'status'          => 'success',
             ];
 
             $this->recordScan($order, true, 'Check-in berhasil - ' . $className);
@@ -361,26 +455,47 @@ class QrScanner extends Page
 
             \Filament\Notifications\Notification::make()
                 ->title('✅ Check-in Berhasil!')
-                ->body($customer->name . ' – ' . $className . ($isExclusive ? ' (Exclusive)' : ' – Quota: ' . $customer->quota))
+                ->body($customer->name . ' – ' . $className . ($isExclusive ? ' (Exclusive)' : ' – Quota: ' . $order->remaining_quota))
                 ->success()
                 ->send();
 
+            \Illuminate\Support\Facades\Log::info('✅ Check-in successful', [
+                'customer_id' => $customer->id,
+                'customer_name' => $customer->name,
+                'schedule_id' => $scheduleId,
+                'class_name' => $className,
+                'remaining_quota' => $order->remaining_quota,
+            ]);
+
         } catch (\Exception $e) {
             \DB::rollBack();
-            $this->errorMessage = 'Error: ' . $e->getMessage();
+            
+            // ✅ Enhanced error logging
+            \Illuminate\Support\Facades\Log::error('❌ Check-in failed in processCheckIn', [
+                'customer_id' => $customer->id ?? 'N/A',
+                'order_id' => $order->id ?? 'N/A',
+                'schedule_id' => $booking->schedule_id ?? 'N/A',
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+            
+            $this->errorMessage = 'Error check-in: ' . $e->getMessage();
+            
             \Filament\Notifications\Notification::make()
-                ->title('❌ Error')
-                ->body($e->getMessage())
+                ->title('❌ Error Check-in')
+                ->body('Terjadi kesalahan: ' . $e->getMessage())
                 ->danger()
                 ->send();
+        } finally {
+            // ✅ Always cleanup regardless of success or failure
+            $this->qrToken = '';
+            $this->selectedProgram    = null;
+            $this->selectedScheduleId = null;
+            $this->todaySchedules     = [];
+            $this->loadStats();
+            $this->loadRecentScans();
         }
-
-        $this->qrToken = '';
-        $this->selectedProgram    = null;
-        $this->selectedScheduleId = null;
-        $this->todaySchedules     = [];
-        $this->loadStats();
-        $this->loadRecentScans();
     }
 
     /**
@@ -397,13 +512,35 @@ class QrScanner extends Page
         }
 
         try {
+            // ✅ ENHANCED: Parse QR token dengan multiple format support
             $token = trim($this->qrToken);
-            $customerId = (int) $token;
+            $customerId = null;
 
-            if ($customerId <= 0) {
-                $this->errorMessage = 'Member ID tidak valid';
-                $this->qrToken = '';
-                return;
+            // Format 1: Plain customer ID
+            if (is_numeric($token)) {
+                $customerId = (int) $token;
+            }
+            // Format 2: QR token dengan MEMBER_XX_...
+            elseif (str_contains($token, 'MEMBER_')) {
+                preg_match('/MEMBER_(\d+)_/', $token, $matches);
+                if (!empty($matches[1])) {
+                    $customerId = (int) $matches[1];
+                }
+            }
+
+            // Format 3: Database fallback
+            if (!$customerId || $customerId <= 0) {
+                $customer = Customer::where('qr_token', $token)
+                    ->where('qr_active', true)
+                    ->first();
+                
+                if ($customer) {
+                    $customerId = $customer->id;
+                } else {
+                    $this->errorMessage = 'Member ID tidak valid atau QR belum diaktifkan';
+                    $this->qrToken = '';
+                    return;
+                }
             }
 
             // Find active attendance
@@ -567,7 +704,7 @@ class QrScanner extends Page
                 'program' => $this->selectedProgram ?? 'General',
                 'location' => $this->selectedLocation,
                 'check_in_time' => now()->format('H:i (d/m/Y)'),
-                'remaining_quota' => $customer->quota,
+                'remaining_quota' => $order->remaining_quota,
                 'total_quota' => $order->package->quota ?? 0,
             ];
 

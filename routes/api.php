@@ -52,3 +52,9 @@ Route::middleware('auth:customer:sanctum')->group(function () {
             ->name('api.member.recent-checkin');
     });
 });
+
+/*
+|--------------------------------------------------------------------------
+| ADMIN API (Protected - Filament) - MOVED TO routes/web.php
+|--------------------------------------------------------------------------
+*/

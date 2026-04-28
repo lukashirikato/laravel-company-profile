@@ -375,23 +375,157 @@
 
         @media (max-width: 768px) {
             .main-content {
-                padding: 1.5rem;
+                padding: 1rem;
+                margin-top: 3rem;
+            }
+
+            .page-header {
+                margin-bottom: 1.5rem;
             }
 
             .page-header h1 {
-                font-size: 1.75rem;
+                font-size: 1.5rem;
+            }
+
+            .page-header p {
+                font-size: 0.8rem;
             }
 
             .stats-grid {
                 grid-template-columns: 1fr;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .stat-card {
+                padding: 1.25rem;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
             }
 
             .classes-grid {
                 grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .class-card {
+                border-radius: 12px;
+            }
+
+            .card-header {
+                padding: 1rem;
+            }
+
+            .card-body {
+                padding: 1rem;
             }
 
             .schedule-info {
                 grid-template-columns: 1fr;
+                gap: 0.5rem;
+                margin-bottom: 1rem;
+                padding-bottom: 1rem;
+            }
+
+            .schedule-item {
+                gap: 0.5rem;
+            }
+
+            .instructor-info {
+                margin-bottom: 1rem;
+                padding: 0.75rem;
+            }
+
+            .package-badge {
+                margin-bottom: 1rem;
+                font-size: 0.75rem;
+                padding: 0.5rem 0.875rem;
+            }
+
+            .status-badge {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.875rem;
+            }
+
+            .classes-section h2 {
+                font-size: 1.1rem;
+                margin-bottom: 1rem;
+            }
+
+            .empty-state {
+                padding: 2rem 1rem;
+            }
+
+            .empty-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.75rem;
+                margin-bottom: 1rem;
+            }
+
+            .empty-state h3 {
+                font-size: 1.25rem;
+            }
+
+            .empty-state p {
+                font-size: 0.9rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .btn-book {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* ═══════════════════════════════════════════ RESPONSIVE SIDEBAR ═══════════════════════════════════════════ */
+        .sidebar {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 20;
+            backdrop-filter: blur(4px);
+        }
+
+        .hamburger-btn {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                z-index: 30;
+                transform: translateX(-100%);
+                box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .sidebar-overlay.active {
+                display: block;
+            }
+
+            .hamburger-btn {
+                display: flex !important;
+            }
+
+            body.sidebar-open {
+                overflow: hidden;
             }
         }
     </style>
@@ -404,7 +538,7 @@
     <!-- ========================================
          SIDEBAR
     ======================================== -->
-    <aside class="w-64 bg-slate-900 text-white flex flex-col shrink-0">
+    <aside id="sidebar" class="sidebar w-64 bg-slate-900 text-white flex flex-col shrink-0">
         <a href="{{ route('member.profile') }}" class="px-6 py-5 text-xl font-bold border-b border-white/20 hover:bg-slate-800 transition inline-block w-full">
             FTM SOCIETY
         </a>
@@ -452,13 +586,21 @@
     </aside>
 
     <!-- MAIN CONTENT -->
+    <!-- Mobile Sidebar Overlay -->
+    <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Mobile Hamburger Button -->
+    <button id="hamburger-btn" class="hamburger-btn fixed top-4 left-4 z-30 w-10 h-10 bg-slate-900 text-white rounded-lg items-center justify-center shadow-lg hover:bg-slate-800 transition" onclick="toggleSidebar()">
+        <i class="fas fa-bars text-lg"></i>
+    </button>
+
     <main class="flex-1 overflow-y-auto">
         <div class="main-content">
             
             <!-- Page Header -->
             <div class="page-header">
-                <h1>My Classes</h1>
-                <p>Manage your scheduled workout sessions</p>
+                <h1 class="text-2xl md:text-3xl">My Classes</h1>
+                <p class="text-xs md:text-sm">Manage your scheduled workout sessions</p>
             </div>
 
             @if(!$myClasses->isEmpty())
@@ -606,6 +748,52 @@
     </main>
 
 </div>
+
+<script>
+// ===== SIDEBAR TOGGLE FUNCTION =====
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    const hamburger = document.getElementById('hamburger-btn');
+    
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('active');
+    
+    if (sidebar.classList.contains('open')) {
+        document.body.style.overflow = 'hidden';
+        hamburger.innerHTML = '<i class="fas fa-times text-lg"></i>';
+    } else {
+        document.body.style.overflow = '';
+        hamburger.innerHTML = '<i class="fas fa-bars text-lg"></i>';
+    }
+}
+
+// Close sidebar when clicking on a nav link
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = document.querySelectorAll('aside nav a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                toggleSidebar();
+            }
+        });
+    });
+});
+
+// Reset sidebar on window resize
+window.addEventListener('resize', function() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    const hamburger = document.getElementById('hamburger-btn');
+    
+    if (window.innerWidth > 768) {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('active');
+        hamburger.innerHTML = '<i class="fas fa-bars text-lg"></i>';
+        document.body.style.overflow = '';
+    }
+});
+</script>
 
 </body>
 </html>

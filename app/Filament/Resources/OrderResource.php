@@ -23,6 +23,16 @@ class OrderResource extends Resource
     
     protected static ?string $navigationGroup = 'Sales';
 
+    // ✅ Eager load relationships untuk mencegah N+1 queries
+    protected static ?string $recordTitleAttribute = 'order_code';
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->with(['customer', 'package'])
+            ->withCount('customer');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -47,16 +57,18 @@ class OrderResource extends Resource
                             ->required()
                             ->unique(ignorable: fn ($record) => $record)
                             ->default(fn () => 'ORD-' . strtoupper(uniqid()))
-                            ->label('Order Code'),
+                            ->label('Order Code')
+                            ->disabled(fn ($operation) => $operation === 'edit'),
                         
                         Forms\Components\Select::make('package_id')
                             ->relationship('package', 'name')
                             ->searchable()
+                            ->preload()
+                            ->required()
                             ->label('Package'),
                         
-                        Forms\Components\Select::make('selected_class_id')
-                            ->label('Selected Class')
-                            ->searchable(),
+                        // ✅ FIXED: Hapus selected_class_id yang tidak punya options
+                        // Bisa ditambahkan relasi ke ClassModel bila diperlukan di future
                         
                         Forms\Components\TextInput::make('amount')
                             ->required()
@@ -144,9 +156,8 @@ class OrderResource extends Resource
                 Tables\Columns\TextColumn::make('order_code')
                     ->searchable()
                     ->sortable()
-                    ->label('Order Code'),
-                
-               
+                    ->label('Order Code')
+                    ->weight('bold'),
                 
                 Tables\Columns\TextColumn::make('customer.name')
                     ->searchable()
@@ -158,20 +169,17 @@ class OrderResource extends Resource
                     ->sortable()
                     ->label('Package'),
                 
-                Tables\Columns\TextColumn::make('selected_class_id')
-                    ->label('Selected Class'),
-                
                 Tables\Columns\TextColumn::make('amount')
                     ->sortable()
                     ->formatStateUsing(fn ($state) => 'Rp' . number_format($state, 0, ',', '.'))
                     ->label('Amount'),
                 
                 Tables\Columns\TextColumn::make('discount')
-                ->formatStateUsing(fn ($state) => 'Rp' . number_format($state ?? 0, 0, ',', '.'))
-                ->label('Discount'),
+                    ->formatStateUsing(fn ($state) => 'Rp' . number_format($state ?? 0, 0, ',', '.'))
+                    ->label('Discount'),
 
                 Tables\Columns\BadgeColumn::make('remaining_classes')
-                    ->label('Classes Remaining')
+                    ->label('Classes')
                     ->colors([
                         'success' => fn ($state) => $state > 3,
                         'warning' => fn ($state) => $state > 0 && $state <= 3,
@@ -180,7 +188,7 @@ class OrderResource extends Resource
                     ->sortable(),
 
                 Tables\Columns\BadgeColumn::make('remaining_quota')
-                    ->label('Quota Remaining')
+                    ->label('Quota')
                     ->colors([
                         'success' => fn ($state) => $state > 3,
                         'warning' => fn ($state) => $state > 0 && $state <= 3,
@@ -188,27 +196,14 @@ class OrderResource extends Resource
                     ])
                     ->sortable(),
                 
-                Tables\Columns\BadgeColumn::make('quota_applied')
+                Tables\Columns\BadgeColumn::make('payment_type')
                     ->colors([
-                        'success' => true,
-                        'danger' => false,
+                        'info' => 'cash',
+                        'warning' => 'bank_transfer',
+                        'success' => 'credit_card',
+                        'primary' => 'e_wallet',
                     ])
-                    ->label('Quota Applied')
-                    ->formatStateUsing(fn ($state) => $state ? 'Yes' : 'No'),
-                
-                Tables\Columns\TextColumn::make('payment_type')
-                    ->searchable()
-                    ->sortable()
-                    ->label('Payment Type'),
-                
-                Tables\Columns\TextColumn::make('voucher_code')
-                    ->searchable()
-                    ->sortable()
-                    
-                    ->color('success')
-                    ->label('Voucher Code'),
-                
-                
+                    ->label('Payment'),
                 
                 Tables\Columns\BadgeColumn::make('status')
                     ->colors([
@@ -220,19 +215,9 @@ class OrderResource extends Resource
                     ->label('Status'),
                 
                 Tables\Columns\TextColumn::make('expired_at')
-                    ->dateTime('d M Y, H:i')
+                    ->dateTime('d M Y')
                     ->sortable()
-                    ->label('Expired At'),
-                
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime('d M Y, H:i')
-                    ->sortable()
-                    ->label('Created At'),
-                
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime('d M Y, H:i')
-                    ->sortable()
-                    ->label('Updated At'),
+                    ->label('Expired'),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')

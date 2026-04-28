@@ -12,17 +12,62 @@
     <script>tailwind.config = { theme: { extend: { colors: { primary: "#EA6993", secondary: "#793451", accent: "#00745F", "light-pink": "#F1CCE3", cream: "#F4EEE6", dark: "#26282B" }, borderRadius: { button: "8px" } } } };</script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"
-    />
-    <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
     />
     <style>
             /* ...existing CSS... */
+      body {
+      font-family: 'Poppins', sans-serif !important;
+      scroll-behavior: smooth;
+      font-size: 16px;
+      line-height: 1.6;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      }
+      body * {
+      font-family: 'Poppins', sans-serif !important;
+      }
+      p {
+      font-weight: 500;
+      line-height: 1.6;
+      letter-spacing: 0.3px;
+      }
+      h1, h2, h3, h4, h5, h6 {
+      font-family: 'Poppins', sans-serif !important;
+      font-weight: 700;
+      line-height: 1.3;
+      letter-spacing: 0.5px;
+      }
+      nav,
+      button,
+      a,
+      span,
+      label {
+      font-family: 'Poppins', sans-serif !important;
+      letter-spacing: 0.3px;
+      }
+      nav a,
+      button {
+      font-weight: 600;
+      }
+      input,
+      select,
+      textarea,
+      option,
+      summary,
+      .logo,
+      .font-heading,
+      .font-body,
+      .font-accent {
+      font-family: 'Poppins', sans-serif !important;
+      }
+      i[class^="ri-"],
+      i[class*=" ri-"] {
+      font-family: 'remixicon' !important;
+      }
       @keyframes fadeInUp {
         from { opacity: 0; transform: translateY(40px);}
         to { opacity: 1; transform: translateY(0);}
@@ -38,15 +83,8 @@
         animation: fadeInUp 0.7s cubic-bezier(.4,0,.2,1);
       }
       
-      body {
-      font-family: 'Poppins', sans-serif;
-      scroll-behavior: smooth;
-      }
-      h1, h2, h3, h4 {
-      font-family: 'Poppins', serif;
-      }
       .logo {
-      font-family: 'Poppins', serif;
+      font-family: 'Poppins', sans-serif;
       }
       .hero-section {
       background-image: linear-gradient(135deg, rgba(8, 81, 60, 0.85) 0%, rgba(121, 52, 81, 0.8) 100%), url('./images/IMG_0278.jpg');
@@ -100,7 +138,7 @@
       background-color: primary;
       }
       .custom-checkbox:checked::after {
-      content: 'âœ“';
+      content: '✓';
       position: absolute;
       color: white;
       font-size: 14px;
@@ -148,7 +186,9 @@
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
 
         <!-- LOGO -->
-        <a href="#" class="logo text-primary text-2xl">FTM SOCIETY</a>
+        <a href="{{ route('member.dashboard') }}" class="logo text-[#EA6993] text-2xl font-heading font-bold hover:text-[#793451] transition tracking-tight">
+          <span class="font-accent italic text-3xl align-top mr-1">FTM <span class="font-accent italic text-3xl align-top ml-1">SOCIETY</span>
+        </a>
 
         <!-- DESKTOP NAVIGATION -->
         <nav class="hidden md:flex items-center space-x-8">
@@ -171,10 +211,9 @@
             </a>
         </nav>
 
-        <!-- TOMBOL MOBILE (â‹®) -->
         <button id="mobile-menu-button"
             class="block md:hidden text-dark text-4xl font-bold leading-none">
-            â‹®
+            ⋮
         </button>
 
     </div>
@@ -238,7 +277,7 @@
     }
 
     function openMenu(){
-      // ensure nothing auto-opens the menu â€” only run on explicit click
+      // ensure nothing auto-opens the menu — only run on explicit click
       console.log('[mobile] openMenu');
       mobileMenu.style.right = '0';
       menuBtn.setAttribute('aria-expanded','true');
@@ -257,7 +296,7 @@
     // toggle on hamburger click (no automatic open anywhere else)
     menuBtn.addEventListener('click', function(e){ e.preventDefault(); const isOpen = mobileMenu.style.right === '0' || mobileMenu.style.right === '' && mobileMenu.classList.contains('open'); if (isOpen) closeMenu(); else openMenu(); });
 
-    // close button â€” stop propagation so it can't re-open
+    // close button — stop propagation so it can't re-open
     if (closeBtn) closeBtn.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); try { e.stopImmediatePropagation(); } catch(_){} closeMenu(); return false; });
 
     // clicking any link inside menu should close the menu so the user can see the page change
@@ -285,7 +324,7 @@
     <div class="absolute inset-0 z-0">
         <div id="hero-bg" 
              class="absolute inset-0 bg-cover bg-center transition-all duration-700 scale-105 backdrop-blur-xs"
-             style="background-image: url('/images/bg.JPG');"></div>
+             style="background-image: url('/images/bg.png');"></div>
         
         <!-- Luxury Gradient Overlay - Rose/Burgundy Blend -->
         <div class="absolute inset-0 bg-gradient-to-br from-secondary/85 via-primary/70 to-dark/80"></div>
@@ -337,7 +376,7 @@
 
                 <!-- Subtitle - Refined Spacing & Hierarchy -->
                 <div data-aos="fade-right" data-aos-delay="200" class="space-y-3 pt-4">
-                    <p class="text-xl sm:text-2xl md:text-3xl text-white/90 font-light leading-relaxed tracking-wide">
+                    <p class="text-xl sm:text-2xl md:text-3xl text-white font-semibold leading-relaxed tracking-wide">
                         Good Habit inside
                     </p>
                     <p class="text-2xl sm:text-3xl md:text-4xl font-black bg-gradient-to-r from-light-pink to-primary bg-clip-text text-transparent drop-shadow-lg" style="text-shadow: 0 8px 20px rgba(234, 105, 147, 0.3);">
@@ -450,7 +489,7 @@
             </div>
 
             <!-- Subtitle -->
-            <p class="text-lg md:text-xl text-dark/70 max-w-3xl mx-auto leading-relaxed font-light">
+            <p class="text-lg md:text-xl text-dark max-w-3xl mx-auto leading-relaxed font-light">
                 Ruang bagi muslimah untuk hidup <span class="font-semibold text-primary">aktif</span>, <span class="font-semibold text-secondary">produktif</span>, dan sesuai <span class="font-semibold text-primary">syariat</span>
             </p>
         </div>
@@ -1261,7 +1300,6 @@
                         
                         <div class="relative z-10 flex flex-col items-center flex-1">
                             
-                            <!-- Icon â€” hanya icon yg bergerak, bukan card -->
                             <div class="relative mb-6">
                                 <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-light-pink to-light-pink text-primary shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
                                     <i class="ri-team-line text-4xl"></i>
@@ -1540,7 +1578,6 @@
 </section>
 
 <!-- ================================ -->
-<!-- CSS â€” update di <style> tag Anda -->
 <!-- ================================ -->
 <style>
     /* Hide scrollbar */
@@ -1556,7 +1593,6 @@
 </style>
 
 <!-- ================================ -->
-<!-- JS â€” update di bagian script     -->
 <!-- ================================ -->
 <script>
     function slideService(direction) {
@@ -1726,7 +1762,7 @@
       title: 'Single Visit Class',
       content: `
         <ul class="mb-3 list-disc pl-5">
-          <li>Semi privat max 6â€“7 orang</li>
+          <li>Semi privat max 6–7 orang</li>
           <li>Coach perempuan tersertifikasi</li>
         </ul>
       `
@@ -1746,7 +1782,7 @@
         <ul class="mb-3 list-disc pl-5">
           <li>8 sesi per bulan (2x/minggu)</li>
           <li>Dilatih oleh pelatih perempuan muslim tersertifikasi</li>
-          <li>Semi private max 6â€“7 orang</li>
+          <li>Semi private max 6–7 orang</li>
         </ul>
       `
     },
@@ -1855,450 +1891,89 @@
                 <i class="ri-arrow-left-s-line text-3xl group-hover:scale-110 transition-transform"></i>
             </button>
 
-            <!-- â”€â”€â”€ Slider Track â”€â”€â”€ -->
             <div id="membershipList"
                  class="flex items-stretch overflow-x-auto gap-6 md:gap-8 scroll-smooth pb-6 px-2"
                  style="scrollbar-width:none; -ms-overflow-style:none;"
                  onscroll="toggleMembershipScroll()">
 
-                <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-                <!-- CARD 1 : Exclusive Class Program           -->
-                <!-- FIX: hapus data-aos, hapus scale di ring  -->
-                <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-                <div class="min-w-[90vw] sm:min-w-[340px] max-w-[360px] flex-shrink-0 flex">
-                    <div class="group relative bg-cream rounded-3xl p-8 shadow-xl
-                                hover:shadow-2xl transition-shadow duration-300
-                                border-2 border-secondary/30 overflow-hidden w-full flex flex-col">
+                {{-- Dynamic Packages from Admin Panel --}}
+                @if(isset($packages) && $packages->count() > 0)
+                    @foreach($packages as $package)
+                    <div class="min-w-[90vw] sm:min-w-[340px] max-w-[360px] flex-shrink-0 flex">
+                        <div class="group relative bg-cream rounded-3xl p-8 shadow-lg
+                                    hover:shadow-2xl transition-shadow duration-300
+                                    border-2 border-light-pink/40 hover:border-primary/30
+                                    overflow-hidden w-full flex flex-col">
 
-                        <!-- Best Value Badge -->
-                        <div class="absolute top-6 right-6 z-20">
-                            <div class="relative">
-                                <div class="absolute inset-0 bg-gradient-to-r from-primary to-secondary blur-md opacity-75 rounded-full"></div>
-                                <div class="relative bg-gradient-to-r from-primary to-secondary text-white text-xs font-black px-4 py-2 rounded-full shadow-xl">
-                                    BEST VALUE
+                            {{-- Hover gradient overlay --}}
+                            <div class="absolute inset-0 bg-gradient-to-br from-light-pink/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"></div>
+
+                            {{-- Content --}}
+                            <div class="relative z-10 flex flex-col h-full">
+
+                                {{-- Badge: Dynamic Package --}}
+                                <div class="mb-4">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-primary to-secondary text-white text-xs font-bold rounded-full shadow-md">
+                                        <i class="ri-heart-pulse-fill"></i>
+                                        <span>EKSKLUSIF</span>
+                                    </span>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="absolute inset-0 bg-gradient-to-br from-light-pink/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                                {{-- Package Name --}}
+                                <h3 class="text-2xl font-black text-primary mb-3 leading-tight group-hover:text-secondary transition-colors">
+                                    {{ $package->name }}
+                                </h3>
 
-                        <div class="relative z-10 flex flex-col items-center flex-1">
-
-                            <!-- Icon: HANYA icon yg bergerak, ring tidak scale -->
-                            <div class="relative mb-6">
-                                <div class="w-24 h-24 flex items-center justify-center rounded-3xl
-                                            bg-gradient-to-br from-light-pink to-light-pink text-primary
-                                            shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
-                                     style="will-change:transform;">
-                                    <i class="ri-star-smile-line text-5xl"></i>
+                                {{-- Price --}}
+                                <div class="mb-6">
+                                    <div class="flex items-baseline gap-2">
+                                        <span class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary">
+                                            Rp {{ number_format($package->price, 0, ',', '.') }}
+                                        </span>
+                                    </div>
+                                    @if($package->duration_days)
+                                        <p class="text-dark/60 text-sm mt-1">Valid {{ $package->duration_days }} hari</p>
+                                    @endif
                                 </div>
-                                <!-- FIX: hapus group-hover:scale-110 dari ring -->
-                                <div class="absolute -inset-2 rounded-3xl border-2 border-secondary/20 group-hover:border-secondary/40 transition-colors duration-300"></div>
-                            </div>
 
-                            <h3 class="text-2xl font-black text-primary mb-3 text-center
-                                       group-hover:text-transparent group-hover:bg-clip-text
-                                       group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary
-                                       transition-all duration-300">
-                                Exclusive Class Program
-                            </h3>
+                                {{-- Features --}}
+                                <ul class="w-full space-y-3 mb-6 flex-1">
+                                    @if($package->quota)
+                                    <li class="flex items-center gap-3 text-sm text-dark">
+                                        <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
+                                        <span>{{ $package->quota }} Sessions</span>
+                                    </li>
+                                    @endif
+                                    @if($package->description)
+                                    <li class="flex items-start gap-3 text-sm text-dark/80">
+                                        <i class="ri-information-fill text-xl text-primary flex-shrink-0 mt-0.5"></i>
+                                        <span>{{ Str::limit($package->description, 80) }}</span>
+                                    </li>
+                                    @endif
+                                </ul>
 
-                            <div class="mb-6 text-center">
-                                <div class="text-4xl font-black text-primary">IDR 850K</div>
-                                <div class="text-sm text-dark/55 font-medium">per Month</div>
-                            </div>
+                                <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full transition-all duration-500 mb-4"></div>
 
-                            <ul class="w-full space-y-3 mb-6 flex-1">
-                                <li class="flex items-center gap-3 text-sm text-dark">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Muaythai</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-dark">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Mat Pilates</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-dark">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Body Shaping</span>
-                                </li>
-                            </ul>
+                                {{-- CTA Button --}}
+                                <div class="w-full mt-auto">
+                                    @auth('customer')
+                                        <a href="#signup"
+                                           class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 rounded-full hover:shadow-xl hover:brightness-110 transition-all font-bold text-center block">
+                                            Daftar Sekarang
+                                        </a>
+                                    @else
+                                        <a href="#signup"
+                                           class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 rounded-full hover:shadow-xl hover:brightness-110 transition-all font-bold text-center block">
+                                            Sign Up Now
+                                        </a>
+                                    @endauth
+                                </div>
 
-                            <!-- Bottom Accent â€” di atas button -->
-                            <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-secondary rounded-full transition-all duration-500 mb-4"></div>
-
-                            <div class="w-full space-y-2 mt-auto">
-                                @if(auth('customer')->check())
-                                    <form action="{{ route('guest.checkout.process', ['package' => 1]) }}" method="POST" class="w-full">
-                                        @csrf
-                                        <input type="hidden" name="name" value="{{ auth('customer')->user()->name }}">
-                                        <input type="hidden" name="email" value="{{ auth('customer')->user()->email }}">
-                                        <input type="hidden" name="phone" value="{{ auth('customer')->user()->phone }}">
-                                        <!-- FIX: hapus hover:scale-105 -->
-                                        <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 rounded-full hover:shadow-xl hover:brightness-110 transition-all font-bold flex items-center justify-center gap-2">
-                                            <i class="ri-check-line text-xl"></i>
-                                            <span>Daftar Sekarang</span>
-                                        </button>
-                                    </form>
-                                @else
-                                    <a href="{{ route('join.package', ['package' => 1]) }}"
-                                       class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 rounded-full hover:shadow-xl hover:brightness-110 transition-all font-bold flex items-center justify-center gap-2">
-                                        <i class="ri-check-line text-xl"></i>
-                                        <span>Daftar Sekarang</span>
-                                    </a>
-                                @endif
-                                <button type="button" onclick="showServiceDetail('exclusive-program')"
-                                        class="w-full text-secondary text-sm font-semibold hover:text-primary transition-colors py-1">
-                                    Lihat Selengkapnya â†’
-                                </button>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-                <!-- CARD 2 : Reformer Pilates Single Visit     -->
-                <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-                <div class="min-w-[90vw] sm:min-w-[340px] max-w-[360px] flex-shrink-0 flex">
-                    <div class="group relative bg-cream rounded-3xl p-8 shadow-lg
-                                hover:shadow-2xl transition-shadow duration-300
-                                border-2 border-light-pink/60 hover:border-primary/30 overflow-hidden w-full flex flex-col">
-
-                        <div class="absolute inset-0 bg-gradient-to-br from-light-pink/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-
-                        <div class="relative z-10 flex flex-col items-center flex-1">
-
-                            <div class="relative mb-6">
-                                <div class="w-24 h-24 flex items-center justify-center rounded-3xl
-                                            bg-gradient-to-br from-light-pink to-light-pink text-primary
-                                            shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
-                                     style="will-change:transform;">
-                                    <i class="ri-group-line text-5xl"></i>
-                                </div>
-                                <div class="absolute -inset-2 rounded-3xl border-2 border-primary/20 group-hover:border-primary/40 transition-colors duration-300"></div>
-                            </div>
-
-                            <h3 class="text-2xl font-black text-primary mb-3 text-center
-                                       group-hover:text-transparent group-hover:bg-clip-text
-                                       group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary
-                                       transition-all duration-300">
-                                Reformer Pilates
-                            </h3>
-                            <div class="mb-6">
-                                <div class="text-lg font-bold text-primary text-center">Single Visit Group Class</div>
-                            </div>
-
-                            <ul class="w-full space-y-3 mb-6 flex-1">
-                                <li class="flex items-center gap-3 text-sm text-dark">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>IDR 400K / Single</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-dark">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>IDR 700K / Double</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-dark">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>IDR 900K / Triple</span>
-                                </li>
-                            </ul>
-
-                            <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full transition-all duration-500 mb-4"></div>
-
-                            <div class="w-full space-y-2 mt-auto">
-                                @if(auth('customer')->check())
-                                    <form action="{{ route('guest.checkout.process', ['package' => 2]) }}" method="POST" class="w-full">
-                                        @csrf
-                                        <input type="hidden" name="name" value="{{ auth('customer')->user()->name }}">
-                                        <input type="hidden" name="email" value="{{ auth('customer')->user()->email }}">
-                                        <input type="hidden" name="phone" value="{{ auth('customer')->user()->phone }}">
-                                        <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 rounded-full hover:shadow-xl hover:brightness-110 transition-all font-bold flex items-center justify-center gap-2">
-                                            <i class="ri-check-line text-xl"></i>
-                                            <span>Daftar Sekarang</span>
-                                        </button>
-                                    </form>
-                                @else
-                                    <a href="{{ route('join.package', ['package' => 2]) }}"
-                                       class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 rounded-full hover:shadow-xl hover:brightness-110 transition-all font-bold flex items-center justify-center gap-2">
-                                        <i class="ri-check-line text-xl"></i>
-                                        <span>Daftar Sekarang</span>
-                                    </a>
-                                @endif
-                                <button type="button" onclick="showServiceDetail('reformer-pilates')"
-                                        class="w-full text-secondary text-sm font-semibold hover:text-primary transition-colors py-1">
-                                    Lihat Selengkapnya â†’
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-                <!-- CARD 3 : Single Visit Class                -->
-                <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-                <div class="min-w-[90vw] sm:min-w-[340px] max-w-[360px] flex-shrink-0 flex">
-                    <div class="group relative bg-cream rounded-3xl p-8 shadow-lg
-                                hover:shadow-2xl transition-shadow duration-300
-                                border-2 border-light-pink/60 hover:border-secondary/30 overflow-hidden w-full flex flex-col">
-
-                        <div class="absolute inset-0 bg-gradient-to-br from-blue-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-
-                        <div class="relative z-10 flex flex-col items-center flex-1">
-
-                            <div class="relative mb-6">
-                                <div class="w-24 h-24 flex items-center justify-center rounded-3xl
-                                            bg-gradient-to-br from-blue-100 to-blue-200 text-blue-600
-                                            shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
-                                     style="will-change:transform;">
-                                    <i class="ri-door-open-line text-5xl"></i>
-                                </div>
-                                <div class="absolute -inset-2 rounded-3xl border-2 border-secondary/20 group-hover:border-secondary/40 transition-colors duration-300"></div>
-                            </div>
-
-                            <h3 class="text-2xl font-black text-primary mb-6 text-center
-                                       group-hover:text-transparent group-hover:bg-clip-text
-                                       group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary
-                                       transition-all duration-300">
-                                Single Visit Class
-                            </h3>
-
-                            <ul class="w-full space-y-3 mb-6 flex-1">
-                                <li class="flex items-center gap-3 text-sm text-dark">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Single Class: IDR 150K</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-dark">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Bundle 2 Class: IDR 275K</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-dark">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Bundle 4 Class: IDR 525K</span>
-                                </li>
-                            </ul>
-
-                            <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-secondary rounded-full transition-all duration-500 mb-4"></div>
-
-                            <div class="w-full space-y-2 mt-auto">
-                                @if(auth('customer')->check())
-                                    <form action="{{ route('guest.checkout.process', ['package' => 3]) }}" method="POST" class="w-full">
-                                        @csrf
-                                        <input type="hidden" name="name" value="{{ auth('customer')->user()->name }}">
-                                        <input type="hidden" name="email" value="{{ auth('customer')->user()->email }}">
-                                        <input type="hidden" name="phone" value="{{ auth('customer')->user()->phone }}">
-                                        <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 rounded-full hover:shadow-xl hover:brightness-110 transition-all font-bold flex items-center justify-center gap-2">
-                                            <i class="ri-check-line text-xl"></i>
-                                            <span>Daftar Sekarang</span>
-                                        </button>
-                                    </form>
-                                @else
-                                    <a href="{{ route('join.package', ['package' => 3]) }}"
-                                       class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 rounded-full hover:shadow-xl hover:brightness-110 transition-all font-bold flex items-center justify-center gap-2">
-                                        <i class="ri-check-line text-xl"></i>
-                                        <span>Daftar Sekarang</span>
-                                    </a>
-                                @endif
-                                <button type="button" onclick="showServiceDetail('single-visit')"
-                                        class="w-full text-secondary text-sm font-semibold hover:text-primary transition-colors py-1">
-                                    Lihat Selengkapnya â†’
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-                <!-- CARD 4 : Reformer Pilates Packages         -->
-                <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-                <div class="min-w-[90vw] sm:min-w-[340px] max-w-[360px] flex-shrink-0 flex">
-                    <div class="group relative bg-cream rounded-3xl p-8 shadow-lg
-                                hover:shadow-2xl transition-shadow duration-300
-                                border-2 border-light-pink/60 hover:border-primary/30 overflow-hidden w-full flex flex-col">
-
-                        <div class="absolute inset-0 bg-gradient-to-br from-green-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-
-                        <div class="relative z-10 flex flex-col items-center flex-1">
-
-                            <div class="relative mb-6">
-                                <div class="w-24 h-24 flex items-center justify-center rounded-3xl
-                                            bg-gradient-to-br from-green-100 to-green-200 text-green-600
-                                            shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
-                                     style="will-change:transform;">
-                                    <i class="ri-calendar-check-line text-5xl"></i>
-                                </div>
-                                <div class="absolute -inset-2 rounded-3xl border-2 border-primary/20 group-hover:border-primary/40 transition-colors duration-300"></div>
-                            </div>
-
-                            <h3 class="text-2xl font-black text-primary mb-3 text-center
-                                       group-hover:text-transparent group-hover:bg-clip-text
-                                       group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary
-                                       transition-all duration-300">
-                                Reformer Pilates
-                            </h3>
-                            <div class="mb-6">
-                                <div class="text-lg font-bold text-primary text-center">Packages</div>
-                            </div>
-
-                            <ul class="w-full space-y-2 mb-6 flex-1 text-xs">
-                                <li class="flex items-start gap-2 text-dark">
-                                    <i class="ri-checkbox-circle-fill text-base text-secondary flex-shrink-0 mt-0.5"></i>
-                                    <span>IDR 400K / Single Visit</span>
-                                </li>
-                                <li class="flex items-start gap-2 text-dark">
-                                    <i class="ri-checkbox-circle-fill text-base text-secondary flex-shrink-0 mt-0.5"></i>
-                                    <span>IDR 1.400K / 4 Sessions 15 Days</span>
-                                </li>
-                                <li class="flex items-start gap-2 text-dark">
-                                    <i class="ri-checkbox-circle-fill text-base text-secondary flex-shrink-0 mt-0.5"></i>
-                                    <span>IDR 1.540K / 4 Sessions 30 Days</span>
-                                </li>
-                                <li class="flex items-start gap-2 text-dark">
-                                    <i class="ri-checkbox-circle-fill text-base text-secondary flex-shrink-0 mt-0.5"></i>
-                                    <span>IDR 2.200K / 8 Sessions 30 Days</span>
-                                </li>
-                                <li class="flex items-start gap-2 text-dark">
-                                    <i class="ri-checkbox-circle-fill text-base text-secondary flex-shrink-0 mt-0.5"></i>
-                                    <span>IDR 2.640K / 8 Sessions 60 Days</span>
-                                </li>
-                            </ul>
-
-                            <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full transition-all duration-500 mb-4"></div>
-
-                            <div class="w-full space-y-2 mt-auto">
-                                <a href="#signup"
-                                   class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 rounded-full hover:shadow-xl hover:brightness-110 transition-all font-bold flex items-center justify-center gap-2">
-                                    <i class="ri-check-line text-xl"></i>
-                                    <span>Daftar Sekarang</span>
-                                </a>
-                                <button type="button" onclick="showServiceDetail('reformer-pilates')"
-                                        class="w-full text-secondary text-sm font-semibold hover:text-primary transition-colors py-1">
-                                    Lihat Selengkapnya â†’
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-                <!-- CARD 5 : Private Program                   -->
-                <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-                <div class="min-w-[90vw] sm:min-w-[340px] max-w-[360px] flex-shrink-0 flex">
-                    <div class="group relative bg-cream rounded-3xl p-8 shadow-lg
-                                hover:shadow-2xl transition-shadow duration-300
-                                border-2 border-light-pink/60 hover:border-secondary/30 overflow-hidden w-full flex flex-col">
-
-                        <div class="absolute inset-0 bg-gradient-to-br from-amber-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-
-                        <div class="relative z-10 flex flex-col items-center flex-1">
-
-                            <div class="relative mb-6">
-                                <div class="w-24 h-24 flex items-center justify-center rounded-3xl
-                                            bg-gradient-to-br from-amber-100 to-amber-200 text-amber-600
-                                            shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
-                                     style="will-change:transform;">
-                                    <i class="ri-user-line text-5xl"></i>
-                                </div>
-                                <div class="absolute -inset-2 rounded-3xl border-2 border-secondary/20 group-hover:border-secondary/40 transition-colors duration-300"></div>
-                            </div>
-
-                            <h3 class="text-2xl font-black text-primary mb-6 text-center
-                                       group-hover:text-transparent group-hover:bg-clip-text
-                                       group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary
-                                       transition-all duration-300">
-                                Private Program
-                            </h3>
-
-                            <ul class="w-full space-y-3 mb-6 flex-1">
-                                <li class="flex items-center gap-3 text-sm text-dark">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Muaythai</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-dark">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Mat Pilates</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-dark">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Body Shaping</span>
-                                </li>
-                            </ul>
-
-                            <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-secondary rounded-full transition-all duration-500 mb-4"></div>
-
-                            <div class="w-full space-y-2 mt-auto">
-                                <a href="https://wa.me/6287785767395" target="_blank"
-                                   class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 rounded-full hover:shadow-xl hover:brightness-110 transition-all font-bold flex items-center justify-center gap-2">
-                                    <i class="ri-whatsapp-line text-xl"></i>
-                                    <span>Hubungi Tim Kami</span>
-                                </a>
-                                <button type="button" onclick="showServiceDetail('private-training')"
-                                        class="w-full text-secondary text-sm font-semibold hover:text-primary transition-colors py-1">
-                                    Lihat Selengkapnya â†’
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-                <!-- CARD 6 : Private Group Program             -->
-                <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-                <div class="min-w-[90vw] sm:min-w-[340px] max-w-[360px] flex-shrink-0 flex">
-                    <div class="group relative bg-cream rounded-3xl p-8 shadow-lg
-                                hover:shadow-2xl transition-shadow duration-300
-                                border-2 border-light-pink/60 hover:border-primary/30 overflow-hidden w-full flex flex-col">
-
-                        <div class="absolute inset-0 bg-gradient-to-br from-rose-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-
-                        <div class="relative z-10 flex flex-col items-center flex-1">
-
-                            <div class="relative mb-6">
-                                <div class="w-24 h-24 flex items-center justify-center rounded-3xl
-                                            bg-gradient-to-br from-rose-100 to-rose-200 text-rose-600
-                                            shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
-                                     style="will-change:transform;">
-                                    <i class="ri-team-line text-5xl"></i>
-                                </div>
-                                <div class="absolute -inset-2 rounded-3xl border-2 border-primary/20 group-hover:border-primary/40 transition-colors duration-300"></div>
-                            </div>
-
-                            <h3 class="text-2xl font-black text-primary mb-6 text-center
-                                       group-hover:text-transparent group-hover:bg-clip-text
-                                       group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary
-                                       transition-all duration-300">
-                                Private Group Program
-                            </h3>
-
-                            <ul class="w-full space-y-3 mb-6 flex-1">
-                                <li class="flex items-center gap-3 text-sm text-dark">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Muaythai</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-dark">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Mat Pilates</span>
-                                </li>
-                                <li class="flex items-center gap-3 text-sm text-dark">
-                                    <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                    <span>Body Shaping</span>
-                                </li>
-                            </ul>
-
-                            <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full transition-all duration-500 mb-4"></div>
-
-                            <div class="w-full space-y-2 mt-auto">
-                                <a href="https://wa.me/6287785767395" target="_blank"
-                                   class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 rounded-full hover:shadow-xl hover:brightness-110 transition-all font-bold flex items-center justify-center gap-2">
-                                    <i class="ri-whatsapp-line text-xl"></i>
-                                    <span>Hubungi Tim Kami</span>
-                                </a>
-                                <button type="button" onclick="showServiceDetail('private-group')"
-                                        class="w-full text-secondary text-sm font-semibold hover:text-primary transition-colors py-1">
-                                    Lihat Selengkapnya â†’
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    @endforeach
+                @endif
 
             </div><!-- end #membershipList -->
 
@@ -2321,7 +1996,6 @@
     </div>
 </section>
 
-<!-- â”€â”€â”€ CSS â”€â”€â”€ -->
 <style>
     #membershipList::-webkit-scrollbar { display: none; }
 
@@ -2333,7 +2007,6 @@
     .animate-gradient-shift { animation: gradient-shift 4s ease infinite; }
 </style>
 
-<!-- â”€â”€â”€ JS â”€â”€â”€ -->
 <script>
     function slideMembership(direction) {
         const slider = document.getElementById('membershipList');
@@ -2471,7 +2144,6 @@
 
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-        <!-- â”€â”€ Section Header â”€â”€ -->
         <div class="text-center mb-16 md:mb-20">
 
             <!-- Badge -->
@@ -2507,13 +2179,10 @@
             </p>
         </div>
 
-        <!-- â”€â”€ 4-Column Grid â”€â”€ -->
-        <!-- KEY: grid layout, tidak pakai slider â†’ tidak perlu hover:scale pada card -->
+        <!-- KEY: grid layout, tidak pakai slider -> tidak perlu hover:scale pada card -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
 
-            <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
             <!-- CARD 1 : Muaythai         -->
-            <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
             <div class="group relative bg-cream rounded-3xl overflow-hidden
                         shadow-lg hover:shadow-2xl transition-shadow duration-300
                         border-2 border-light-pink/60 hover:border-secondary/30 flex flex-col">
@@ -2561,13 +2230,12 @@
                     </div>
 
                     <p class="text-sm text-dark/70 leading-relaxed flex-1 mb-5">
-                        Seni bela diri asal Thailand menggunakan delapan titik kontak tubuh: tangan, siku, lutut, dan kaki â€” melibatkan teknik serangan dan pertahanan.
+                        Seni bela diri asal Thailand menggunakan delapan titik kontak tubuh: tangan, siku, lutut, dan kaki — melibatkan teknik serangan dan pertahanan.
                     </p>
 
                     <!-- Bottom accent line -->
                     <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-secondary rounded-full transition-all duration-500 mb-4"></div>
 
-                    <!-- CTA â€” hapus hover:scale-105 -->
                     <button onclick="openModal('muaythai')"
                             class="w-full bg-gradient-to-r from-primary to-secondary text-white px-4 py-3 rounded-full
                                    hover:shadow-xl hover:brightness-110 transition-all text-sm font-bold
@@ -2578,9 +2246,7 @@
                 </div>
             </div>
 
-            <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
             <!-- CARD 2 : Body Shaping     -->
-            <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
             <div class="group relative bg-cream rounded-3xl overflow-hidden
                         shadow-lg hover:shadow-2xl transition-shadow duration-300
                         border-2 border-light-pink/60 hover:border-primary/30 flex flex-col">
@@ -2617,7 +2283,7 @@
                     </div>
 
                     <p class="text-sm text-dark/70 leading-relaxed flex-1 mb-5">
-                        Kelas strength training full body workout untuk toning dan shaping tubuh â€” dari calisthenics hingga gerakan dengan beban dan equipment pendukung.
+                        Kelas strength training full body workout untuk toning dan shaping tubuh — dari calisthenics hingga gerakan dengan beban dan equipment pendukung.
                     </p>
 
                     <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full transition-all duration-500 mb-4"></div>
@@ -2632,9 +2298,7 @@
                 </div>
             </div>
 
-            <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
             <!-- CARD 3 : Mat Pilates      -->
-            <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
             <div class="group relative bg-cream rounded-3xl overflow-hidden
                         shadow-lg hover:shadow-2xl transition-shadow duration-300
                         border-2 border-light-pink/60 hover:border-secondary/30 flex flex-col">
@@ -2671,7 +2335,7 @@
                     </div>
 
                     <p class="text-sm text-dark/70 leading-relaxed flex-1 mb-5">
-                        Latihan di atas matras fokus pada kekuatan inti (core), stabilitas, postur, pernapasan, dan fleksibilitas â€” dilakukan secara perlahan dan terkontrol.
+                        Latihan di atas matras fokus pada kekuatan inti (core), stabilitas, postur, pernapasan, dan fleksibilitas — dilakukan secara perlahan dan terkontrol.
                     </p>
 
                     <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-secondary rounded-full transition-all duration-500 mb-4"></div>
@@ -2686,9 +2350,7 @@
                 </div>
             </div>
 
-            <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
             <!-- CARD 4 : Reformer Pilates      -->
-            <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
             <div class="group relative bg-cream rounded-3xl overflow-hidden
                         shadow-lg hover:shadow-2xl transition-shadow duration-300
                         border-2 border-light-pink/60 hover:border-primary/30 flex flex-col">
@@ -2729,7 +2391,7 @@
                     </div>
 
                     <p class="text-sm text-dark/70 leading-relaxed flex-1 mb-5">
-                        Menggunakan alat reformer dengan pegas dan tali untuk resistensi tambahan â€” variasi Mat Pilates yang dibantu alat untuk hasil lebih optimal.
+                        Menggunakan alat reformer dengan pegas dan tali untuk resistensi tambahan — variasi Mat Pilates yang dibantu alat untuk hasil lebih optimal.
                     </p>
 
                     <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full transition-all duration-500 mb-4"></div>
@@ -2749,9 +2411,6 @@
     </div>
 </section>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
-<!-- MODAL â€” Enhanced Premium Design       -->
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <div id="class-modal"
      class="fixed inset-0 bg-dark/60 backdrop-blur-sm hidden justify-center items-center z-50 px-4">
     <div class="bg-cream w-full max-w-lg rounded-3xl shadow-2xl relative overflow-hidden">
@@ -2770,7 +2429,6 @@
             <h3 id="modal-title" class="text-2xl font-black text-primary mb-1"></h3>
             <div id="modal-content" class="text-sm text-dark/70 mt-3"></div>
 
-            <!-- WA Button â€” hapus hover:scale-105 -->
             <div class="mt-6">
                 <a id="modal-wa-btn"
                    href="#"
@@ -2786,7 +2444,6 @@
     </div>
 </div>
 
-<!-- â”€â”€â”€ CSS â”€â”€â”€ -->
 <style>
     @keyframes gradient-shift {
         0%   { background-position: 0% 50%; }
@@ -3033,7 +2690,7 @@ const classSchedules = {
 
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-        {{-- â”€â”€ Section Header â”€â”€ --}}
+        {{-- ── Section Header ── --}}
         <div class="text-center mb-16 md:mb-20">
 
             {{-- Badge --}}
@@ -3068,7 +2725,7 @@ const classSchedules = {
             </p>
         </div>
 
-        {{-- â”€â”€ Slider â”€â”€ --}}
+        {{-- ── Slider ── --}}
         <div class="relative max-w-5xl mx-auto">
 
             {{-- Slider Card --}}
@@ -3109,7 +2766,7 @@ const classSchedules = {
                     @endforeach
                 </div>
 
-                {{-- â”€â”€ PREV BUTTON â”€â”€ --}}
+                {{-- ── PREV BUTTON ── --}}
                 <button id="facility-prev"
                         type="button"
                         class="absolute left-4 top-1/2 z-30 flex items-center justify-center w-12 h-12 rounded-full"
@@ -3125,7 +2782,7 @@ const classSchedules = {
                     </svg>
                 </button>
 
-                {{-- â”€â”€ NEXT BUTTON â”€â”€ --}}
+                {{-- ── NEXT BUTTON ── --}}
                 <button id="facility-next"
                         type="button"
                         class="absolute right-4 top-1/2 z-30 flex items-center justify-center w-12 h-12 rounded-full"
@@ -3342,7 +2999,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let idx   = 0;
     let timer = null;
 
-    // â”€â”€ Buat dots â”€â”€
+    // ── Buat dots ──
     const dots = [];
     for (let i = 0; i < TOTAL; i++) {
         const btn = document.createElement('button');
@@ -3353,7 +3010,7 @@ document.addEventListener('DOMContentLoaded', function () {
         dots.push(btn);
     }
 
-    // â”€â”€ Render state â”€â”€
+    // ── Render state ──
     function render() {
         // Track
         track.style.transform = `translateX(-${idx * 10}%)`;
@@ -3375,7 +3032,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // â”€â”€ Navigation â”€â”€
+    // ── Navigation ──
     function next() { idx = (idx + 1) % TOTAL; render(); resetTimer(); }
     function prev() { idx = (idx - 1 + TOTAL) % TOTAL; render(); resetTimer(); }
 
@@ -3384,11 +3041,11 @@ document.addEventListener('DOMContentLoaded', function () {
         timer = setInterval(next, 4500);
     }
 
-    // â”€â”€ Button Events â”€â”€
+    // ── Button Events ──
     btnNext.addEventListener('click', next);
     btnPrev.addEventListener('click', prev);
 
-    // â”€â”€ Thumbnail Events â”€â”€
+    // ── Thumbnail Events ──
     thumbs.forEach(t => {
         t.addEventListener('click', () => {
             idx = parseInt(t.dataset.index);
@@ -3397,12 +3054,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // â”€â”€ Pause on hover â”€â”€
+    // ── Pause on hover ──
     const sliderEl = document.getElementById('facility-slider');
     sliderEl.addEventListener('mouseenter', () => clearInterval(timer));
     sliderEl.addEventListener('mouseleave', () => resetTimer());
 
-    // â”€â”€ Touch swipe â”€â”€
+    // ── Touch swipe ──
     let startX = 0;
     sliderEl.addEventListener('touchstart', e => startX = e.touches[0].clientX, { passive:true });
     sliderEl.addEventListener('touchend', e => {
@@ -3410,7 +3067,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (Math.abs(diff) > 40) diff > 0 ? next() : prev();
     });
 
-    // â”€â”€ Init â”€â”€
+    // ── Init ──
     render();
     resetTimer();
 });
@@ -3421,16 +3078,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     <!-- Join Now Section -->
-    <!-- Tambahkan setelah form Data-Member -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const form = document.querySelector('form[name="Data-Member"]');
-  if (form) {
-    form.addEventListener('submit', function(e) {
-    });
-  }
-});
-</script>
     <section id="join" class="py-20 bg-cream">
       <div class="container mx-auto px-4">
         <div class="bg-primary rounded-lg overflow-hidden shadow-lg">
@@ -3456,7 +3103,7 @@ document.addEventListener('DOMContentLoaded', function() {
                       Exclusive Access to Members-Only Class
                     </h3>
                     <p class="text-white text-opacity-80">
-                      Step into a private, peaceful training space â€” thoughtfully designed for Muslimah who value comfort, privacy, and premium quality.
+                      Step into a private, peaceful training space — thoughtfully designed for Muslimah who value comfort, privacy, and premium quality.
                     </p>
                   </div>
                 </div>
@@ -3501,12 +3148,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
 {{-- Error Validasi --}}
 @if ($errors->any())
-    <div class="mb-4 text-primary">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+  <div id="error-popup" class="fixed inset-0 flex items-center justify-center z-50 bg-dark bg-opacity-40">
+    <div class="bg-cream rounded-xl shadow-2xl px-8 py-8 max-w-md w-full text-center border-t-4 border-primary animate-fadeIn">
+      <div class="flex justify-center mb-4">
+        <div class="bg-primary bg-opacity-15 rounded-full p-4">
+          <i class="ri-error-warning-line text-4xl text-primary"></i>
+        </div>
+      </div>
+      <h4 class="text-xl font-bold text-primary mb-2">Pendaftaran gagal</h4>
+      <div class="text-dark mb-6 text-sm text-left space-y-2">
+        @foreach ($errors->all() as $error)
+          <div>{{ $error }}</div>
+        @endforeach
+      </div>
+      <button onclick="document.getElementById('error-popup').remove()" class="bg-primary text-white px-6 py-2 rounded hover:bg-opacity-90 transition font-semibold">
+        Tutup
+      </button>
+    </div>
     </div>
 @endif
 
@@ -3528,7 +3186,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 @endif
 
-<form name="Data-Member" method="POST" action="{{ route('public.customers.store') }}" class="space-y-6">
+<form name="Data-Member" method="POST" action="{{ route('signup.store') }}" class="space-y-6">
     @csrf
     <div>
         <label for="name" class="block text-dark mb-2">Full Name</label>
@@ -3603,6 +3261,18 @@ document.addEventListener('DOMContentLoaded', function() {
     </button>
 </form>
 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const signupSection = document.getElementById('join');
+  const successPopup = document.getElementById('success-popup');
+  const errorPopup = document.getElementById('error-popup');
+
+  if (signupSection && (successPopup || errorPopup || window.location.hash === '#signup')) {
+    signupSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+});
+</script>
+
 </div>
           </div>
         </div>
@@ -3637,10 +3307,10 @@ document.addEventListener('DOMContentLoaded', function() {
                   <div>
                     <h4 class="font-medium text-dark">Address</h4>
                     <p class="text-dark/70">
-                    ðŸ“Jakarta Selatan: <br />
+                    📍Jakarta Selatan: <br />
                       Jl. Wijaya 8 No.2, RT.6/RW.7. <br />Melawai, Kec. Kby. Baru, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12160
                     </p>
-                    ðŸ“Jakarta Pusat: <br />
+                    📍Jakarta Pusat: <br />
                       Jl. Cempaka Putih Tengah XIII No.56, RT.4/RW.6. <br />Cemp. Putih Tim., Kec. Cemp. Putih, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10510
                     </p>
                   </div>

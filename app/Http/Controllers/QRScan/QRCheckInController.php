@@ -97,7 +97,7 @@ class QRCheckInController extends Controller
             // ── STEP 4: Find Bookings Hari Ini ─────────────────────────
             $todayBookings = CustomerSchedule::where('customer_id', $customer->id)
                 ->whereHas('schedule', fn($q) => $q->whereDate('schedule_date', Carbon::now()->toDateString()))
-                ->with(['schedule.classModel', 'order.package'])
+                ->with(['schedule.classModel.instructor', 'order.package'])
                 ->get();
 
             if ($todayBookings->isEmpty()) {
@@ -109,30 +109,58 @@ class QRCheckInController extends Controller
                 ];
             }
 
-            // ── STEP 5: Auto-Detect Booking Based on Time Window ─────────
-            $validBooking = null;
-            foreach ($todayBookings as $booking) {
-                if ($booking->schedule->isWithinTimeWindow()) {
-                    $validBooking = $booking;
-                    break;
+            // ── STEP 5: Check for Multiple Bookings - Let Admin Choose ────────
+            if ($todayBookings->count() > 1) {
+                // Filter out already checked-in schedules today
+                $availableBookings = [];
+                foreach ($todayBookings as $booking) {
+                    $alreadyCheckedIn = Attendance::where('customer_id', $customer->id)
+                        ->where('schedule_id', $booking->schedule_id)
+                        ->whereDate('check_in_at', Carbon::now()->toDateString())
+                        ->exists();
+                    
+                    if (!$alreadyCheckedIn) {
+                        $classModel = $booking->schedule->classModel;
+                        $availableBookings[] = [
+                            'schedule_id' => $booking->schedule_id,
+                            'class_name' => $classModel->name ?? $classModel->class_name ?? 'Kelas',
+                            'class_time' => $this->safeFormatTime($booking->schedule->class_time),
+                            'location' => $booking->schedule->location ?? 'FTM SOCIETY',
+                            'instructor' => $classModel->instructor->name ?? '-',
+                            'capacity' => $booking->schedule->capacity ?? 0,
+                            'booked' => $booking->schedule->customerSchedules()->count(),
+                            'is_within_window' => $booking->schedule->isWithinTimeWindow(),
+                        ];
+                    }
                 }
-            }
 
-            if (!$validBooking && $todayBookings->count() > 1) {
-                DB::rollBack();
-                return [
-                    'success' => false,
-                    'message' => 'Bukan waktu check-in untuk kelas manapun. Time window kelas sudah tutup (>30 menit dari jam mulai).',
-                    'type' => 'outside_time_window',
-                    'bookings' => $todayBookings->map(fn($b) => [
-                        'id' => $b->schedule_id,
-                        'name' => $b->schedule->classModel->name ?? 'Kelas',
-                        'time' => $b->schedule->class_time?->format('H:i') ?? '-',
-                    ])->toArray(),
-                ];
-            }
+                if (empty($availableBookings)) {
+                    DB::rollBack();
+                    return [
+                        'success' => false,
+                        'message' => 'Semua kelas hari ini sudah di-check-in.',
+                        'type' => 'all_classes_checked_in',
+                    ];
+                }
 
-            if (!$validBooking) {
+                if (count($availableBookings) > 1) {
+                    DB::rollBack();
+                    return [
+                        'success' => true,
+                        'type' => 'multiple_bookings_found',
+                        'message' => 'Member memiliki ' . count($availableBookings) . ' kelas hari ini. Pilih kelas untuk check-in.',
+                        'data' => [
+                            'member_id' => $customer->id,
+                            'member_name' => $customer->name,
+                            'bookings' => $availableBookings,
+                        ],
+                    ];
+                }
+
+                // Only 1 available booking left
+                $validBooking = $todayBookings->firstWhere('schedule_id', $availableBookings[0]['schedule_id']);
+            } else {
+                // Single booking - proceed directly
                 $validBooking = $todayBookings->first();
             }
 
@@ -210,6 +238,10 @@ class QRCheckInController extends Controller
 
             $autoCheckoutAt = Carbon::now()->addMinutes(60);
 
+            // ── Check if package is exclusive ────────────────────────────
+            $isExclusive = (bool) ($order->package->is_exclusive ?? false);
+            $quotaDeducted = !$isExclusive;
+
             $attendance = Attendance::create([
                 'customer_id' => $customer->id,
                 'order_id' => $order->id,
@@ -221,11 +253,22 @@ class QRCheckInController extends Controller
                 'auto_checkout_at' => $autoCheckoutAt,
                 'check_in_type' => 'qr',
                 'attendance_status' => 'present',
-                'quota_deducted' => 1,
+                'quota_deducted' => $quotaDeducted,
             ]);
 
-            // ── STEP 9: Deduct Quota ────────────────────────────────────
-            $order->decrement('remaining_quota');
+            // ✅ Ensure schedule_date and class_time are proper objects
+            $scheduleDate = $schedule->schedule_date instanceof Carbon 
+                ? $schedule->schedule_date 
+                : Carbon::parse($schedule->schedule_date);
+            
+            $classTime = $schedule->class_time instanceof \DateTime
+                ? $schedule->class_time
+                : (is_string($schedule->class_time) ? Carbon::createFromFormat('H:i:s', $schedule->class_time) : $schedule->class_time);
+
+            // ── STEP 9: Deduct Quota (only for non-exclusive packages) ────
+            if (!$isExclusive) {
+                $order->decrement('remaining_quota');
+            }
             $order->refresh();
 
             DB::commit();
@@ -249,9 +292,10 @@ class QRCheckInController extends Controller
                     'program' => $className,
                     'check_in_time' => $attendance->check_in_at->format('H:i'),
                     'check_in_date' => $attendance->check_in_at->format('d/m/Y'),
-                    'schedule_time' => $schedule->class_time?->format('H:i') ?? '-',
+                    'schedule_time' => $classTime ? $classTime->format('H:i') : '-',
                     'auto_checkout_time' => $autoCheckoutAt->format('H:i'),
                     'package_name' => $order->package->name,
+                    'is_exclusive' => $isExclusive,
                     'remaining_quota' => $order->remaining_quota,
                     'total_quota' => $order->package->quota ?? 0,
                     'attendance_id' => $attendance->id,
@@ -330,6 +374,9 @@ class QRCheckInController extends Controller
                 'data' => [
                     'member_id' => str_pad($customer->id, 4, '0', STR_PAD_LEFT),
                     'member_name' => $customer->name,
+                    'package_name' => $order->package->name ?? '-',
+                    'program' => $attendance->program ?? '-',
+                    'location' => $attendance->location ?? '-',
                     'class_name' => $schedule->classModel->name ?? 'Kelas',
                     'check_in_time' => $attendance->check_in_at->format('H:i'),
                     'check_out_time' => $attendance->check_out_at->format('H:i'),
@@ -398,6 +445,34 @@ class QRCheckInController extends Controller
                 'message' => 'Error fetching active attendance',
                 'error' => $e->getMessage(),
             ];
+        }
+    }
+
+    /**
+     * Helper: Safely format time that might be string or Carbon/DateTime
+     * 
+     * @param mixed $time
+     * @param string $format
+     * @return string
+     */
+    private function safeFormatTime($time, string $format = 'H:i'): string
+    {
+        try {
+            if (!$time) {
+                return '-';
+            }
+
+            if ($time instanceof \DateTime) {
+                return $time->format($format);
+            }
+
+            if (is_string($time)) {
+                return Carbon::createFromFormat('H:i:s', $time)->format($format);
+            }
+
+            return '-';
+        } catch (\Exception) {
+            return '-';
         }
     }
 }

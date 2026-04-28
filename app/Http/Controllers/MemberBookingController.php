@@ -6,6 +6,7 @@ use App\Models\CustomerSchedule;
 use App\Models\Schedule;
 use App\Models\Order;
 use App\Models\ClassModel;
+use App\Models\Package;
 use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,18 +27,10 @@ class MemberBookingController extends Controller
         'Sunday'
     ];
 
-    // ✅ MAPPING PACKAGE GROUP - Packages yang share jadwal yang sama
-    private const PACKAGE_GROUPS = [
-        // Reformer Pilates: Single Visit (Single/Double/Triple) + Reformer Pilates Package (1 Visit, 4/15, 4/30, 8/30, 8/60)
-        'reformer_pilates' => [
-            'package_ids' => [2, 3, 4, 8, 9, 10, 11, 12], // Single Visit + Reformer Pilates Packages
-            'schedule_package_id' => 2, // Ambil schedules dari package_id 2
-        ],
-        // Single Visit Class: semua variant akses jadwal yang sama
-        'single_visit' => [
-            'package_ids' => [5, 6, 7], // Single, Bundle 2, Bundle 4
-            'schedule_package_id' => 5, // Atau bisa ambil dari semua (5, 6, 7)
-        ],
+    // ✅ GROUPING DINAMIS BERDASARKAN NAMA PAKET
+    private const PACKAGE_GROUP_PATTERNS = [
+        'reformer_pilates' => ['reformer pilates'],
+        'single_visit' => ['single visit class'],
     ];
 
     /**
@@ -132,7 +125,7 @@ class MemberBookingController extends Controller
                 'total_schedules' => $schedules->count(),
                 'days' => $groupedSchedules->keys()->toArray(),
                 'classes_remaining' => $selectedOrder->remaining_classes,
-                'quota_remaining' => $customer->quota,
+                'quota_remaining' => $selectedOrder->remaining_quota,
             ]);
 
             return view('member.book-class', [
@@ -143,7 +136,7 @@ class MemberBookingController extends Controller
                 'selectedOrderId' => $selectedOrderId,
                 'selectedPackage' => $package,
                 'remainingClasses' => $selectedOrder->remaining_classes ?? 0,
-                'remainingQuota' => $customer->quota,
+                'remainingQuota' => $selectedOrder->remaining_quota ?? 0,
             ]);
 
         } catch (\Exception $e) {
@@ -268,7 +261,7 @@ class MemberBookingController extends Controller
                     'day' => $schedule->day,
                     'time' => $schedule->class_time,
                     'classes_remaining' => $validOrder->remaining_classes,
-                    'quota_remaining' => $customer->quota,
+                    'quota_remaining' => $validOrder->remaining_quota,
                 ]);
             });
 
@@ -303,7 +296,11 @@ class MemberBookingController extends Controller
     private function getActiveOrders($customer)
     {
         return Order::where('customer_id', $customer->id)
-            ->whereIn('status', ['active', 'paid'])
+            ->whereIn('status', ['active', 'paid', 'settlement', 'success'])
+            ->where(function ($query) {
+                $query->whereNull('expired_at')
+                    ->orWhere('expired_at', '>', now());
+            })
             ->with('package')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -371,28 +368,22 @@ class MemberBookingController extends Controller
      */
     private function getRegularSchedules($package)
     {
-        // ✅ 1. Query schedules yang terhubung ke package ini via pivot table packages_schedules
-        // TIDAK filter show_on_landing - tampilkan semua jadwal
-        $schedules = Schedule::whereHas('packages', function ($query) use ($package) {
-            $query->where('package_id', $package->id);
+        // ✅ Query schedules dari gabungan package terpilih + seluruh package dalam group
+        // Tujuan: jika admin membuat jadwal pada varian package lain dalam group yang sama,
+        // jadwal tetap muncul di halaman booking member.
+        $schedulePackageIds = collect([$package->id])
+            ->merge($this->getSchedulePackageIds($package))
+            ->unique()
+            ->values()
+            ->all();
+
+        $schedules = Schedule::whereHas('packages', function ($query) use ($schedulePackageIds) {
+            $query->whereIn('packages.id', $schedulePackageIds);
         })
         ->with(['classModel', 'packages'])
         ->orderBy('schedule_date')
         ->orderBy('class_time')
         ->get();
-
-        // ✅ 2. Fallback: jika paket bagian dari group, query dari grouped packages
-        if ($schedules->isEmpty()) {
-            $schedulePackageIds = $this->getSchedulePackageIds($package);
-            
-            $schedules = Schedule::whereHas('packages', function ($query) use ($schedulePackageIds) {
-                $query->whereIn('package_id', $schedulePackageIds);
-            })
-            ->with(['classModel', 'packages'])
-            ->orderBy('schedule_date')
-            ->orderBy('class_time')
-            ->get();
-        }
 
         // ✅ 3. Attach classModel data manually untuk display jika tidak ada
         $schedules = $schedules->map(function ($schedule) {
@@ -413,6 +404,7 @@ class MemberBookingController extends Controller
         Log::info('✅ Loaded regular package schedules', [
             'package_id' => $package->id,
             'package_name' => $package->name,
+            'schedule_package_ids' => $schedulePackageIds,
             'count' => $schedules->count(),
             'note' => 'All schedules including hidden ones (tidak filter show_on_landing)',
         ]);
@@ -425,25 +417,57 @@ class MemberBookingController extends Controller
      */
     private function getSchedulePackageIds($package)
     {
-        // Cek apakah package ini ada dalam package groups
-        foreach (self::PACKAGE_GROUPS as $groupName => $groupConfig) {
-            if (in_array($package->id, $groupConfig['package_ids'])) {
-                Log::info('📦 Package is part of group', [
-                    'package_id' => $package->id,
-                    'group' => $groupName,
-                    'will_use_schedules_from' => $groupConfig['schedule_package_id'],
-                ]);
-                
-                // Kembalikan schedule_package_id dari config
-                // Bisa single ID atau array
-                return is_array($groupConfig['schedule_package_id']) 
-                    ? $groupConfig['schedule_package_id']
-                    : [$groupConfig['schedule_package_id']];
+        $groupName = $this->resolvePackageGroupName($package);
+
+        if (!$groupName) {
+            return [$package->id];
+        }
+
+        $patterns = self::PACKAGE_GROUP_PATTERNS[$groupName] ?? [];
+
+        $groupPackageIds = Package::query()
+            ->where(function ($query) use ($patterns) {
+                foreach ($patterns as $pattern) {
+                    $query->orWhereRaw('LOWER(name) LIKE ?', ['%' . strtolower($pattern) . '%']);
+                }
+            })
+            ->pluck('id')
+            ->values()
+            ->all();
+
+        if (!empty($groupPackageIds)) {
+            Log::info('📦 Package is part of dynamic group', [
+                'package_id' => $package->id,
+                'group' => $groupName,
+                'group_package_ids' => $groupPackageIds,
+            ]);
+
+            return $groupPackageIds;
+        }
+
+        return [$package->id];
+    }
+
+    /**
+     * Resolve package group name using package title patterns.
+     */
+    private function resolvePackageGroupName($package): ?string
+    {
+        $packageName = strtolower((string) ($package->name ?? ''));
+
+        if ($packageName === '') {
+            return null;
+        }
+
+        foreach (self::PACKAGE_GROUP_PATTERNS as $groupName => $patterns) {
+            foreach ($patterns as $pattern) {
+                if (str_contains($packageName, strtolower($pattern))) {
+                    return $groupName;
+                }
             }
         }
 
-        // Jika tidak ada di group, gunakan package_id sendiri
-        return [$package->id];
+        return null;
     }
 
     /**
@@ -488,7 +512,7 @@ class MemberBookingController extends Controller
             else {
                 // Cek apakah schedule memiliki relasi dengan package ini via pivot
                 $packageConnected = $schedule->packages()
-                    ->where('package_id', $package->id)
+                    ->where('packages.id', $package->id)
                     ->exists();
                 
                 if ($packageConnected) {
@@ -504,7 +528,7 @@ class MemberBookingController extends Controller
                 $schedulePackageIds = $this->getSchedulePackageIds($package);
                 foreach ($schedulePackageIds as $schedulePackageId) {
                     $groupConnected = $schedule->packages()
-                        ->where('package_id', $schedulePackageId)
+                        ->where('packages.id', $schedulePackageId)
                         ->exists();
                     
                     if ($groupConnected) {
@@ -631,7 +655,6 @@ class MemberBookingController extends Controller
             } else {
                 Log::warning('⚠️ Failed to send member booking notification', [
                     'customer_id' => $customer->id,
-                    'order_id' => $order->id,
                     'message' => $result['message'],
                 ]);
             }

@@ -6,6 +6,7 @@ use App\Filament\Resources\ScheduleResource\Pages;
 use App\Models\Schedule;
 use App\Models\Package;
 use App\Models\ClassModel;
+use App\Services\ScheduleExpansionService;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Resources\Form;
@@ -13,6 +14,8 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Cache;
+use Carbon\Carbon;
+use Illuminate\Support\HtmlString;
 
 class ScheduleResource extends Resource
 {
@@ -68,24 +71,23 @@ class ScheduleResource extends Resource
                         ->required()
                         ->maxLength(255),
 
-                    Forms\Components\Select::make('day')
-                        ->label('Day')
-                        ->options([
-                            'Monday' => 'Monday',
-                            'Tuesday' => 'Tuesday',
-                            'Wednesday' => 'Wednesday',
-                            'Thursday' => 'Thursday',
-                            'Friday' => 'Friday',
-                            'Saturday' => 'Saturday',
-                            'Sunday' => 'Sunday',
-                        ])
+                    Forms\Components\TextInput::make('day')
+                        ->label('Day(s)')
+                        ->placeholder('Wednesday atau Wednesday & Friday')
+                        ->helperText('Bisa 1 hari atau beberapa hari. Contoh: Wednesday & Friday')
+                        ->required()
+                        ->maxLength(255)
                         ->reactive()
                         ->afterStateUpdated(function (callable $set, $state) {
-                            // Auto-set schedule_date berdasarkan day yang dipilih (next occurrence)
+                            // Auto-set schedule_date berdasarkan hari pertama yang dipilih
                             if ($state) {
                                 try {
-                                    $date = \Carbon\Carbon::now()->startOfWeek()->next($state);
-                                    $set('schedule_date', $date->format('Y-m-d'));
+                                    $service = app(ScheduleExpansionService::class);
+                                    $preview = $service->buildPreview($state, Carbon::now());
+
+                                    if (!empty($preview['first_date'])) {
+                                        $set('schedule_date', $preview['first_date']);
+                                    }
                                 } catch (\Exception $e) {
                                     // ignore
                                 }
@@ -110,6 +112,58 @@ class ScheduleResource extends Resource
                         ->nullable(),
                 ])
                 ->columns(2),
+
+            Forms\Components\Section::make('📅 Ekspansi Otomatis 1 Bulan')
+                ->description('Admin bisa melihat preview jadwal dulu, lalu klik konfirmasi sebelum disimpan.')
+                ->collapsible()
+                ->collapsed(false)
+                ->schema([
+                    Forms\Components\Toggle::make('expand_to_month')
+                        ->label('Expand otomatis 1 bulan')
+                        ->helperText('Jika ON, jadwal akan dibuat otomatis untuk hari yang dipilih sampai akhir bulan.')
+                        ->reactive()
+                        ->default(false),
+
+                    Forms\Components\Placeholder::make('expansion_preview')
+                        ->label('Preview Jadwal')
+                        ->content(function (callable $get) {
+                            if (! $get('expand_to_month') || ! $get('day')) {
+                                return new HtmlString('<span class="text-gray-500">Aktifkan toggle lalu isi hari untuk melihat preview jadwal.</span>');
+                            }
+
+                            try {
+                                $service = app(ScheduleExpansionService::class);
+                                $preview = $service->buildPreview((string) $get('day'), Carbon::now());
+                                $days = implode(', ', $preview['days'] ?? []);
+                                $dates = collect($preview['dates'] ?? [])->pluck('date')->implode(', ');
+
+                                return new HtmlString(
+                                    '<div class="space-y-1 text-sm">'
+                                    . '<div><strong>Rentang:</strong> ' . e($preview['range']) . '</div>'
+                                    . '<div><strong>Hari:</strong> ' . e($days ?: '-') . '</div>'
+                                    . '<div><strong>Total jadwal:</strong> ' . e((string) ($preview['count'] ?? 0)) . '</div>'
+                                    . '<div><strong>Tanggal:</strong> ' . e($dates ?: '-') . '</div>'
+                                    . '</div>'
+                                );
+                            } catch (\Throwable $e) {
+                                return new HtmlString('<span class="text-red-600">Preview belum bisa dibuat. Periksa input hari.</span>');
+                            }
+                        })
+                        ->visible(fn (callable $get) => (bool) $get('expand_to_month')),
+
+                    Forms\Components\Radio::make('schedule_preview_confirmed')
+                        ->label('Sudah sesuai?')
+                        ->options([
+                            1 => 'Ya, lanjutkan simpan jadwal',
+                            0 => 'Belum, saya mau perbaiki',
+                        ])
+                        ->default(null)
+                        ->required(fn (callable $get) => (bool) $get('expand_to_month'))
+                        ->helperText('Klik jawaban yang sesuai sebelum menyimpan.')
+                        ->inline()
+                        ->visible(fn (callable $get) => (bool) $get('expand_to_month')),
+                ])
+                ->columns(1),
         ]);
     }
 
@@ -132,6 +186,15 @@ class ScheduleResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->color(fn($state) => $state ? 'success' : 'danger'),
+
+                Tables\Columns\BadgeColumn::make('series_status')
+                    ->label('Series')
+                    ->sortable()
+                    ->colors([
+                        'success' => fn ($state) => str_starts_with((string) $state, '👑 Parent'),
+                        'warning' => fn ($state) => str_starts_with((string) $state, '📅 Child'),
+                        'gray' => fn ($state) => $state === 'Single',
+                    ]),
 
                 Tables\Columns\TextColumn::make('classModel.class_name')
                     ->label('Class')
@@ -172,9 +235,33 @@ class ScheduleResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('package_id')
+                Tables\Filters\SelectFilter::make('series_status')
+                    ->label('Series')
+                    ->options([
+                        'single' => 'Single',
+                        'parent' => 'Parent',
+                        'child' => 'Child',
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        $state = $data['value'] ?? null;
+
+                        if ($state === 'single') {
+                            $query->whereNull('series_id')->whereNull('parent_schedule_id');
+                        }
+
+                        if ($state === 'parent') {
+                            $query->where('is_series_parent', true);
+                        }
+
+                        if ($state === 'child') {
+                            $query->whereNotNull('parent_schedule_id');
+                        }
+                    }),
+
+                Tables\Filters\SelectFilter::make('packages')
                     ->label('Package')
-                    ->options(Package::query()->orderBy('name')->pluck('name', 'id')->toArray()),
+                    ->relationship('packages', 'name')
+                    ->searchable(),
 
                 Tables\Filters\SelectFilter::make('class_id')
                     ->label('Class')
@@ -289,6 +376,7 @@ class ScheduleResource extends Resource
             // Eager load packages untuk display
             return parent::getEloquentQuery()
                 ->with(['packages', 'classModel'])
+                ->withCount('children')
                 ->select([
                     'schedules.id',
                     'schedules.class_id',
@@ -298,6 +386,10 @@ class ScheduleResource extends Resource
                     'schedules.class_time',
                     'schedules.instructor',
                     'schedules.show_on_landing',
+                    'schedules.series_id',
+                    'schedules.parent_schedule_id',
+                    'schedules.is_series_parent',
+                    'schedules.expand_to_month',
                     'schedules.created_at',
                     'schedules.updated_at',
                 ])

@@ -14,8 +14,6 @@ use App\Models\Voucher;
 use App\Models\Schedule;
 use App\Models\CustomerSchedule;
 use App\Services\WhatsAppService;
-use App\Notifications\PaymentSuccessNotification;
-use App\Notifications\BookingConfirmationNotification;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
@@ -294,36 +292,48 @@ class CheckoutController extends Controller
         $customer = $order->customer;
         $package = $order->package;
 
-        // ❌ TIDAK lagi set expired_at saat payment
-        // expired_at akan di-set saat BOOKING PERTAMA di MemberBookingController::store()
-        // $this->setPackageExpiration($order, $package);
-
-        // Ensure the order has remaining_quota and remaining_classes assigned from the package when payment is successful.
-        // remaining_quota = untuk check-in/checkout (berkurang saat check-in)
-        // remaining_classes = untuk booking class (TIDAK berkurang saat check-in, hanya saat booking)
-        if ((empty($order->remaining_quota) || empty($order->remaining_classes)) && $package) {
+        // ✅ ALWAYS initialize remaining_quota and remaining_classes for new orders
+        // This ensures each order tracks its own quota/classes separately
+        if ($package) {
             try {
+                $packageQuota = (int) ($package->quota ?? 0);
+                
                 $order->update([
-                    'remaining_quota' => (int) ($package->quota ?? 0),
-                    'remaining_classes' => (int) ($package->quota ?? 0),
+                    'remaining_quota' => $packageQuota,
+                    'remaining_classes' => $packageQuota,
+                    'total_quota' => $packageQuota,
+                    'total_classes' => $packageQuota,
                     'quota_applied' => true,
                 ]);
-                Log::info('ℹ️ Order remaining_quota and remaining_classes initialized', [
+                
+                \Illuminate\Support\Facades\Log::info('✅ New order quota initialized', [
                     'order_id' => $order->id,
-                    'assigned_quota' => $package->quota,
-                    'assigned_classes' => $package->quota,
+                    'order_code' => $order->order_code,
+                    'customer_id' => $customer->id,
+                    'customer_name' => $customer->name,
+                    'package_id' => $package->id,
+                    'package_name' => $package->name,
+                    'assigned_quota' => $packageQuota,
+                    'assigned_classes' => $packageQuota,
                 ]);
             } catch (\Exception $e) {
-                Log::warning('Failed to initialize quota/classes for order: ' . $e->getMessage(), ['order_id' => $order->id]);
+                \Illuminate\Support\Facades\Log::warning('⚠️ Failed to initialize quota/classes for order', [
+                    'order_id' => $order->id,
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ]);
             }
         }
 
-        Log::info('✅ APPLY PACKAGE SUCCESS', [
+        \Illuminate\Support\Facades\Log::info('✅ APPLY PACKAGE SUCCESS', [
             'order_id' => $order->id,
             'customer_id' => $customer->id,
+            'customer_name' => $customer->name,
+            'package_name' => $package->name ?? 'Unknown',
         ]);
 
-        // Update customer package
+        // Update customer package (latest package)
         $customer->update(['package_id' => $package->id]);
 
         // 📱 Kirim notifikasi WhatsApp payment berhasil
@@ -475,9 +485,15 @@ class CheckoutController extends Controller
         $firstSchedule = null;
 
         foreach ($scheduleMap[$classKey] as $scheduleData) {
-            $schedule = $this->findSchedule($scheduleData);
+            $schedule = $this->findSchedule($scheduleData, $order, $classKey);
 
             if (!$schedule) {
+                Log::error('❌ Schedule not found for selected class key', [
+                    'order_id' => $order->id,
+                    'package_id' => $order->package_id,
+                    'class_key' => $classKey,
+                    'schedule_data' => $scheduleData,
+                ]);
                 throw new \Exception(
                     "Schedule not found: {$scheduleData['day']} {$scheduleData['time']}"
                 );
@@ -511,7 +527,12 @@ class CheckoutController extends Controller
             $insertedCount++;
 
             Log::info('✅ Schedule assigned', [
+                'order_id' => $order->id,
+                'package_id' => $order->package_id,
+                'class_key' => $classKey,
                 'schedule_id' => $schedule->id,
+                'schedule_label' => $schedule->schedule_label,
+                'schedule_date' => $schedule->schedule_date,
                 'day' => $scheduleData['day'],
                 'time' => $scheduleData['time'],
             ]);
@@ -579,17 +600,58 @@ class CheckoutController extends Controller
      * Find schedule by class, day, and time
      * 
      * @param array $scheduleData
+     * @param Order $order
+     * @param string $classKey
      * @return Schedule|null
      */
-    private function findSchedule(array $scheduleData): ?Schedule
+    private function findSchedule(array $scheduleData, Order $order, string $classKey): ?Schedule
     {
         $timeFormatted = strlen($scheduleData['time']) === 5
             ? $scheduleData['time'] . ':00'
             : $scheduleData['time'];
 
-        return Schedule::where('class_id', $scheduleData['class_id'])
+        $classOptions = $this->getExclusiveClassOptions();
+        $selectedLabel = $classOptions[$classKey]['label'] ?? null;
+        $today = Carbon::today()->toDateString();
+
+        $query = Schedule::query()
             ->where('day', $scheduleData['day'])
             ->whereTime('class_time', $timeFormatted)
+            ->whereHas('packages', function ($q) use ($order) {
+                $q->where('packages.id', $order->package_id);
+            });
+
+        if (!empty($selectedLabel)) {
+            $query->where('schedule_label', $selectedLabel);
+        }
+
+        // Primary selection: nearest upcoming admin schedule date.
+        $upcoming = (clone $query)
+            ->whereNotNull('schedule_date')
+            ->whereDate('schedule_date', '>=', $today)
+            ->orderBy('schedule_date', 'asc')
+            ->orderBy('id', 'asc')
+            ->first();
+
+        if ($upcoming) {
+            return $upcoming;
+        }
+
+        // Fallback: latest dated schedule (if all configured dates are in the past).
+        $latestDated = (clone $query)
+            ->whereNotNull('schedule_date')
+            ->orderBy('schedule_date', 'desc')
+            ->orderBy('id', 'desc')
+            ->first();
+
+        if ($latestDated) {
+            return $latestDated;
+        }
+
+        // Last fallback for legacy data without schedule_date.
+        return (clone $query)
+            ->where('class_id', $scheduleData['class_id'])
+            ->orderBy('id', 'desc')
             ->first();
     }
 

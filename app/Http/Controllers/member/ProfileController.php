@@ -38,13 +38,16 @@ class ProfileController extends Controller
                 ->get();
         });
 
+        // Query dynamic packages untuk ditampilkan di member profile
+        $packages = \App\Models\Package::active()->latest()->get();
+
         // Tidak dipakai di view saat ini, diset kosong agar request lebih ringan
         $transactions = [];
 
         // Tidak dipakai di view saat ini; tetap jaga kompatibilitas variabel
         $attendances = [];
 
-        return View::make('member.profile', compact('customer', 'schedules', 'transactions', 'attendances'));
+        return View::make('member.profile', compact('customer', 'schedules', 'transactions', 'attendances', 'packages'));
     }
 
     /**
