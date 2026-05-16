@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -312,7 +312,7 @@
             align-items: center;
             gap: 0.5rem;
             padding: 0.875rem 1.75rem;
-            background: linear-gradient(135deg, #793451 0%, #EA6993 100%);
+            background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%);
             color: white;
             border-radius: 10px;
             text-decoration: none;
@@ -323,7 +323,7 @@
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(121, 52, 81, 0.28);
+            box-shadow: 0 10px 25px rgba(122, 43, 74, 0.28);
         }
 
         /* Responsive */
@@ -419,68 +419,21 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="{{ asset('css/ftm-member-portal.css') }}?v={{ filemtime(public_path('css/ftm-member-portal.css')) }}">
 </head>
 
-<body class="bg-gray-100 h-screen overflow-hidden">
+<body class="bg-cream h-screen overflow-hidden">
 
 <div class="flex h-screen">
 
-    <!-- ========================================
-         SIDEBAR
-    ======================================== -->
-    <aside id="sidebar" class="sidebar w-64 bg-slate-900 text-white flex flex-col shrink-0">
-        <a href="{{ route('member.profile') }}" class="px-6 py-5 text-xl font-bold border-b border-white/20 hover:bg-slate-800 transition inline-block w-full">
-            FTM SOCIETY
-        </a>
-
-        <nav class="flex-1 px-4 py-6 space-y-1 text-sm">
-            <a href="{{ route('member.dashboard') }}" 
-               class="block px-4 py-2 rounded hover:bg-white/10 transition">
-                <i class="fas fa-home mr-2"></i>Dashboard
-            </a>
-
-            <a href="{{ route('member.packages.index') }}" 
-               class="block px-4 py-2 rounded hover:bg-white/10 transition">
-                <i class="fas fa-box mr-2"></i>My Packages
-            </a>
-
-            <a href="{{ route('member.book') }}"
-               class="block px-4 py-2 rounded hover:bg-white/10 transition">
-                <i class="fas fa-calendar-plus mr-2"></i>Book Class
-            </a>
-
-            <a href="{{ route('member.my-classes') }}"
-               class="block px-4 py-2 rounded hover:bg-white/10 transition">
-                <i class="fas fa-dumbbell mr-2"></i>My Classes
-            </a>
-
-            <a href="{{ route('member.transactions') }}" 
-               class="block px-4 py-2 rounded bg-indigo-600 text-white font-medium">
-                <i class="fas fa-receipt mr-2"></i>Transactions
-            </a>
-
-            <a href="{{ route('member.attendance') }}" 
-               class="block px-4 py-2 rounded hover:bg-white/10 transition">
-                <i class="fas fa-calendar-check mr-2"></i>Attendance
-            </a>
-
-            <a href="{{ route('member.account') }}" 
-               class="block px-4 py-2 rounded hover:bg-white/10 transition">
-                <i class="fas fa-user mr-2"></i>Profile
-            </a>
-        </nav>
-
-        <div class="px-6 py-4 border-t border-white/20 text-xs text-white/60">
-            &copy; {{ date('Y') }} FTM Society
-        </div>
-    </aside>
+    @include('partials.member-sidebar')
 
     <!-- MAIN CONTENT -->
     <!-- Mobile Sidebar Overlay -->
     <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
     <!-- Mobile Hamburger Button -->
-    <button id="hamburger-btn" class="hamburger-btn fixed top-4 left-4 z-30 w-10 h-10 bg-slate-900 text-white rounded-lg items-center justify-center shadow-lg hover:bg-slate-800 transition" onclick="toggleSidebar()">
+    <button id="hamburger-btn" class="hamburger-btn fixed top-4 left-4 z-30 w-10 h-10 bg-dark text-white rounded-lg items-center justify-center shadow-lg hover:bg-secondary transition" onclick="toggleSidebar()">
         <i class="fas fa-bars text-lg"></i>
     </button>
 

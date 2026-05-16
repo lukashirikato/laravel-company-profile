@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -20,8 +20,8 @@
         
         body {
             font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #F4EEE6;
-            color: #26282B;
+            background: #FCF9F2;
+            color: #1C1C1C;
         }
         
         /* ============================================
@@ -56,13 +56,13 @@
         }
         
         .breadcrumb a {
-            color: #793451;
+            color: #7A2B4A;
             text-decoration: none;
             transition: color 0.2s;
         }
         
         .breadcrumb a:hover {
-            color: #EA6993;
+            color: #EE4E8B;
         }
         
         /* ============================================
@@ -79,7 +79,7 @@
         .page-header h1 {
             font-size: 2rem;
             font-weight: 600;
-            color: #793451;
+            color: #7A2B4A;
             margin-bottom: 0.5rem;
         }
         
@@ -97,7 +97,7 @@
             padding: 2rem;
             margin-bottom: 2rem;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            border-left: 4px solid #EA6993;
+            border-left: 4px solid #EE4E8B;
         }
         
         .status-grid {
@@ -138,7 +138,7 @@
         .status-value {
             font-size: 1.5rem;
             font-weight: 600;
-            color: #793451;
+            color: #7A2B4A;
             line-height: 1.2;
         }
         
@@ -163,7 +163,7 @@
             display: block;
             font-weight: 600;
             margin-bottom: 0.75rem;
-            color: #793451;
+            color: #7A2B4A;
             font-size: 0.875rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -184,13 +184,13 @@
         }
         
         .package-selector select:hover {
-            border-color: #EA6993;
+            border-color: #EE4E8B;
         }
         
         .package-selector select:focus {
             outline: none;
-            border-color: #EA6993;
-            box-shadow: 0 0 0 3px rgba(234, 105, 147, 0.15);
+            border-color: #EE4E8B;
+            box-shadow: 0 0 0 3px rgba(238, 78, 139, 0.15);
         }
         
         /* ============================================
@@ -250,7 +250,7 @@
         }
         
         .day-badge {
-            background: #793451;
+            background: #7A2B4A;
             color: white;
             padding: 0.5rem 1rem;
             border-radius: 6px;
@@ -275,7 +275,7 @@
         }
         
         .schedule-table thead {
-            background: linear-gradient(90deg, #F4EEE6 0%, rgba(241,204,227,0.40) 100%);
+            background: linear-gradient(90deg, #FCF9F2 0%, rgba(241,204,227,0.40) 100%);
         }
         
         .schedule-table th {
@@ -283,10 +283,10 @@
             text-align: left;
             font-size: 0.875rem;
             font-weight: 600;
-            color: #793451;
+            color: #7A2B4A;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            border-bottom: 2px solid rgba(234,105,147,0.25);
+            border-bottom: 2px solid rgba(238, 78, 139,0.25);
         }
         
         .schedule-table td {
@@ -322,7 +322,7 @@
         
         .class-name {
             font-weight: 600;
-            color: #793451;
+            color: #7A2B4A;
             font-size: 0.95rem;
         }
         
@@ -334,7 +334,7 @@
             background: rgba(210,220,165,0.30);
             border-radius: 6px;
             font-weight: 600;
-            color: #08513C;
+            color: #1D5A4B;
             font-size: 0.95rem;
         }
         
@@ -357,13 +357,13 @@
         }
         
         .status-badge.available {
-            background: rgba(0,116,95,0.10);
-            color: #00745F;
+            background: rgba(26, 122, 94,0.10);
+            color: #1A7A5E;
         }
         
         .status-badge.booked {
             background: rgba(241,204,227,0.35);
-            color: #793451;
+            color: #7A2B4A;
         }
         
         /* ============================================
@@ -383,14 +383,14 @@
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #793451 0%, #EA6993 100%);
+            background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%);
             color: white;
         }
         
         .btn-primary:hover {
             background: linear-gradient(135deg, #5A1F3A 0%, #B83863 100%);
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(121, 52, 81, 0.35);
+            box-shadow: 0 4px 12px rgba(122, 43, 74, 0.35);
         }
         
         .btn-primary:active {
@@ -398,7 +398,7 @@
         }
         
         .btn-success {
-            background: linear-gradient(135deg, #08513C, #00745F);
+            background: linear-gradient(135deg, #1D5A4B, #1A7A5E);
             color: white;
             cursor: not-allowed;
         }
@@ -530,66 +530,20 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="{{ asset('css/ftm-member-portal.css') }}?v={{ filemtime(public_path('css/ftm-member-portal.css')) }}">
 </head>
-<body class="bg-gray-100 h-screen overflow-hidden">
+<body class="bg-cream h-screen overflow-hidden">
 
  <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('css/ftm-member-portal.css') }}?v={{ filemtime(public_path('css/ftm-member-portal.css')) }}">
 </head>
 
-<body class="bg-gray-100 h-screen overflow-hidden">
+<body class="bg-cream h-screen overflow-hidden">
 
 <div class="flex h-screen">
 
-    <!-- ========================================
-         SIDEBAR
-    ======================================== -->
-    <aside id="sidebar" class="sidebar w-64 bg-slate-900 text-white flex flex-col shrink-0">
-        <a href="{{ route('member.profile') }}" class="px-6 py-5 text-xl font-bold border-b border-white/20 hover:bg-slate-800 transition inline-block w-full">
-            FTM SOCIETY
-        </a>
-
-        <nav class="flex-1 px-4 py-6 space-y-1 text-sm">
-            <a href="{{ route('member.dashboard') }}" 
-               class="block px-4 py-2 rounded hover:bg-white/10 transition">
-                <i class="fas fa-home mr-2"></i>Dashboard
-            </a>
-
-            <a href="{{ route('member.packages.index') }}" 
-               class="block px-4 py-2 rounded hover:bg-white/10 transition">
-                <i class="fas fa-box mr-2"></i>My Packages
-            </a>
-
-            <a href="{{ route('member.book') }}"
-               class="block px-4 py-2 rounded text-white font-medium" style="background: linear-gradient(90deg, #793451 0%, #EA6993 100%); border-left: 3px solid #F1CCE3;">
-                <i class="fas fa-calendar-plus mr-2"></i>Book Class
-            </a>
-
-            <a href="{{ route('member.my-classes') }}"
-               class="block px-4 py-2 rounded hover:bg-white/10 transition">
-                <i class="fas fa-dumbbell mr-2"></i>My Classes
-            </a>
-
-            <a href="{{ route('member.transactions') }}" 
-               class="block px-4 py-2 rounded hover:bg-white/10 transition">
-                <i class="fas fa-receipt mr-2"></i>Transactions
-            </a>
-
-            <a href="{{ route('member.attendance') }}" 
-               class="block px-4 py-2 rounded hover:bg-white/10 transition">
-                <i class="fas fa-calendar-check mr-2"></i>Attendance
-            </a>
-
-            <a href="{{ route('member.account') }}" 
-               class="block px-4 py-2 rounded hover:bg-white/10 transition">
-                <i class="fas fa-user mr-2"></i>Profile
-            </a>
-        </nav>
-
-        <div class="px-6 py-4 border-t border-white/20 text-xs text-white/60">
-            &copy; {{ date('Y') }} FTM Society
-        </div>
-    </aside>
+    @include('partials.member-sidebar')
 
     {{-- ============================================
          MAIN CONTENT AREA
@@ -598,7 +552,7 @@
     <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
     <!-- Mobile Hamburger Button -->
-    <button id="hamburger-btn" class="hamburger-btn fixed top-4 left-4 z-30 w-10 h-10 bg-slate-900 text-white rounded-lg items-center justify-center shadow-lg hover:bg-slate-800 transition" onclick="toggleSidebar()">
+    <button id="hamburger-btn" class="hamburger-btn fixed top-4 left-4 z-30 w-10 h-10 bg-dark text-white rounded-lg items-center justify-center shadow-lg hover:bg-secondary transition" onclick="toggleSidebar()">
         <i class="fas fa-bars text-lg"></i>
     </button>
 
@@ -610,10 +564,10 @@
                  HEADER WITH USER INFO
                  ============================================ --}}
             <div class="mb-8">
-                <h1 class="text-2xl font-bold text-gray-800">
+                <h1 class="text-2xl font-bold text-dark">
                     Book Your Class
                 </h1>
-                <p class="text-sm text-gray-500">
+                <p class="text-sm text-cream0">
                     Welcome back, {{ $customer->name ?? 'Member' }}
                 </p>
             </div>
@@ -690,7 +644,7 @@
                             <div class="status-icon">📅</div>
                             <div class="status-info">
                                 <div class="status-label">Valid Until</div>
-                                <div class="status-value" style="font-size: 1rem; color: #793451;">Belum dimulai</div>
+                                <div class="status-value" style="font-size: 1rem; color: #7A2B4A;">Belum dimulai</div>
                                 <div class="status-meta">Aktif {{ $selectedPackage->duration_days }} hari saat booking pertama</div>
                             </div>
                         </div>
@@ -781,7 +735,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <div style="font-weight:600; color:#793451; font-size:0.95rem;">
+                                        <div style="font-weight:600; color:#7A2B4A; font-size:0.95rem;">
                                             {{ $s->schedule_date_formatted }}
                                         </div>
                                     </td>
@@ -850,11 +804,11 @@
     <div style="background:white; border-radius:16px; max-width:440px; width:100%; box-shadow:0 25px 60px rgba(0,0,0,0.2); animation:modalIn 0.25s ease-out; overflow:hidden;">
         
         {{-- Header --}}
-        <div style="background: linear-gradient(135deg, rgba(241,204,227,0.30) 0%, rgba(244,238,230,1) 100%); padding:1.5rem 2rem; border-bottom:1px solid rgba(234,105,147,0.20); text-align:center;">
-            <div style="width:56px; height:56px; background: linear-gradient(135deg, #793451 0%, #EA6993 100%); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem; font-size:1.5rem; color:white;">
+        <div style="background: linear-gradient(135deg, rgba(241,204,227,0.30) 0%, rgba(244,238,230,1) 100%); padding:1.5rem 2rem; border-bottom:1px solid rgba(238, 78, 139,0.20); text-align:center;">
+            <div style="width:56px; height:56px; background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem; font-size:1.5rem; color:white;">
                 <i class="fas fa-calendar-check"></i>
             </div>
-            <h3 style="font-size:1.15rem; font-weight:700; color:#793451; margin:0;">Konfirmasi Booking</h3>
+            <h3 style="font-size:1.15rem; font-weight:700; color:#7A2B4A; margin:0;">Konfirmasi Booking</h3>
             <p style="font-size:0.825rem; color:#64748b; margin-top:4px;">Apakah Anda yakin ingin booking jadwal ini?</p>
         </div>
 
@@ -864,23 +818,23 @@
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
                     <div>
                         <div style="font-size:0.65rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">Class</div>
-                        <div id="confirm-class" style="font-size:0.95rem; font-weight:700; color:#793451;">—</div>
+                        <div id="confirm-class" style="font-size:0.95rem; font-weight:700; color:#7A2B4A;">—</div>
                     </div>
                     <div>
                         <div style="font-size:0.65rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">Day</div>
-                        <div id="confirm-day" style="font-size:0.95rem; font-weight:700; color:#793451;">—</div>
+                        <div id="confirm-day" style="font-size:0.95rem; font-weight:700; color:#7A2B4A;">—</div>
                     </div>
                     <div>
                         <div style="font-size:0.65rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">Date</div>
-                        <div id="confirm-date" style="font-size:0.95rem; font-weight:700; color:#793451;">—</div>
+                        <div id="confirm-date" style="font-size:0.95rem; font-weight:700; color:#7A2B4A;">—</div>
                     </div>
                     <div>
                         <div style="font-size:0.65rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">Time</div>
-                        <div id="confirm-time" style="font-size:0.95rem; font-weight:700; color:#793451;">—</div>
+                        <div id="confirm-time" style="font-size:0.95rem; font-weight:700; color:#7A2B4A;">—</div>
                     </div>
                     <div>
                         <div style="font-size:0.65rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">Coach</div>
-                        <div id="confirm-coach" style="font-size:0.95rem; font-weight:700; color:#793451;">—</div>
+                        <div id="confirm-coach" style="font-size:0.95rem; font-weight:700; color:#7A2B4A;">—</div>
                     </div>
                 </div>
             </div>
@@ -900,9 +854,9 @@
                     <i class="fas fa-times" style="margin-right:6px;"></i>Batal
                 </button>
                 <button id="confirm-book-btn" onclick="confirmBook()" 
-                    style="flex:1; padding:0.8rem; border:none; background:linear-gradient(135deg,#793451,#EA6993); color:white; border-radius:10px; font-weight:600; font-size:0.875rem; cursor:pointer; transition:all 0.2s; font-family:inherit; box-shadow:0 4px 12px rgba(121,52,81,0.30);"
+                    style="flex:1; padding:0.8rem; border:none; background:linear-gradient(135deg,#7A2B4A,#EE4E8B); color:white; border-radius:10px; font-weight:600; font-size:0.875rem; cursor:pointer; transition:all 0.2s; font-family:inherit; box-shadow:0 4px 12px rgba(122, 43, 74,0.30);"
                     onmouseover="this.style.background='linear-gradient(135deg,#5A1F3A,#B83863)'" 
-                    onmouseout="this.style.background='linear-gradient(135deg,#793451,#EA6993)'">
+                    onmouseout="this.style.background='linear-gradient(135deg,#7A2B4A,#EE4E8B)'">
                     <i class="fas fa-check" style="margin-right:6px;"></i>Ya, Book Sekarang
                 </button>
             </div>

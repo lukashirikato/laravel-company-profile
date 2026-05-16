@@ -1,10 +1,10 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <div class="container">
     <h2>Daftar User Belum ACC</h2>
     @if(session('success'))
-        <div class="text-green-600 mb-2">{{ session('success') }}</div>
+        <div class="text-accent mb-2">{{ session('success') }}</div>
     @endif
     <table class="table-auto w-full">
         <thead>
@@ -22,7 +22,7 @@
                 <td>
                     <form method="POST" action="{{ route('admin.users.approve', $user->id) }}">
                         @csrf
-                        <button type="submit" class="bg-green-600 text-white px-3 py-1 rounded">ACC</button>
+                        <button type="submit" class="bg-accent text-white px-3 py-1 rounded">ACC</button>
                     </form>
                 </td>
             </tr>

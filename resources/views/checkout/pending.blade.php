@@ -1,26 +1,26 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-8">
+<div class="min-h-screen bg-cream flex items-center justify-center px-4 py-8">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-5xl overflow-hidden grid grid-cols-1 md:grid-cols-2">
 
         {{-- LEFT SIDE: STATUS & INSTRUCTIONS --}}
-        <div class="p-10 flex flex-col justify-center items-center text-center bg-yellow-50">
+        <div class="p-10 flex flex-col justify-center items-center text-center bg-grounded-green/20">
 
             {{-- Status Icon --}}
-            <div class="w-20 h-20 rounded-full bg-yellow-100 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-yellow-600"
+            <div class="w-20 h-20 rounded-full bg-grounded-green/40 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-springs-ivy"
                      fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
             </div>
 
             {{-- Heading --}}
-            <h2 class="text-2xl font-bold text-gray-800 mt-6">
+            <h2 class="text-2xl font-bold text-dark mt-6">
                 Payment Pending
             </h2>
 
-            <p class="text-gray-500 mt-3 max-w-sm">
+            <p class="text-cream0 mt-3 max-w-sm">
                 Your order has been created. Please complete your payment to get access to the program.
             </p>
 
@@ -35,11 +35,11 @@
             @endphp
 
             @if($showInstructions)
-                <div class="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 w-full max-w-sm text-left">
+                <div class="mt-4 bg-light-pink/30 border border-primary/30 rounded-xl p-4 w-full max-w-sm text-left">
                     
                     {{-- Instruction Header --}}
-                    <h4 class="font-semibold text-gray-800 text-sm mb-3 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2 text-blue-600" 
+                    <h4 class="font-semibold text-dark text-sm mb-3 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2 text-primary" 
                              fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                                   d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -48,18 +48,18 @@
                     </h4>
 
                     {{-- Instruction Steps --}}
-                    <ol class="text-sm text-gray-700 space-y-2 list-decimal list-inside">
+                    <ol class="text-sm text-dark space-y-2 list-decimal list-inside">
                         <li>Transfer to our bank account below</li>
-                        <li>Transfer <strong class="text-gray-900">exactly Rp{{ number_format($order->amount, 0, ',', '.') }}</strong></li>
+                        <li>Transfer <strong class="text-dark">exactly Rp{{ number_format($order->amount, 0, ',', '.') }}</strong></li>
                         <li>Screenshot your transfer receipt</li>
-                        <li class="font-semibold text-gray-900">Send proof to admin via WhatsApp</li>
+                        <li class="font-semibold text-dark">Send proof to admin via WhatsApp</li>
                     </ol>
 
                     {{-- Bank Account Info --}}
-                    <div class="mt-3 bg-white rounded-lg p-3 border border-blue-200">
-                        <p class="text-xs text-gray-600 mb-1">Transfer to:</p>
-                        <p class="text-sm font-bold text-gray-900">BCA - 1234567890</p>
-                        <p class="text-sm text-gray-700">a.n. GYM FITNESS CENTER</p>
+                    <div class="mt-3 bg-white rounded-lg p-3 border border-primary/30">
+                        <p class="text-xs text-dark/70 mb-1">Transfer to:</p>
+                        <p class="text-sm font-bold text-dark">BCA - 1234567890</p>
+                        <p class="text-sm text-dark">a.n. GYM FITNESS CENTER</p>
                     </div>
 
                     {{-- WhatsApp Confirmation Button --}}
@@ -75,7 +75,7 @@
 
                     <a href="https://wa.me/{{ $whatsappNumber }}?text={{ urlencode($whatsappMessage) }}" 
                        target="_blank"
-                       class="mt-3 w-full bg-green-500 hover:bg-green-600 text-white text-center py-2.5 px-4 rounded-lg font-semibold transition flex items-center justify-center shadow-sm">
+                       class="mt-3 w-full bg-grounded-green/200 hover:bg-accent text-white text-center py-2.5 px-4 rounded-lg font-semibold transition flex items-center justify-center shadow-sm">
                         
                         {{-- WhatsApp Icon --}}
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
@@ -85,7 +85,7 @@
                         Confirm Payment via WhatsApp
                     </a>
 
-                    <p class="text-xs text-gray-500 mt-2 text-center">
+                    <p class="text-xs text-cream0 mt-2 text-center">
                         Admin will verify within 1x24 hours
                     </p>
                 </div>
@@ -97,7 +97,7 @@
         {{-- RIGHT SIDE: TRANSACTION SUMMARY --}}
         <div class="p-10">
 
-            <h3 class="text-lg font-semibold text-gray-800 mb-6">
+            <h3 class="text-lg font-semibold text-dark mb-6">
                 Transaction Summary
             </h3>
 
@@ -105,24 +105,24 @@
 
                 {{-- Order Code --}}
                 <div class="flex justify-between items-start">
-                    <span class="text-gray-500">Order Code</span>
-                    <span class="font-medium text-gray-800 text-right">
+                    <span class="text-cream0">Order Code</span>
+                    <span class="font-medium text-dark text-right">
                         {{ $order->order_code }}
                     </span>
                 </div>
 
                 {{-- Package Name --}}
                 <div class="flex justify-between items-start">
-                    <span class="text-gray-500">Package</span>
-                    <span class="font-medium text-gray-800 text-right">
+                    <span class="text-cream0">Package</span>
+                    <span class="font-medium text-dark text-right">
                         {{ $order->package->name ?? '-' }}
                     </span>
                 </div>
 
                 {{-- Original Price --}}
                 <div class="flex justify-between items-start">
-                    <span class="text-gray-500">Original Price</span>
-                    <span class="font-medium text-gray-800">
+                    <span class="text-cream0">Original Price</span>
+                    <span class="font-medium text-dark">
                         Rp{{ number_format($order->amount + $order->discount, 0, ',', '.') }}
                     </span>
                 </div>
@@ -130,13 +130,13 @@
                 {{-- Voucher Discount --}}
                 @if($order->discount > 0)
                     <div class="flex justify-between items-start">
-                        <span class="text-gray-500">
+                        <span class="text-cream0">
                             Voucher
-                            <span class="text-xs text-gray-400 block">
+                            <span class="text-xs text-dark/40 block">
                                 ({{ $order->voucher_code }})
                             </span>
                         </span>
-                        <span class="font-medium text-red-600">
+                        <span class="font-medium text-secondary">
                             - Rp{{ number_format($order->discount, 0, ',', '.') }}
                         </span>
                     </div>
@@ -144,8 +144,8 @@
 
                 {{-- Payment Method --}}
                 <div class="flex justify-between items-start">
-                    <span class="text-gray-500">Payment Method</span>
-                    <span class="font-medium text-gray-800">
+                    <span class="text-cream0">Payment Method</span>
+                    <span class="font-medium text-dark">
                         @php
                             $displayPaymentType = $order->payment_type ?? 'BANK TRANSFER';
                             if (strtolower($displayPaymentType) == 'null' || empty($displayPaymentType)) {
@@ -158,8 +158,8 @@
 
                 {{-- Payment Status --}}
                 <div class="flex justify-between items-start">
-                    <span class="text-gray-500">Payment Status</span>
-                    <span class="font-semibold text-yellow-600 capitalize" id="payment-status">
+                    <span class="text-cream0">Payment Status</span>
+                    <span class="font-semibold text-springs-ivy capitalize" id="payment-status">
                         {{ ucfirst($order->status) }}
                     </span>
                 </div>
@@ -167,8 +167,8 @@
                 {{-- Payment Deadline --}}
                 @if($order->expired_at)
                     <div class="flex justify-between items-start">
-                        <span class="text-gray-500">Payment Deadline</span>
-                        <span class="font-medium text-red-600 text-right">
+                        <span class="text-cream0">Payment Deadline</span>
+                        <span class="font-medium text-secondary text-right">
                             {{ \Carbon\Carbon::parse($order->expired_at)->format('d M Y, H:i') }} WIB
                         </span>
                     </div>
@@ -177,12 +177,12 @@
             </div>
 
             {{-- Divider --}}
-            <div class="border-t border-gray-200 my-6"></div>
+            <div class="border-t border-light-pink/50 my-6"></div>
 
             {{-- Total Amount --}}
             <div class="flex justify-between items-center">
-                <span class="text-gray-500 text-sm font-medium">Total to Pay</span>
-                <span class="text-2xl font-bold text-yellow-600">
+                <span class="text-cream0 text-sm font-medium">Total to Pay</span>
+                <span class="text-2xl font-bold text-springs-ivy">
                     Rp{{ number_format($order->amount, 0, ',', '.') }}
                 </span>
             </div>
@@ -203,8 +203,8 @@
     function checkPaymentStatus() {
         if (checkCount >= maxChecks) {
             statusElement.textContent = 'Auto-check stopped. Refresh page manually.';
-            statusElement.classList.remove('text-yellow-700');
-            statusElement.classList.add('text-gray-500');
+            statusElement.classList.remove('text-springs-ivy');
+            statusElement.classList.add('text-cream0');
             return;
         }
         
@@ -219,8 +219,8 @@
                 if (data.status === 'paid' || data.status === 'active') {
                     // Payment successful - redirect to success page
                     statusElement.textContent = 'Payment verified! Redirecting...';
-                    statusElement.classList.remove('text-yellow-700');
-                    statusElement.classList.add('text-green-700');
+                    statusElement.classList.remove('text-springs-ivy');
+                    statusElement.classList.add('text-springs-ivy');
                     
                     setTimeout(() => {
                         window.location.href = "{{ route('payment.success', $order->order_code) }}";
@@ -230,8 +230,8 @@
                     // Payment failed/expired/cancelled
                     paymentStatusElement.textContent = data.status.charAt(0).toUpperCase() + data.status.slice(1);
                     statusElement.textContent = 'Payment ' + data.status + '. Please contact admin.';
-                    statusElement.classList.remove('text-yellow-700');
-                    statusElement.classList.add('text-red-700');
+                    statusElement.classList.remove('text-springs-ivy');
+                    statusElement.classList.add('text-secondary');
                     
                 } else {
                     // Still pending - continue checking

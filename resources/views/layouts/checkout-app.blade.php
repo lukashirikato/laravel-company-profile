@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -27,7 +27,7 @@
     </style>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-cream">
 
     {{-- Main Content --}}
     <main class="min-h-screen">

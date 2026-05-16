@@ -1,191 +1,250 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lupa Password | FTM Society Gym Muslimah</title>
+    <title>Lupa Password | FTM Society</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/ftm-typography.css') }}">
     <style>
-        /* Brand Palette: Burnt Cherry #793451 | Power Pink #EA6993 |
-           Soft Petals #F1CCE3 | Patina Green #00745F | Springs Ivy #08513C |
-           Grounded Green #D2DCA5 | Layl #26282B | Rising #F4EEE6 */
-
-        .custom-gradient {
-            background: linear-gradient(135deg, #793451 0%, #EA6993 55%, #F1CCE3 100%);
+        /* FTM Society — Brand Palette */
+        body {
+            font-family: 'Poppins', system-ui, sans-serif;
+            font-weight: 500;
+            background-color: #FCF9F2;
+            background-image:
+                radial-gradient(circle at 12% 18%, rgba(238, 78, 139, 0.10) 0%, transparent 35%),
+                radial-gradient(circle at 88% 82%, rgba(244, 201, 223, 0.45) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(122, 43, 74, 0.05) 0%, transparent 60%);
+            min-height: 100vh;
         }
 
-        .card-glass {
-            background: rgba(244, 238, 230, 0.97);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+        h1, h2, h3, h4 {
+            font-family: 'Nord', 'Poppins', sans-serif;
+            letter-spacing: -0.01em;
         }
 
-        .input-focus:focus {
-            border-color: #EA6993;
-            box-shadow: 0 0 0 3px rgba(234, 105, 147, 0.18);
+        .ftm-card {
+            background: #FFFFFF;
+            border: 1px solid #F4C9DF;
+            border-radius: 18px;
+            box-shadow:
+                0 12px 30px rgba(122, 43, 74, 0.10),
+                0 1px 3px rgba(28, 28, 28, 0.04);
+            position: relative;
+            overflow: hidden;
+        }
+        .ftm-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: #EE4E8B;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #793451 0%, #EA6993 100%);
-            transition: all 0.3s ease;
+        .ftm-input {
+            background: #FCF9F2;
+            border: 1.5px solid #F4C9DF;
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            color: #1C1C1C;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            transition: border-color 0.18s, box-shadow 0.18s;
+            width: 100%;
+        }
+        .ftm-input::placeholder { color: rgba(28, 28, 28, 0.4); }
+        .ftm-input:focus {
+            outline: none;
+            border-color: #EE4E8B;
+            box-shadow: 0 0 0 3px rgba(238, 78, 139, 0.15);
+            background: #FFFFFF;
         }
 
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #26282B 0%, #793451 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(121, 52, 81, 0.35);
+        .ftm-label {
+            font-family: 'Nord', 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #7A2B4A;
+            margin-bottom: 0.4rem;
+            display: block;
         }
 
-        .logo-shadow {
-            box-shadow: 0 4px 16px rgba(121, 52, 81, 0.25);
+        .ftm-btn-primary {
+            background: #EE4E8B;
+            color: #FFFFFF;
+            border-radius: 10px;
+            padding: 0.85rem 1.25rem;
+            font-family: 'Nord', 'Poppins', sans-serif;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            box-shadow: 0 6px 16px rgba(238, 78, 139, 0.30);
+            transition: background 0.18s, transform 0.15s, box-shadow 0.18s;
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .ftm-btn-primary:hover {
+            background: #7A2B4A;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(122, 43, 74, 0.32);
         }
 
-        .success-alert {
-            background: linear-gradient(135deg, #00745F 0%, #08513C 100%);
-        }
-
-        .error-alert {
-            background: linear-gradient(135deg, #793451 0%, #EA6993 100%);
-        }
-
-        .info-alert {
-            background: #F1CCE3;
-            border-left: 4px solid #EA6993;
-            color: #793451;
-        }
-
-        hr { border-color: #F1CCE3; }
-
-        a.brand-link {
-            color: #793451;
+        .ftm-alert-success {
+            background: #C5D79B;
+            border-left: 4px solid #1A7A5E;
+            color: #1D5A4B;
             font-weight: 600;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
         }
-        a.brand-link:hover {
-            color: #EA6993;
+        .ftm-alert-error {
+            background: rgba(238, 78, 139, 0.10);
+            border-left: 4px solid #EE4E8B;
+            color: #7A2B4A;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
         }
+        .ftm-info {
+            background: #F4C9DF;
+            border-left: 4px solid #7A2B4A;
+            color: #7A2B4A;
+            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            font-size: 0.78rem;
+            line-height: 1.55;
+        }
+
+        .ftm-step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1rem 0 1.5rem;
+        }
+        .ftm-step {
+            width: 2rem;
+            height: 0.3rem;
+            border-radius: 2px;
+            background: #F4C9DF;
+            transition: background 0.3s;
+        }
+        .ftm-step.active { background: #EE4E8B; }
+        .ftm-step.done { background: #1A7A5E; }
+
+        .ftm-link {
+            color: #7A2B4A;
+            font-weight: 700;
+            text-decoration: none;
+            transition: color 0.18s;
+        }
+        .ftm-link:hover { color: #EE4E8B; }
     </style>
 </head>
-<body class="custom-gradient min-h-screen flex items-center justify-center px-4 py-8">
+<body class="flex items-center justify-center px-4 py-8">
 
-    <div class="card-glass shadow-2xl rounded-2xl p-8 w-full max-w-md border border-[#F1CCE3]">
-        <div class="text-center mb-6">
-            <img src="{{ asset('icons/logo-ftm.jpg') }}" alt="Logo FTM Society" class="w-20 h-20 mx-auto mb-3 rounded-full logo-shadow">
-            <h1 class="text-3xl font-bold text-[#793451] flex items-center justify-center gap-2">
-                <i class="fas fa-key"></i> Lupa Password
+    <div class="ftm-card w-full max-w-md p-8">
+        {{-- Header --}}
+        <div class="text-center mb-2">
+            <img src="{{ asset('icons/logo-ftm.jpg') }}"
+                 alt="FTM Society"
+                 class="w-16 h-16 mx-auto mb-3 rounded-full"
+                 style="box-shadow: 0 4px 12px rgba(122, 43, 74, 0.20); border: 2px solid #F4C9DF;">
+            <h1 style="color: #7A2B4A; font-size: 1.6rem; font-weight: 800; margin: 0;">
+                Lupa Password
             </h1>
-            <p class="text-sm text-[#26282B]/60 mt-1">FTM Society</p>
+            <p style="color: rgba(28, 28, 28, 0.55); font-size: 0.85rem; margin-top: 0.25rem;">
+                FTM Society Member
+            </p>
         </div>
 
-        {{-- Notifikasi sukses --}}
+        {{-- Step indicator --}}
+        <div class="ftm-step-indicator">
+            <span class="ftm-step active" title="Verifikasi"></span>
+            <span class="ftm-step" title="OTP"></span>
+            <span class="ftm-step" title="Password baru"></span>
+        </div>
+
+        <p class="text-center text-xs mb-5" style="color: rgba(28, 28, 28, 0.6);">
+            <span style="color: #EE4E8B; font-weight: 700;">Langkah 1 dari 3</span>
+            &mdash; Verifikasi identitas
+        </p>
+
+        {{-- Notif sukses --}}
         @if(session('success'))
-            <div class="success-alert text-white p-3 mb-4 rounded text-sm">
-                <div class="flex items-center">
-                    <i class="fas fa-check-circle mr-2"></i>
-                    {{ session('success') }}
-                </div>
+            <div class="ftm-alert-success mb-4 text-sm flex items-start gap-2">
+                <i class="fas fa-check-circle mt-0.5"></i>
+                <span>{{ session('success') }}</span>
             </div>
         @endif
 
-        {{-- Notifikasi error --}}
+        {{-- Notif error --}}
         @if($errors->any())
-            <div class="error-alert text-white p-3 mb-4 rounded text-sm">
-                <div class="flex items-center">
-                    <i class="fas fa-exclamation-circle mr-2"></i>
-                    {{ $errors->first() }}
-                </div>
+            <div class="ftm-alert-error mb-4 text-sm flex items-start gap-2">
+                <i class="fas fa-exclamation-circle mt-0.5"></i>
+                <span>{{ $errors->first() }}</span>
             </div>
         @endif
 
-        {{-- Info verifikasi identitas --}}
-        <div class="info-alert px-4 py-3 rounded mb-5 text-xs flex items-start gap-2">
+        {{-- Info --}}
+        <div class="ftm-info mb-5 flex items-start gap-2">
             <i class="fas fa-shield-alt mt-0.5"></i>
             <span>
-                Untuk verifikasi identitas, masukkan <strong>email</strong> dan <strong>nomor HP</strong> yang terdaftar pada akun Anda. Keduanya harus cocok.
+                Masukkan <strong>email</strong> dan <strong>nomor HP</strong> yang terdaftar.
+                Kami akan mengirim kode OTP ke WhatsApp Anda untuk verifikasi.
             </span>
         </div>
 
-        {{-- Form lupa password --}}
+        {{-- Form --}}
         <form method="POST" action="{{ route('member.forgot-password.submit') }}" class="space-y-4">
             @csrf
 
             <div>
-                <label for="email" class="block text-sm text-[#26282B]/80 mb-1 font-medium">Email Terdaftar</label>
-                <input type="email" name="email" id="email" value="{{ old('email') }}" required autofocus
-                    placeholder="contoh@email.com"
-                    class="w-full px-4 py-3 border border-[#F1CCE3] rounded-lg focus:outline-none input-focus transition-all duration-200 bg-[#F4EEE6] text-[#26282B] placeholder-[#26282B]/40">
+                <label for="email" class="ftm-label">Email Terdaftar</label>
+                <input type="email"
+                       name="email"
+                       id="email"
+                       class="ftm-input"
+                       value="{{ old('email') }}"
+                       placeholder="contoh@email.com"
+                       required
+                       autofocus>
             </div>
 
             <div>
-                <label for="phone_number" class="block text-sm text-[#26282B]/80 mb-1 font-medium">Nomor HP Terdaftar</label>
-                <input type="text" name="phone_number" id="phone_number" value="{{ old('phone_number') }}" required
-                    placeholder="08xxxxxxxxxx"
-                    class="w-full px-4 py-3 border border-[#F1CCE3] rounded-lg focus:outline-none input-focus transition-all duration-200 bg-[#F4EEE6] text-[#26282B] placeholder-[#26282B]/40">
+                <label for="phone_number" class="ftm-label">Nomor HP Terdaftar</label>
+                <input type="tel"
+                       name="phone_number"
+                       id="phone_number"
+                       class="ftm-input"
+                       value="{{ old('phone_number') }}"
+                       placeholder="08xxxxxxxxxx"
+                       required>
             </div>
 
-            <div>
-                <label for="new_password" class="block text-sm text-[#26282B]/80 mb-1 font-medium">Password Baru</label>
-                <div class="relative">
-                    <input type="password" name="new_password" id="new_password" required minlength="8"
-                        placeholder="Minimal 8 karakter"
-                        class="w-full px-4 py-3 border border-[#F1CCE3] rounded-lg focus:outline-none input-focus transition-all duration-200 bg-[#F4EEE6] text-[#26282B] placeholder-[#26282B]/40 pr-12">
-                    <button type="button" data-toggle="new_password"
-                            class="toggle-eye absolute right-3 top-1/2 transform -translate-y-1/2 text-[#26282B]/40 hover:text-[#793451] transition-colors">
-                        <i class="fa fa-eye"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div>
-                <label for="new_password_confirmation" class="block text-sm text-[#26282B]/80 mb-1 font-medium">Konfirmasi Password Baru</label>
-                <div class="relative">
-                    <input type="password" name="new_password_confirmation" id="new_password_confirmation" required minlength="8"
-                        placeholder="Ulangi password baru"
-                        class="w-full px-4 py-3 border border-[#F1CCE3] rounded-lg focus:outline-none input-focus transition-all duration-200 bg-[#F4EEE6] text-[#26282B] placeholder-[#26282B]/40 pr-12">
-                    <button type="button" data-toggle="new_password_confirmation"
-                            class="toggle-eye absolute right-3 top-1/2 transform -translate-y-1/2 text-[#26282B]/40 hover:text-[#793451] transition-colors">
-                        <i class="fa fa-eye"></i>
-                    </button>
-                </div>
-            </div>
-
-            <button type="submit"
-                class="w-full btn-primary text-white px-6 py-3 rounded-xl font-semibold shadow-sm flex items-center justify-center gap-2">
-                <i class="fas fa-save"></i> Reset Password
+            <button type="submit" class="ftm-btn-primary mt-2">
+                <i class="fab fa-whatsapp"></i>
+                <span>Kirim Kode OTP via WhatsApp</span>
             </button>
         </form>
 
-        <hr class="my-6">
+        <hr class="my-6" style="border-color: #F4C9DF;">
 
-        <div class="text-center text-sm">
+        <div class="text-center text-sm" style="color: rgba(28, 28, 28, 0.7);">
             Ingat password Anda?
-            <a href="{{ route('member.login.form') }}" class="brand-link hover:underline">Kembali ke Login</a>
+            <a href="{{ route('member.login.form') }}" class="ftm-link">Kembali ke Login</a>
         </div>
 
-        <p class="text-center text-xs text-[#26282B]/40 mt-4">
+        <p class="text-center text-xs mt-4" style="color: rgba(28, 28, 28, 0.45);">
             Jika mengalami kendala, hubungi admin via WhatsApp.
         </p>
     </div>
 
-    <script>
-        // Toggle visibility untuk semua field password
-        document.querySelectorAll('.toggle-eye').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                const targetId = this.getAttribute('data-toggle');
-                const input = document.getElementById(targetId);
-                const icon = this.querySelector('i');
-
-                if (input.type === 'password') {
-                    input.type = 'text';
-                    icon.classList.remove('fa-eye');
-                    icon.classList.add('fa-eye-slash');
-                } else {
-                    input.type = 'password';
-                    icon.classList.remove('fa-eye-slash');
-                    icon.classList.add('fa-eye');
-                }
-            });
-        });
-    </script>
 </body>
 </html>

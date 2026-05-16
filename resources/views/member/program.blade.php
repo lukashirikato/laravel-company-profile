@@ -1,25 +1,25 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-gray-100 px-6 py-10">
+<div class="min-h-screen bg-cream px-6 py-10">
 
     <div class="max-w-6xl mx-auto">
 
         {{-- HEADER --}}
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
             <div>
-                <h1 class="text-2xl font-bold text-gray-800">
+                <h1 class="text-2xl font-bold text-dark">
                     Program Saya
                 </h1>
-                <p class="text-sm text-gray-500 mt-1">
+                <p class="text-sm text-cream0 mt-1">
                     Daftar paket & program yang sedang dan pernah kamu ikuti
                 </p>
             </div>
 
             <a href="{{ route('member.profile') }}"
                class="mt-4 sm:mt-0 inline-flex items-center px-5 py-2
-                      bg-blue-600 text-white text-sm font-semibold
-                      rounded-xl hover:bg-blue-700 transition">
+                      bg-primary text-white text-sm font-semibold
+                      rounded-xl hover:bg-secondary transition">
                 Profile Saya
             </a>
         </div>
@@ -32,10 +32,10 @@
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between">
 
                     <div>
-                        <h2 class="text-lg font-semibold text-gray-800">
+                        <h2 class="text-lg font-semibold text-dark">
                             {{ $order->package->name ?? 'Program' }}
                         </h2>
-                        <p class="text-sm text-gray-500 mt-1">
+                        <p class="text-sm text-cream0 mt-1">
                             Order Code: {{ $order->order_code }}
                         </p>
                     </div>
@@ -44,8 +44,8 @@
                     <div class="mt-4 md:mt-0">
                         <span class="px-4 py-1 rounded-full text-sm font-semibold
                             {{ $order->status === 'paid'
-                                ? 'bg-green-100 text-green-700'
-                                : 'bg-gray-200 text-gray-600' }}">
+                                ? 'bg-grounded-green/40 text-springs-ivy'
+                                : 'bg-light-pink/30 text-dark/70' }}">
                             {{ strtoupper($order->status) }}
                         </span>
                     </div>
@@ -59,29 +59,29 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-sm">
 
                     <div>
-                        <span class="block text-gray-400">Harga</span>
-                        <span class="font-medium text-gray-800">
+                        <span class="block text-dark/40">Harga</span>
+                        <span class="font-medium text-dark">
                             Rp{{ number_format($order->amount,0,',','.') }}
                         </span>
                     </div>
 
                     <div>
-                        <span class="block text-gray-400">Metode Pembayaran</span>
-                        <span class="font-medium text-gray-800">
+                        <span class="block text-dark/40">Metode Pembayaran</span>
+                        <span class="font-medium text-dark">
                             {{ strtoupper($order->payment_type ?? '-') }}
                         </span>
                     </div>
 
                     <div>
-                        <span class="block text-gray-400">Tanggal Pembelian</span>
-                        <span class="font-medium text-gray-800">
+                        <span class="block text-dark/40">Tanggal Pembelian</span>
+                        <span class="font-medium text-dark">
                             {{ $order->created_at->format('d M Y') }}
                         </span>
                     </div>
 
                     <div>
-                        <span class="block text-gray-400">Status Program</span>
-                        <span class="font-semibold {{ $order->status === 'paid' ? 'text-green-600' : 'text-gray-500' }}">
+                        <span class="block text-dark/40">Status Program</span>
+                        <span class="font-semibold {{ $order->status === 'paid' ? 'text-accent' : 'text-cream0' }}">
                             {{ $order->status === 'paid' ? 'Aktif' : 'Tidak Aktif' }}
                         </span>
                     </div>
@@ -93,16 +93,16 @@
 
                     <a href="{{ route('invoice.show', $order->id) }}"
                        target="_blank"
-                       class="px-5 py-2 rounded-xl border border-gray-300
-                              text-sm font-semibold text-gray-700
-                              hover:bg-gray-50 transition">
+                       class="px-5 py-2 rounded-xl border border-light-pink/60
+                              text-sm font-semibold text-dark
+                              hover:bg-cream transition">
                         Download Invoice
                     </a>
 
                     <a href="{{ route('member.profile') }}"
-                       class="px-5 py-2 rounded-xl bg-blue-600
+                       class="px-5 py-2 rounded-xl bg-primary
                               text-white text-sm font-semibold
-                              hover:bg-blue-700 transition">
+                              hover:bg-secondary transition">
                         Lihat Profile
                     </a>
 
@@ -113,17 +113,17 @@
 
             {{-- EMPTY STATE --}}
             <div class="bg-white rounded-2xl shadow p-12 text-center">
-                <h3 class="text-lg font-semibold text-gray-700">
+                <h3 class="text-lg font-semibold text-dark">
                     Belum Ada Program
                 </h3>
-                <p class="text-sm text-gray-500 mt-2">
+                <p class="text-sm text-cream0 mt-2">
                     Kamu belum memiliki program aktif.
                 </p>
 
                 <a href="{{ route('home') }}"
                    class="inline-block mt-6 px-6 py-3
-                          bg-blue-600 text-white rounded-xl
-                          font-semibold hover:bg-blue-700 transition">
+                          bg-primary text-white rounded-xl
+                          font-semibold hover:bg-secondary transition">
                     Lihat Program
                 </a>
             </div>

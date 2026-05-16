@@ -1,0 +1,639 @@
+/* ==========================================================================
+   FTM SOCIETY — Member Portal Theme (Unified)  v4 — Final
+   --------------------------------------------------------------------------
+   Sumber sidebar: resources/views/partials/member-sidebar.blade.php
+   Class prefix .ftm-* dipakai supaya tidak konflik dgn class lama.
+   --------------------------------------------------------------------------
+   PALET (.kiro/steering/desain.md):
+     Power Pink   #EE4E8B        Burnt Cherry #7A2B4A     Soft Petals #F4C9DF
+     Patina Green #1A7A5E        Springs Ivy  #1D5A4B     Grounded   #C5D79B
+     Layl         #1C1C1C        Rising       #FCF9F2
+   ========================================================================== */
+
+:root {
+    --ftm-pink:   #EE4E8B;
+    --ftm-cherry: #7A2B4A;
+    --ftm-petal:  #F4C9DF;
+    --ftm-green:  #1A7A5E;
+    --ftm-ivy:    #1D5A4B;
+    --ftm-sage:   #C5D79B;
+    --ftm-layl:   #1C1C1C;
+    --ftm-rising: #FCF9F2;
+}
+
+/* ================================================================
+   GLOBAL
+   ================================================================ */
+body {
+    background: var(--ftm-rising) !important;
+    color: var(--ftm-layl) !important;
+    font-family: 'Poppins', system-ui, sans-serif !important;
+    font-weight: 500 !important;
+    -webkit-font-smoothing: antialiased !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Nord', 'Poppins', sans-serif !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.015em !important;
+    color: var(--ftm-cherry) !important;
+}
+
+/* ================================================================
+   UNIFIED SIDEBAR — semua halaman member pakai struktur ini
+   ================================================================ */
+
+.ftm-sidebar {
+    width: 16rem;
+    flex-shrink: 0;
+    background: var(--ftm-cherry);
+    color: var(--ftm-rising);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: auto;
+    box-shadow: 2px 0 8px rgba(28, 28, 28, 0.10);
+    transition: transform 0.3s ease;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .ftm-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 50;
+        transform: translateX(-100%);
+    }
+    .ftm-sidebar.active {
+        transform: translateX(0);
+    }
+}
+
+/* Brand logo header */
+.ftm-sidebar-brand {
+    display: block;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(244, 201, 223, 0.18);
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+.ftm-sidebar-brand:hover {
+    background: rgba(238, 78, 139, 0.12);
+}
+
+.ftm-sidebar-logo {
+    font-family: 'Nord', 'Poppins', sans-serif;
+    font-weight: 900;
+    font-size: 1.3rem;
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+}
+.ftm-logo-pink  { color: var(--ftm-pink); }
+.ftm-logo-cream { color: var(--ftm-rising); }
+
+.ftm-sidebar-tagline {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: rgba(244, 201, 223, 0.7);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-top: 0.4rem;
+}
+
+/* Navigation */
+.ftm-sidebar-nav {
+    flex: 1;
+    padding: 1rem 0.75rem;
+    overflow-y: auto;
+}
+
+.ftm-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.7rem 1rem;
+    margin: 3px 0;
+    border-radius: 8px;
+    color: rgba(252, 249, 242, 0.92);
+    background: transparent;
+    text-decoration: none;
+    font-family: 'Nord', 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: background 0.18s ease, color 0.18s ease, transform 0.15s ease;
+}
+
+.ftm-nav-item i {
+    width: 1.125rem;
+    font-size: 0.95rem;
+    color: rgba(252, 249, 242, 0.85);
+    flex-shrink: 0;
+}
+
+.ftm-nav-item:hover {
+    background: rgba(238, 78, 139, 0.18);
+    color: var(--ftm-rising);
+}
+.ftm-nav-item:hover i {
+    color: var(--ftm-rising);
+}
+
+/* Active state — flat Power Pink */
+.ftm-nav-item.active {
+    background: var(--ftm-pink);
+    color: var(--ftm-rising);
+    box-shadow: 0 4px 12px rgba(238, 78, 139, 0.32);
+    font-weight: 800;
+}
+.ftm-nav-item.active i {
+    color: var(--ftm-rising);
+}
+
+/* Footer area (logout + copyright) */
+.ftm-sidebar-footer {
+    padding: 1rem;
+    border-top: 1px solid rgba(244, 201, 223, 0.18);
+}
+
+.ftm-logout-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1rem;
+    background: var(--ftm-pink);
+    color: var(--ftm-rising);
+    border: none;
+    border-radius: 10px;
+    font-family: 'Nord', 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(238, 78, 139, 0.3);
+    transition: background 0.2s ease, transform 0.18s ease, box-shadow 0.2s ease;
+}
+.ftm-logout-btn:hover {
+    background: var(--ftm-cherry);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(122, 43, 74, 0.32);
+}
+.ftm-logout-btn i {
+    font-size: 0.95rem;
+}
+
+.ftm-sidebar-copyright {
+    text-align: center;
+    margin-top: 0.85rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: rgba(244, 201, 223, 0.55);
+    letter-spacing: 0.05em;
+}
+
+/* Sidebar overlay (mobile) */
+.ftm-sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(28, 28, 28, 0.55);
+    z-index: 40;
+}
+.ftm-sidebar-overlay.active { display: block; }
+
+@media (min-width: 769px) {
+    .ftm-sidebar-overlay { display: none !important; }
+}
+
+/* ================================================================
+   MAIN CONTENT
+   ================================================================ */
+main.main-content,
+.main-content {
+    background: var(--ftm-rising) !important;
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* Mobile hamburger */
+.hamburger-btn,
+#hamburger-btn {
+    background: var(--ftm-pink) !important;
+    background-image: none !important;
+    color: var(--ftm-rising) !important;
+    box-shadow: 0 4px 12px rgba(238, 78, 139, 0.3) !important;
+}
+
+/* ================================================================
+   PAGE HEADERS / CARDS
+   ================================================================ */
+main .bg-white,
+.main-content .bg-white {
+    background: #FFFFFF !important;
+    border: 1px solid var(--ftm-petal) !important;
+    box-shadow: none !important;
+}
+
+main .rounded-xl, main .rounded-2xl, main .rounded-lg,
+.main-content .rounded-xl, .main-content .rounded-2xl, .main-content .rounded-lg {
+    border-radius: 14px !important;
+}
+
+.card-hover:hover {
+    box-shadow: 0 8px 24px rgba(122, 43, 74, 0.08) !important;
+    transform: translateY(-2px);
+}
+
+/* ================================================================
+   ICONS, BADGES, TEXT COLORS
+   ================================================================ */
+main [class*="bg-primary/10"],
+main [class*="bg-primary/15"],
+main [class*="bg-primary/20"] {
+    background: rgba(238, 78, 139, 0.12) !important;
+}
+
+main .text-primary,        .main-content .text-primary        { color: var(--ftm-pink) !important; }
+main .text-primary-dark,   .main-content .text-primary-dark   { color: var(--ftm-cherry) !important; }
+main .text-secondary,      .main-content .text-secondary      { color: var(--ftm-cherry) !important; }
+main .text-accent,         .main-content .text-accent         { color: var(--ftm-green) !important; }
+main .text-springs-ivy,    .main-content .text-springs-ivy    { color: var(--ftm-ivy) !important; }
+
+main [class*="bg-grounded-green"],
+.main-content [class*="bg-grounded-green"] {
+    background: rgba(26, 122, 94, 0.12) !important;
+    color: var(--ftm-green) !important;
+}
+
+main [class*="bg-light-pink/30"],
+main [class*="bg-light-pink/40"],
+main [class*="bg-light-pink/50"],
+.main-content [class*="bg-light-pink"] {
+    background: rgba(244, 201, 223, 0.4) !important;
+}
+main .bg-light-pink, .main-content .bg-light-pink {
+    background: var(--ftm-petal) !important;
+}
+
+/* ================================================================
+   BUTTONS — flat brand
+   ================================================================ */
+main button[class*="bg-primary"]:not([class*="bg-primary/"]),
+main a[class*="bg-primary"]:not([class*="bg-primary/"]),
+.main-content button[class*="bg-primary"]:not([class*="bg-primary/"]),
+.main-content a[class*="bg-primary"]:not([class*="bg-primary/"]) {
+    background: var(--ftm-pink) !important;
+    background-image: none !important;
+    color: var(--ftm-rising) !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+    font-family: 'Nord', sans-serif !important;
+    box-shadow: 0 3px 10px rgba(238, 78, 139, 0.25) !important;
+    transition: background 0.2s ease, transform 0.18s ease !important;
+}
+main [class*="bg-primary"]:not([class*="bg-primary/"]):hover {
+    background: var(--ftm-cherry) !important;
+    transform: translateY(-1px) !important;
+}
+
+main button[class*="bg-secondary"]:not([class*="bg-secondary/"]),
+main a[class*="bg-secondary"]:not([class*="bg-secondary/"]),
+main .from-secondary, main .to-secondary,
+.main-content [class*="bg-secondary"]:not([class*="bg-secondary/"]) {
+    background: var(--ftm-cherry) !important;
+    background-image: none !important;
+    color: var(--ftm-rising) !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+    font-family: 'Nord', sans-serif !important;
+    box-shadow: 0 3px 10px rgba(122, 43, 74, 0.22) !important;
+}
+main [class*="bg-secondary"]:not([class*="bg-secondary/"]):hover {
+    background: var(--ftm-pink) !important;
+}
+
+main [class*="bg-accent"]:not([class*="bg-accent/"]),
+.main-content [class*="bg-accent"]:not([class*="bg-accent/"]) {
+    background: var(--ftm-green) !important;
+    background-image: none !important;
+    color: var(--ftm-rising) !important;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+}
+
+/* Kill all gradients in main */
+main [class*="bg-gradient"],
+.main-content [class*="bg-gradient"] {
+    background-image: none !important;
+}
+main [class*="from-"], main [class*="via-"], main [class*="to-"] {
+    background-image: none !important;
+}
+
+/* ================================================================
+   TABLES
+   ================================================================ */
+main table, .main-content table {
+    background: #FFFFFF !important;
+    border: 1px solid var(--ftm-petal) !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+}
+main table thead, .main-content table thead {
+    background: var(--ftm-rising) !important;
+    border-bottom: 1px solid var(--ftm-petal) !important;
+}
+main table thead th, .main-content table thead th {
+    color: var(--ftm-cherry) !important;
+    font-family: 'Nord', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 0.75rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+    padding: 0.875rem 1rem !important;
+}
+main table tbody tr:hover { background: rgba(244, 201, 223, 0.18) !important; }
+main table tbody td, .main-content table tbody td {
+    color: var(--ftm-layl) !important;
+    border-bottom: 1px solid rgba(244, 201, 223, 0.4) !important;
+    font-weight: 500 !important;
+    padding: 0.875rem 1rem !important;
+}
+
+/* ================================================================
+   FORMS / INPUTS
+   ================================================================ */
+main input[type="text"], main input[type="email"], main input[type="password"],
+main input[type="number"], main input[type="tel"], main input[type="date"],
+main input[type="search"], main select, main textarea,
+.main-content input, .main-content select, .main-content textarea {
+    background: #FFFFFF !important;
+    border: 1px solid var(--ftm-petal) !important;
+    color: var(--ftm-layl) !important;
+    border-radius: 8px !important;
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 500 !important;
+}
+main input:focus, main select:focus, main textarea:focus,
+.main-content input:focus, .main-content select:focus, .main-content textarea:focus {
+    outline: none !important;
+    border-color: var(--ftm-pink) !important;
+    box-shadow: 0 0 0 3px rgba(238, 78, 139, 0.15) !important;
+}
+
+/* Badges */
+[class*="badge"] {
+    border-radius: 999px !important;
+    font-weight: 700 !important;
+    font-size: 0.75rem !important;
+    padding: 3px 10px !important;
+}
+
+/* ================================================================
+   CLEANUP — kill rogue Tailwind colors in main
+   ================================================================ */
+main [class*="bg-orange"], main [class*="bg-yellow"], main [class*="bg-amber"],
+.main-content [class*="bg-orange"], .main-content [class*="bg-yellow"], .main-content [class*="bg-amber"] {
+    background: var(--ftm-petal) !important;
+    color: var(--ftm-cherry) !important;
+}
+main [class*="text-orange"], main [class*="text-yellow"], main [class*="text-amber"] {
+    color: var(--ftm-cherry) !important;
+}
+main [class*="bg-blue"]:not(.bg-blue-100),
+main [class*="bg-indigo"], main [class*="bg-purple"] {
+    background: var(--ftm-pink) !important;
+    color: var(--ftm-rising) !important;
+}
+
+/* ================================================================
+   SCROLLBAR
+   ================================================================ */
+main::-webkit-scrollbar, .main-content::-webkit-scrollbar { width: 8px; }
+main::-webkit-scrollbar-track { background: var(--ftm-rising); }
+main::-webkit-scrollbar-thumb {
+    background: var(--ftm-petal);
+    border-radius: 4px;
+}
+main::-webkit-scrollbar-thumb:hover { background: var(--ftm-pink); }
+
+.ftm-sidebar::-webkit-scrollbar { width: 6px; }
+.ftm-sidebar::-webkit-scrollbar-track { background: rgba(28, 28, 28, 0.18); }
+.ftm-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(244, 201, 223, 0.3);
+    border-radius: 3px;
+}
+
+/* ================================================================
+   LOGOUT CONFIRMATION MODAL — Brand FTM Society
+   Disediakan oleh partials/member-sidebar.blade.php
+   Selectors:
+     #ftm-logout-modal.ftm-modal-overlay
+       .ftm-modal-backdrop
+       .ftm-modal-box
+         .ftm-modal-accent
+         .ftm-modal-icon-wrap > .ftm-modal-icon
+         .ftm-modal-title
+         .ftm-modal-message > .ftm-modal-hint
+         .ftm-modal-actions
+           .ftm-btn-cancel
+           .ftm-modal-form > .ftm-btn-confirm
+   ================================================================ */
+
+/* Overlay container — hidden by default */
+.ftm-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    font-family: 'Poppins', sans-serif;
+}
+.ftm-modal-overlay.active {
+    display: flex;
+    animation: ftmFadeIn 0.18s ease-out;
+}
+
+@keyframes ftmFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Backdrop — flat dark cherry tint */
+.ftm-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(28, 28, 28, 0.65);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    cursor: pointer;
+}
+
+/* Modal box */
+.ftm-modal-box {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 24rem;
+    background: var(--ftm-rising);
+    border: 1px solid var(--ftm-petal);
+    border-radius: 18px;
+    box-shadow: 0 20px 50px rgba(28, 28, 28, 0.32);
+    padding: 1.75rem 1.5rem 1.5rem;
+    text-align: center;
+    overflow: hidden;
+    animation: ftmScaleIn 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes ftmScaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.92) translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Decorative top accent strip */
+.ftm-modal-accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: var(--ftm-pink);
+}
+
+/* Icon */
+.ftm-modal-icon-wrap {
+    display: flex;
+    justify-content: center;
+    margin: 0.25rem 0 1rem;
+}
+.ftm-modal-icon {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background: var(--ftm-cherry);
+    color: var(--ftm-rising);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 16px rgba(122, 43, 74, 0.32);
+}
+.ftm-modal-icon i {
+    font-size: 1.5rem;
+}
+
+/* Title */
+.ftm-modal-title {
+    font-family: 'Nord', 'Poppins', sans-serif !important;
+    font-weight: 800 !important;
+    font-size: 1.2rem !important;
+    color: var(--ftm-cherry) !important;
+    letter-spacing: -0.01em !important;
+    margin: 0 0 0.5rem !important;
+}
+
+/* Message */
+.ftm-modal-message {
+    font-size: 0.92rem;
+    color: rgba(28, 28, 28, 0.78);
+    line-height: 1.55;
+    margin: 0 0 1.4rem;
+    font-weight: 500;
+}
+.ftm-modal-message strong {
+    color: var(--ftm-cherry);
+    font-weight: 700;
+}
+.ftm-modal-hint {
+    display: block;
+    margin-top: 0.4rem;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: rgba(28, 28, 28, 0.5);
+}
+
+/* Action buttons */
+.ftm-modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+@media (min-width: 480px) {
+    .ftm-modal-actions {
+        flex-direction: row;
+    }
+}
+
+.ftm-modal-form {
+    width: 100%;
+    margin: 0;
+}
+
+.ftm-btn-cancel,
+.ftm-btn-confirm {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.7rem 1rem;
+    border-radius: 10px;
+    font-family: 'Nord', 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease,
+                border-color 0.18s ease, transform 0.15s ease,
+                box-shadow 0.18s ease;
+    border: 1px solid transparent;
+}
+
+/* Cancel button — outline soft petals */
+.ftm-btn-cancel {
+    background: transparent;
+    color: var(--ftm-cherry);
+    border-color: var(--ftm-petal);
+}
+.ftm-btn-cancel:hover {
+    background: var(--ftm-petal);
+    color: var(--ftm-cherry);
+}
+
+/* Confirm button — flat Power Pink */
+.ftm-btn-confirm {
+    background: var(--ftm-pink);
+    color: var(--ftm-rising);
+    border-color: var(--ftm-pink);
+    box-shadow: 0 3px 10px rgba(238, 78, 139, 0.28);
+}
+.ftm-btn-confirm:hover {
+    background: var(--ftm-cherry);
+    border-color: var(--ftm-cherry);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(122, 43, 74, 0.32);
+}
+
+/* Icon size in modal buttons */
+.ftm-btn-cancel i,
+.ftm-btn-confirm i {
+    font-size: 0.85rem;
+}

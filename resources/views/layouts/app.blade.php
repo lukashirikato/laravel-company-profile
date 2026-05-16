@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -17,9 +17,13 @@
 
     {{-- Tailwind & App --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    {{-- FTM Brand Typography & Member Portal Theme --}}
+    <link rel="stylesheet" href="{{ asset('css/ftm-typography.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/ftm-member-portal.css') }}?v={{ filemtime(public_path('css/ftm-member-portal.css')) }}">
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-cream">
 
     {{-- Navbar --}}
     @yield('navbar')

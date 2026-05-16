@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Filament\Facades\Filament;
 use Midtrans\Config;
 
 class AppServiceProvider extends ServiceProvider
@@ -30,5 +31,12 @@ class AppServiceProvider extends ServiceProvider
         // Keamanan & 3DS wajib true
         Config::$isSanitized   = true;
         Config::$is3ds         = true;
+
+        // FTM Society — Filament v2 Custom Theme
+        Filament::serving(function () {
+            Filament::registerStyles([
+                asset('css/ftm-filament-v2-theme.css'),
+            ]);
+        });
     }
 }

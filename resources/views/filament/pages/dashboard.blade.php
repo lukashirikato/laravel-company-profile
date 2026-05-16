@@ -1,4 +1,4 @@
-@php
+﻿@php
     use Illuminate\Support\Facades\Auth;
     use App\Models\Customer;
     use Carbon\Carbon;
@@ -21,7 +21,7 @@
 
 <x-filament::page>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        /* Inter import removed - using local Poppins via ftm-typography.css */
         
         * {
             margin: 0;
@@ -30,44 +30,63 @@
         }
         
         :root {
-            /* Modern Professional Admin Color Palette */
-            --primary: #4F46E5;
-            --primary-dark: #4338CA;
-            --primary-light: #6366F1;
-            --primary-ultra-light: #EEF2FF;
-            
-            --secondary: #10B981;
-            --secondary-light: #D1FAE5;
-            
-            --warning: #F59E0B;
-            --warning-light: #FEF3C7;
-            
-            --danger: #EF4444;
-            --danger-light: #FEE2E2;
-            
-            --info: #3B82F6;
-            --info-light: #DBEAFE;
-            
-            /* Neutral Professional Grays */
-            --gray-50: #F9FAFB;
-            --gray-100: #F3F4F6;
-            --gray-200: #E5E7EB;
-            --gray-300: #D1D5DB;
-            --gray-400: #9CA3AF;
-            --gray-500: #6B7280;
-            --gray-600: #4B5563;
-            --gray-700: #374151;
-            --gray-800: #1F2937;
-            --gray-900: #111827;
-            
+            /* ==========================================================
+               FTM SOCIETY BRAND PALETTE — 2025 OFFICIAL
+               Sumber: .kiro/steering/desain.md
+               ========================================================== */
+
+            /* PRIMARY = Power Pink → Burnt Cherry */
+            --primary:             #EE4E8B;   /* Power Pink */
+            --primary-dark:        #7A2B4A;   /* Burnt Cherry */
+            --primary-light:       #F08AB3;   /* mid pink */
+            --primary-ultra-light: #FAE0EE;   /* soft pink wash */
+
+            /* SECONDARY (success) = Patina Green */
+            --secondary:           #1A7A5E;
+            --secondary-light:     #C8E8DD;
+
+            /* WARNING — di-redirect ke Power Pink (HINDARI oranye/kuning) */
+            --warning:             #EE4E8B;
+            --warning-light:       #F4C9DF;   /* Soft Petals */
+
+            /* DANGER — Burnt Cherry (deeper) */
+            --danger:              #7A2B4A;
+            --danger-light:        #FAE0EE;
+
+            /* INFO — Power Pink (HINDARI biru) */
+            --info:                #EE4E8B;
+            --info-light:          #FAE0EE;
+
+            /* NEUTRAL warm — Rising → Layl scale */
+            --gray-50:  #FCF9F2;   /* Rising */
+            --gray-100: #F8F1E5;
+            --gray-200: #F4C9DF;   /* Soft Petals */
+            --gray-300: #E5C7C7;
+            --gray-400: #B89999;
+            --gray-500: #8A6D6D;
+            --gray-600: #5A4444;
+            --gray-700: #1C1C1C;   /* Layl */
+            --gray-800: #1C1C1C;
+            --gray-900: #0E0E0E;
+
             --white: #FFFFFF;
-            
-            /* Shadows */
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-            
+
+            /* Brand semantic aliases */
+            --brand-pink:   #EE4E8B;
+            --brand-cherry: #7A2B4A;
+            --brand-petal:  #F4C9DF;
+            --brand-green:  #1A7A5E;
+            --brand-ivy:    #1D5A4B;
+            --brand-sage:   #C5D79B;
+            --brand-layl:   #1C1C1C;
+            --brand-rising: #FCF9F2;
+
+            /* Shadows — disesuaikan ke brand cherry tint */
+            --shadow-sm: 0 1px 2px 0 rgba(122, 43, 74, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(122, 43, 74, 0.10);
+            --shadow-lg: 0 10px 15px -3px rgba(122, 43, 74, 0.12);
+            --shadow-xl: 0 20px 25px -5px rgba(122, 43, 74, 0.15);
+
             /* Border Radius */
             --radius-sm: 8px;
             --radius-md: 12px;
@@ -79,7 +98,7 @@
         .fi-page {
             background: var(--gray-50) !important;
             padding: 0 !important;
-            font-family: 'Inter', sans-serif !important;
+            font-family: 'Poppins', system-ui, sans-serif !important;
         }
         
         .fi-page-heading {
@@ -225,12 +244,12 @@
         
         .kpi-card.success {
             --card-color: var(--secondary);
-            --card-color-light: #34D399;
+            --card-color-light: #1A7A5E;
         }
         
         .kpi-card.warning {
             --card-color: var(--warning);
-            --card-color-light: #FBBF24;
+            --card-color-light: #EE4E8B;
         }
         
         .kpi-card-header {
@@ -526,7 +545,7 @@
             align-items: center;
             gap: 0.75rem;
             font-size: 0.95rem;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Poppins', system-ui, sans-serif;
         }
         
         .action-btn-icon {
@@ -610,15 +629,15 @@
         
         .stat-box.primary {
             --stat-color-light: var(--primary-ultra-light);
-            --stat-color-ultra-light: #F5F3FF;
-            --stat-color-border: #C7D2FE;
+            --stat-color-ultra-light: #FAE0EE;
+            --stat-color-border: #F4C9DF;
             --stat-color: var(--primary);
         }
         
         .stat-box.success {
             --stat-color-light: var(--secondary-light);
-            --stat-color-ultra-light: #ECFDF5;
-            --stat-color-border: #A7F3D0;
+            --stat-color-ultra-light: #C8E8DD;
+            --stat-color-border: #1A7A5E;
             --stat-color: var(--secondary);
         }
         

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 
@@ -39,8 +39,8 @@
         align-items: center;
         position: relative; 
         overflow: hidden;
-        box-shadow: 0 20px 60px rgba(15,23,42,0.4), 0 0 1px rgba(234,105,147,0.5);
-        border: 1px solid rgba(234,105,147,0.15);
+        box-shadow: 0 20px 60px rgba(15,23,42,0.4), 0 0 1px rgba(238, 78, 139,0.5);
+        border: 1px solid rgba(238, 78, 139,0.15);
         backdrop-filter: blur(10px);
     }
     
@@ -53,7 +53,7 @@
         width: 280px; 
         height: 280px; 
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(234,105,147,0.25) 0%, rgba(234,105,147,0.08) 70%, transparent 100%);
+        background: radial-gradient(circle, rgba(238, 78, 139,0.25) 0%, rgba(238, 78, 139,0.08) 70%, transparent 100%);
         animation: float 8s ease-in-out infinite;
     }
     
@@ -65,7 +65,7 @@
         width: 220px; 
         height: 220px; 
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(121,52,81,0.2) 0%, rgba(121,52,81,0.06) 70%, transparent 100%);
+        background: radial-gradient(circle, rgba(122, 43, 74,0.2) 0%, rgba(122, 43, 74,0.06) 70%, transparent 100%);
         animation: float 10s ease-in-out infinite reverse;
     }
     
@@ -146,7 +146,7 @@
         width: 64px; 
         height: 64px; 
         border-radius: 16px;
-        background: linear-gradient(135deg, #793451 0%, #EA6993 100%);
+        background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%);
         display: flex; 
         align-items: center; 
         justify-content: center;
@@ -154,14 +154,14 @@
         font-weight: 800; 
         color: white;
         margin-bottom: 1.25rem; 
-        box-shadow: 0 8px 24px rgba(121,52,81,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+        box-shadow: 0 8px 24px rgba(122, 43, 74,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
         border: 1px solid rgba(255,255,255,0.2);
         animation: pulse-glow 2s ease-in-out infinite;
     }
     
     @keyframes pulse-glow {
-        0%, 100% { box-shadow: 0 8px 24px rgba(121,52,81,0.4), inset 0 1px 0 rgba(255,255,255,0.2); }
-        50% { box-shadow: 0 12px 32px rgba(121,52,81,0.6), inset 0 1px 0 rgba(255,255,255,0.3); }
+        0%, 100% { box-shadow: 0 8px 24px rgba(122, 43, 74,0.4), inset 0 1px 0 rgba(255,255,255,0.2); }
+        50% { box-shadow: 0 12px 32px rgba(122, 43, 74,0.6), inset 0 1px 0 rgba(255,255,255,0.3); }
     }
     
     .member-info .name { 
@@ -304,7 +304,7 @@
     }
     
     .stat-card.sc-indigo::before { 
-        background: linear-gradient(90deg, #793451 0%, #EA6993 100%);
+        background: linear-gradient(90deg, #7A2B4A 0%, #EE4E8B 100%);
     }
     
     .stat-card.sc-emerald::before { 
@@ -332,8 +332,8 @@
     }
     
     .stat-card.sc-indigo .sc-icon { 
-        background: linear-gradient(135deg, rgba(234,105,147,0.2) 0%, rgba(120,52,81,0.1) 100%); 
-        color: #793451; 
+        background: linear-gradient(135deg, rgba(238, 78, 139,0.2) 0%, rgba(122, 43, 74,0.1) 100%); 
+        color: #7A2B4A; 
     }
     
     .stat-card.sc-emerald .sc-icon { 
@@ -396,7 +396,7 @@
         font-size: 0.95rem; font-weight: 700; color: #0f172a;
         display: flex; align-items: center; gap: 8px; margin-bottom: 1.25rem;
     }
-    .content-card .cc-title i { font-size: 1rem; color: #793451; }
+    .content-card .cc-title i { font-size: 1rem; color: #7A2B4A; }
 
     /* QR ACTION BUTTONS */
     .qr-actions { display: flex; flex-direction: column; gap: 0.5rem; }
@@ -414,8 +414,8 @@
     }
     .qr-action-btn.btn-download:hover { background: #1e293b; }
     .qr-action-btn.btn-print {
-        background: linear-gradient(135deg, #793451, #EA6993); color: white;
-        box-shadow: 0 2px 8px rgba(121,52,81,0.25);
+        background: linear-gradient(135deg, #7A2B4A, #EE4E8B); color: white;
+        box-shadow: 0 2px 8px rgba(122, 43, 74,0.25);
     }
     .qr-action-btn.btn-print:hover { background: linear-gradient(135deg, #5A1F3A, #B83863); }
     .qr-action-btn.btn-regen {
@@ -427,8 +427,8 @@
     }
     .qr-action-btn.btn-disable:hover { background: #fee2e2; }
     .qr-action-btn.btn-generate {
-        background: linear-gradient(135deg, #793451, #EA6993); color: white;
-        box-shadow: 0 4px 14px rgba(121,52,81,0.30); padding: 1rem;
+        background: linear-gradient(135deg, #7A2B4A, #EE4E8B); color: white;
+        box-shadow: 0 4px 14px rgba(122, 43, 74,0.30); padding: 1rem;
         justify-content: center;
     }
 
@@ -444,9 +444,9 @@
 
     /* INFO ALERT */
     .info-tip {
-        background: rgba(241,204,227,0.30); border-left: 3px solid #EA6993;
+        background: rgba(241,204,227,0.30); border-left: 3px solid #EE4E8B;
         border-radius: 0 10px 10px 0; padding: 0.85rem 1rem;
-        font-size: 0.8rem; color: #793451; display: flex; gap: 8px; align-items: flex-start;
+        font-size: 0.8rem; color: #7A2B4A; display: flex; gap: 8px; align-items: flex-start;
         margin-top: 0.75rem;
     }
     .info-tip i { margin-top: 1px; flex-shrink: 0; }
@@ -457,7 +457,7 @@
         padding: 0.75rem 0.9rem; border-radius: 10px; font-size: 0.82rem;
         background: #f8fafc; border: 1px solid #e2e8f0;
     }
-    .notif-item i { color: #793451; margin-top: 1px; flex-shrink: 0; }
+    .notif-item i { color: #7A2B4A; margin-top: 1px; flex-shrink: 0; }
 
     /* ── QR PREVIEW MODAL ── */
     .qr-preview-overlay {
@@ -505,7 +505,7 @@
         background: rgba(180,100,130,0.25);
     }
     .qp-header { text-align: center; margin-bottom: 1.5rem; position: relative; z-index: 1; }
-    .qp-header .qp-brand { font-size: 0.6rem; font-weight: 800; letter-spacing: 0.3em; color: #793451; text-transform: uppercase; margin-bottom: 2px; }
+    .qp-header .qp-brand { font-size: 0.6rem; font-weight: 800; letter-spacing: 0.3em; color: #7A2B4A; text-transform: uppercase; margin-bottom: 2px; }
     .qp-header .qp-title { font-size: 1.25rem; font-weight: 800; color: #0f172a; letter-spacing: 0.1em; }
     .qp-qr-wrap {
         display: flex; justify-content: center; margin-bottom: 1.5rem; position: relative; z-index: 1;
@@ -518,10 +518,10 @@
     .qp-member-info { text-align: center; position: relative; z-index: 1; margin-bottom: 1.25rem; }
     .qp-avatar {
         width: 48px; height: 48px; border-radius: 14px;
-        background: linear-gradient(135deg, #793451, #EA6993);
+        background: linear-gradient(135deg, #7A2B4A, #EE4E8B);
         display: flex; align-items: center; justify-content: center;
         font-size: 1.25rem; font-weight: 800; color: white;
-        margin: 0 auto 0.75rem; box-shadow: 0 4px 14px rgba(121,52,81,0.30);
+        margin: 0 auto 0.75rem; box-shadow: 0 4px 14px rgba(122, 43, 74,0.30);
     }
     .qp-name { font-size: 1.1rem; font-weight: 700; color: #0f172a; }
     .qp-id { font-size: 0.85rem; color: #64748b; font-family: 'JetBrains Mono', monospace; font-weight: 700; margin-top: 2px; }
@@ -530,12 +530,12 @@
     }
     .qp-status-badge {
         display: inline-flex; align-items: center; gap: 6px;
-        background: rgba(0,116,95,0.12); border: 1px solid rgba(0,116,95,0.25);
-        color: #00745F; padding: 6px 16px; border-radius: 999px;
+        background: rgba(26, 122, 94,0.12); border: 1px solid rgba(26, 122, 94,0.25);
+        color: #1A7A5E; padding: 6px 16px; border-radius: 999px;
         font-size: 0.72rem; font-weight: 700;
     }
     .qp-status-badge .qp-dot {
-        width: 7px; height: 7px; border-radius: 50%; background: #00745F;
+        width: 7px; height: 7px; border-radius: 50%; background: #1A7A5E;
         animation: pulse-dot 2s ease-in-out infinite;
     }
     .qp-divider {
@@ -558,8 +558,8 @@
     }
     .qp-btn-download:hover { background: rgba(255,255,255,0.15); }
     .qp-btn-done {
-        background: linear-gradient(135deg, #793451, #EA6993); color: white;
-        box-shadow: 0 4px 14px rgba(121,52,81,0.35);
+        background: linear-gradient(135deg, #7A2B4A, #EE4E8B); color: white;
+        box-shadow: 0 4px 14px rgba(122, 43, 74,0.35);
     }
     .qp-btn-done:hover { background: linear-gradient(135deg, #5A1F3A, #B83863); transform: translateY(-1px); }
 
@@ -591,11 +591,11 @@
     .print-member-card::before {
         content: ''; position: absolute; top: -40px; right: -40px;
         width: 120px; height: 120px; border-radius: 50%;
-        background: rgba(234,105,147,0.10);
+        background: rgba(238, 78, 139,0.10);
     }
     .print-member-card .brand {
         font-size: 0.65rem; font-weight: 800; letter-spacing: 0.25em;
-        color: #F1CCE3; margin-bottom: 0.15rem; position: relative;
+        color: #F4C9DF; margin-bottom: 0.15rem; position: relative;
     }
     .print-member-card .card-type {
         font-size: 0.95rem; font-weight: 800; color: white;
@@ -614,9 +614,9 @@
 
     .btn-print-now {
         width: 100%; padding: 0.85rem; border-radius: 12px; border: none; cursor: pointer;
-        background: linear-gradient(135deg, #793451, #EA6993); color: white; font-size: 0.88rem; font-weight: 700;
+        background: linear-gradient(135deg, #7A2B4A, #EE4E8B); color: white; font-size: 0.88rem; font-weight: 700;
         display: flex; align-items: center; justify-content: center; gap: 8px;
-        transition: all 0.2s; box-shadow: 0 4px 14px rgba(121,52,81,0.30);
+        transition: all 0.2s; box-shadow: 0 4px 14px rgba(122, 43, 74,0.30);
     }
     .btn-print-now:hover { background: linear-gradient(135deg, #5A1F3A, #B83863); transform: translateY(-1px); }
 
@@ -814,49 +814,7 @@
 
 <div style="display:flex; height:100vh;">
 
-<!-- ========================================
-     SIDEBAR
-======================================== -->
-<aside id="sidebar" class="sidebar w-64 bg-slate-900 text-white flex flex-col shrink-0">
-    <a href="{{ route('member.profile') }}" class="px-6 py-5 text-xl font-bold border-b border-white/20 hover:bg-slate-800 transition inline-block w-full">
-        FTM SOCIETY
-    </a>
-
-    <nav class="flex-1 px-4 py-6 space-y-1 text-sm">
-        <a href="{{ route('member.dashboard') }}" 
-           class="block px-4 py-2 rounded hover:bg-white/10 transition">
-            <i class="fas fa-home mr-2"></i>Dashboard
-        </a>
-        <a href="{{ route('member.packages.index') }}" 
-           class="block px-4 py-2 rounded hover:bg-white/10 transition">
-            <i class="fas fa-box mr-2"></i>My Packages
-        </a>
-        <a href="{{ route('member.book') }}"
-           class="block px-4 py-2 rounded hover:bg-white/10 transition">
-            <i class="fas fa-calendar-plus mr-2"></i>Book Class
-        </a>
-        <a href="{{ route('member.my-classes') }}"
-           class="block px-4 py-2 rounded hover:bg-white/10 transition">
-            <i class="fas fa-dumbbell mr-2"></i>My Classes
-        </a>
-        <a href="{{ route('member.transactions') }}" 
-           class="block px-4 py-2 rounded hover:bg-white/10 transition">
-            <i class="fas fa-receipt mr-2"></i>Transactions
-        </a>
-        <a href="{{ route('member.attendance') }}" 
-           class="block px-4 py-2 rounded hover:bg-white/10 transition">
-            <i class="fas fa-calendar-check mr-2"></i>Attendance
-        </a>
-        <a href="{{ route('member.account') }}" 
-           class="block px-4 py-2 rounded text-white font-medium" style="background: linear-gradient(90deg, #793451 0%, #EA6993 100%); border-left: 3px solid #F1CCE3;">
-            <i class="fas fa-user mr-2"></i>Profile
-        </a>
-    </nav>
-
-    <div class="px-6 py-4 border-t border-white/20 text-xs text-white/60">
-        &copy; {{ date('Y') }} FTM Society
-    </div>
-</aside>
+@include('partials.member-sidebar')
 
 <!-- ========================================
      MAIN CONTENT
@@ -865,7 +823,7 @@
 <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
 <!-- Mobile Hamburger Button -->
-<button id="hamburger-btn" class="hamburger-btn fixed top-4 left-4 z-30 w-10 h-10 bg-slate-900 text-white rounded-lg items-center justify-center shadow-lg hover:bg-slate-800 transition" onclick="toggleSidebar()">
+<button id="hamburger-btn" class="hamburger-btn fixed top-4 left-4 z-30 w-10 h-10 bg-dark text-white rounded-lg items-center justify-center shadow-lg hover:bg-secondary transition" onclick="toggleSidebar()">
     <i class="fas fa-bars text-lg"></i>
 </button>
 
@@ -874,7 +832,7 @@
 
     {{-- ── PAGE HEADER ── --}}
     <div class="acct-header">
-        <h1><i class="fas fa-user-circle" style="color:#793451; margin-right:8px;"></i>My Profile</h1>
+        <h1><i class="fas fa-user-circle" style="color:#7A2B4A; margin-right:8px;"></i>My Profile</h1>
         <p>Manage your account information and QR code</p>
     </div>
 
@@ -1064,7 +1022,7 @@
     <div class="modal-box">
         <button class="modal-close" onclick="closePrintModal()">&times;</button>
         <h3 style="font-size:1.1rem; font-weight:800; color:#0f172a; margin-bottom:1.25rem; display:flex; align-items:center; gap:8px;">
-            <i class="fas fa-print" style="color:#793451;"></i> Print Member Card
+            <i class="fas fa-print" style="color:#7A2B4A;"></i> Print Member Card
         </h3>
         <div class="print-member-card">
             <div class="brand">FTM SOCIETY</div>

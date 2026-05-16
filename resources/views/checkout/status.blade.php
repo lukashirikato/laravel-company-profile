@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 
@@ -15,16 +15,16 @@
     // --- LOGIC TAMPILAN BERDASARKAN STATUS ---
     $title = 'Menunggu Pembayaran';
     $message = 'Kami sedang menunggu konfirmasi. Anda dapat menutup halaman ini.';
-    $iconClass = 'text-yellow-500 bg-yellow-100'; // Default: Pending
+    $iconClass = 'text-springs-ivy bg-grounded-green/40'; // Default: Pending
 
     if ($isSuccess) {
         $title = 'Payment was successful';
         $message = 'Pembayaran Anda telah diterima. Terima kasih atas pesanan Anda.';
-        $iconClass = 'text-green-500 bg-green-100';
+        $iconClass = 'text-accent bg-grounded-green/40';
     } elseif ($transactionStatus == 'failed' || $transactionStatus == 'expire') {
         $title = 'Pembayaran Gagal';
         $message = 'Pembayaran gagal. Mohon coba lagi atau hubungi support.';
-        $iconClass = 'text-red-500 bg-red-100';
+        $iconClass = 'text-secondary bg-light-pink/50';
     }
 
     // --- SIMULASI DETAIL TAMBAHAN (Sesuai desain Crypto/Wallet) ---
@@ -51,8 +51,8 @@
     .btn-secondary-violet:hover { background-color: #f3e8ff; }
 </style>
 
-<div class="min-h-screen bg-gray-50 flex flex-col justify-center items-center py-12">
-    <div class="max-w-md w-full bg-white rounded-2xl shadow-xl border border-gray-100 p-8 text-center">
+<div class="min-h-screen bg-cream flex flex-col justify-center items-center py-12">
+    <div class="max-w-md w-full bg-white rounded-2xl shadow-xl border border-light-pink/30 p-8 text-center">
 
         {{-- Icon Status (Ikon Centang Besar untuk Sukses) --}}
         <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full {{ $iconClass }} mb-6">
@@ -69,36 +69,36 @@
         </div>
 
         {{-- Judul dan Pesan --}}
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ $title }}</h1>
-        <p class="text-gray-500 mb-8">{{ $message }}</p>
+        <h1 class="text-3xl font-bold text-dark mb-2">{{ $title }}</h1>
+        <p class="text-cream0 mb-8">{{ $message }}</p>
 
         {{-- Total yang Dibayar --}}
-        <div class="inline-block px-6 py-2 bg-gray-100 rounded-lg text-xl font-bold text-gray-800 mb-8">
+        <div class="inline-block px-6 py-2 bg-cream rounded-lg text-xl font-bold text-dark mb-8">
             {{ $paidInFiat }} IDR
         </div>
 
         {{-- Detail Transaksi (Mengikuti Layout Gambar: Key-Value List) --}}
         <div class="space-y-4 text-left">
-            <div class="flex justify-between text-sm text-gray-500">
+            <div class="flex justify-between text-sm text-cream0">
                 <span>**Customer Name**</span>
-                <span class="font-medium text-gray-900">{{ $order->customer_name ?? 'N/A' }}</span>
+                <span class="font-medium text-dark">{{ $order->customer_name ?? 'N/A' }}</span>
             </div>
-            <div class="flex justify-between text-sm text-gray-500">
+            <div class="flex justify-between text-sm text-cream0">
                 <span>**Payment Method**</span>
-                <span class="font-medium text-gray-900">{{ $paidInCoin }}</span>
+                <span class="font-medium text-dark">{{ $paidInCoin }}</span>
             </div>
-            <div class="flex justify-between text-sm text-gray-500">
+            <div class="flex justify-between text-sm text-cream0">
                 <span>**Order Code**</span>
-                <span class="font-medium text-gray-900">{{ $orderId }}</span>
+                <span class="font-medium text-dark">{{ $orderId }}</span>
             </div>
-            <div class="flex justify-between text-sm text-gray-500">
+            <div class="flex justify-between text-sm text-cream0">
                 <span>**Transaction time**</span>
-                <span class="font-medium text-gray-900">{{ $transactionTime }}</span>
+                <span class="font-medium text-dark">{{ $transactionTime }}</span>
             </div>
-            <div class="flex justify-between text-sm text-gray-500">
+            <div class="flex justify-between text-sm text-cream0">
                 <span>**Transaction Hash/Ref**</span>
                 {{-- Hash dibuat sebagai link, seperti di gambar --}}
-                <a href="#" class="font-medium text-violet-600 hover:text-violet-700 truncate">{{ $transactionHashOrRef }}</a>
+                <a href="#" class="font-medium text-primary hover:text-violet-700 truncate">{{ $transactionHashOrRef }}</a>
             </div>
         </div>
 

@@ -1,4 +1,4 @@
-/* ========================================
+﻿/* ========================================
    FILAMENT THEME - FTM SOCIETY
    Brand Palette: Burnt Cherry, Power Pink,
    Soft Petals, Patina Green, Rising, Layl
@@ -6,78 +6,78 @@
 
 /* ROOT COLORS */
 :root {
-    --brand-primary:   #793451;  /* Burnt Cherry */
-    --brand-secondary: #EA6993;  /* Power Pink   */
-    --brand-accent:    #00745F;  /* Patina Green */
-    --brand-forest:    #08513C;  /* Springs Ivy  */
-    --brand-sage:      #D2DCA5;  /* Grounded Green */
-    --brand-petal:     #F1CCE3;  /* Soft Petals  */
-    --brand-paper:     #F4EEE6;  /* Rising       */
-    --brand-ink:       #26282B;  /* Layl         */
+    --brand-primary:   #7A2B4A;  /* Burnt Cherry */
+    --brand-secondary: #EE4E8B;  /* Power Pink   */
+    --brand-accent:    #1A7A5E;  /* Patina Green */
+    --brand-forest:    #1D5A4B;  /* Springs Ivy  */
+    --brand-sage:      #C5D79B;  /* Grounded Green */
+    --brand-petal:     #F4C9DF;  /* Soft Petals  */
+    --brand-paper:     #FCF9F2;  /* Rising       */
+    --brand-ink:       #1C1C1C;  /* Layl         */
 }
 
 /* SIDEBAR OVERRIDE */
 .fi-sidebar, aside {
-    background: linear-gradient(135deg, #793451 0%, #08513C 100%) !important;
-    border-right: 2px solid #EA6993 !important;
+    background: linear-gradient(135deg, #7A2B4A 0%, #1D5A4B 100%) !important;
+    border-right: 2px solid #EE4E8B !important;
 }
 
 .fi-sidebar-nav-item,
 .fi-sidebar-item,
 [data-sidebar-item] {
-    color: #F1CCE3 !important;
+    color: #F4C9DF !important;
 }
 
 .fi-sidebar-nav-item:hover,
 .fi-sidebar-item:hover {
-    background-color: rgba(234, 105, 147, 0.2) !important;
-    color: #F4EEE6 !important;
+    background-color: rgba(238, 78, 139, 0.2) !important;
+    color: #FCF9F2 !important;
 }
 
 .fi-sidebar-nav-item.active,
 .fi-sidebar-item.active,
 [data-active] {
-    background-color: rgba(234, 105, 147, 0.3) !important;
-    color: #F4EEE6 !important;
-    border-left: 3px solid #EA6993 !important;
+    background-color: rgba(238, 78, 139, 0.3) !important;
+    color: #FCF9F2 !important;
+    border-left: 3px solid #EE4E8B !important;
 }
 
 .fi-logo {
-    color: #F1CCE3 !important;
+    color: #F4C9DF !important;
     font-weight: 700 !important;
 }
 
 /* TOPBAR OVERRIDE */
 .fi-topbar, [data-topbar] {
-    background: linear-gradient(90deg, #F4EEE6 0%, #F1CCE3 100%) !important;
-    border-bottom: 2px solid #F1CCE3 !important;
+    background: linear-gradient(90deg, #FCF9F2 0%, #F4C9DF 100%) !important;
+    border-bottom: 2px solid #F4C9DF !important;
 }
 
 /* MAIN CONTENT */
 .filament-main,
 .fi-main {
-    background-color: #F4EEE6 !important;
+    background-color: #FCF9F2 !important;
 }
 
 /* CARDS */
 .fi-card,
 .filament-card,
 [class*="card"] {
-    background-color: #F4EEE6 !important;
-    border: 1px solid #F1CCE3 !important;
+    background-color: #FCF9F2 !important;
+    border: 1px solid #F4C9DF !important;
     border-radius: 12px !important;
-    box-shadow: 0 2px 8px rgba(121, 52, 81, 0.05) !important;
+    box-shadow: 0 2px 8px rgba(122, 43, 74, 0.05) !important;
 }
 
 .fi-card:hover {
-    border-color: #EA6993 !important;
-    box-shadow: 0 8px 16px rgba(121, 52, 81, 0.12) !important;
+    border-color: #EE4E8B !important;
+    box-shadow: 0 8px 16px rgba(122, 43, 74, 0.12) !important;
 }
 
 /* STATS CARD */
 .stats-card {
-    background: linear-gradient(135deg, #F4EEE6 0%, #F4EEE6 100%) !important;
-    border: 1px solid #F1CCE3 !important;
+    background: linear-gradient(135deg, #FCF9F2 0%, #FCF9F2 100%) !important;
+    border: 1px solid #F4C9DF !important;
     border-radius: 12px !important;
     padding: 1.5rem !important;
     display: flex !important;
@@ -86,8 +86,8 @@
 }
 
 .stats-card:hover {
-    border-color: #EA6993 !important;
-    box-shadow: 0 8px 16px rgba(234, 105, 147, 0.2) !important;
+    border-color: #EE4E8B !important;
+    box-shadow: 0 8px 16px rgba(238, 78, 139, 0.2) !important;
 }
 
 .stats-card-icon {
@@ -100,18 +100,18 @@
 }
 
 .stats-card-icon.primary {
-    background-color: rgba(234, 105, 147, 0.15) !important;
-    color: #793451 !important;
+    background-color: rgba(238, 78, 139, 0.15) !important;
+    color: #7A2B4A !important;
 }
 
 .stats-card-icon.success {
-    background-color: rgba(0, 116, 95, 0.15) !important;
-    color: #00745F !important;
+    background-color: rgba(26, 122, 94, 0.15) !important;
+    color: #1A7A5E !important;
 }
 
 .stats-card-icon.warning {
     background-color: rgba(210, 220, 165, 0.4) !important;
-    color: #08513C !important;
+    color: #1D5A4B !important;
 }
 
 .stats-card-label {
@@ -123,7 +123,7 @@
 .stats-card-value {
     font-size: 1.875rem !important;
     font-weight: 700 !important;
-    color: #793451 !important;
+    color: #7A2B4A !important;
 }
 
 /* TABLE */
@@ -133,12 +133,12 @@ table {
 }
 
 table thead {
-    background: linear-gradient(90deg, #F4EEE6 0%, #F1CCE3 100%) !important;
-    border-bottom: 2px solid #F1CCE3 !important;
+    background: linear-gradient(90deg, #FCF9F2 0%, #F4C9DF 100%) !important;
+    border-bottom: 2px solid #F4C9DF !important;
 }
 
 table thead th {
-    color: #793451 !important;
+    color: #7A2B4A !important;
     font-weight: 600 !important;
     padding: 1rem !important;
     text-align: left !important;
@@ -157,7 +157,7 @@ table tbody tr:hover {
 
 table tbody td {
     padding: 0.875rem 1rem !important;
-    color: #26282B !important;
+    color: #1C1C1C !important;
     font-size: 0.875rem !important;
 }
 
@@ -172,28 +172,28 @@ button,
 
 button.bg-primary,
 .fi-btn-primary {
-    background: linear-gradient(135deg, #793451 0%, #EA6993 100%) !important;
-    color: #F4EEE6 !important;
+    background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%) !important;
+    color: #FCF9F2 !important;
     border: none !important;
-    box-shadow: 0 4px 12px rgba(121, 52, 81, 0.25) !important;
+    box-shadow: 0 4px 12px rgba(122, 43, 74, 0.25) !important;
 }
 
 button.bg-primary:hover,
 .fi-btn-primary:hover {
-    box-shadow: 0 6px 16px rgba(121, 52, 81, 0.35) !important;
+    box-shadow: 0 6px 16px rgba(122, 43, 74, 0.35) !important;
 }
 
 button.bg-secondary,
 .fi-btn-secondary {
-    background-color: #F1CCE3 !important;
-    color: #793451 !important;
-    border: 1px solid #EA6993 !important;
+    background-color: #F4C9DF !important;
+    color: #7A2B4A !important;
+    border: 1px solid #EE4E8B !important;
 }
 
 button.bg-secondary:hover,
 .fi-btn-secondary:hover {
-    background-color: #EA6993 !important;
-    color: #F4EEE6 !important;
+    background-color: #EE4E8B !important;
+    color: #FCF9F2 !important;
 }
 
 .fi-icon-btn {
@@ -203,30 +203,30 @@ button.bg-secondary:hover,
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    color: #793451 !important;
-    background-color: rgba(121, 52, 81, 0.08) !important;
+    color: #7A2B4A !important;
+    background-color: rgba(122, 43, 74, 0.08) !important;
 }
 
 .fi-icon-btn:hover {
-    background-color: rgba(121, 52, 81, 0.15) !important;
+    background-color: rgba(122, 43, 74, 0.15) !important;
 }
 
 /* INPUT FORMS */
 input,
 select,
 textarea {
-    background-color: #F4EEE6 !important;
-    border: 1px solid #F1CCE3 !important;
+    background-color: #FCF9F2 !important;
+    border: 1px solid #F4C9DF !important;
     border-radius: 8px !important;
-    color: #26282B !important;
+    color: #1C1C1C !important;
 }
 
 input:focus,
 select:focus,
 textarea:focus {
     outline: none !important;
-    border-color: #EA6993 !important;
-    box-shadow: 0 0 0 3px rgba(234, 105, 147, 0.15) !important;
+    border-color: #EE4E8B !important;
+    box-shadow: 0 0 0 3px rgba(238, 78, 139, 0.15) !important;
     background-color: rgba(241, 204, 227, 0.25) !important;
 }
 
@@ -240,18 +240,18 @@ textarea:focus {
 }
 
 .badge-success {
-    background-color: rgba(0, 116, 95, 0.1) !important;
-    color: #00745F !important;
+    background-color: rgba(26, 122, 94, 0.1) !important;
+    color: #1A7A5E !important;
 }
 
 .badge-warning {
     background-color: rgba(210, 220, 165, 0.4) !important;
-    color: #08513C !important;
+    color: #1D5A4B !important;
 }
 
 /* HEADINGS */
 h1, h2, h3, h4, h5, h6 {
-    color: #793451 !important;
+    color: #7A2B4A !important;
     font-weight: 700 !important;
 }
 
@@ -266,14 +266,14 @@ h3 { font-size: 1.25rem !important; }
 }
 
 ::-webkit-scrollbar-track {
-    background: #F4EEE6 !important;
+    background: #FCF9F2 !important;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #EA6993 !important;
+    background: #EE4E8B !important;
     border-radius: 4px !important;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #793451 !important;
+    background: #7A2B4A !important;
 }

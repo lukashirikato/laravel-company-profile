@@ -1,4 +1,4 @@
-<!-- filepath: c:\Users\hp\Desktop\progres\progres\resources\views\admin\customers\index.blade.php -->
+﻿<!-- filepath: c:\Users\hp\Desktop\progres\progres\resources\views\admin\customers\index.blade.php -->
 <!DOCTYPE html>
 <html lang="en" x-data="{ showDelete: false, deleteId: null, deleteName: '' }">
 <head>
@@ -17,7 +17,7 @@
 
 @if(session('success'))
     <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 2500)" x-show="show"
-         x-transition class="fixed top-8 left-1/2 -translate-x-1/2 bg-green-500 text-white px-8 py-4 rounded-xl shadow-xl z-50 text-lg font-semibold flex items-center gap-3"
+         x-transition class="fixed top-8 left-1/2 -translate-x-1/2 bg-grounded-green/200 text-white px-8 py-4 rounded-xl shadow-xl z-50 text-lg font-semibold flex items-center gap-3"
          style="min-width: 250px;">
         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
@@ -27,7 +27,7 @@
 @endif
 @if(session('error'))
     <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show"
-         x-transition class="fixed top-8 left-1/2 -translate-x-1/2 bg-red-500 text-white px-8 py-4 rounded-xl shadow-xl z-50 text-lg font-semibold flex items-center gap-3"
+         x-transition class="fixed top-8 left-1/2 -translate-x-1/2 bg-light-pink/300 text-white px-8 py-4 rounded-xl shadow-xl z-50 text-lg font-semibold flex items-center gap-3"
          style="min-width: 250px;">
         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -37,7 +37,7 @@
 @endif
 @if(session('info'))
     <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show"
-         x-transition class="fixed top-8 left-1/2 -translate-x-1/2 bg-blue-500 text-white px-8 py-4 rounded-xl shadow-xl z-50 text-lg font-semibold flex items-center gap-3"
+         x-transition class="fixed top-8 left-1/2 -translate-x-1/2 bg-light-pink/300 text-white px-8 py-4 rounded-xl shadow-xl z-50 text-lg font-semibold flex items-center gap-3"
          style="min-width: 250px;">
         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01" />
@@ -48,14 +48,14 @@
 
 <nav class="bg-white shadow-md sticky top-0 z-40">
     <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
-        <h1 class="text-2xl font-bold text-blue-700">FTM Admin Panel</h1>
+        <h1 class="text-2xl font-bold text-secondary">FTM Admin Panel</h1>
         <div class="flex flex-wrap gap-2 items-center">
-            <a href="{{ route('admin.home') }}" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm">Home</a>
-            <a href="{{ route('feedback.index') }}" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 text-sm">Feedback</a>
-            <a href="{{ route('schedules.index') }}" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 text-sm">Schedules</a>
+            <a href="{{ route('admin.home') }}" class="px-4 py-2 bg-primary text-white rounded hover:bg-secondary text-sm">Home</a>
+            <a href="{{ route('feedback.index') }}" class="px-4 py-2 bg-grounded-green/200 text-white rounded hover:bg-accent text-sm">Feedback</a>
+            <a href="{{ route('schedules.index') }}" class="px-4 py-2 bg-primary text-white rounded hover:bg-secondary text-sm">Schedules</a>
             <div x-data="{ time: new Date().toLocaleTimeString('id-ID', { hour12: false }) }"
                  x-init="setInterval(() => time = new Date().toLocaleTimeString('id-ID', { hour12: false }), 1000)"
-                 class="text-sm text-gray-700 font-semibold px-2">
+                 class="text-sm text-dark font-semibold px-2">
                 🕒 <span x-text="time"></span>
             </div>
         </div>
@@ -88,7 +88,7 @@
 }">
 
     <div x-show="showCheckinSuccess" x-transition
-         class="fixed top-8 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-8 py-4 rounded-xl shadow-xl z-50 text-lg font-semibold flex items-center gap-3"
+         class="fixed top-8 left-1/2 -translate-x-1/2 bg-primary text-white px-8 py-4 rounded-xl shadow-xl z-50 text-lg font-semibold flex items-center gap-3"
          style="min-width: 250px;">
         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
@@ -100,10 +100,10 @@
         <h2 class="text-xl md:text-2xl font-bold text-blue-800">Customers Data</h2>
         <div class="flex gap-2 items-center w-full md:w-auto">
             <input x-model="$store.customerSearch.q" type="text" placeholder="Cari nama customer..."
-                   class="border border-blue-300 rounded-lg px-3 py-2 text-sm w-full md:w-48 focus:ring-blue-400 focus:outline-none focus:ring-2">
+                   class="border border-blue-300 rounded-lg px-3 py-2 text-sm w-full md:w-48 focus:ring-primary/50 focus:outline-none focus:ring-2">
             <a href="{{ route('customers.create') }}"
-               class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm shadow font-semibold">+ Add Customer</a>
-            <a href="{{ route('bookings.index') }}" class="px-4 py-2 bg-blue-600 text-white rounded">Daftar Booking</a>
+               class="px-4 py-2 bg-accent text-white rounded-lg hover:bg-springs-ivy text-sm shadow font-semibold">+ Add Customer</a>
+            <a href="{{ route('bookings.index') }}" class="px-4 py-2 bg-primary text-white rounded">Daftar Booking</a>
         </div>
     </div>
 
@@ -133,28 +133,28 @@
             </thead>
             <tbody class="bg-white divide-y divide-blue-100">
                 <tr x-show="filtered.length === 0">
-                    <td colspan="18" class="py-4 px-6 text-center text-gray-500">No customers found.</td>
+                    <td colspan="18" class="py-4 px-6 text-center text-cream0">No customers found.</td>
                 </tr>
                 <template x-for="customer in filtered" :key="customer.id">
-                    <tr class="hover:bg-blue-50 transition">
-                        <td class="py-3 px-4 font-semibold text-blue-700" x-text="customer.name || '-' "></td>
+                    <tr class="hover:bg-light-pink/30 transition">
+                        <td class="py-3 px-4 font-semibold text-secondary" x-text="customer.name || '-' "></td>
                         <td class="py-3 px-4">
-                            <a :href="'https://wa.me/62' + (customer.phone_number ? customer.phone_number.replace(/^0+/, '') : '')" target="_blank" class="text-green-600 hover:underline" x-text="customer.phone_number || '-' "></a>
+                            <a :href="'https://wa.me/62' + (customer.phone_number ? customer.phone_number.replace(/^0+/, '') : '')" target="_blank" class="text-accent hover:underline" x-text="customer.phone_number || '-' "></a>
                         </td>
                         <td class="py-3 px-4">
-                            <a :href="'mailto:' + customer.email" class="text-blue-600 hover:underline break-all" x-text="customer.email || '-' "></a>
+                            <a :href="'mailto:' + customer.email" class="text-primary hover:underline break-all" x-text="customer.email || '-' "></a>
                         </td>
                         <td class="py-3 px-4">
     <span x-text="customer.birth_date !== '-' ? new Date(customer.birth_date).toLocaleDateString('id-ID') : '-'"></span>
-    <span class="text-gray-500 ml-2" x-show="customer.age !== '-'">(
+    <span class="text-cream0 ml-2" x-show="customer.age !== '-'">(
         <span x-text="customer.age"></span> tahun
     )</span>
 </td>
-                        <td class="py-3 px-4 text-gray-700" x-text="customer.program || '-' "></td>
+                        <td class="py-3 px-4 text-dark" x-text="customer.program || '-' "></td>
                         <td class="py-3 px-4" x-text="customer.schedule ?? '-'"></td>
-                        <td class="py-3 px-4 font-semibold" :class="customer.quota > 0 ? 'text-green-600' : 'text-red-500'" x-text="customer.quota ?? '-' "></td>
+                        <td class="py-3 px-4 font-semibold" :class="customer.quota > 0 ? 'text-accent' : 'text-secondary'" x-text="customer.quota ?? '-' "></td>
                         <td class="py-3 px-4">
-                            <span class="px-2 py-1 rounded bg-blue-100 text-blue-700 text-xs font-semibold" x-text="customer.membership || '-' "></span>
+                            <span class="px-2 py-1 rounded bg-light-pink/50 text-secondary text-xs font-semibold" x-text="customer.membership || '-' "></span>
                         </td>
                         <td class="py-3 px-4" x-text="customer.goals ?? '-'"></td>
                         <td class="py-3 px-4" x-text="customer.kondisi_khusus ?? '-'"></td>
@@ -164,51 +164,51 @@
                         <td class="py-3 px-4" x-text="customer.voucher_code ?? '-'"></td>
                         <td class="py-3 px-4">
                             <template x-if="customer.preferred_membership === 'Basic'">
-                                <span class="px-2 py-1 rounded bg-green-100 text-green-700 text-xs font-semibold">Basic</span>
+                                <span class="px-2 py-1 rounded bg-grounded-green/40 text-springs-ivy text-xs font-semibold">Basic</span>
                             </template>
                             <template x-if="customer.preferred_membership === 'Premium'">
-                                <span class="px-2 py-1 rounded bg-purple-100 text-purple-700 text-xs font-semibold">Premium</span>
+                                <span class="px-2 py-1 rounded bg-light-pink/50 text-secondary text-xs font-semibold">Premium</span>
                             </template>
                             <template x-if="!['Basic','Premium'].includes(customer.preferred_membership)">
-                                <span class="px-2 py-1 rounded bg-gray-100 text-gray-700 text-xs font-semibold" x-text="customer.preferred_membership || 'Not sure'"> </span>
+                                <span class="px-2 py-1 rounded bg-cream text-dark text-xs font-semibold" x-text="customer.preferred_membership || 'Not sure'"> </span>
                             </template>
                         </td>
-                        <td class="py-3 px-4 text-gray-500" x-text="new Date(customer.created_at).toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })"></td>
-                        <td class="py-3 px-4 text-gray-500" x-text="new Date(customer.updated_at).toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })"></td>
+                        <td class="py-3 px-4 text-cream0" x-text="new Date(customer.created_at).toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })"></td>
+                        <td class="py-3 px-4 text-cream0" x-text="new Date(customer.updated_at).toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })"></td>
                         <td class="py-3 px-4 text-center">
                             <div class="flex justify-center items-center gap-2 flex-wrap md:flex-nowrap">
                                 <template x-if="customer.quota > 0">
-                                    <button @click.prevent="checkin(customer)" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-semibold whitespace-nowrap transition">
+                                    <button @click.prevent="checkin(customer)" class="px-3 py-1 bg-primary text-white rounded hover:bg-secondary text-xs font-semibold whitespace-nowrap transition">
                                         Cek In
                                     </button>
                                 </template>
                                 <template x-if="customer.quota <= 0">
-                                    <div class="px-3 py-1 bg-gray-300 text-gray-600 rounded text-xs font-semibold whitespace-nowrap">
+                                    <div class="px-3 py-1 bg-light-pink/40 text-dark/70 rounded text-xs font-semibold whitespace-nowrap">
                                         Habis
                                     </div>
                                 </template>
-                                <a :href="'/adm/customers/' + customer.id + '/edit'" class="px-3 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-500 text-xs font-semibold whitespace-nowrap">
+                                <a :href="'/adm/customers/' + customer.id + '/edit'" class="px-3 py-1 bg-yellow-400 text-white rounded hover:bg-grounded-green/200 text-xs font-semibold whitespace-nowrap">
                                     Edit
                                 </a>
                                 <!-- Delete Button: open modal -->
                                 <button type="button"
                                     @click="showDelete = true; deleteId = customer.id; deleteName = customer.name"
-                                    class="px-3 py-1 bg-red-500 text-white rounded text-xs font-semibold whitespace-nowrap">
+                                    class="px-3 py-1 bg-light-pink/300 text-white rounded text-xs font-semibold whitespace-nowrap">
                                     Delete
                                 </button>
-                                <a :href="'/adm/bookings/create/' + customer.id" class="px-2 py-1 bg-blue-500 text-white rounded text-xs">Booking</a>
+                                <a :href="'/adm/bookings/create/' + customer.id" class="px-2 py-1 bg-light-pink/300 text-white rounded text-xs">Booking</a>
                                 <template x-if="!customer.is_verified">
                                     <form method="POST" :action="`/adm/customers/${customer.id}/verify`"
                                         @submit.prevent="if (confirm(`Verifikasi dan kirim login untuk ${customer.name}?`)) $el.submit()">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <button type="submit"
-                                                class="bg-green-600 hover:bg-green-700 text-white text-sm px-3 py-1 rounded">
+                                                class="bg-accent hover:bg-springs-ivy text-white text-sm px-3 py-1 rounded">
                                             Verifikasi & Kirim Login
                                         </button>
                                     </form>
                                 </template>
                                 <template x-if="customer.is_verified">
-                                    <span class="bg-green-100 text-green-700 text-xs px-3 py-1 rounded font-semibold">
+                                    <span class="bg-grounded-green/40 text-springs-ivy text-xs px-3 py-1 rounded font-semibold">
                                         ✅ Sudah Bisa Login
                                     </span>
                                 </template>
@@ -233,26 +233,26 @@
      style="display: none;"
      @keydown.escape.window="showDelete = false">
     <div class="bg-white rounded-xl shadow-lg max-w-md w-full p-7 relative flex flex-col items-center">
-        <div class="bg-red-100 rounded-full p-3 mb-4 flex items-center justify-center">
-            <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <div class="bg-light-pink/50 rounded-full p-3 mb-4 flex items-center justify-center">
+            <svg class="w-8 h-8 text-secondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
             </svg>
         </div>
-        <h3 class="text-xl font-bold text-red-700 mb-2 text-center">Konfirmasi Hapus Customer</h3>
-        <p class="mb-6 text-gray-700 text-center">
-            Anda yakin ingin menghapus data <span class="font-semibold text-blue-700" x-text="deleteName"></span>?<br>
-            <span class="text-xs text-gray-500">Tindakan ini tidak dapat dibatalkan.</span>
+        <h3 class="text-xl font-bold text-secondary mb-2 text-center">Konfirmasi Hapus Customer</h3>
+        <p class="mb-6 text-dark text-center">
+            Anda yakin ingin menghapus data <span class="font-semibold text-secondary" x-text="deleteName"></span>?<br>
+            <span class="text-xs text-cream0">Tindakan ini tidak dapat dibatalkan.</span>
         </p>
         <div class="flex flex-col gap-3 w-full mt-2">
             <button @click="showDelete = false"
-                class="w-full px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold text-base hover:bg-gray-300 transition">
+                class="w-full px-4 py-2 rounded-lg bg-light-pink/30 text-dark font-semibold text-base hover:bg-light-pink/40 transition">
                 Batal
             </button>
             <form :action="`/adm/customers/${deleteId}`" method="POST" class="w-full">
                 @csrf
                 @method('DELETE')
                 <button type="submit"
-                    class="w-full px-4 py-2 rounded-lg bg-red-600 text-white font-semibold text-base hover:bg-red-700 transition">
+                    class="w-full px-4 py-2 rounded-lg bg-secondary text-white font-semibold text-base hover:bg-secondary transition">
                     Hapus
                 </button>
             </form>
@@ -262,7 +262,7 @@
     </div>
 </main>
 
-<footer class="mt-10 text-center text-gray-500 text-xs md:text-sm">
+<footer class="mt-10 text-center text-cream0 text-xs md:text-sm">
     &copy; {{ date('Y') }} FTM Admin. All rights reserved.
 </footer>
 

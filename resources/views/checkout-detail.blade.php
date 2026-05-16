@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-10">
@@ -11,7 +11,7 @@
     </div>
 
     <button id="pay-button"
-        class="mt-6 px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
+        class="mt-6 px-6 py-3 bg-primary text-white rounded-lg shadow hover:bg-secondary transition">
         Bayar Sekarang
     </button>
 </div>

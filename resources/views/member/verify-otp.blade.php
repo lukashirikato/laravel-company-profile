@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -9,7 +9,7 @@
     <style>
         /* Brand Palette */
         .custom-gradient {
-            background: linear-gradient(135deg, #793451 0%, #EA6993 55%, #F1CCE3 100%);
+            background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 55%, #F4C9DF 100%);
         }
         .card-glass {
             background: rgba(244, 238, 230, 0.97);
@@ -22,58 +22,58 @@
             text-align: center;
             font-size: 1.5rem;
             font-weight: 700;
-            border: 2px solid #F1CCE3;
+            border: 2px solid #F4C9DF;
             border-radius: 12px;
-            background: #F4EEE6;
-            color: #26282B;
+            background: #FCF9F2;
+            color: #1C1C1C;
             transition: all 0.2s ease;
         }
         .otp-input:focus {
             outline: none;
-            border-color: #EA6993;
-            box-shadow: 0 0 0 3px rgba(234, 105, 147, 0.18);
+            border-color: #EE4E8B;
+            box-shadow: 0 0 0 3px rgba(238, 78, 139, 0.18);
             background: #FFFFFF;
         }
         .otp-input.filled {
-            border-color: #793451;
+            border-color: #7A2B4A;
             background: #FFFFFF;
         }
         .btn-primary {
-            background: linear-gradient(135deg, #793451 0%, #EA6993 100%);
+            background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%);
             transition: all 0.3s ease;
         }
         .btn-primary:hover:not(:disabled) {
-            background: linear-gradient(135deg, #26282B 0%, #793451 100%);
+            background: linear-gradient(135deg, #1C1C1C 0%, #7A2B4A 100%);
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(121, 52, 81, 0.35);
+            box-shadow: 0 8px 25px rgba(122, 43, 74, 0.35);
         }
         .btn-primary:disabled {
             opacity: 0.55;
             cursor: not-allowed;
             transform: none;
         }
-        .success-alert  { background: linear-gradient(135deg, #00745F 0%, #08513C 100%); }
-        .error-alert    { background: linear-gradient(135deg, #793451 0%, #EA6993 100%); }
+        .success-alert  { background: linear-gradient(135deg, #1A7A5E 0%, #1D5A4B 100%); }
+        .error-alert    { background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%); }
         .warning-alert  { background: linear-gradient(135deg, #C8851C 0%, #A66B12 100%); }
-        a.brand-link    { color: #793451; font-weight: 600; }
-        a.brand-link:hover { color: #EA6993; }
+        a.brand-link    { color: #7A2B4A; font-weight: 600; }
+        a.brand-link:hover { color: #EE4E8B; }
     </style>
 </head>
 <body class="custom-gradient min-h-screen flex items-center justify-center px-4 py-8">
 
-    <div class="card-glass shadow-2xl rounded-2xl p-8 w-full max-w-md border border-[#F1CCE3]">
+    <div class="card-glass shadow-2xl rounded-2xl p-8 w-full max-w-md border border-[#F4C9DF]">
 
         <div class="text-center mb-6">
             <img src="{{ asset('icons/logo-ftm.jpg') }}" alt="Logo FTM Society"
                  class="w-20 h-20 mx-auto mb-3 rounded-full"
-                 style="box-shadow: 0 4px 16px rgba(121, 52, 81, 0.25);">
-            <h1 class="text-2xl font-bold text-[#793451] flex items-center justify-center gap-2">
+                 style="box-shadow: 0 4px 16px rgba(122, 43, 74, 0.25);">
+            <h1 class="text-2xl font-bold text-[#7A2B4A] flex items-center justify-center gap-2">
                 <i class="fas fa-shield-alt"></i> Verifikasi Nomor
             </h1>
-            <p class="text-sm text-[#26282B]/70 mt-2">
+            <p class="text-sm text-[#1C1C1C]/70 mt-2">
                 Kami telah mengirim kode <strong>{{ $codeLength }} digit</strong> ke nomor WhatsApp:
             </p>
-            <p class="text-base font-bold text-[#793451] mt-1 tracking-wider">
+            <p class="text-base font-bold text-[#7A2B4A] mt-1 tracking-wider">
                 {{ $maskedPhone }}
             </p>
         </div>
@@ -123,9 +123,9 @@
 
             {{-- Countdown expiration --}}
             @if($expiresAt)
-                <p class="text-center text-xs text-[#26282B]/60 mb-4">
+                <p class="text-center text-xs text-[#1C1C1C]/60 mb-4">
                     OTP berlaku hingga
-                    <span class="font-bold text-[#793451]" id="expiryTime">
+                    <span class="font-bold text-[#7A2B4A]" id="expiryTime">
                         {{ $expiresAt->format('H:i:s') }}
                     </span>
                 </p>
@@ -139,11 +139,11 @@
             </button>
         </form>
 
-        <hr class="my-6" style="border-color: #F1CCE3;">
+        <hr class="my-6" style="border-color: #F4C9DF;">
 
         {{-- Resend OTP --}}
         <div class="text-center text-sm">
-            <p class="text-[#26282B]/70 mb-2">Tidak menerima kode?</p>
+            <p class="text-[#1C1C1C]/70 mb-2">Tidak menerima kode?</p>
             <form method="POST" action="{{ route('member.otp.resend') }}" id="resendForm">
                 @csrf
                 <button type="submit"
@@ -160,7 +160,7 @@
             </form>
         </div>
 
-        <p class="text-center text-xs text-[#26282B]/40 mt-6">
+        <p class="text-center text-xs text-[#1C1C1C]/40 mt-6">
             Dengan memasukkan kode, Anda menyetujui syarat &amp; ketentuan FTM Society.
         </p>
     </div>

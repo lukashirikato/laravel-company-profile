@@ -1,4 +1,4 @@
-
+﻿
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -31,7 +31,7 @@
       }
     </style>
   </head>
-  <body class="bg-white text-gray-800">
+  <body class="bg-white text-dark">
     
       <!-- Desktop Navigation -->
 
@@ -50,18 +50,18 @@
         <nav class="hidden md:flex items-center space-x-8">
 
             <!-- MENU UMUM -->
-            <a href="#home" class="text-gray-700 hover:text-primary transition">Home</a>
-            <a href="#about" class="text-gray-700 hover:text-primary transition">About</a>
-            <a href="#Programs" class="text-gray-700 hover:text-primary transition">Programs</a>
-            <a href="#Packages" class="text-gray-700 hover:text-primary transition">Packages</a>
-            <a href="#classes" class="text-gray-700 hover:text-primary transition">Classes</a>
-            <a href="#schedule" class="text-gray-700 hover:text-primary transition">Schedule</a>
-            <a href="#Facility" class="text-gray-700 hover:text-primary transition">Gallery</a>
-            <a href="#contact" class="text-gray-700 hover:text-primary transition">Contact</a>
+            <a href="#home" class="text-dark hover:text-primary transition">Home</a>
+            <a href="#about" class="text-dark hover:text-primary transition">About</a>
+            <a href="#Programs" class="text-dark hover:text-primary transition">Programs</a>
+            <a href="#Packages" class="text-dark hover:text-primary transition">Packages</a>
+            <a href="#classes" class="text-dark hover:text-primary transition">Classes</a>
+            <a href="#schedule" class="text-dark hover:text-primary transition">Schedule</a>
+            <a href="#Facility" class="text-dark hover:text-primary transition">Gallery</a>
+            <a href="#contact" class="text-dark hover:text-primary transition">Contact</a>
 
             <!-- PROFIL -->
             <a href="{{ route('member.profile.modal') }}"
-   class="flex items-center gap-2 text-gray-700 hover:text-primary transition">
+   class="flex items-center gap-2 text-dark hover:text-primary transition">
     <i class="ri-user-3-line text-xl"></i> Profil
 </a>
 
@@ -71,7 +71,7 @@
                 <button
                     type="button"
                     onclick="showLogoutModal()"
-                    class="bg-red-600 text-white px-6 py-2 rounded-button font-semibold hover:bg-red-700 transition"
+                    class="bg-secondary text-white px-6 py-2 rounded-button font-semibold hover:bg-secondary transition"
                 >
                     Logout
                 </button>
@@ -100,12 +100,12 @@
 <div id="logout-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
     <div class="bg-white rounded-xl shadow-lg max-w-sm w-full p-8 relative flex flex-col items-center">
         <h3 class="text-xl font-bold text-primary mb-4">Konfirmasi Logout</h3>
-        <p class="mb-6 text-gray-700 text-center">Anda yakin ingin logout?<br>Pilih "Reset Password" jika ingin mengganti password Anda.</p>
+        <p class="mb-6 text-dark text-center">Anda yakin ingin logout?<br>Pilih "Reset Password" jika ingin mengganti password Anda.</p>
         <div class="flex flex-col sm:flex-row gap-3 w-full">
             <form method="POST" action="{{ route('member.logout') }}" class="w-full">
                 @csrf
                 <button type="submit"
-    class="w-full bg-red-600 text-white px-4 py-2 rounded-button font-semibold">
+    class="w-full bg-secondary text-white px-4 py-2 rounded-button font-semibold">
     Logout
 </button>
 </form>
@@ -115,7 +115,7 @@
 </a>
         </div>
         <button type="button" onclick="closeLogoutModal()"
-            class="mt-4 w-full px-4 py-2 rounded-button border border-gray-300 text-gray-700 hover:bg-gray-100 transition font-semibold">
+            class="mt-4 w-full px-4 py-2 rounded-button border border-light-pink/60 text-dark hover:bg-cream transition font-semibold">
             Batal
         </button>
     </div>
@@ -126,7 +126,7 @@
     <div id="mobile-menu" class="mobile-menu fixed top-16 bottom-0 right-0 w-72 bg-white shadow-lg p-6 transform overflow-y-auto" style="z-index:9999;">
       <div class="flex items-center justify-between mb-6">
         <a href="{{ route('member.dashboard') }}" class="logo text-primary font-semibold hover:text-secondary transition">FTM SOCIETY</a>
-        <button id="close-menu-button" type="button" aria-label="Tutup menu" class="w-9 h-9 inline-flex items-center justify-center rounded-md text-gray-700 hover:bg-gray-100" style="position:relative; z-index:10001; pointer-events:auto;">
+        <button id="close-menu-button" type="button" aria-label="Tutup menu" class="w-9 h-9 inline-flex items-center justify-center rounded-md text-dark hover:bg-cream" style="position:relative; z-index:10001; pointer-events:auto;">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
@@ -135,27 +135,27 @@
 
       <nav class="flex flex-col gap-3">
         @auth('customer')
-          <a href="#" onclick="showProfilePopup(); return false;" class="block px-4 py-3 rounded-md text-gray-800 hover:bg-primary hover:text-white transition font-semibold">Profile</a>
-          <a href="{{ route('member.password.form') }}" class="block px-4 py-3 rounded-md text-gray-800 hover:bg-primary hover:text-white transition font-semibold">Ubah Password</a>
+          <a href="#" onclick="showProfilePopup(); return false;" class="block px-4 py-3 rounded-md text-dark hover:bg-primary hover:text-white transition font-semibold">Profile</a>
+          <a href="{{ route('member.password.form') }}" class="block px-4 py-3 rounded-md text-dark hover:bg-primary hover:text-white transition font-semibold">Ubah Password</a>
           <form method="POST" action="{{ route('member.logout') }}" class="px-4">
             @csrf
-            <button type="submit" class="w-full text-left px-4 py-3 rounded-md text-gray-800 hover:bg-red-600 hover:text-white transition font-semibold">Logout ({{ Auth::guard('customer')->user()->name }})</button>
+            <button type="submit" class="w-full text-left px-4 py-3 rounded-md text-dark hover:bg-secondary hover:text-white transition font-semibold">Logout ({{ Auth::guard('customer')->user()->name }})</button>
           </form>
         @else
-          <a href="{{ route('member.login') }}" class="block px-4 py-3 rounded-md text-gray-800 hover:bg-primary hover:text-white transition font-semibold">Login</a>
-          <a href="{{ route('member.register') }}" class="block px-4 py-3 rounded-md text-gray-800 hover:bg-primary hover:text-white transition font-semibold">Register</a>
+          <a href="{{ route('member.login') }}" class="block px-4 py-3 rounded-md text-dark hover:bg-primary hover:text-white transition font-semibold">Login</a>
+          <a href="{{ route('member.register') }}" class="block px-4 py-3 rounded-md text-dark hover:bg-primary hover:text-white transition font-semibold">Register</a>
         @endauth
 
         <hr class="my-2">
-        <a href="{{ route('member.dashboard') }}" class="block px-4 py-3 rounded-md text-gray-700 hover:bg-primary hover:text-white transition">Dashboard</a>
-        <a href="{{ route('member.account') }}" class="block px-4 py-3 rounded-md text-gray-700 hover:bg-primary hover:text-white transition">My QR Card</a>
-        <a href="{{ route('member.attendance') }}" class="block px-4 py-3 rounded-md text-gray-700 hover:bg-primary hover:text-white transition">Attendance</a>
-        <a href="#about" class="block px-4 py-3 rounded-md text-gray-700 hover:bg-primary hover:text-white transition">About</a>
-        <a href="#Programs" class="block px-4 py-3 rounded-md text-gray-700 hover:bg-primary hover:text-white transition">Programs</a>
-        <a href="#Classes" class="block px-4 py-3 rounded-md text-gray-700 hover:bg-primary hover:text-white transition">Classes</a>
-        <a href="#schedule" class="block px-4 py-3 rounded-md text-gray-700 hover:bg-primary hover:text-white transition">Schedule</a>
-        <a href="#Facility" class="block px-4 py-3 rounded-md text-gray-700 hover:bg-primary hover:text-white transition">Facility</a>
-        <a href="#contact" class="block px-4 py-3 rounded-md text-gray-700 hover:bg-primary hover:text-white transition">Contact</a>
+        <a href="{{ route('member.dashboard') }}" class="block px-4 py-3 rounded-md text-dark hover:bg-primary hover:text-white transition">Dashboard</a>
+        <a href="{{ route('member.account') }}" class="block px-4 py-3 rounded-md text-dark hover:bg-primary hover:text-white transition">My QR Card</a>
+        <a href="{{ route('member.attendance') }}" class="block px-4 py-3 rounded-md text-dark hover:bg-primary hover:text-white transition">Attendance</a>
+        <a href="#about" class="block px-4 py-3 rounded-md text-dark hover:bg-primary hover:text-white transition">About</a>
+        <a href="#Programs" class="block px-4 py-3 rounded-md text-dark hover:bg-primary hover:text-white transition">Programs</a>
+        <a href="#Classes" class="block px-4 py-3 rounded-md text-dark hover:bg-primary hover:text-white transition">Classes</a>
+        <a href="#schedule" class="block px-4 py-3 rounded-md text-dark hover:bg-primary hover:text-white transition">Schedule</a>
+        <a href="#Facility" class="block px-4 py-3 rounded-md text-dark hover:bg-primary hover:text-white transition">Facility</a>
+        <a href="#contact" class="block px-4 py-3 rounded-md text-dark hover:bg-primary hover:text-white transition">Contact</a>
 
       </nav>
     </div>
@@ -323,7 +323,7 @@
       </div>
 
       <!-- Subtitle -->
-      <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-light">
+      <p class="text-lg md:text-xl text-dark/70 max-w-3xl mx-auto leading-relaxed font-light">
         Ruang bagi muslimah untuk hidup <span class="font-semibold text-primary">aktif</span>, <span class="font-semibold text-secondary">produktif</span>, dan sesuai <span class="font-semibold text-primary">syariat</span>
       </p>
     </div>
@@ -388,17 +388,17 @@
             <h3 class="text-3xl md:text-4xl lg:text-5xl font-black text-primary mb-2">
               Vision & Mission
             </h3>
-            <p class="text-sm text-gray-500 font-medium uppercase tracking-wider">Our Purpose & Goals</p>
+            <p class="text-sm text-cream0 font-medium uppercase tracking-wider">Our Purpose & Goals</p>
           </div>
         </div>
 
         <!-- Description with Enhanced Typography -->
         <div class="space-y-5 pl-5">
-          <p class="text-gray-700 leading-relaxed text-base md:text-lg relative">
+          <p class="text-dark leading-relaxed text-base md:text-lg relative">
             <span class="absolute -left-5 top-2 w-2 h-2 bg-secondary rounded-full"></span>
             <span class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">FTM Society</span> adalah memberikan ruang bagi para muslimah untuk memiliki gaya hidup <span class="font-semibold text-primary">aktif</span> dan <span class="font-semibold text-secondary">produktif</span> yang sesuai dengan syariat Islam.
           </p>
-          <p class="text-gray-700 leading-relaxed text-base md:text-lg relative">
+          <p class="text-dark leading-relaxed text-base md:text-lg relative">
             <span class="absolute -left-5 top-2 w-2 h-2 bg-primary rounded-full"></span>
             Oleh karena itu, FTM Society hadir menyelenggarakan kegiatan olahraga dan kegiatan aktif sosial lainnya, seperti <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-secondary/10 text-secondary font-semibold rounded-md text-sm"><i class="ri-presentation-line"></i>webinar</span> dan <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-primary/10 text-primary font-semibold rounded-md text-sm"><i class="ri-calendar-event-line"></i>event</span>.
           </p>
@@ -408,7 +408,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
                     
           <!-- Feature Card 1 - Enhanced -->
-          <div class="group relative bg-white rounded-2xl p-5 shadow-lg hover:shadow-2xl border border-gray-100 hover:border-secondary/30 transition-all duration-300 overflow-hidden cursor-pointer"
+          <div class="group relative bg-white rounded-2xl p-5 shadow-lg hover:shadow-2xl border border-light-pink/30 hover:border-secondary/30 transition-all duration-300 overflow-hidden cursor-pointer"
              data-aos="fade-up" data-aos-delay="300">
                         
             <!-- Gradient Background on Hover -->
@@ -425,10 +425,10 @@
                             
               <!-- Content -->
               <div class="flex-1">
-                <h4 class="font-black text-gray-800 text-base mb-1 group-hover:text-primary transition-colors duration-300">
+                <h4 class="font-black text-dark text-base mb-1 group-hover:text-primary transition-colors duration-300">
                   Muslimah Only
                 </h4>
-                <p class="text-sm text-gray-600 leading-relaxed">
+                <p class="text-sm text-dark/70 leading-relaxed">
                   100% Private & Safe Environment
                 </p>
                 <!-- Decorative Line -->
@@ -438,24 +438,24 @@
           </div>
 
           <!-- Feature Card 2 - Enhanced -->
-          <div class="group relative bg-white rounded-2xl p-5 shadow-lg hover:shadow-2xl border border-gray-100 hover:border-primary/30 transition-all duration-300 overflow-hidden cursor-pointer"
+          <div class="group relative bg-white rounded-2xl p-5 shadow-lg hover:shadow-2xl border border-light-pink/30 hover:border-primary/30 transition-all duration-300 overflow-hidden cursor-pointer"
              data-aos="fade-up" data-aos-delay="400">
                         
             <div class="absolute inset-0 bg-gradient-to-br from-purple-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         
             <div class="relative flex items-start gap-4">
               <div class="relative flex-shrink-0">
-                <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-gradient-to-br from-purple-100 to-purple-200 text-purple-600 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
+                <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-gradient-to-br from-purple-100 to-purple-200 text-primary group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
                   <i class="ri-heart-pulse-line text-3xl"></i>
                 </div>
                 <div class="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
                             
               <div class="flex-1">
-                <h4 class="font-black text-gray-800 text-base mb-1 group-hover:text-primary transition-colors duration-300">
+                <h4 class="font-black text-dark text-base mb-1 group-hover:text-primary transition-colors duration-300">
                   Certified Trainers
                 </h4>
-                <p class="text-sm text-gray-600 leading-relaxed">
+                <p class="text-sm text-dark/70 leading-relaxed">
                   Professional Muslimah Coaches
                 </p>
                 <div class="mt-2 h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary to-transparent transition-all duration-500"></div>
@@ -464,24 +464,24 @@
           </div>
 
           <!-- Feature Card 3 - Full Width Enhanced -->
-          <div class="group relative bg-white rounded-2xl p-5 shadow-lg hover:shadow-2xl border border-gray-100 hover:border-secondary/30 transition-all duration-300 overflow-hidden cursor-pointer sm:col-span-2"
+          <div class="group relative bg-white rounded-2xl p-5 shadow-lg hover:shadow-2xl border border-light-pink/30 hover:border-secondary/30 transition-all duration-300 overflow-hidden cursor-pointer sm:col-span-2"
              data-aos="fade-up" data-aos-delay="500">
                         
             <div class="absolute inset-0 bg-gradient-to-br from-pink-50 via-purple-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         
             <div class="relative flex items-start gap-4">
               <div class="relative flex-shrink-0">
-                <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-100 to-indigo-200 text-indigo-600 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
+                <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-100 to-indigo-200 text-primary group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
                   <i class="ri-pray-line text-3xl"></i>
                 </div>
                 <div class="absolute -top-1 -right-1 w-4 h-4 bg-secondary rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
                             
               <div class="flex-1">
-                <h4 class="font-black text-gray-800 text-base mb-1 group-hover:text-primary transition-colors duration-300">
+                <h4 class="font-black text-dark text-base mb-1 group-hover:text-primary transition-colors duration-300">
                   No Music & No Camera
                 </h4>
-                <p class="text-sm text-gray-600 leading-relaxed">
+                <p class="text-sm text-dark/70 leading-relaxed">
                   Fully Islamic-Compliant Environment for Your Comfort
                 </p>
                 <div class="mt-2 h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-transparent transition-all duration-500"></div>
@@ -569,7 +569,7 @@
             </div>
 
             <!-- Subtitle -->
-            <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            <p class="text-lg md:text-xl text-dark/70 max-w-3xl mx-auto leading-relaxed">
                 Temukan keunggulan yang membuat FTM Society menjadi pilihan terbaik untuk muslimah aktif
             </p>
         </div>
@@ -598,7 +598,7 @@
             >
                 <!-- Feature Card 1 - Enhanced -->
                 <div class="min-w-[300px] sm:min-w-[340px] max-w-[360px] flex-shrink-0" data-aos="fade-up" data-aos-delay="100">
-                    <div class="group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-secondary/30 overflow-hidden h-full flex flex-col">
+                    <div class="group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-light-pink/30 hover:border-secondary/30 overflow-hidden h-full flex flex-col">
                         
                         <!-- Gradient Background on Hover -->
                         <div class="absolute inset-0 bg-gradient-to-br from-pink-50/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -623,7 +623,7 @@
                             </h3>
 
                             <!-- Description -->
-                            <p class="text-gray-600 text-sm md:text-base leading-relaxed flex-1">
+                            <p class="text-dark/70 text-sm md:text-base leading-relaxed flex-1">
                                 Fasilitas kami hanya untuk wanita, dengan staf wanita saja. Nikmati privasi lengkap tanpa jendela yang menghadap area publik dan sistem masuk yang aman.
                             </p>
 
@@ -635,14 +635,14 @@
 
                 <!-- Feature Card 2 - Enhanced -->
                 <div class="min-w-[300px] sm:min-w-[340px] max-w-[360px] flex-shrink-0" data-aos="fade-up" data-aos-delay="200">
-                    <div class="group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-primary/30 overflow-hidden h-full flex flex-col">
+                    <div class="group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-light-pink/30 hover:border-primary/30 overflow-hidden h-full flex flex-col">
                         
                         <div class="absolute inset-0 bg-gradient-to-br from-purple-50/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         
                         <div class="relative z-10 flex flex-col items-center text-center flex-1">
                             
                             <div class="relative mb-6">
-                                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-purple-100 to-purple-200 text-purple-600 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
+                                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-purple-100 to-purple-200 text-primary group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
                                     <i class="ri-user-star-line text-4xl"></i>
                                 </div>
                                 <div class="absolute -inset-2 rounded-2xl border-2 border-primary/20 group-hover:border-primary/40 group-hover:scale-110 transition-all duration-500"></div>
@@ -653,7 +653,7 @@
                                 Certified Muslimah Trainer
                             </h3>
 
-                            <p class="text-gray-600 text-sm md:text-base leading-relaxed flex-1">
+                            <p class="text-dark/70 text-sm md:text-base leading-relaxed flex-1">
                                 Dibimbing langsung oleh coach tersertifikasi dengan pengalaman profesional dan pemahaman mendalam tentang kebutuhan muslimah.
                             </p>
 
@@ -664,14 +664,14 @@
 
                 <!-- Feature Card 3 - Enhanced -->
                 <div class="min-w-[300px] sm:min-w-[340px] max-w-[360px] flex-shrink-0" data-aos="fade-up" data-aos-delay="300">
-                    <div class="group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-secondary/30 overflow-hidden h-full flex flex-col">
+                    <div class="group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-light-pink/30 hover:border-secondary/30 overflow-hidden h-full flex flex-col">
                         
                         <div class="absolute inset-0 bg-gradient-to-br from-indigo-50/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         
                         <div class="relative z-10 flex flex-col items-center text-center flex-1">
                             
                             <div class="relative mb-6">
-                                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-100 to-indigo-200 text-indigo-600 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
+                                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-100 to-indigo-200 text-primary group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
                                     <i class="ri-shield-user-line text-4xl"></i>
                                 </div>
                                 <div class="absolute -inset-2 rounded-2xl border-2 border-secondary/20 group-hover:border-secondary/40 group-hover:scale-110 transition-all duration-500"></div>
@@ -682,7 +682,7 @@
                                 Privacy is Our Priority
                             </h3>
 
-                            <p class="text-gray-600 text-sm md:text-base leading-relaxed flex-1">
+                            <p class="text-dark/70 text-sm md:text-base leading-relaxed flex-1">
                                 Ruang latihan khusus muslimah, tanpa kamera dan tanpa musik. Kami mengutamakan kenyamanan, keamanan, dan privasimu saat berolahraga.
                             </p>
 
@@ -693,7 +693,7 @@
 
                 <!-- Feature Card 4 - Enhanced -->
                 <div class="min-w-[300px] sm:min-w-[340px] max-w-[360px] flex-shrink-0" data-aos="fade-up" data-aos-delay="400">
-                    <div class="group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-primary/30 overflow-hidden h-full flex flex-col">
+                    <div class="group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-light-pink/30 hover:border-primary/30 overflow-hidden h-full flex flex-col">
                         
                         <div class="absolute inset-0 bg-gradient-to-br from-rose-50/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         
@@ -711,7 +711,7 @@
                                 Muslimah Friendly
                             </h3>
 
-                            <p class="text-gray-600 text-sm md:text-base leading-relaxed flex-1">
+                            <p class="text-dark/70 text-sm md:text-base leading-relaxed flex-1">
                                 Dirancang khusus untuk muslimah: area khusus wanita, pelatih perempuan bersertifikat, dan suasana nyaman sesuai nilai-nilai islami.
                             </p>
 
@@ -815,7 +815,7 @@
       </div>
 
       <!-- Subtitle -->
-      <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+      <p class="text-lg md:text-xl text-dark/70 max-w-3xl mx-auto leading-relaxed">
         Temukan program yang sesuai dengan kebutuhan dan gaya hidup Anda
       </p>
     </div>
@@ -847,7 +847,7 @@
         <!-- FIX: Hapus data-aos dari wrapper -->
         <!-- ================================ -->
         <div class="min-w-[85vw] sm:min-w-[300px] max-w-[320px] flex-shrink-0 flex">
-          <div class="group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-gray-100 hover:border-secondary/30 overflow-hidden w-full flex flex-col">
+          <div class="group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-light-pink/30 hover:border-secondary/30 overflow-hidden w-full flex flex-col">
                         
             <div class="absolute inset-0 bg-gradient-to-br from-pink-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                         
@@ -868,11 +868,11 @@
                 Private Group Class
               </h4>
 
-              <p class="text-gray-600 text-sm leading-relaxed text-center mb-6 flex-1">
+              <p class="text-dark/70 text-sm leading-relaxed text-center mb-6 flex-1">
                 Latihan kelompok privat dengan instruktur berpengalaman, cocok untuk komunitas atau teman-teman.
               </p>
 
-              <div class="w-full mb-6 space-y-2 text-xs text-gray-500">
+              <div class="w-full mb-6 space-y-2 text-xs text-cream0">
                 <div class="flex items-center gap-2">
                   <i class="ri-check-line text-secondary"></i>
                   <span>Max 8-10 orang</span>
@@ -900,14 +900,14 @@
         <!-- Card 2: Private Training         -->
         <!-- ================================ -->
         <div class="min-w-[85vw] sm:min-w-[300px] max-w-[320px] flex-shrink-0 flex">
-          <div class="group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-gray-100 hover:border-primary/30 overflow-hidden w-full flex flex-col">
+          <div class="group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-light-pink/30 hover:border-primary/30 overflow-hidden w-full flex flex-col">
                         
             <div class="absolute inset-0 bg-gradient-to-br from-purple-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                         
             <div class="relative z-10 flex flex-col items-center flex-1">
                             
               <div class="relative mb-6">
-                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-purple-100 to-purple-200 text-purple-600 shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
+                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-purple-100 to-purple-200 text-primary shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
                   <i class="ri-user-heart-line text-4xl"></i>
                 </div>
                 <div class="absolute -inset-2 rounded-2xl border-2 border-primary/20 group-hover:border-primary/40 transition-colors duration-300"></div>
@@ -920,11 +920,11 @@
                 Private Training
               </h4>
 
-              <p class="text-gray-600 text-sm leading-relaxed text-center mb-6 flex-1">
+              <p class="text-dark/70 text-sm leading-relaxed text-center mb-6 flex-1">
                 Sesi latihan personal sesuai kebutuhan Anda, didampingi pelatih profesional untuk hasil optimal.
               </p>
 
-              <div class="w-full mb-6 space-y-2 text-xs text-gray-500">
+              <div class="w-full mb-6 space-y-2 text-xs text-cream0">
                 <div class="flex items-center gap-2">
                   <i class="ri-check-line text-primary"></i>
                   <span>Personal attention</span>
@@ -950,14 +950,14 @@
         <!-- Card 3: Single Visit Class       -->
         <!-- ================================ -->
         <div class="min-w-[85vw] sm:min-w-[300px] max-w-[320px] flex-shrink-0 flex">
-          <div class="group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-gray-100 hover:border-secondary/30 overflow-hidden w-full flex flex-col">
+          <div class="group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-light-pink/30 hover:border-secondary/30 overflow-hidden w-full flex flex-col">
                         
             <div class="absolute inset-0 bg-gradient-to-br from-blue-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                         
             <div class="relative z-10 flex flex-col items-center flex-1">
                             
               <div class="relative mb-6">
-                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200 text-blue-600 shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
+                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200 text-primary shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
                   <i class="ri-calendar-check-line text-4xl"></i>
                 </div>
                 <div class="absolute -inset-2 rounded-2xl border-2 border-secondary/20 group-hover:border-secondary/40 transition-colors duration-300"></div>
@@ -970,11 +970,11 @@
                 Single Visit Class
               </h4>
 
-              <p class="text-gray-600 text-sm leading-relaxed text-center mb-6 flex-1">
+              <p class="text-dark/70 text-sm leading-relaxed text-center mb-6 flex-1">
                 Ikuti kelas tanpa harus menjadi member tetap. Fleksibel untuk Anda yang ingin mencoba atau punya jadwal padat.
               </p>
 
-              <div class="w-full mb-6 space-y-2 text-xs text-gray-500">
+              <div class="w-full mb-6 space-y-2 text-xs text-cream0">
                 <div class="flex items-center gap-2">
                   <i class="ri-check-line text-secondary"></i>
                   <span>No commitment</span>
@@ -1000,14 +1000,14 @@
         <!-- Card 4: Reformer Pilates         -->
         <!-- ================================ -->
         <div class="min-w-[85vw] sm:min-w-[300px] max-w-[320px] flex-shrink-0 flex">
-          <div class="group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-gray-100 hover:border-primary/30 overflow-hidden w-full flex flex-col">
+          <div class="group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-light-pink/30 hover:border-primary/30 overflow-hidden w-full flex flex-col">
                         
             <div class="absolute inset-0 bg-gradient-to-br from-green-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                         
             <div class="relative z-10 flex flex-col items-center flex-1">
                             
               <div class="relative mb-6">
-                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-green-100 to-green-200 text-green-600 shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
+                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-green-100 to-green-200 text-accent shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
                   <i class="ri-group-line text-4xl"></i>
                 </div>
                 <div class="absolute -inset-2 rounded-2xl border-2 border-primary/20 group-hover:border-primary/40 transition-colors duration-300"></div>
@@ -1020,11 +1020,11 @@
                 Reformer Pilates
               </h4>
 
-              <p class="text-gray-600 text-sm leading-relaxed text-center mb-6 flex-1">
+              <p class="text-dark/70 text-sm leading-relaxed text-center mb-6 flex-1">
                 Latihan pilates dengan alat reformer untuk kekuatan, fleksibilitas, dan postur tubuh yang lebih baik.
               </p>
 
-              <div class="w-full mb-6 space-y-2 text-xs text-gray-500">
+              <div class="w-full mb-6 space-y-2 text-xs text-cream0">
                 <div class="flex items-center gap-2">
                   <i class="ri-check-line text-primary"></i>
                   <span>Alat reformer</span>
@@ -1051,14 +1051,14 @@
         <!-- FIX: Hapus hover:scale-105 btn  -->
         <!-- ================================ -->
         <div class="min-w-[85vw] sm:min-w-[300px] max-w-[320px] flex-shrink-0 flex">
-          <div class="group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-gray-100 hover:border-secondary/30 overflow-hidden w-full flex flex-col">
+          <div class="group relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-light-pink/30 hover:border-secondary/30 overflow-hidden w-full flex flex-col">
                         
             <div class="absolute inset-0 bg-gradient-to-br from-amber-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                         
             <div class="relative z-10 flex flex-col items-center flex-1">
                             
               <div class="relative mb-6">
-                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-amber-100 to-amber-200 text-amber-600 shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
+                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-amber-100 to-amber-200 text-springs-ivy shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
                   <i class="ri-award-line text-4xl"></i>
                 </div>
                 <div class="absolute -inset-2 rounded-2xl border-2 border-secondary/20 group-hover:border-secondary/40 transition-colors duration-300"></div>
@@ -1071,11 +1071,11 @@
                 Exclusive Class Program
               </h4>
 
-              <p class="text-gray-600 text-sm leading-relaxed text-center mb-6 flex-1">
+              <p class="text-dark/70 text-sm leading-relaxed text-center mb-6 flex-1">
                 Program kelas eksklusif dengan materi pilihan, peserta terbatas, dan pendampingan intensif.
               </p>
 
-              <div class="w-full mb-6 space-y-2 text-xs text-gray-500">
+              <div class="w-full mb-6 space-y-2 text-xs text-cream0">
                 <div class="flex items-center gap-2">
                   <i class="ri-check-line text-secondary"></i>
                   <span>Limited seats</span>
@@ -1115,7 +1115,7 @@
 
     <!-- Bottom CTA -->
     <div class="mt-16 text-center">
-      <p class="text-gray-600 mb-6">
+      <p class="text-dark/70 mb-6">
         Tidak yakin program mana yang cocok? <span class="font-semibold text-primary">Konsultasi gratis</span> dengan tim kami
       </p>
       <!-- FIX: hover:scale-105 dihapus dari CTA ini juga -->
@@ -1142,14 +1142,14 @@
   >
     <button 
       onclick="closeServiceDetail()" 
-      class="absolute top-2 right-2 text-gray-500 hover:text-primary text-2xl"
+      class="absolute top-2 right-2 text-cream0 hover:text-primary text-2xl"
       aria-label="Close Modal"
     >
       &times;
     </button>
 
     <h3 id="service-detail-title" class="text-xl font-bold text-primary mb-4"></h3>
-    <div id="service-detail-content" class="text-gray-700 text-sm leading-relaxed"></div>
+    <div id="service-detail-content" class="text-dark text-sm leading-relaxed"></div>
   </div>
 </div>
 
@@ -1209,7 +1209,7 @@
                 <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-secondary rounded-full"></div>
             </div>
 
-            <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            <p class="text-lg md:text-xl text-dark/70 max-w-3xl mx-auto leading-relaxed">
                 Pilih rencana yang sempurna yang sesuai dengan perjalanan kebugaran dan gaya hidup Anda
             </p>
         </div>
@@ -1267,19 +1267,19 @@
 
                             <div class="mb-6 text-center">
                                 <div class="text-4xl font-black text-primary">IDR 850K</div>
-                                <div class="text-sm text-gray-500 font-medium">per Month</div>
+                                <div class="text-sm text-cream0 font-medium">per Month</div>
                             </div>
 
                             <ul class="w-full space-y-3 mb-6 flex-1">
-                                <li class="flex items-center gap-3 text-sm text-gray-700">
+                                <li class="flex items-center gap-3 text-sm text-dark">
                                     <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
                                     <span>Muaythai</span>
                                 </li>
-                                <li class="flex items-center gap-3 text-sm text-gray-700">
+                                <li class="flex items-center gap-3 text-sm text-dark">
                                     <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
                                     <span>Mat Pilates</span>
                                 </li>
-                                <li class="flex items-center gap-3 text-sm text-gray-700">
+                                <li class="flex items-center gap-3 text-sm text-dark">
                                     <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
                                     <span>Body Shaping</span>
                                 </li>
@@ -1306,14 +1306,14 @@
                 <div class="min-w-[90vw] sm:min-w-[340px] max-w-[360px] flex-shrink-0 flex">
                     <div class="group relative bg-white rounded-3xl p-8 shadow-lg
                                 hover:shadow-2xl transition-shadow duration-300
-                                border-2 border-gray-100 hover:border-primary/30 overflow-hidden w-full flex flex-col">
+                                border-2 border-light-pink/30 hover:border-primary/30 overflow-hidden w-full flex flex-col">
 
                         <div class="absolute inset-0 bg-gradient-to-br from-purple-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
 
                         <div class="relative z-10 flex flex-col items-center flex-1">
                             <div class="relative mb-6">
                                 <div class="w-24 h-24 flex items-center justify-center rounded-3xl
-                                            bg-gradient-to-br from-purple-100 to-purple-200 text-purple-600
+                                            bg-gradient-to-br from-purple-100 to-purple-200 text-primary
                                             shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
                                      style="will-change:transform;">
                                     <i class="ri-group-line text-5xl"></i>
@@ -1332,15 +1332,15 @@
                             </div>
 
                             <ul class="w-full space-y-3 mb-6 flex-1">
-                                <li class="flex items-center gap-3 text-sm text-gray-700">
+                                <li class="flex items-center gap-3 text-sm text-dark">
                                     <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
                                     <span>IDR 400K / Single</span>
                                 </li>
-                                <li class="flex items-center gap-3 text-sm text-gray-700">
+                                <li class="flex items-center gap-3 text-sm text-dark">
                                     <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
                                     <span>IDR 700K / Double</span>
                                 </li>
-                                <li class="flex items-center gap-3 text-sm text-gray-700">
+                                <li class="flex items-center gap-3 text-sm text-dark">
                                     <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
                                     <span>IDR 900K / Triple</span>
                                 </li>
@@ -1373,14 +1373,14 @@
                 <div class="min-w-[90vw] sm:min-w-[340px] max-w-[360px] flex-shrink-0 flex">
                     <div class="group relative bg-white rounded-3xl p-8 shadow-lg
                                 hover:shadow-2xl transition-shadow duration-300
-                                border-2 border-gray-100 hover:border-secondary/30 overflow-hidden w-full flex flex-col">
+                                border-2 border-light-pink/30 hover:border-secondary/30 overflow-hidden w-full flex flex-col">
 
                         <div class="absolute inset-0 bg-gradient-to-br from-blue-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
 
                         <div class="relative z-10 flex flex-col items-center flex-1">
                             <div class="relative mb-6">
                                 <div class="w-24 h-24 flex items-center justify-center rounded-3xl
-                                            bg-gradient-to-br from-blue-100 to-blue-200 text-blue-600
+                                            bg-gradient-to-br from-blue-100 to-blue-200 text-primary
                                             shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
                                      style="will-change:transform;">
                                     <i class="ri-door-open-line text-5xl"></i>
@@ -1396,15 +1396,15 @@
                             </h3>
 
                             <ul class="w-full space-y-3 mb-6 flex-1">
-                                <li class="flex items-center gap-3 text-sm text-gray-700">
+                                <li class="flex items-center gap-3 text-sm text-dark">
                                     <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
                                     <span>Single Class: IDR 150K</span>
                                 </li>
-                                <li class="flex items-center gap-3 text-sm text-gray-700">
+                                <li class="flex items-center gap-3 text-sm text-dark">
                                     <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
                                     <span>Bundle 2 Class: IDR 275K</span>
                                 </li>
-                                <li class="flex items-center gap-3 text-sm text-gray-700">
+                                <li class="flex items-center gap-3 text-sm text-dark">
                                     <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
                                     <span>Bundle 4 Class: IDR 525K</span>
                                 </li>
@@ -1437,14 +1437,14 @@
                 <div class="min-w-[90vw] sm:min-w-[340px] max-w-[360px] flex-shrink-0 flex">
                     <div class="group relative bg-white rounded-3xl p-8 shadow-lg
                                 hover:shadow-2xl transition-shadow duration-300
-                                border-2 border-gray-100 hover:border-primary/30 overflow-hidden w-full flex flex-col">
+                                border-2 border-light-pink/30 hover:border-primary/30 overflow-hidden w-full flex flex-col">
 
                         <div class="absolute inset-0 bg-gradient-to-br from-green-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
 
                         <div class="relative z-10 flex flex-col items-center flex-1">
                             <div class="relative mb-6">
                                 <div class="w-24 h-24 flex items-center justify-center rounded-3xl
-                                            bg-gradient-to-br from-green-100 to-green-200 text-green-600
+                                            bg-gradient-to-br from-green-100 to-green-200 text-accent
                                             shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
                                      style="will-change:transform;">
                                     <i class="ri-calendar-check-line text-5xl"></i>
@@ -1463,23 +1463,23 @@
                             </div>
 
                             <ul class="w-full space-y-2 mb-6 flex-1 text-xs">
-                                <li class="flex items-start gap-2 text-gray-700">
+                                <li class="flex items-start gap-2 text-dark">
                                     <i class="ri-checkbox-circle-fill text-base text-secondary flex-shrink-0 mt-0.5"></i>
                                     <span>IDR 400K / Single Visit</span>
                                 </li>
-                                <li class="flex items-start gap-2 text-gray-700">
+                                <li class="flex items-start gap-2 text-dark">
                                     <i class="ri-checkbox-circle-fill text-base text-secondary flex-shrink-0 mt-0.5"></i>
                                     <span>IDR 1.400K / 4 Sessions 15 Days</span>
                                 </li>
-                                <li class="flex items-start gap-2 text-gray-700">
+                                <li class="flex items-start gap-2 text-dark">
                                     <i class="ri-checkbox-circle-fill text-base text-secondary flex-shrink-0 mt-0.5"></i>
                                     <span>IDR 1.540K / 4 Sessions 30 Days</span>
                                 </li>
-                                <li class="flex items-start gap-2 text-gray-700">
+                                <li class="flex items-start gap-2 text-dark">
                                     <i class="ri-checkbox-circle-fill text-base text-secondary flex-shrink-0 mt-0.5"></i>
                                     <span>IDR 2.200K / 8 Sessions 30 Days</span>
                                 </li>
-                                <li class="flex items-start gap-2 text-gray-700">
+                                <li class="flex items-start gap-2 text-dark">
                                     <i class="ri-checkbox-circle-fill text-base text-secondary flex-shrink-0 mt-0.5"></i>
                                     <span>IDR 2.640K / 8 Sessions 60 Days</span>
                                 </li>
@@ -1514,14 +1514,14 @@
                 <div class="min-w-[90vw] sm:min-w-[340px] max-w-[360px] flex-shrink-0 flex">
                     <div class="group relative bg-white rounded-3xl p-8 shadow-lg
                                 hover:shadow-2xl transition-shadow duration-300
-                                border-2 border-gray-100 hover:border-secondary/30 overflow-hidden w-full flex flex-col">
+                                border-2 border-light-pink/30 hover:border-secondary/30 overflow-hidden w-full flex flex-col">
 
                         <div class="absolute inset-0 bg-gradient-to-br from-amber-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
 
                         <div class="relative z-10 flex flex-col items-center flex-1">
                             <div class="relative mb-6">
                                 <div class="w-24 h-24 flex items-center justify-center rounded-3xl
-                                            bg-gradient-to-br from-amber-100 to-amber-200 text-amber-600
+                                            bg-gradient-to-br from-amber-100 to-amber-200 text-springs-ivy
                                             shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
                                      style="will-change:transform;">
                                     <i class="ri-user-line text-5xl"></i>
@@ -1537,15 +1537,15 @@
                             </h3>
 
                             <ul class="w-full space-y-3 mb-6 flex-1">
-                                <li class="flex items-center gap-3 text-sm text-gray-700">
+                                <li class="flex items-center gap-3 text-sm text-dark">
                                     <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
                                     <span>Muaythai</span>
                                 </li>
-                                <li class="flex items-center gap-3 text-sm text-gray-700">
+                                <li class="flex items-center gap-3 text-sm text-dark">
                                     <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
                                     <span>Mat Pilates</span>
                                 </li>
-                                <li class="flex items-center gap-3 text-sm text-gray-700">
+                                <li class="flex items-center gap-3 text-sm text-dark">
                                     <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
                                     <span>Body Shaping</span>
                                 </li>
@@ -1572,7 +1572,7 @@
                 <div class="min-w-[90vw] sm:min-w-[340px] max-w-[360px] flex-shrink-0 flex">
                     <div class="group relative bg-white rounded-3xl p-8 shadow-lg
                                 hover:shadow-2xl transition-shadow duration-300
-                                border-2 border-gray-100 hover:border-primary/30 overflow-hidden w-full flex flex-col">
+                                border-2 border-light-pink/30 hover:border-primary/30 overflow-hidden w-full flex flex-col">
 
                         <div class="absolute inset-0 bg-gradient-to-br from-rose-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
 
@@ -1595,15 +1595,15 @@
                             </h3>
 
                             <ul class="w-full space-y-3 mb-6 flex-1">
-                                <li class="flex items-center gap-3 text-sm text-gray-700">
+                                <li class="flex items-center gap-3 text-sm text-dark">
                                     <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
                                     <span>Muaythai</span>
                                 </li>
-                                <li class="flex items-center gap-3 text-sm text-gray-700">
+                                <li class="flex items-center gap-3 text-sm text-dark">
                                     <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
                                     <span>Mat Pilates</span>
                                 </li>
-                                <li class="flex items-center gap-3 text-sm text-gray-700">
+                                <li class="flex items-center gap-3 text-sm text-dark">
                                     <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
                                     <span>Body Shaping</span>
                                 </li>
@@ -1638,7 +1638,7 @@
 
         <!-- Bottom Notes -->
         <div class="mt-16 text-center">
-            <p class="text-gray-600 text-sm max-w-2xl mx-auto">
+            <p class="text-dark/70 text-sm max-w-2xl mx-auto">
                 All packages include Schedule will continue to be updated
             </p>
         </div>
@@ -1650,11 +1650,11 @@
   <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 mx-4">
     <div class="flex items-center justify-between mb-4">
       <h3 class="text-lg font-bold text-primary">Pilih Paket</h3>
-      <button type="button" onclick="closeVariantModal()" class="text-gray-600 text-2xl">&times;</button>
+      <button type="button" onclick="closeVariantModal()" class="text-dark/70 text-2xl">&times;</button>
     </div>
     <div id="package-variant-list" class="flex flex-col gap-3"></div>
     <div class="mt-4 text-right">
-      <button type="button" onclick="closeVariantModal()" class="px-4 py-2 rounded-button border border-gray-300">Batal</button>
+      <button type="button" onclick="closeVariantModal()" class="px-4 py-2 rounded-button border border-light-pink/60">Batal</button>
     </div>
   </div>
 </div>
@@ -1718,7 +1718,7 @@
                 <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-secondary rounded-full"></div>
             </div>
 
-            <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            <p class="text-lg md:text-xl text-dark/70 max-w-2xl mx-auto leading-relaxed">
                 Temukan berbagai program kebugaran yang dirancang khusus untuk kebutuhan Anda.
             </p>
         </div>
@@ -1732,7 +1732,7 @@
             <!-- ══════════════════════════ -->
             <div class="group relative bg-white rounded-3xl overflow-hidden
                         shadow-lg hover:shadow-2xl transition-shadow duration-300
-                        border-2 border-gray-100 hover:border-secondary/30 flex flex-col">
+                        border-2 border-light-pink/30 hover:border-secondary/30 flex flex-col">
 
                 <!-- Hover tint -->
                 <div class="absolute inset-0 bg-gradient-to-br from-pink-50/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"></div>
@@ -1772,11 +1772,11 @@
                                        transition-all duration-300">
                                 Muaythai
                             </h3>
-                            <span class="text-xs text-gray-400 font-medium">All Levels</span>
+                            <span class="text-xs text-dark/40 font-medium">All Levels</span>
                         </div>
                     </div>
 
-                    <p class="text-sm text-gray-600 leading-relaxed flex-1 mb-5">
+                    <p class="text-sm text-dark/70 leading-relaxed flex-1 mb-5">
                         Seni bela diri asal Thailand menggunakan delapan titik kontak tubuh: tangan, siku, lutut, dan kaki — melibatkan teknik serangan dan pertahanan.
                     </p>
 
@@ -1799,7 +1799,7 @@
             <!-- ══════════════════════════ -->
             <div class="group relative bg-white rounded-3xl overflow-hidden
                         shadow-lg hover:shadow-2xl transition-shadow duration-300
-                        border-2 border-gray-100 hover:border-primary/30 flex flex-col">
+                        border-2 border-light-pink/30 hover:border-primary/30 flex flex-col">
 
                 <div class="absolute inset-0 bg-gradient-to-br from-purple-50/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"></div>
 
@@ -1816,7 +1816,7 @@
 
                     <div class="flex items-center gap-3 mb-3">
                         <div class="w-10 h-10 flex items-center justify-center rounded-xl
-                                    bg-gradient-to-br from-purple-100 to-purple-200 text-purple-600
+                                    bg-gradient-to-br from-purple-100 to-purple-200 text-primary
                                     shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
                              style="will-change:transform; flex-shrink:0;">
                             <i class="ri-body-scan-line text-lg"></i>
@@ -1828,11 +1828,11 @@
                                        transition-all duration-300">
                                 Body Shaping
                             </h3>
-                            <span class="text-xs text-gray-400 font-medium">All Levels</span>
+                            <span class="text-xs text-dark/40 font-medium">All Levels</span>
                         </div>
                     </div>
 
-                    <p class="text-sm text-gray-600 leading-relaxed flex-1 mb-5">
+                    <p class="text-sm text-dark/70 leading-relaxed flex-1 mb-5">
                         Kelas strength training full body workout untuk toning dan shaping tubuh — dari calisthenics hingga gerakan dengan beban dan equipment pendukung.
                     </p>
 
@@ -1853,7 +1853,7 @@
             <!-- ══════════════════════════ -->
             <div class="group relative bg-white rounded-3xl overflow-hidden
                         shadow-lg hover:shadow-2xl transition-shadow duration-300
-                        border-2 border-gray-100 hover:border-secondary/30 flex flex-col">
+                        border-2 border-light-pink/30 hover:border-secondary/30 flex flex-col">
 
                 <div class="absolute inset-0 bg-gradient-to-br from-blue-50/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"></div>
 
@@ -1870,7 +1870,7 @@
 
                     <div class="flex items-center gap-3 mb-3">
                         <div class="w-10 h-10 flex items-center justify-center rounded-xl
-                                    bg-gradient-to-br from-blue-100 to-blue-200 text-blue-600
+                                    bg-gradient-to-br from-blue-100 to-blue-200 text-primary
                                     shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
                              style="will-change:transform; flex-shrink:0;">
                             <i class="ri-mental-health-line text-lg"></i>
@@ -1882,11 +1882,11 @@
                                        transition-all duration-300">
                                 Mat Pilates
                             </h3>
-                            <span class="text-xs text-gray-400 font-medium">All Levels</span>
+                            <span class="text-xs text-dark/40 font-medium">All Levels</span>
                         </div>
                     </div>
 
-                    <p class="text-sm text-gray-600 leading-relaxed flex-1 mb-5">
+                    <p class="text-sm text-dark/70 leading-relaxed flex-1 mb-5">
                         Latihan di atas matras fokus pada kekuatan inti (core), stabilitas, postur, pernapasan, dan fleksibilitas — dilakukan secara perlahan dan terkontrol.
                     </p>
 
@@ -1907,7 +1907,7 @@
             <!-- ══════════════════════════════ -->
             <div class="group relative bg-white rounded-3xl overflow-hidden
                         shadow-lg hover:shadow-2xl transition-shadow duration-300
-                        border-2 border-gray-100 hover:border-primary/30 flex flex-col">
+                        border-2 border-light-pink/30 hover:border-primary/30 flex flex-col">
 
                 <div class="absolute inset-0 bg-gradient-to-br from-green-50/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"></div>
 
@@ -1928,7 +1928,7 @@
 
                     <div class="flex items-center gap-3 mb-3">
                         <div class="w-10 h-10 flex items-center justify-center rounded-xl
-                                    bg-gradient-to-br from-green-100 to-green-200 text-green-600
+                                    bg-gradient-to-br from-green-100 to-green-200 text-accent
                                     shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
                              style="will-change:transform; flex-shrink:0;">
                             <i class="ri-focus-3-line text-lg"></i>
@@ -1940,11 +1940,11 @@
                                        transition-all duration-300">
                                 Reformer Pilates
                             </h3>
-                            <span class="text-xs text-gray-400 font-medium">All Levels</span>
+                            <span class="text-xs text-dark/40 font-medium">All Levels</span>
                         </div>
                     </div>
 
-                    <p class="text-sm text-gray-600 leading-relaxed flex-1 mb-5">
+                    <p class="text-sm text-dark/70 leading-relaxed flex-1 mb-5">
                         Menggunakan alat reformer dengan pegas dan tali untuk resistensi tambahan — variasi Mat Pilates yang dibantu alat untuk hasil lebih optimal.
                     </p>
 
@@ -1977,14 +1977,14 @@
 
         <!-- Close Button -->
         <button onclick="closeModal()"
-                class="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 hover:bg-red-100 hover:text-red-600 text-gray-500 text-lg font-bold transition-colors duration-200 z-10">
+                class="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full bg-cream hover:bg-light-pink/50 hover:text-secondary text-cream0 text-lg font-bold transition-colors duration-200 z-10">
             &times;
         </button>
 
         <!-- Modal Content -->
         <div class="p-7">
             <h3 id="modal-title" class="text-2xl font-black text-primary mb-1"></h3>
-            <div id="modal-content" class="text-sm text-gray-600 mt-3"></div>
+            <div id="modal-content" class="text-sm text-dark/70 mt-3"></div>
 
             <!-- WA Button — hapus hover:scale-105 -->
             <div class="mt-6">
@@ -2042,7 +2042,7 @@ window.classSchedules = {
 
         <!-- Notes -->
         <div class="mt-12 text-center">
-          <p class="text-gray-600 text-sm">
+          <p class="text-dark/70 text-sm">
             All packages including Schedule will continue to be updated
           </p>
           <div class="mt-8">
@@ -2061,7 +2061,7 @@ window.classSchedules = {
   >
     <button 
       onclick="closeServiceDetail()" 
-      class="absolute top-2 right-2 text-gray-500 hover:text-primary text-2xl"
+      class="absolute top-2 right-2 text-cream0 hover:text-primary text-2xl"
       aria-label="Close Modal"
     >
       &times;
@@ -2069,7 +2069,7 @@ window.classSchedules = {
 
     <h3 id="service-detail-title" class="text-xl font-bold text-primary mb-4"></h3>
 
-    <p id="service-detail-desc" class="text-gray-700 leading-relaxed"></p>
+    <p id="service-detail-desc" class="text-dark leading-relaxed"></p>
   </div>
 </div>
 
@@ -2078,14 +2078,14 @@ window.classSchedules = {
     <h2 class="text-2xl font-bold mb-4 text-center">JADWAL KELAS</h2>
 
     <!-- Tambahan: tampilkan membership -->
-    <div class="mb-4 text-center text-lg font-semibold text-gray-700">
+    <div class="mb-4 text-center text-lg font-semibold text-dark">
         Membership Anda: <span class="text-primary">{{ $customer->membership }}</span>
     </div>
 
     @if ($schedules->count())
         <div class="overflow-x-auto">
-            <table class="w-full text-left border border-gray-300 rounded-lg">
-                <thead class="bg-gray-100">
+            <table class="w-full text-left border border-light-pink/60 rounded-lg">
+                <thead class="bg-cream">
                     <tr>
                         <th class="p-3">KELAS</th>
                         <th class="p-3">HARI</th>
@@ -2110,7 +2110,7 @@ window.classSchedules = {
             </table>
         </div>
     @else
-        <p class="text-center text-gray-500">Belum ada jadwal tersedia.</p>
+        <p class="text-center text-cream0">Belum ada jadwal tersedia.</p>
     @endif
 </section>
 
@@ -2170,7 +2170,7 @@ window.classSchedules = {
                 <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-secondary rounded-full"></div>
             </div>
 
-            <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            <p class="text-lg md:text-xl text-dark/70 max-w-2xl mx-auto leading-relaxed">
                 Jelajahi fasilitas kelas dunia kami yang dirancang untuk menginspirasi, menantang, dan mengubah Anda.
             </p>
         </div>
@@ -2180,7 +2180,7 @@ window.classSchedules = {
 
             {{-- Slider Card --}}
             <div id="facility-slider"
-                 class="relative overflow-hidden rounded-3xl shadow-2xl border-2 border-gray-100"
+                 class="relative overflow-hidden rounded-3xl shadow-2xl border-2 border-light-pink/30"
                  style="aspect-ratio:16/9; background:#1a1a1a;">
 
                 {{-- Image Track --}}
@@ -2345,7 +2345,7 @@ window.classSchedules = {
                 <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-secondary rounded-full"></div>
             </div>
 
-            <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            <p class="text-lg md:text-xl text-dark/70 max-w-2xl mx-auto leading-relaxed">
                 Didukung oleh merek-merek terkemuka di industri yang berkomitmen pada kesehatan, kesejahteraan, dan keunggulan.
             </p>
         </div>
@@ -2376,7 +2376,7 @@ window.classSchedules = {
                 @foreach(array_merge($partners, $partners) as $p)
                 {{-- Card identik dengan card Classes --}}
                 <div class="group relative flex-shrink-0 mx-4 px-7 py-5 rounded-3xl
-                            bg-white border-2 border-gray-100
+                            bg-white border-2 border-light-pink/30
                             shadow-lg transition-shadow duration-300 hover:shadow-2xl hover:border-secondary/30"
                      style="cursor:default; min-height:100px; display:flex; align-items:center; justify-content:center;">
                     {{-- Hover tint sama dengan Classes --}}
@@ -2399,13 +2399,13 @@ window.classSchedules = {
 </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-20 bg-gray-50">
+    <section id="contact" class="py-20 bg-cream">
       <div class="container mx-auto px-4">
         <div class="text-center mb-16">
           <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4">
             Get in Touch
           </h2>
-          <p class="text-gray-600 max-w-2xl mx-auto">
+          <p class="text-dark/70 max-w-2xl mx-auto">
             Have questions or want to learn more? We're here to help you on your
             fitness journey.
           </p>
@@ -2425,8 +2425,8 @@ window.classSchedules = {
                     <i class="ri-map-pin-line ri-lg"></i>
                   </div>
                   <div>
-                    <h4 class="font-medium text-gray-800">Address</h4>
-                    <p class="text-gray-600">
+                    <h4 class="font-medium text-dark">Address</h4>
+                    <p class="text-dark/70">
                     📍Jakarta Selatan: <br />
                       Jl. Wijaya 8 No.2, RT.6/RW.7. <br />Melawai, Kec. Kby. Baru, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12160
                     </p>
@@ -2442,8 +2442,8 @@ window.classSchedules = {
                     <i class="ri-time-line ri-lg"></i>
                   </div>
                   <div>
-                    <h4 class="font-medium text-gray-800">Opening Hours</h4>
-                    <p class="text-gray-600">
+                    <h4 class="font-medium text-dark">Opening Hours</h4>
+                    <p class="text-dark/70">
                       Monday - Saturday: 08:00 AM - 20:00 PM <br />Sunday: 08:00 AM -15:00 AM
                     </p>
                   </div>
@@ -2455,8 +2455,8 @@ window.classSchedules = {
                     <i class="ri-phone-line ri-lg"></i>
                   </div>
                   <div>
-                    <h4 class="font-medium text-gray-800">Phone & WhatsApp</h4>
-                    <p class="text-gray-600">+62 877-8576-7395</p>
+                    <h4 class="font-medium text-dark">Phone & WhatsApp</h4>
+                    <p class="text-dark/70">+62 877-8576-7395</p>
                     <a
                      href="https://wa.me/6287785767395"
                       class="inline-flex items-center text-secondary mt-2 hover:underline"
@@ -2473,13 +2473,13 @@ window.classSchedules = {
                     <i class="ri-mail-line ri-lg"></i>
                   </div>
                   <div>
-                    <h4 class="font-medium text-gray-800">Email</h4>
-                    <p class="text-gray-600">ftmsociety@gmail.com</p>
+                    <h4 class="font-medium text-dark">Email</h4>
+                    <p class="text-dark/70">ftmsociety@gmail.com</p>
                   </div>
                 </div>
               </div>
               <div class="mt-8">
-                <h4 class="font-medium text-gray-800 mb-4">Follow Us</h4>
+                <h4 class="font-medium text-dark mb-4">Follow Us</h4>
                 <div class="flex space-x-4">
                   <a
                     href="https://www.instagram.com/ftmsociety.id"
@@ -2518,33 +2518,33 @@ window.classSchedules = {
               <form class="space-y-6" method="POST" action="{{ route('feedback.store') }}">
                 @csrf
                 <div>
-                  <label for="contact-name" class="block text-gray-700 mb-2">Your Name</label>
+                  <label for="contact-name" class="block text-dark mb-2">Your Name</label>
                   <input
                     type="text"
                     id="contact-name"
                     name="name"
-                    class="w-full px-4 py-3 rounded border border-gray-300 focus:border-secondary"
+                    class="w-full px-4 py-3 rounded border border-light-pink/60 focus:border-secondary"
                     placeholder="Your name"
                     required
                   />
                 </div>
                 <div>
-                  <label for="contact-email" class="block text-gray-700 mb-2">Email Address</label>
+                  <label for="contact-email" class="block text-dark mb-2">Email Address</label>
                   <input
                     type="email"
                     id="contact-email"
                     name="email"
-                    class="w-full px-4 py-3 rounded border border-gray-300 focus:border-secondary"
+                    class="w-full px-4 py-3 rounded border border-light-pink/60 focus:border-secondary"
                     placeholder="your.email@example.com"
                     required
                   />
                 </div>
                 <div>
-                  <label for="subject" class="block text-gray-700 mb-2">Subject</label>
+                  <label for="subject" class="block text-dark mb-2">Subject</label>
                   <select
                     id="subject"
                     name="subject"
-                    class="w-full px-4 py-3 rounded border border-gray-300 focus:border-secondary pr-8 appearance-none bg-white"
+                    class="w-full px-4 py-3 rounded border border-light-pink/60 focus:border-secondary pr-8 appearance-none bg-white"
                     required
                   >
                     <option value="" selected disabled>Select a subject</option>
@@ -2556,12 +2556,12 @@ window.classSchedules = {
                   </select>
                 </div>
                 <div>
-                  <label for="message" class="block text-gray-700 mb-2">Your Message</label>
+                  <label for="message" class="block text-dark mb-2">Your Message</label>
                   <textarea
                     id="message"
                     name="message"
                     rows="5"
-                    class="w-full px-4 py-3 rounded border border-gray-300 focus:border-secondary"
+                    class="w-full px-4 py-3 rounded border border-light-pink/60 focus:border-secondary"
                     placeholder="How can we help you?"
                     required
                   ></textarea>
@@ -2580,7 +2580,7 @@ window.classSchedules = {
       </div>
           <!-- filepath: resources/views/dashboard.blade.php -->
         <!-- filepath: resources/views/dashboard.blade.php -->
-<section id="maps" class="py-12 bg-gray-50">
+<section id="maps" class="py-12 bg-cream">
   <div class="container mx-auto px-4">
     <div class="rounded-lg overflow-hidden shadow-md h-80">
       <iframe
@@ -2646,7 +2646,7 @@ window.classSchedules = {
             <input
               type="email"
               placeholder="Alamat email Anda"
-              class="px-4 py-2 rounded-l text-gray-800 w-full border-none"
+              class="px-4 py-2 rounded-l text-dark w-full border-none"
             />
             <button
               type="submit"

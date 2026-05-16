@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-slate-900 to-black py-8">
@@ -8,11 +8,11 @@
         <div class="flex items-center justify-between mb-8">
             <div>
                 <h1 class="text-4xl font-bold text-white mb-2">
-                    <i class="ri-qr-scan-2-line mr-3 text-red-600"></i>Member Check-in Scanner
+                    <i class="ri-qr-scan-2-line mr-3 text-secondary"></i>Member Check-in Scanner
                 </h1>
-                <p class="text-gray-400">Scan QR code member untuk automatic check-in dan pengurangan quota</p>
+                <p class="text-dark/40">Scan QR code member untuk automatic check-in dan pengurangan quota</p>
             </div>
-            <a href="{{ url('/admin') }}" class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition flex items-center gap-2">
+            <a href="{{ url('/admin') }}" class="bg-dark hover:bg-dark text-white px-6 py-2 rounded-lg transition flex items-center gap-2">
                 <i class="ri-arrow-left-line"></i> Back to Admin
             </a>
         </div>
@@ -30,11 +30,11 @@
                 </div>
 
                 <!-- SCANNER CARD -->
-                <div class="bg-slate-800 rounded-xl p-8 border border-slate-700 shadow-xl">
+                <div class="bg-secondary rounded-xl p-8 border border-slate-700 shadow-xl">
                     
                     <!-- QR Token Input -->
                     <div class="mb-6">
-                        <label class="block text-sm font-bold text-gray-300 mb-3">
+                        <label class="block text-sm font-bold text-dark/30 mb-3">
                             <i class="ri-qr-code-line mr-2"></i>QR Token / Member ID
                         </label>
                         <input type="text" 
@@ -47,14 +47,14 @@
                     <!-- Program & Location -->
                     <div class="grid grid-cols-2 gap-4 mb-6">
                         <div>
-                            <label class="block text-sm font-bold text-gray-300 mb-2">Program (Opsional)</label>
+                            <label class="block text-sm font-bold text-dark/30 mb-2">Program (Opsional)</label>
                             <input type="text" 
                                    id="program-input" 
                                    placeholder="Boxing, Yoga, dll"
                                    class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-red-600">
                         </div>
                         <div>
-                            <label class="block text-sm font-bold text-gray-300 mb-2">Location (Opsional)</label>
+                            <label class="block text-sm font-bold text-dark/30 mb-2">Location (Opsional)</label>
                             <select id="location-input" class="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-red-600">
                                 <option value="Gym Entrance">Gym Entrance</option>
                                 <option value="Main Hall">Main Hall</option>
@@ -84,12 +84,12 @@
                 
                 <!-- TODAY STATS -->
                 <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 border border-slate-700 shadow-lg">
-                    <h3 class="text-sm font-bold text-gray-400 uppercase mb-4 flex items-center gap-2">
+                    <h3 class="text-sm font-bold text-dark/40 uppercase mb-4 flex items-center gap-2">
                         <i class="ri-calendar-today-line"></i>Hari Ini
                     </h3>
                     <div class="space-y-3">
                         <div>
-                            <p class="text-gray-400 text-xs">Total Check-in</p>
+                            <p class="text-dark/40 text-xs">Total Check-in</p>
                             <p id="today-count" class="text-4xl font-bold text-white">0</p>
                         </div>
                         <div class="grid grid-cols-2 gap-3">
@@ -122,12 +122,12 @@
         </div>
 
         <!-- SCAN LOGS -->
-        <div class="mt-8 bg-slate-800 rounded-xl p-6 border border-slate-700 shadow-xl">
+        <div class="mt-8 bg-secondary rounded-xl p-6 border border-slate-700 shadow-xl">
             <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                <i class="ri-history-line text-red-600"></i>Recent Check-ins (Last 20)
+                <i class="ri-history-line text-secondary"></i>Recent Check-ins (Last 20)
             </h3>
             <div id="scans-log" class="space-y-2 max-h-64 overflow-y-auto">
-                <p class="text-gray-400 text-sm text-center py-8">Hasil scan akan muncul di sini...</p>
+                <p class="text-dark/40 text-sm text-center py-8">Hasil scan akan muncul di sini...</p>
             </div>
         </div>
 
@@ -245,7 +245,7 @@
                         <div class="bg-gradient-to-r from-red-500 to-red-600 h-full rounded-full transition-all" 
                              style="width: ${(data.remaining_quota / data.total_quota) * 100}%"></div>
                     </div>
-                    <p class="text-gray-300 text-xs mt-2">Quota used: ${data.quota_used_today}</p>
+                    <p class="text-dark/30 text-xs mt-2">Quota used: ${data.quota_used_today}</p>
                 </div>
 
                 <p class="text-green-300 text-lg font-semibold">${data.notification.message}</p>
@@ -302,8 +302,8 @@
             <i class="ri-${icon} ${statusText} flex-shrink-0 mt-0.5 text-lg"></i>
             <div class="flex-1 text-left">
                 <p class="${statusText} font-bold text-sm">${data.member_name ? '✓ ' + data.member_name : '✗ ' + (data.message || 'Error')}</p>
-                <p class="text-gray-400 text-xs">${time}</p>
-                ${status === 'success' ? `<p class="text-gray-300 text-xs mt-1">Quota: ${data.remaining_quota}/${data.total_quota}</p>` : ''}
+                <p class="text-dark/40 text-xs">${time}</p>
+                ${status === 'success' ? `<p class="text-dark/30 text-xs mt-1">Quota: ${data.remaining_quota}/${data.total_quota}</p>` : ''}
             </div>
         `;
 
@@ -323,7 +323,7 @@
     }
 
     function showAlert(message, type = 'info') {
-        const bgClass = type === 'error' ? 'bg-red-600' : type === 'success' ? 'bg-green-600' : 'bg-blue-600';
+        const bgClass = type === 'error' ? 'bg-secondary' : type === 'success' ? 'bg-accent' : 'bg-primary';
         const alert = document.createElement('div');
         alert.className = `${bgClass} text-white px-6 py-3 rounded-lg fixed top-4 right-4 z-50 shadow-lg font-semibold`;
         alert.textContent = message;

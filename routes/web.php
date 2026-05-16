@@ -156,10 +156,25 @@ Route::middleware('guest:customer')->group(function () {
         ->name('member.register.submit');
 
     // Forgot Password (Public — tanpa perlu login)
+    // STEP 1 — input email + phone, kirim OTP via WhatsApp
     Route::get('/forgot-password', [MemberAuthController::class, 'showForgotPasswordForm'])
         ->name('member.forgot-password.form');
     Route::post('/forgot-password', [MemberAuthController::class, 'forgotPassword'])
         ->name('member.forgot-password.submit');
+
+    // STEP 2 — verifikasi OTP
+    Route::get('/forgot-password/otp', [MemberAuthController::class, 'showResetPasswordOtpForm'])
+        ->name('member.forgot-password.otp.form');
+    Route::post('/forgot-password/otp', [MemberAuthController::class, 'verifyResetPasswordOtp'])
+        ->name('member.forgot-password.otp.verify');
+    Route::post('/forgot-password/otp/resend', [MemberAuthController::class, 'resendResetPasswordOtp'])
+        ->name('member.forgot-password.otp.resend');
+
+    // STEP 3 — set password baru (hanya bisa diakses setelah OTP verified)
+    Route::get('/forgot-password/reset', [MemberAuthController::class, 'showResetPasswordForm'])
+        ->name('member.forgot-password.reset.form');
+    Route::post('/forgot-password/reset', [MemberAuthController::class, 'resetPassword'])
+        ->name('member.forgot-password.reset.submit');
 });
 
 /*

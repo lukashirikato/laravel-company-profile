@@ -1,73 +1,700 @@
-/* ==================== SIDEBAR - LIGHT MODERN VERSION ==================== */
+/* ==========================================================================
+   FTM SOCIETY — Filament Admin Theme (2025) — v7 Seamless L-Shell
+   --------------------------------------------------------------------------
+   Goal: sidebar header & topbar form ONE continuous Burnt Cherry bar.
+   No height/color gap, no orange divider line, fully seamless.
+   Palette per .kiro/steering/desain.md
+   ========================================================================== */
+
+:root {
+    --ftm-pink:   #EE4E8B;
+    --ftm-cherry: #7A2B4A;
+    --ftm-petal:  #F4C9DF;
+    --ftm-green:  #1A7A5E;
+    --ftm-ivy:    #1D5A4B;
+    --ftm-sage:   #C5D79B;
+    --ftm-layl:   #1C1C1C;
+    --ftm-rising: #FCF9F2;
+
+    --topbar-h: 64px;       /* one source of truth for topbar/header height */
+}
+
+/* ================================================================
+   GLOBAL
+   ================================================================ */
+body,
+.fi-body,
+.fi-layout {
+    background: var(--ftm-rising) !important;
+    color: var(--ftm-layl) !important;
+    font-family: 'Poppins', system-ui, sans-serif !important;
+    font-weight: 500 !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Reset rogue ::before/::after across sidebar */
+aside *::before,
+aside *::after {
+    background-color: transparent !important;
+}
+
+/* Kill default Filament loading bar / orange yellow strip
+   (often a div with bg-yellow-* or bg-primary-* near sidebar top) */
+aside [class*="bg-yellow"],
+aside [class*="bg-orange"],
+aside [class*="bg-amber"],
+aside [class*="from-yellow"],
+aside [class*="from-orange"] {
+    background: transparent !important;
+    background-image: none !important;
+}
+
+/* ================================================================
+   SIDEBAR — Burnt Cherry (matches topbar exactly)
+   ================================================================ */
+aside,
+aside > div,
+.filament-sidebar,
+.fi-sidebar {
+    background: var(--ftm-cherry) !important;
+    background-image: none !important;
+}
 
 aside {
-    background: linear-gradient(
-        180deg,
-        #FFFFFF 0%,
-        #F8FAFC 100%
-    ) !important;
-    
-    border-right: 1px solid #E5E7EB !important;
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+    border-right: 1px solid rgba(244, 201, 223, 0.10) !important;
+    box-shadow: none !important;
+    width: 17rem !important;
+    color: var(--ftm-rising) !important;
 }
 
-/* Logo */
-.fi-logo {
-    color: #111827 !important;
-    font-weight: 700 !important;
+@media (max-width: 1023px) {
+    aside {
+        box-shadow: 8px 0 32px rgba(28, 28, 28, 0.20) !important;
+    }
+}
+
+/* ================================================================
+   SIDEBAR HEADER — "FTMAdmin" wordmark
+   FIXED: same height as topbar (64px), same Cherry bg, no border bottom
+   so it forms a continuous bar with the topbar.
+   ================================================================ */
+aside header,
+aside > div:first-child:not(nav):not(ul) {
+    background: var(--ftm-cherry) !important;
+    background-image: none !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(244, 201, 223, 0.10) !important;
+    padding: 0 1.35rem !important;
+    min-height: var(--topbar-h) !important;
+    height: var(--topbar-h) !important;
+    display: flex !important;
+    align-items: center !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+}
+
+aside header *,
+aside > div:first-child:not(nav):not(ul) > * {
+    background: transparent !important;
+}
+
+.fi-logo,
+aside .fi-logo,
+aside header h1,
+aside header h2,
+aside [class*="text-2xl"]:first-child,
+aside [class*="text-xl"]:first-child {
+    color: var(--ftm-rising) !important;
+    font-family: 'Nord', 'Poppins', sans-serif !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.01em !important;
     font-size: 1.25rem !important;
-    padding: 1rem !important;
+    line-height: 1.15 !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
 }
 
-/* Sidebar Items */
-aside .fi-sidebar-item {
-    margin: 4px 8px !important;
-    padding: 10px 12px !important;
-    border-radius: 10px !important;
-    transition: all 0.2s ease !important;
-    color: #374151 !important;
+.fi-logo::before,
+aside header h1::before,
+aside header h2::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: var(--ftm-pink) !important;
+    border-radius: 50%;
+    margin-right: 10px;
+    flex-shrink: 0;
 }
 
-/* Label */
-aside .fi-sidebar-item-label {
-    color: #374151 !important;
+/* ================================================================
+   GROUP LABELS ("MANAGEMENT", "SALES", etc.)
+   ================================================================ */
+aside .filament-sidebar-group-label,
+aside .fi-sidebar-group-label,
+aside p.uppercase,
+aside [class*="uppercase"][class*="font-bold"],
+aside .text-xs.font-bold.uppercase,
+aside button[aria-expanded] > span:first-child {
+    color: rgba(244, 201, 223, 0.7) !important;
+    font-family: 'Nord', 'Poppins', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 0.66rem !important;
+    letter-spacing: 0.18em !important;
+    text-transform: uppercase !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+aside button[aria-expanded] {
+    background: transparent !important;
+    border: none !important;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 1.2rem 1.4rem 0.5rem !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+aside button[aria-expanded]:hover {
+    background: transparent !important;
+}
+aside button[aria-expanded] svg {
+    color: rgba(244, 201, 223, 0.5) !important;
+    stroke: rgba(244, 201, 223, 0.5) !important;
+    width: 0.95rem !important;
+    height: 0.95rem !important;
+}
+
+/* ================================================================
+   NAV ITEMS — clean, no bubble in fonts
+   ================================================================ */
+aside ul {
+    list-style: none !important;
+    padding: 0.25rem 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+}
+
+aside li {
+    list-style: none !important;
+    background: transparent !important;
+    margin: 0 !important;
+}
+
+aside a.filament-sidebar-item-button,
+aside a[class*="filament-sidebar-item"],
+aside li > a {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    color: rgba(252, 249, 242, 0.78) !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    padding: 0.75rem 1.4rem !important;
+    margin: 0 !important;
+    font-family: 'Poppins', sans-serif !important;
     font-weight: 500 !important;
     font-size: 0.9rem !important;
+    text-decoration: none !important;
+    transition: background 0.18s ease, color 0.18s ease, padding-left 0.15s ease !important;
+    line-height: 1.35 !important;
+    border: none !important;
+    box-shadow: none !important;
+    position: relative;
 }
 
-/* Icon */
-aside .fi-sidebar-item-icon {
-    color: #6B7280 !important;
+/* Reset inner spans — kill bubble pills */
+aside a span,
+aside li span {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    color: inherit !important;
+    font-weight: inherit !important;
+    font-size: inherit !important;
+    letter-spacing: 0 !important;
 }
 
-/* Hover */
-aside .fi-sidebar-item:hover {
-    background: #E0E7FF !important;
-    transform: translateX(3px);
+aside li > a:hover,
+aside a.filament-sidebar-item-button:hover {
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: var(--ftm-rising) !important;
+    padding-left: 1.5rem !important;
 }
 
-/* Active Item */
-aside .fi-sidebar-item-active {
-    background: #6366F1 !important;
-    color: white !important;
+/* ACTIVE state: lighter cherry tint + Power Pink left bar */
+aside a.filament-sidebar-item-active,
+aside .filament-sidebar-item-active a,
+aside [aria-current="page"],
+aside [data-active="true"] {
+    background: rgba(255, 255, 255, 0.10) !important;
+    color: var(--ftm-rising) !important;
+    box-shadow: none !important;
+    font-weight: 600 !important;
+}
+aside a.filament-sidebar-item-active span,
+aside [aria-current="page"] span,
+aside [data-active="true"] span {
+    color: var(--ftm-rising) !important;
+}
+
+aside a.filament-sidebar-item-active::before,
+aside [aria-current="page"]::before,
+aside [data-active="true"]::before {
+    content: '' !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    width: 4px !important;
+    background: var(--ftm-pink) !important;
+    border-radius: 0 !important;
+}
+
+/* ================================================================
+   SVG ICONS — sidebar
+   ================================================================ */
+aside a svg,
+aside li svg {
+    color: rgba(252, 249, 242, 0.70) !important;
+    stroke: currentColor !important;
+    fill: none !important;
+    width: 1.2rem !important;
+    height: 1.2rem !important;
+    flex-shrink: 0 !important;
+    transition: color 0.18s ease !important;
+}
+
+aside li > a:hover svg,
+aside a.filament-sidebar-item-button:hover svg {
+    color: var(--ftm-rising) !important;
+}
+
+aside a.filament-sidebar-item-active svg,
+aside [aria-current="page"] svg,
+aside [data-active="true"] svg {
+    color: var(--ftm-rising) !important;
+    stroke: var(--ftm-rising) !important;
+}
+
+/* ================================================================
+   SIDEBAR BADGE
+   ================================================================ */
+aside .filament-sidebar-item-badge,
+aside .fi-sidebar-item-badge,
+aside .fi-badge {
+    background: rgba(244, 201, 223, 0.22) !important;
+    color: var(--ftm-rising) !important;
+    border: 1px solid rgba(244, 201, 223, 0.32) !important;
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 0.7rem !important;
+    line-height: 1 !important;
+    padding: 3px 9px !important;
+    border-radius: 999px !important;
+    min-width: 22px !important;
+    text-align: center !important;
+    margin-left: auto !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+aside a.filament-sidebar-item-active .filament-sidebar-item-badge,
+aside [aria-current="page"] .filament-sidebar-item-badge,
+aside [data-active="true"] .filament-sidebar-item-badge {
+    background: var(--ftm-pink) !important;
+    color: #FFFFFF !important;
+    border-color: var(--ftm-pink) !important;
+}
+
+/* ================================================================
+   TOPBAR — same Cherry, same height as sidebar header
+   ================================================================ */
+.fi-topbar,
+.filament-main-topbar,
+header[data-topbar],
+.filament-main > header {
+    background: var(--ftm-cherry) !important;
+    background-image: none !important;
+    border-bottom: 1px solid rgba(244, 201, 223, 0.10) !important;
+    box-shadow: none !important;
+    color: var(--ftm-rising) !important;
+    padding: 0 1.75rem !important;
+    min-height: var(--topbar-h) !important;
+    height: var(--topbar-h) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 1.25rem !important;
+}
+
+.fi-topbar a,
+.fi-topbar button,
+.filament-main-topbar a,
+.filament-main-topbar button {
+    color: var(--ftm-rising) !important;
+    font-weight: 500 !important;
+}
+.fi-topbar a:hover,
+.filament-main-topbar a:hover {
+    color: var(--ftm-petal) !important;
+}
+
+.fi-topbar svg,
+.filament-main-topbar svg {
+    color: var(--ftm-rising) !important;
+    stroke: currentColor !important;
+}
+
+/* Breadcrumbs / page title in topbar (e.g. "Customers / List") */
+.fi-topbar [class*="breadcrumb"],
+.filament-main-topbar [class*="breadcrumb"],
+.fi-topbar h1,
+.fi-topbar h2 {
+    color: var(--ftm-rising) !important;
+    font-family: 'Nord', 'Poppins', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    margin: 0 !important;
+}
+
+/* User avatar */
+.filament-user-avatar,
+.fi-avatar {
+    background: var(--ftm-pink) !important;
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    font-family: 'Nord', sans-serif !important;
+    border: 2px solid var(--ftm-rising) !important;
+    width: 2.5rem !important;
+    height: 2.5rem !important;
     border-radius: 10px !important;
 }
 
-aside .fi-sidebar-item-active .fi-sidebar-item-label {
-    color: white !important;
+.filament-user-account-name,
+.fi-user-account-name,
+.filament-main-topbar [class*="font-medium"]:not(svg) {
+    color: var(--ftm-rising) !important;
     font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    line-height: 1.2 !important;
 }
 
-aside .fi-sidebar-item-active .fi-sidebar-item-icon {
-    color: white !important;
+/* ================================================================
+   GLOBAL SEARCH — light pill input centered in topbar
+   ================================================================ */
+.fi-global-search,
+.filament-global-search {
+    flex: 1 1 0 !important;
+    max-width: 480px !important;
+    margin: 0 auto !important;
 }
 
-/* Group Label */
-aside .fi-sidebar-group-label {
-    color: #9CA3AF !important;
-    font-size: 0.7rem !important;
+.fi-global-search-input,
+.filament-global-search input {
+    background: var(--ftm-rising) !important;
+    border: 1px solid rgba(244, 201, 223, 0.4) !important;
+    color: var(--ftm-layl) !important;
+    border-radius: 999px !important;
+    padding: 0.6rem 1rem 0.6rem 2.6rem !important;
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 500 !important;
+    width: 100% !important;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease !important;
+    box-shadow: 0 1px 3px rgba(28, 28, 28, 0.08) !important;
+}
+.fi-global-search-input::placeholder,
+.filament-global-search input::placeholder {
+    color: rgba(28, 28, 28, 0.45) !important;
+    font-weight: 400 !important;
+}
+.fi-global-search-input:focus,
+.filament-global-search input:focus {
+    background: #FFFFFF !important;
+    border-color: var(--ftm-pink) !important;
+    box-shadow: 0 0 0 3px rgba(238, 78, 139, 0.20) !important;
+    outline: none !important;
+}
+
+.fi-global-search svg,
+.filament-global-search svg {
+    color: rgba(28, 28, 28, 0.45) !important;
+}
+
+/* ================================================================
+   NOTIFICATION BUTTON
+   ================================================================ */
+.fi-topbar button[aria-label*="otification" i],
+.fi-topbar button[aria-label*="notif" i],
+.filament-main-topbar button[aria-label*="otification" i] {
+    background: rgba(255, 255, 255, 0.10) !important;
+    border-radius: 50% !important;
+    padding: 0.55rem !important;
+    width: 2.4rem !important;
+    height: 2.4rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: background 0.18s ease !important;
+    position: relative !important;
+}
+.fi-topbar button[aria-label*="otification" i]:hover {
+    background: rgba(255, 255, 255, 0.20) !important;
+}
+.fi-topbar button[aria-label*="otification" i]::after,
+.filament-main-topbar button[aria-label*="otification" i]::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ftm-pink);
+    border: 2px solid var(--ftm-cherry);
+}
+
+/* ================================================================
+   MOBILE — hamburger
+   ================================================================ */
+.fi-topbar [aria-controls*="sidebar"],
+.fi-topbar button[x-on\:click*="sidebar"],
+.filament-main-topbar button[aria-label*="menu" i],
+.filament-main-topbar button[aria-label*="sidebar" i] {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-radius: 8px !important;
+    padding: 0.5rem !important;
+    color: var(--ftm-rising) !important;
+}
+
+/* ================================================================
+   MAIN CONTENT (left as-is per request)
+   ================================================================ */
+.fi-main h1,
+.fi-main h2,
+.filament-page-heading,
+.fi-page-heading,
+.fi-header-heading {
+    color: var(--ftm-cherry) !important;
+    font-family: 'Nord', 'Poppins', sans-serif !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.01em !important;
+}
+
+.fi-main p,
+.fi-main span:not(.filament-badge):not([class*="badge"]) {
+    color: var(--ftm-layl);
+}
+
+.fi-card,
+.fi-section,
+.filament-card {
+    background: #FFFFFF !important;
+    border: 1px solid var(--ftm-petal) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 1px 3px rgba(122, 43, 74, 0.04) !important;
+}
+
+/* ================================================================
+   BUTTONS — main content
+   ================================================================ */
+.fi-main button[class*="bg-primary"],
+.fi-main .filament-button-color-primary,
+.fi-btn-color-primary {
+    background: var(--ftm-pink) !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    box-shadow: 0 2px 6px rgba(238, 78, 139, 0.22) !important;
     font-weight: 700 !important;
+    font-family: 'Nord', 'Poppins', sans-serif !important;
+    border-radius: 10px !important;
+}
+.fi-main button[class*="bg-primary"]:hover,
+.fi-main .filament-button-color-primary:hover {
+    background: var(--ftm-cherry) !important;
+}
+
+.fi-btn-color-success {
+    background: var(--ftm-green) !important;
+    color: #FFFFFF !important;
+}
+.fi-btn-color-danger {
+    background: var(--ftm-cherry) !important;
+    color: #FFFFFF !important;
+}
+.fi-btn-color-secondary {
+    background: transparent !important;
+    color: var(--ftm-cherry) !important;
+    border: 1px solid var(--ftm-petal) !important;
+}
+
+/* ================================================================
+   TABLES
+   ================================================================ */
+.fi-ta,
+.filament-tables-table {
+    background: #FFFFFF !important;
+    border: 1px solid var(--ftm-petal) !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+}
+.fi-ta thead,
+.filament-tables-table thead {
+    background: var(--ftm-rising) !important;
+}
+.fi-ta thead th,
+.filament-tables-table thead th {
+    color: var(--ftm-cherry) !important;
+    font-weight: 700 !important;
+    font-family: 'Nord', 'Poppins', sans-serif !important;
     text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
-    padding: 0.5rem 1rem !important;
+    letter-spacing: 0.06em !important;
+    font-size: 0.72rem !important;
+}
+.fi-ta tbody tr:hover,
+.filament-tables-table tbody tr:hover {
+    background: rgba(244, 201, 223, 0.18) !important;
+}
+.fi-ta tbody td,
+.filament-tables-table tbody td {
+    color: var(--ftm-layl) !important;
+    font-weight: 500 !important;
+}
+
+/* ================================================================
+   FORMS
+   ================================================================ */
+.fi-input,
+.filament-input,
+.fi-main input[type="text"],
+.fi-main input[type="email"],
+.fi-main input[type="password"],
+.fi-main input[type="search"],
+.fi-main input[type="number"],
+.fi-main input[type="tel"],
+.fi-main input[type="date"],
+.fi-main select,
+.fi-main textarea {
+    background: #FFFFFF !important;
+    border: 1px solid var(--ftm-petal) !important;
+    border-radius: 8px !important;
+    color: var(--ftm-layl) !important;
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 500 !important;
+}
+.fi-input:focus,
+.fi-main input:focus,
+.fi-main select:focus,
+.fi-main textarea:focus {
+    outline: none !important;
+    border-color: var(--ftm-pink) !important;
+    box-shadow: 0 0 0 3px rgba(238, 78, 139, 0.15) !important;
+}
+
+/* ================================================================
+   CLEANUP — only in MAIN content
+   ================================================================ */
+.fi-main [class*="bg-orange"],
+.fi-main [class*="bg-yellow"],
+.fi-main [class*="bg-amber"] {
+    background: var(--ftm-petal) !important;
+    color: var(--ftm-cherry) !important;
+}
+.fi-main [class*="text-orange"],
+.fi-main [class*="text-yellow"],
+.fi-main [class*="text-amber"] {
+    color: var(--ftm-cherry) !important;
+}
+.fi-main [class*="bg-blue"],
+.fi-main [class*="bg-indigo"],
+.fi-main [class*="bg-purple"] {
+    background: var(--ftm-pink) !important;
+    color: #FFFFFF !important;
+}
+.fi-main [class*="text-blue"],
+.fi-main [class*="text-indigo"],
+.fi-main [class*="text-purple"] {
+    color: var(--ftm-pink) !important;
+}
+
+/* ================================================================
+   SCROLLBARS
+   ================================================================ */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--ftm-rising);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--ftm-petal);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--ftm-pink);
+}
+
+aside::-webkit-scrollbar {
+    width: 6px;
+}
+aside::-webkit-scrollbar-track {
+    background: rgba(28, 28, 28, 0.20) !important;
+}
+aside::-webkit-scrollbar-thumb {
+    background: rgba(244, 201, 223, 0.30) !important;
+    border-radius: 3px;
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+@media (max-width: 1023px) {
+    aside {
+        width: 16rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .fi-topbar,
+    .filament-main-topbar {
+        padding: 0 0.85rem !important;
+        gap: 0.75rem !important;
+    }
+    .fi-global-search,
+    .filament-global-search {
+        max-width: none !important;
+    }
+    .filament-user-account-name,
+    .fi-user-account-name {
+        display: none !important;
+    }
+}
+
+@media (max-width: 480px) {
+    aside header,
+    aside > div:first-child:not(nav):not(ul) {
+        padding: 0 1rem !important;
+    }
+    .fi-logo,
+    aside h1,
+    aside h2 {
+        font-size: 1.05rem !important;
+    }
+    .filament-user-avatar,
+    .fi-avatar {
+        width: 2.2rem !important;
+        height: 2.2rem !important;
+    }
 }

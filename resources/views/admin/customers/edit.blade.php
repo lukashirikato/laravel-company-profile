@@ -1,4 +1,4 @@
-<!-- filepath: c:\Users\hp\Desktop\progres\progres\resources\views\admin\customers\edit.blade.php -->
+﻿<!-- filepath: c:\Users\hp\Desktop\progres\progres\resources\views\admin\customers\edit.blade.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,10 +9,10 @@
 </head>
 <body class="bg-gradient-to-br from-blue-100 to-blue-300 min-h-screen">
     <div class="max-w-5xl mx-auto py-10 px-4">
-        <h2 class="text-3xl font-bold mb-8 text-blue-700 text-center">Edit Data Member & Jadwal Booking</h2>
+        <h2 class="text-3xl font-bold mb-8 text-secondary text-center">Edit Data Member & Jadwal Booking</h2>
 
         @if ($errors->any())
-            <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded shadow">
+            <div class="mb-4 bg-light-pink/50 border border-secondary/60 text-secondary px-4 py-3 rounded shadow">
                 <ul class="list-disc pl-5">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -28,24 +28,24 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="space-y-4 bg-white rounded-xl shadow p-6">
                     <div>
-                        <label class="block mb-1 font-semibold text-blue-700">Nama</label>
-                        <input type="text" name="name" value="{{ old('name', $customer->name) }}" class="w-full border px-3 py-2 rounded focus:ring focus:ring-blue-200" required>
+                        <label class="block mb-1 font-semibold text-secondary">Nama</label>
+                        <input type="text" name="name" value="{{ old('name', $customer->name) }}" class="w-full border px-3 py-2 rounded focus:ring focus:ring-primary/30" required>
                     </div>
                     <div>
-                        <label class="block mb-1 font-semibold text-blue-700">Email</label>
-                        <input type="email" name="email" value="{{ old('email', $customer->email) }}" class="w-full border px-3 py-2 rounded focus:ring focus:ring-blue-200" required>
+                        <label class="block mb-1 font-semibold text-secondary">Email</label>
+                        <input type="email" name="email" value="{{ old('email', $customer->email) }}" class="w-full border px-3 py-2 rounded focus:ring focus:ring-primary/30" required>
                     </div>
                     <div>
-                        <label class="block mb-1 font-semibold text-blue-700">No. HP</label>
-                        <input type="text" name="phone_number" value="{{ old('phone_number', $customer->phone_number) }}" class="w-full border px-3 py-2 rounded focus:ring focus:ring-blue-200" required>
+                        <label class="block mb-1 font-semibold text-secondary">No. HP</label>
+                        <input type="text" name="phone_number" value="{{ old('phone_number', $customer->phone_number) }}" class="w-full border px-3 py-2 rounded focus:ring focus:ring-primary/30" required>
                     </div>
                     <div>
-                        <label class="block font-semibold mb-1 text-blue-700">Program / Kelas</label>
-                        <input type="text" name="program" value="{{ old('program', $customer->program) }}" class="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-200" required>
+                        <label class="block font-semibold mb-1 text-secondary">Program / Kelas</label>
+                        <input type="text" name="program" value="{{ old('program', $customer->program) }}" class="w-full border rounded px-3 py-2 focus:ring focus:ring-primary/30" required>
                     </div>
                     <div>
-                        <label class="block font-semibold mb-1 text-blue-700">Kuota</label>
-                        <input type="number" name="quota" min="0" value="{{ old('quota', $customer->quota) }}" class="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-200" required>
+                        <label class="block font-semibold mb-1 text-secondary">Kuota</label>
+                        <input type="number" name="quota" min="0" value="{{ old('quota', $customer->quota) }}" class="w-full border rounded px-3 py-2 focus:ring focus:ring-primary/30" required>
                     </div>
                     @php
                         $memberships = [
@@ -60,8 +60,8 @@
                         $selectedPreferred = old('preferred_membership', $customer->preferred_membership);
                     @endphp
                     <div>
-                        <label class="block font-semibold mb-1 text-blue-700">Membership</label>
-                        <select name="membership" class="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-200" required>
+                        <label class="block font-semibold mb-1 text-secondary">Membership</label>
+                        <select name="membership" class="w-full border rounded px-3 py-2 focus:ring focus:ring-primary/30" required>
                             <option value="">-- Pilih Membership --</option>
                             @foreach ($memberships as $item)
                                 <option value="{{ $item }}" {{ $selectedMembership === $item ? 'selected' : '' }}>
@@ -71,8 +71,8 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block font-semibold mb-1 text-blue-700">Preferred Membership</label>
-                        <select name="preferred_membership" class="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-200">
+                        <label class="block font-semibold mb-1 text-secondary">Preferred Membership</label>
+                        <select name="preferred_membership" class="w-full border rounded px-3 py-2 focus:ring focus:ring-primary/30">
                             <option value="">-- Pilih Preferred --</option>
                             @foreach ($memberships as $item)
                                 <option value="{{ $item }}" {{ $selectedPreferred === $item ? 'selected' : '' }}>
@@ -85,8 +85,8 @@
                         </select>
                     </div>
                     <div>
-                        <label for="schedule_ids" class="block font-semibold mb-1 text-blue-700">Pilih Jadwal Program</label>
-                        <select name="schedule_ids[]" id="schedule_ids" multiple class="form-select w-full focus:ring focus:ring-blue-200">
+                        <label for="schedule_ids" class="block font-semibold mb-1 text-secondary">Pilih Jadwal Program</label>
+                        <select name="schedule_ids[]" id="schedule_ids" multiple class="form-select w-full focus:ring focus:ring-primary/30">
                             @foreach ($schedules as $schedule)
                                 <option value="{{ $schedule->id }}"
                                     {{ isset($customer) && $customer->schedules->contains($schedule->id) ? 'selected' : '' }}>
@@ -94,32 +94,32 @@
                                 </option>
                             @endforeach
                         </select>
-                        <small class="text-gray-500">Gunakan Ctrl (Windows) / Command (Mac) untuk memilih lebih dari satu jadwal.</small>
+                        <small class="text-cream0">Gunakan Ctrl (Windows) / Command (Mac) untuk memilih lebih dari satu jadwal.</small>
                     </div>
                 </div>
 
                <!-- Jadwal Booking Member Full Section -->
 <div class="bg-white rounded-xl shadow p-6">
-    <h3 class="font-bold mb-6 text-blue-700 text-xl text-center">Edit Jadwal Booking Member</h3>
+    <h3 class="font-bold mb-6 text-secondary text-xl text-center">Edit Jadwal Booking Member</h3>
     <div class="overflow-x-auto">
-        <table class="min-w-full border border-blue-200 rounded-lg text-sm bg-blue-50">
-            <thead class="bg-blue-100">
+        <table class="min-w-full border border-primary/30 rounded-lg text-sm bg-light-pink/30">
+            <thead class="bg-light-pink/50">
                 <tr>
-                    <th class="p-2 text-center font-semibold text-blue-700">Visit</th>
-                    <th class="p-2 text-center font-semibold text-blue-700">Tanggal</th>
-                    <th class="p-2 text-center font-semibold text-blue-700">Program/Kelas</th> <!-- Tambahan -->
-                    <th class="p-2 text-center font-semibold text-blue-700">Jam</th>
+                    <th class="p-2 text-center font-semibold text-secondary">Visit</th>
+                    <th class="p-2 text-center font-semibold text-secondary">Tanggal</th>
+                    <th class="p-2 text-center font-semibold text-secondary">Program/Kelas</th> <!-- Tambahan -->
+                    <th class="p-2 text-center font-semibold text-secondary">Jam</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($bookings as $booking)
                 <tr>
-                    <td class="p-2 text-center font-semibold text-blue-700">Visit {{ $loop->iteration }}</td>
+                    <td class="p-2 text-center font-semibold text-secondary">Visit {{ $loop->iteration }}</td>
                     <td class="p-2">
-                        <input type="date" name="schedule_date[{{ $booking->id }}]" value="{{ $booking->schedule_date }}" class="border rounded px-3 py-2 w-full focus:ring focus:ring-blue-200">
+                        <input type="date" name="schedule_date[{{ $booking->id }}]" value="{{ $booking->schedule_date }}" class="border rounded px-3 py-2 w-full focus:ring focus:ring-primary/30">
                     </td>
                     <td class="p-2"> <!-- Tambahan kolom program -->
-                        <select name="schedule_program[{{ $booking->id }}]" class="border rounded px-3 py-2 w-full focus:ring focus:ring-blue-200">
+                        <select name="schedule_program[{{ $booking->id }}]" class="border rounded px-3 py-2 w-full focus:ring focus:ring-primary/30">
                             <option value="">Pilih Program</option>
                             <option value="Muaythai" {{ $booking->program === 'Muaythai' ? 'selected' : '' }}>Muaythai</option>
                             <option value="Body Shaping" {{ $booking->program === 'Body Shaping' ? 'selected' : '' }}>Body Shaping</option>
@@ -128,7 +128,7 @@
                         </select>
                     </td>
                     <td class="p-2">
-                        <input type="time" name="schedule_time[{{ $booking->id }}]" value="{{ $booking->schedule_time }}" class="border rounded px-3 py-2 w-full focus:ring focus:ring-blue-200">
+                        <input type="time" name="schedule_time[{{ $booking->id }}]" value="{{ $booking->schedule_time }}" class="border rounded px-3 py-2 w-full focus:ring focus:ring-primary/30">
                     </td>
                 </tr>
                 @endforeach
@@ -137,8 +137,8 @@
     </div>
 </div>
             <div class="flex justify-between mt-8">
-                <a href="{{ route('customers.index') }}" class="px-6 py-2 bg-gray-300 rounded hover:bg-gray-400 text-sm">Cancel</a>
-                <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm font-semibold">Update</button>
+                <a href="{{ route('customers.index') }}" class="px-6 py-2 bg-light-pink/40 rounded hover:bg-gray-400 text-sm">Cancel</a>
+                <button type="submit" class="px-6 py-2 bg-primary text-white rounded hover:bg-secondary text-sm font-semibold">Update</button>
             </div>
         </form>
     </div>

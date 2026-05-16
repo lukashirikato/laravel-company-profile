@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <style>
@@ -52,80 +52,32 @@
     }
 </style>
 
-<div class="min-h-screen bg-gray-50 flex">
+<div class="min-h-screen bg-cream flex">
     
-    <!-- ========================================
-         SIDEBAR
-    ======================================== -->
-    <aside id="sidebar" class="sidebar w-64 bg-slate-900 text-white flex flex-col shrink-0">
-        <a href="{{ route('member.profile') }}" class="px-6 py-5 text-xl font-bold border-b border-white/20 hover:bg-slate-800 transition inline-block w-full">
-            FTM SOCIETY
-        </a>
-
-        <nav class="flex-1 px-4 py-6 space-y-1 text-sm">
-            <a href="{{ route('member.dashboard') }}" 
-               class="block px-4 py-2 rounded hover:bg-white/10 transition">
-                <i class="fas fa-home mr-2"></i>Dashboard
-            </a>
-
-            <a href="{{ route('member.packages.index') }}" 
-               class="block px-4 py-2 rounded hover:bg-white/10 transition">
-                <i class="fas fa-box mr-2"></i>My Packages
-            </a>
-
-            <a href="{{ route('member.book') }}"
-               class="block px-4 py-2 rounded hover:bg-white/10 transition">
-                <i class="fas fa-calendar-plus mr-2"></i>Book Class
-            </a>
-
-            <a href="{{ route('member.my-classes') }}"
-               class="block px-4 py-2 rounded hover:bg-white/10 transition">
-                <i class="fas fa-dumbbell mr-2"></i>My Classes
-            </a>
-
-            <a href="{{ route('member.transactions') }}" 
-               class="block px-4 py-2 rounded hover:bg-white/10 transition">
-                <i class="fas fa-receipt mr-2"></i>Transactions
-            </a>
-
-            <a href="{{ route('member.attendance') }}" 
-               class="block px-4 py-2 rounded bg-indigo-600 text-white font-medium">
-                <i class="fas fa-calendar-check mr-2"></i>Attendance
-            </a>
-
-            <a href="{{ route('member.account') }}" 
-               class="block px-4 py-2 rounded hover:bg-white/10 transition">
-                <i class="fas fa-user mr-2"></i>Profile
-            </a>
-        </nav>
-
-        <div class="px-6 py-4 border-t border-white/20 text-xs text-white/60">
-            &copy; {{ date('Y') }} FTM Society
-        </div>
-    </aside>
+    @include('partials.member-sidebar')
 
     <!-- MAIN CONTENT -->
     <!-- Mobile Sidebar Overlay -->
     <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
     <!-- Mobile Hamburger Button -->
-    <button id="hamburger-btn" class="hamburger-btn fixed top-4 left-4 z-30 w-10 h-10 bg-slate-900 text-white rounded-lg items-center justify-center shadow-lg hover:bg-slate-800 transition" onclick="toggleSidebar()">
+    <button id="hamburger-btn" class="hamburger-btn fixed top-4 left-4 z-30 w-10 h-10 bg-dark text-white rounded-lg items-center justify-center shadow-lg hover:bg-secondary transition" onclick="toggleSidebar()">
         <i class="fas fa-bars text-lg"></i>
     </button>
 
     <div class="flex-1 overflow-auto">
         <!-- HEADER SECTION -->
-        <div class="bg-white border-b border-gray-200">
+        <div class="bg-white border-b border-light-pink/50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
-                        <h1 class="text-3xl font-bold text-gray-900">
-                            <i class="ri-calendar-check-line text-red-600 mr-2"></i>Attendance History
+                        <h1 class="text-3xl font-bold text-dark">
+                            <i class="ri-calendar-check-line text-secondary mr-2"></i>Attendance History
                         </h1>
-                        <p class="text-gray-600 mt-2">Monitor your training consistency</p>
+                        <p class="text-dark/70 mt-2">Monitor your training consistency</p>
                     </div>
                     <a href="{{ route('member.dashboard') }}" 
-                       class="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                       class="inline-flex items-center gap-2 bg-dark hover:bg-dark text-white px-4 py-2 rounded-lg transition-colors duration-200">
                         <i class="ri-arrow-left-line"></i> 
                         <span>Back</span>
                     </a>
@@ -158,18 +110,18 @@
         
 
         <!-- ATTENDANCE RECORDS -->
-        <div class="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
+        <div class="bg-white rounded-lg border border-light-pink/50 overflow-hidden shadow-sm">
             
             <!-- Header -->
-            <div class="px-6 py-5 border-b border-gray-200 bg-gray-50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <h2 class="text-lg font-bold text-gray-900">Attendance Records</h2>
+            <div class="px-6 py-5 border-b border-light-pink/50 bg-cream flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <h2 class="text-lg font-bold text-dark">Attendance Records</h2>
                 <div class="w-full sm:w-auto">
                     <div class="relative">
                         <input type="text" 
                                placeholder="Search..." 
-                               class="w-full sm:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-red-600 focus:border-red-600 transition-colors"
+                               class="w-full sm:w-64 pl-10 pr-4 py-2 border border-light-pink/60 rounded-lg text-dark placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-red-600 focus:border-red-600 transition-colors"
                                id="searchInput">
-                        <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-dark/40"></i>
                     </div>
                 </div>
             </div>
@@ -179,40 +131,40 @@
                 <div class="hidden md:block overflow-x-auto">
                     <table class="w-full" id="attendanceTable">
                         <thead>
-                            <tr class="bg-gray-50 border-b border-gray-200">
-                                <th class="text-left px-6 py-3 text-gray-600 font-semibold text-sm">Date</th>
-                                <th class="text-left px-6 py-3 text-gray-600 font-semibold text-sm">Program</th>
-                                <th class="text-left px-6 py-3 text-gray-600 font-semibold text-sm">Check-In</th>
-                                <th class="text-left px-6 py-3 text-gray-600 font-semibold text-sm">Check-Out</th>
-                                <th class="text-left px-6 py-3 text-gray-600 font-semibold text-sm">Duration</th>
-                                <th class="text-left px-6 py-3 text-gray-600 font-semibold text-sm">Type</th>
-                                <th class="text-left px-6 py-3 text-gray-600 font-semibold text-sm">Status</th>
+                            <tr class="bg-cream border-b border-light-pink/50">
+                                <th class="text-left px-6 py-3 text-dark/70 font-semibold text-sm">Date</th>
+                                <th class="text-left px-6 py-3 text-dark/70 font-semibold text-sm">Program</th>
+                                <th class="text-left px-6 py-3 text-dark/70 font-semibold text-sm">Check-In</th>
+                                <th class="text-left px-6 py-3 text-dark/70 font-semibold text-sm">Check-Out</th>
+                                <th class="text-left px-6 py-3 text-dark/70 font-semibold text-sm">Duration</th>
+                                <th class="text-left px-6 py-3 text-dark/70 font-semibold text-sm">Type</th>
+                                <th class="text-left px-6 py-3 text-dark/70 font-semibold text-sm">Status</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200" id="attendanceTableBody">
+                        <tbody class="divide-y divide-light-pink/40" id="attendanceTableBody">
                             @foreach($user->attendances()->latest()->paginate(20) as $index => $attendance)
-                                <tr class="hover:bg-gray-50 transition-colors attendance-row">
+                                <tr class="hover:bg-cream transition-colors attendance-row">
                                     <td class="px-6 py-4 text-sm">
                                         <div>
-                                            <div class="font-semibold text-gray-900">{{ $attendance->created_at->format('d M Y') }}</div>
-                                            <div class="text-gray-500">{{ $attendance->created_at->format('l') }}</div>
+                                            <div class="font-semibold text-dark">{{ $attendance->created_at->format('d M Y') }}</div>
+                                            <div class="text-cream0">{{ $attendance->created_at->format('l') }}</div>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 text-sm">
                                         @if($attendance->program)
-                                            <span class="inline-flex items-center gap-2 px-3 py-1 bg-red-50 border border-red-200 text-red-700 rounded-lg font-medium">
+                                            <span class="inline-flex items-center gap-2 px-3 py-1 bg-light-pink/30 border border-secondary/30 text-secondary rounded-lg font-medium">
                                                 <i class="ri-dumbbell-line"></i>
                                                 {{ $attendance->program }}
                                             </span>
                                         @else
-                                            <span class="inline-flex items-center gap-2 px-3 py-1 bg-gray-50 border border-gray-200 text-gray-500 rounded-lg font-medium">
+                                            <span class="inline-flex items-center gap-2 px-3 py-1 bg-cream border border-light-pink/50 text-cream0 rounded-lg font-medium">
                                                 <i class="ri-dumbbell-line"></i>
                                                 General Fitness
                                             </span>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-gray-900 font-medium">{{ $attendance->check_in_at?->format('H:i') ?? '-' }}</td>
-                                    <td class="px-6 py-4 text-sm {{ $attendance->check_out_at ? 'text-green-600 font-medium' : 'text-orange-600' }}">
+                                    <td class="px-6 py-4 text-sm text-dark font-medium">{{ $attendance->check_in_at?->format('H:i') ?? '-' }}</td>
+                                    <td class="px-6 py-4 text-sm {{ $attendance->check_out_at ? 'text-accent font-medium' : 'text-secondary' }}">
                                         {{ $attendance->check_out_at?->format('H:i') ?? 'Aktif' }}
                                     </td>
                                     <td class="px-6 py-4 text-sm">
@@ -222,60 +174,60 @@
                                             $isActive = $attendance->check_out_at === null;
                                         @endphp
                                         @if($isActive)
-                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-orange-50 border border-orange-200 text-orange-600 rounded-lg text-xs font-semibold">
+                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-light-pink/30 border border-light-pink text-secondary rounded-lg text-xs font-semibold">
                                                 <span class="relative flex h-2 w-2">
-                                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+                                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-light-pink"></span>
                                                 </span>
                                                 Sedang Latihan
                                             </span>
                                         @elseif($durationMins !== null)
                                             <div class="flex items-center gap-2">
                                                 <div class="w-8 h-8 rounded-lg flex items-center justify-center
-                                                    {{ $durationMins >= 60 ? 'bg-emerald-100 text-emerald-600' : ($durationMins >= 30 ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-500') }}">
+                                                    {{ $durationMins >= 60 ? 'bg-grounded-green/40 text-accent' : ($durationMins >= 30 ? 'bg-light-pink/50 text-primary' : 'bg-cream text-cream0') }}">
                                                     <i class="fas fa-stopwatch text-xs"></i>
                                                 </div>
                                                 <div>
-                                                    <p class="font-bold text-gray-900 text-sm">{{ $duration }}</p>
+                                                    <p class="font-bold text-dark text-sm">{{ $duration }}</p>
                                                     @if($durationMins >= 60)
-                                                        <p class="text-xs text-emerald-600 font-medium">Great session!</p>
+                                                        <p class="text-xs text-accent font-medium">Great session!</p>
                                                     @endif
                                                 </div>
                                             </div>
                                         @else
-                                            <span class="text-gray-400">-</span>
+                                            <span class="text-dark/40">-</span>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 text-sm">
                                         @if($attendance->check_in_type === 'qr')
-                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-purple-100 text-purple-700 rounded text-xs font-medium">
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-light-pink/50 text-secondary rounded text-xs font-medium">
                                                 <i class="ri-qr-code-line"></i>QR Scan
                                             </span>
                                         @elseif($attendance->check_in_type === 'manual')
-                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-light-pink/50 text-secondary rounded text-xs font-medium">
                                                 <i class="ri-user-line"></i>Manual
                                             </span>
                                         @else
-                                            <span class="inline-flex px-2.5 py-1 bg-gray-100 text-gray-700 rounded text-xs font-medium">
+                                            <span class="inline-flex px-2.5 py-1 bg-cream text-dark rounded text-xs font-medium">
                                                 {{ ucfirst($attendance->check_in_type ?? 'system') }}
                                             </span>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 text-sm">
                                         @if($attendance->attendance_status === 'present')
-                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-grounded-green/40 text-springs-ivy rounded text-xs font-medium">
                                                 <i class="ri-checkbox-circle-line"></i>Present
                                             </span>
                                         @elseif($attendance->attendance_status === 'late')
-                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-medium">
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-grounded-green/40 text-springs-ivy rounded text-xs font-medium">
                                                 <i class="ri-alarm-warning-line"></i>Late
                                             </span>
                                         @elseif($attendance->attendance_status === 'absent')
-                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-red-100 text-red-700 rounded text-xs font-medium">
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-light-pink/50 text-secondary rounded text-xs font-medium">
                                                 <i class="ri-close-circle-line"></i>Absent
                                             </span>
                                         @else
-                                            <span class="inline-flex px-2.5 py-1 bg-gray-100 text-gray-700 rounded text-xs font-medium">
+                                            <span class="inline-flex px-2.5 py-1 bg-cream text-dark rounded text-xs font-medium">
                                                 {{ ucfirst($attendance->attendance_status ?? 'unknown') }}
                                             </span>
                                         @endif
@@ -287,62 +239,62 @@
                 </div>
 
                 <!-- Mobile Card View -->
-                <div class="md:hidden divide-y divide-gray-200" id="attendanceCards">
+                <div class="md:hidden divide-y divide-light-pink/40" id="attendanceCards">
                     @foreach($user->attendances()->latest()->paginate(20) as $attendance)
-                        <div class="p-4 hover:bg-gray-50 transition-colors attendance-row">
+                        <div class="p-4 hover:bg-cream transition-colors attendance-row">
                             <div class="flex justify-between items-start mb-3">
                                 <div>
-                                    <p class="font-semibold text-gray-900">{{ $attendance->created_at->format('d M Y') }}</p>
-                                    <p class="text-sm text-gray-500">{{ $attendance->created_at->format('l, H:i') }}</p>
+                                    <p class="font-semibold text-dark">{{ $attendance->created_at->format('d M Y') }}</p>
+                                    <p class="text-sm text-cream0">{{ $attendance->created_at->format('l, H:i') }}</p>
                                 </div>
                                 @if($attendance->attendance_status === 'present')
-                                    <span class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">
+                                    <span class="inline-flex items-center gap-1 px-2 py-1 bg-grounded-green/40 text-springs-ivy rounded text-xs font-medium">
                                         <i class="ri-checkbox-circle-line"></i>Present
                                     </span>
                                 @elseif($attendance->attendance_status === 'late')
-                                    <span class="inline-flex items-center gap-1 px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-medium">
+                                    <span class="inline-flex items-center gap-1 px-2 py-1 bg-grounded-green/40 text-springs-ivy rounded text-xs font-medium">
                                         <i class="ri-alarm-warning-line"></i>Late
                                     </span>
                                 @else
-                                    <span class="inline-flex items-center gap-1 px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-medium">
+                                    <span class="inline-flex items-center gap-1 px-2 py-1 bg-light-pink/50 text-secondary rounded text-xs font-medium">
                                         <i class="ri-close-circle-line"></i>Absent
                                     </span>
                                 @endif
                             </div>
                             <div class="grid grid-cols-2 gap-3 text-sm">
                                 <div>
-                                    <p class="text-gray-500">Program</p>
-                                    <p class="font-semibold text-gray-900">{{ $attendance->program ?? 'General Fitness' }}</p>
+                                    <p class="text-cream0">Program</p>
+                                    <p class="font-semibold text-dark">{{ $attendance->program ?? 'General Fitness' }}</p>
                                 </div>
                                 <div>
-                                    <p class="text-gray-500">Check-In</p>
-                                    <p class="font-semibold text-gray-900">{{ $attendance->check_in_at?->format('H:i') ?? '-' }}</p>
+                                    <p class="text-cream0">Check-In</p>
+                                    <p class="font-semibold text-dark">{{ $attendance->check_in_at?->format('H:i') ?? '-' }}</p>
                                 </div>
                                 <div>
-                                    <p class="text-gray-500">Check-Out</p>
-                                    <p class="font-semibold {{ $attendance->check_out_at ? 'text-green-600' : 'text-orange-600' }}">
+                                    <p class="text-cream0">Check-Out</p>
+                                    <p class="font-semibold {{ $attendance->check_out_at ? 'text-accent' : 'text-secondary' }}">
                                         {{ $attendance->check_out_at?->format('H:i') ?? 'Aktif' }}
                                     </p>
                                 </div>
                                 <div>
-                                    <p class="text-gray-500">Duration</p>
+                                    <p class="text-cream0">Duration</p>
                                     @php
                                         $mobDuration = $attendance->getFormattedDuration();
                                         $mobDurationMins = $attendance->getDurationInMinutes();
                                         $mobIsActive = $attendance->check_out_at === null;
                                     @endphp
                                     @if($mobIsActive)
-                                        <p class="font-semibold text-orange-600 flex items-center gap-1">
+                                        <p class="font-semibold text-secondary flex items-center gap-1">
                                             <span class="relative flex h-2 w-2">
-                                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                                                <span class="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+                                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                                                <span class="relative inline-flex rounded-full h-2 w-2 bg-light-pink"></span>
                                             </span>
                                             Sedang Latihan
                                         </p>
                                     @elseif($mobDurationMins !== null)
-                                        <p class="font-semibold text-gray-900">{{ $mobDuration }}</p>
+                                        <p class="font-semibold text-dark">{{ $mobDuration }}</p>
                                     @else
-                                        <p class="font-semibold text-gray-400">-</p>
+                                        <p class="font-semibold text-dark/40">-</p>
                                     @endif
                                 </div>
                             </div>
@@ -351,20 +303,20 @@
                 </div>
 
                 <!-- Pagination -->
-                <div class="px-6 py-5 border-t border-gray-200 bg-gray-50">
+                <div class="px-6 py-5 border-t border-light-pink/50 bg-cream">
                     {{ $user->attendances()->latest()->paginate(20)->links() }}
                 </div>
                 
             @else
                 <!-- Empty State -->
                 <div class="py-16 text-center px-6">
-                    <div class="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-lg mb-4">
-                        <i class="ri-calendar-x-line text-3xl text-gray-400"></i>
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-cream rounded-lg mb-4">
+                        <i class="ri-calendar-x-line text-3xl text-dark/40"></i>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">No Records Yet</h3>
-                    <p class="text-gray-500 mb-6">Your attendance records will appear here once you check in.</p>
+                    <h3 class="text-lg font-semibold text-dark mb-2">No Records Yet</h3>
+                    <p class="text-cream0 mb-6">Your attendance records will appear here once you check in.</p>
                     <a href="{{ route('member.dashboard') }}" 
-                       class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2.5 rounded-lg transition-colors duration-200">
+                       class="inline-flex items-center gap-2 bg-secondary hover:bg-secondary text-white font-semibold px-6 py-2.5 rounded-lg transition-colors duration-200">
                         <i class="ri-dashboard-line"></i>
                         <span>Go to Dashboard</span>
                     </a>

@@ -9,7 +9,7 @@
     <!-- end favicon  -->
     <title>FTM SOCIETY - Muslimah-Only Gym</title>
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-    <script>tailwind.config = { theme: { extend: { colors: { primary: "#E8618C", secondary: "#6B2D4E", accent: "#1A7A6E", "light-pink": "#E8C4D8", cream: "#F5EFE6", dark: "#1C1C1E", "springs-ivy": "#1A5C4A", "grounded-green": "#C8D9A0", "power-pink": "#E8618C", "burnt-cherry": "#6B2D4E", "soft-petals": "#E8C4D8", "patina-green": "#1A7A6E", "layl": "#1C1C1E", "rising": "#F5EFE6" }, fontFamily: { nord: ['Nord', 'Poppins', 'sans-serif'], instrument: ['"Instrument Serif"', 'Georgia', 'serif'], poppins: ['Poppins', 'sans-serif'] }, borderRadius: { button: "8px" } } } };</script>
+    <script>tailwind.config = { theme: { extend: { colors: { primary: "#EE4E8B", secondary: "#7A2B4A", accent: "#1A7A5E", "light-pink": "#F4C9DF", cream: "#FCF9F2", dark: "#1C1C1C", "springs-ivy": "#1D5A4B", "grounded-green": "#C5D79B", "power-pink": "#EE4E8B", "burnt-cherry": "#7A2B4A", "soft-petals": "#F4C9DF", "patina-green": "#1A7A5E", "layl": "#1C1C1C", "rising": "#FCF9F2" }, fontFamily: { nord: ['Nord', 'Poppins', 'sans-serif'], instrument: ['"Instrument Serif"', 'Georgia', 'serif'], poppins: ['Poppins', 'sans-serif'] }, borderRadius: { button: "8px" } } } };</script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
@@ -26,36 +26,89 @@
     <link rel="preload" href="{{ asset('fonts/Nord-Book.woff2') }}"  as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="{{ asset('css/ftm-typography.css') }}">
     <style>
-            /* Body & layout helpers (typography handled by ftm-typography.css) */
+      /* ================================================== */
+      /* FTM SOCIETY TYPOGRAPHY — per .kiro/steering/desain.md */
+      /*                                                     */
+      /*   Body / paragraf  → Poppins 500 (readable & solid)*/
+      /*   h1-h6 / heading  → Nord (tegas, architectural)   */
+      /*   Button / nav     → Nord (UI labels)               */
+      /*   Form inputs      → Poppins                        */
+      /*   .font-instrument → utility untuk aksen feminin    */
+      /*                      (kata "Society", "Productive") */
+      /* ================================================== */
+
+      /* Global text rendering — anti-pucat */
+      html {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+      }
+
       body {
+        font-family: 'Poppins', system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 1.65;
+        font-weight: 500;
+        color: #1C1C1C;                /* Layl — kontras kuat */
         scroll-behavior: smooth;
         overflow-x: hidden;
       }
+
       p {
-        line-height: 1.65;
+        font-family: 'Poppins', system-ui, sans-serif;
+        font-weight: 500;
+        line-height: 1.7;
+        color: #1C1C1C;
       }
+
+      /* Optional softer paragraph helper kalau perlu */
+      .p-soft { color: rgba(28, 28, 28, 0.78); }
+
       h1, h2, h3, h4, h5, h6 {
+        font-family: 'Nord', 'Poppins', sans-serif;
+        font-weight: 700;
         line-height: 1.15;
-        letter-spacing: -0.01em;
+        letter-spacing: -0.015em;
+        color: #1C1C1C;
       }
-      nav,
-      button,
-      a,
-      span,
-      label {
+
+      nav, button, a, span, label {
         letter-spacing: 0.2px;
       }
-      nav a,
+
+      nav a {
+        font-family: 'Nord', 'Poppins', sans-serif;
+        font-weight: 700;
+      }
+
       button {
-        font-weight: 600;
+        font-family: 'Nord', 'Poppins', sans-serif;
+        font-weight: 700;
       }
-      input,
-      select,
-      textarea,
-      option,
-      summary {
+
+      input, select, textarea, option, summary {
         font-family: 'Poppins', sans-serif;
+        font-weight: 500;
+        color: #1C1C1C;
       }
+
+      strong, b {
+        font-weight: 700;
+      }
+
+      /* Utility class overrides (sesuai tailwind.config inline) */
+      .font-nord       { font-family: 'Nord', 'Poppins', sans-serif !important; }
+      .font-instrument { font-family: 'Instrument Serif', Georgia, serif !important; font-weight: 400 !important; }
+      .font-poppins    { font-family: 'Poppins', sans-serif !important; }
+
+      /* Boost ketegasan untuk Instrument Serif italic
+         (font ini memang tipis bawaan — kasih text-shadow halus
+         untuk meniru weight yang lebih kokoh tanpa kehilangan elegan) */
+      .font-instrument.italic {
+        font-style: italic;
+        text-shadow: 0 0 0.4px currentColor;
+      }
+
       i[class^="ri-"],
       i[class*=" ri-"] {
         font-family: 'remixicon' !important;
@@ -80,7 +133,7 @@
         font-weight: 900;
       }
       .hero-section {
-      background-image: linear-gradient(135deg, rgba(107, 45, 78, 0.88) 0%, rgba(232, 97, 140, 0.82) 100%), url('./images/IMG_0278.jpg');
+      background-image: linear-gradient(135deg, rgba(122, 43, 74, 0.88) 0%, rgba(238, 78, 139, 0.82) 100%), url('./images/IMG_0278.jpg');
       background-size: cover;
       background-position: center;
       }
@@ -107,7 +160,7 @@
       }
       .class-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 10px 25px -5px rgba(232, 97, 140, 0.2);
+      box-shadow: 0 10px 25px -5px rgba(238, 78, 139, 0.2);
       }
       .feature-card:hover {
       transform: translateY(-5px);
@@ -226,13 +279,13 @@
 }
 
 /* Brand gradient utility classes */
-.bg-brand-pink-gradient   { background: linear-gradient(135deg, #E8618C 0%, #6B2D4E 100%); }
-.bg-brand-green-gradient  { background: linear-gradient(135deg, #1A7A6E 0%, #1A5C4A 100%); }
-.bg-brand-soft-gradient   { background: linear-gradient(135deg, #F5EFE6 0%, #E8C4D8 100%); }
-.bg-brand-nature-gradient { background: linear-gradient(135deg, #C8D9A0 0%, #1A7A6E 100%); }
+.bg-brand-pink-gradient   { background: linear-gradient(135deg, #EE4E8B 0%, #7A2B4A 100%); }
+.bg-brand-green-gradient  { background: linear-gradient(135deg, #1A7A5E 0%, #1D5A4B 100%); }
+.bg-brand-soft-gradient   { background: linear-gradient(135deg, #FCF9F2 0%, #F4C9DF 100%); }
+.bg-brand-nature-gradient { background: linear-gradient(135deg, #C5D79B 0%, #1A7A5E 100%); }
 
 .text-brand-gradient {
-  background: linear-gradient(135deg, #E8618C 0%, #6B2D4E 100%);
+  background: linear-gradient(135deg, #EE4E8B 0%, #7A2B4A 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -251,7 +304,7 @@
   content: "";
   height: 1px;
   width: 80px;
-  background: linear-gradient(90deg, transparent, #E8618C, transparent);
+  background: linear-gradient(90deg, transparent, #EE4E8B, transparent);
 }
 
 /* Keyframe: gentle float for ornaments */
@@ -272,8 +325,8 @@
 
         <!-- LOGO (kiri) -->
         <a href="{{ route('member.dashboard') }}" class="logo text-2xl hover:opacity-80 transition tracking-tight flex items-baseline gap-1.5 justify-self-start">
-            <span class="font-nord font-black text-[#E8618C]">FTM</span>
-            <span class="font-instrument italic text-[#6B2D4E] text-3xl">Society</span>
+            <span class="font-nord font-black text-[#EE4E8B]">FTM</span>
+            <span class="font-instrument italic text-[#7A2B4A] text-3xl">Society</span>
         </a>
 
         <!-- DESKTOP NAVIGATION (tengah) -->
@@ -450,7 +503,7 @@
                     <h1 class="font-nord text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white leading-[0.95] tracking-tighter drop-shadow-2xl" style="text-shadow: 0 20px 40px rgba(0,0,0,0.3);">
                         YOUR<br/>
                         <span class="relative inline-block my-3">
-                            <span class="font-instrument italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-light-pink via-primary to-light-pink bg-[length:200%_auto] animate-gradient-shift drop-shadow-2xl" style="text-shadow: 0 10px 30px rgba(232,97,140,0.4); filter: drop-shadow(0 20px 40px rgba(107,45,78,0.3)); letter-spacing: -0.02em;">
+                            <span class="font-instrument italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-light-pink via-primary to-light-pink bg-[length:200%_auto] animate-gradient-shift drop-shadow-2xl" style="text-shadow: 0 10px 30px rgba(238, 78, 139,0.4); filter: drop-shadow(0 20px 40px rgba(122, 43, 74,0.3)); letter-spacing: -0.02em;">
                                 Productive
                             </span>
                             <!-- Elegant Gradient Underline -->
@@ -466,7 +519,7 @@
                     <p class="font-poppins text-xl sm:text-2xl md:text-3xl text-white font-medium leading-relaxed tracking-wide">
                         Good Habit inside
                     </p>
-                    <p class="font-instrument italic text-3xl sm:text-4xl md:text-5xl bg-gradient-to-r from-light-pink to-primary bg-clip-text text-transparent drop-shadow-lg" style="text-shadow: 0 8px 20px rgba(232,97,140,0.3);">
+                    <p class="font-instrument italic text-3xl sm:text-4xl md:text-5xl bg-gradient-to-r from-light-pink to-primary bg-clip-text text-transparent drop-shadow-lg" style="text-shadow: 0 8px 20px rgba(238, 78, 139,0.3);">
                         Productive Muslimah
                     </p>
                 </div>
@@ -530,7 +583,7 @@
         <div class="absolute inset-0" 
              style="background-image: 
                 radial-gradient(circle at 20% 50%, transparent 0%, transparent 10%, primary 10%, primary 11%, transparent 11%),
-                radial-gradient(circle at 80% 80%, transparent 0%, transparent 10%, #793451 10%, #793451 11%, transparent 11%);
+                radial-gradient(circle at 80% 80%, transparent 0%, transparent 10%, #7A2B4A 10%, #7A2B4A 11%, transparent 11%);
                 background-size: 100px 100px;">
         </div>
     </div>
@@ -964,7 +1017,7 @@
         <div class="absolute inset-0" 
              style="background-image: 
                 repeating-linear-gradient(45deg, transparent, transparent 15px, primary 15px, primary 16px),
-                repeating-linear-gradient(-45deg, transparent, transparent 15px, #793451 15px, #793451 16px);
+                repeating-linear-gradient(-45deg, transparent, transparent 15px, #7A2B4A 15px, #7A2B4A 16px);
                 background-size: 80px 80px;">
         </div>
     </div>
@@ -1108,7 +1161,7 @@
                 <div class="min-w-[300px] sm:min-w-[340px] max-w-[360px] flex-shrink-0" data-aos="fade-up" data-aos-delay="300">
                     <div class="group relative bg-cream rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-light-pink/60 hover:border-secondary/30 overflow-hidden h-full flex flex-col">
                         
-                        <div class="absolute inset-0 bg-gradient-to-br from-indigo-50/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div class="absolute inset-0 bg-gradient-to-br from-light-pink/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         
                         <div class="relative z-10 flex flex-col items-center text-center flex-1">
                             
@@ -1137,7 +1190,7 @@
                 <div class="min-w-[300px] sm:min-w-[340px] max-w-[360px] flex-shrink-0" data-aos="fade-up" data-aos-delay="400">
                     <div class="group relative bg-cream rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-light-pink/60 hover:border-primary/30 overflow-hidden h-full flex flex-col">
                         
-                        <div class="absolute inset-0 bg-gradient-to-br from-rose-50/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div class="absolute inset-0 bg-gradient-to-br from-light-pink/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         
                         <div class="relative z-10 flex flex-col items-center text-center flex-1">
                             
@@ -1315,7 +1368,7 @@
         <div class="absolute inset-0" 
              style="background-image: 
                 radial-gradient(circle at 25% 25%, transparent 0%, transparent 12%, primary 12%, primary 13%, transparent 13%),
-                radial-gradient(circle at 75% 75%, transparent 0%, transparent 12%, #793451 12%, #793451 13%, transparent 13%);
+                radial-gradient(circle at 75% 75%, transparent 0%, transparent 12%, #7A2B4A 12%, #7A2B4A 13%, transparent 13%);
                 background-size: 120px 120px;">
         </div>
     </div>
@@ -1497,7 +1550,7 @@
                 <div class="min-w-[85vw] sm:min-w-[300px] max-w-[320px] flex-shrink-0 flex">
                     <div class="group relative bg-cream rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-light-pink/60 hover:border-secondary/30 overflow-hidden w-full flex flex-col">
                         
-                        <div class="absolute inset-0 bg-gradient-to-br from-blue-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                        <div class="absolute inset-0 bg-gradient-to-br from-light-pink/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                         
                         <div class="relative z-10 flex flex-col items-center flex-1">
                             
@@ -1547,7 +1600,7 @@
                 <div class="min-w-[85vw] sm:min-w-[300px] max-w-[320px] flex-shrink-0 flex">
                     <div class="group relative bg-cream rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-light-pink/60 hover:border-primary/30 overflow-hidden w-full flex flex-col">
                         
-                        <div class="absolute inset-0 bg-gradient-to-br from-green-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                        <div class="absolute inset-0 bg-gradient-to-br from-grounded-green/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                         
                         <div class="relative z-10 flex flex-col items-center flex-1">
                             
@@ -1598,7 +1651,7 @@
                 <div class="min-w-[85vw] sm:min-w-[300px] max-w-[320px] flex-shrink-0 flex">
                     <div class="group relative bg-cream rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-light-pink/60 hover:border-secondary/30 overflow-hidden w-full flex flex-col">
                         
-                        <div class="absolute inset-0 bg-gradient-to-br from-amber-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                        <div class="absolute inset-0 bg-gradient-to-br from-light-pink/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                         
                         <div class="relative z-10 flex flex-col items-center flex-1">
                             
@@ -1934,7 +1987,7 @@
         <div class="absolute inset-0" 
              style="background-image: 
                 repeating-linear-gradient(0deg, transparent, transparent 50px, primary 50px, primary 51px),
-                repeating-linear-gradient(90deg, transparent, transparent 50px, #793451 50px, #793451 51px);
+                repeating-linear-gradient(90deg, transparent, transparent 50px, #7A2B4A 50px, #7A2B4A 51px);
                 background-size: 100px 100px;">
         </div>
     </div>
@@ -2231,7 +2284,7 @@
     <div class="absolute inset-0 opacity-[0.02] pointer-events-none"
          style="background-image:
             repeating-linear-gradient(0deg, transparent, transparent 50px, primary 50px, primary 51px),
-            repeating-linear-gradient(90deg, transparent, transparent 50px, #793451 50px, #793451 51px);
+            repeating-linear-gradient(90deg, transparent, transparent 50px, #7A2B4A 50px, #7A2B4A 51px);
             background-size: 100px 100px;">
     </div>
 
@@ -2404,7 +2457,7 @@
                         shadow-lg hover:shadow-2xl transition-shadow duration-300
                         border-2 border-light-pink/60 hover:border-secondary/30 flex flex-col">
 
-                <div class="absolute inset-0 bg-gradient-to-br from-blue-50/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"></div>
+                <div class="absolute inset-0 bg-gradient-to-br from-light-pink/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"></div>
 
                 <div class="relative h-52 overflow-hidden flex-shrink-0">
                     <img src="./images/mat pilates.png" alt="Mat Pilates"
@@ -2456,7 +2509,7 @@
                         shadow-lg hover:shadow-2xl transition-shadow duration-300
                         border-2 border-light-pink/60 hover:border-primary/30 flex flex-col">
 
-                <div class="absolute inset-0 bg-gradient-to-br from-green-50/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"></div>
+                <div class="absolute inset-0 bg-gradient-to-br from-grounded-green/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"></div>
 
                 <div class="relative h-52 overflow-hidden flex-shrink-0">
                     <img src="./images/revormer pilates.png" alt="Reformer Pilates"
@@ -2777,7 +2830,7 @@ const classSchedules = {
     <div class="absolute inset-0 opacity-[0.02] pointer-events-none"
          style="background-image:
             repeating-linear-gradient(0deg, transparent, transparent 50px, primary 50px, primary 51px),
-            repeating-linear-gradient(90deg, transparent, transparent 50px, #793451 50px, #793451 51px);
+            repeating-linear-gradient(90deg, transparent, transparent 50px, #7A2B4A 50px, #7A2B4A 51px);
             background-size: 100px 100px;">
     </div>
 
@@ -2832,7 +2885,7 @@ const classSchedules = {
             {{-- Slider Card --}}
             <div id="facility-slider"
                  class="relative overflow-hidden rounded-3xl shadow-2xl border-2 border-light-pink/60"
-                 style="aspect-ratio:16/9; background:#26282B;">
+                 style="aspect-ratio:16/9; background:#1C1C1C;">
 
                 {{-- Image Track --}}
                 <div id="facility-track"
@@ -2872,8 +2925,8 @@ const classSchedules = {
                         type="button"
                         class="absolute left-4 top-1/2 z-30 flex items-center justify-center w-12 h-12 rounded-full"
                         style="transform:translateY(-50%);
-                               background:linear-gradient(135deg,#793451,primary);
-                               box-shadow:0 4px 20px rgba(234,105,147,0.5);
+                               background:linear-gradient(135deg,#7A2B4A,primary);
+                               box-shadow:0 4px 20px rgba(238, 78, 139,0.5);
                                border:none; cursor:pointer;
                                transition: transform 0.2s, filter 0.2s;"
                         onmouseover="this.style.filter='brightness(1.15)'; this.style.transform='translateY(-50%) scale(1.1)';"
@@ -2888,8 +2941,8 @@ const classSchedules = {
                         type="button"
                         class="absolute right-4 top-1/2 z-30 flex items-center justify-center w-12 h-12 rounded-full"
                         style="transform:translateY(-50%);
-                               background:linear-gradient(135deg,primary,#793451);
-                               box-shadow:0 4px 20px rgba(234,105,147,0.5);
+                               background:linear-gradient(135deg,primary,#7A2B4A);
+                               box-shadow:0 4px 20px rgba(238, 78, 139,0.5);
                                border:none; cursor:pointer;
                                transition: transform 0.2s, filter 0.2s;"
                         onmouseover="this.style.filter='brightness(1.15)'; this.style.transform='translateY(-50%) scale(1.1)';"
@@ -2903,8 +2956,8 @@ const classSchedules = {
                 <div class="absolute top-4 left-4 z-20">
                     <span id="facility-counter"
                           class="text-xs font-black px-3 py-1 rounded-full text-white"
-                          style="background:linear-gradient(to right,primary,#793451);
-                                 box-shadow:0 2px 12px rgba(234,105,147,0.5);
+                          style="background:linear-gradient(to right,primary,#7A2B4A);
+                                 box-shadow:0 2px 12px rgba(238, 78, 139,0.5);
                                  letter-spacing:0.1em;">
                         01 / 10
                     </span>
@@ -2958,7 +3011,7 @@ const classSchedules = {
     <div class="absolute inset-0 opacity-[0.02] pointer-events-none"
          style="background-image:
             repeating-linear-gradient(0deg, transparent, transparent 50px, primary 50px, primary 51px),
-            repeating-linear-gradient(90deg, transparent, transparent 50px, #793451 50px, #793451 51px);
+            repeating-linear-gradient(90deg, transparent, transparent 50px, #7A2B4A 50px, #7A2B4A 51px);
             background-size: 100px 100px;">
     </div>
 
@@ -3030,7 +3083,7 @@ const classSchedules = {
                          style="min-width:80px;" />
                     {{-- Bottom accent line identik Classes --}}
                     <div class="h-0.5 w-0 group-hover:w-full rounded-full transition-all duration-500 mt-3"
-                         style="background:linear-gradient(to right,primary,#793451,primary);"></div>
+                         style="background:linear-gradient(to right,primary,#7A2B4A,primary);"></div>
                 </div>
                 @endforeach
 
@@ -3386,7 +3439,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     <div>
     <label for="is_muslim" class="block text-dark mb-2">Apakah Anda Muslimah?</label>
-    <div class="mb-2 text-xs text-dark bg-[#D2DCA5] rounded px-3 py-2">
+    <div class="mb-2 text-xs text-dark bg-[#C5D79B] rounded px-3 py-2">
         <strong>P.S:</strong> Kolom Agama Islam diperlukan karena adanya perbedaan pendapat di kalangan para ulama tentang batasan aurat perempuan muslim di hadapan perempuan non-muslim. Karenanya, kami mengambil pendapat yang paling hati-hati dalam perkara ini. Kami tidak meminta bukti KTP Anda, oleh karena itu, kami mohon kerjasamanya agar mengisi form dengan jujur sebagai bentuk toleransi terhadap apa yang kami yakini. Semoga ridho dan berkenan.
     </div>
     <select id="is_muslim" name="is_muslim" required class="w-full px-4 py-3 rounded border border-light-pink focus:border-secondary">
@@ -3763,6 +3816,685 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>
   </div>
 </footer>
+
+  {{-- ========================================================== --}}
+  {{-- FTM SOCIETY — WhatsApp Floating Widget (draggable + form)   --}}
+  {{-- ========================================================== --}}
+  <div id="ftm-wa-widget" class="ftm-wa-widget"
+       data-wa-number="6287785767395"
+       aria-label="WhatsApp FTM Society">
+
+    {{-- Floating Trigger Button (collapsed state) --}}
+    <button type="button"
+            id="ftm-wa-trigger"
+            class="ftm-wa-trigger"
+            aria-label="Hubungi FTM Society via WhatsApp">
+      <span class="ftm-wa-pulse" aria-hidden="true"></span>
+      <svg class="ftm-wa-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.226 1.36.194 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+      </svg>
+    </button>
+
+    {{-- Card Panel (open state) --}}
+    <div id="ftm-wa-card" class="ftm-wa-card" role="dialog" aria-labelledby="ftm-wa-title" aria-hidden="true">
+
+      {{-- Drag handle / Header --}}
+      <div class="ftm-wa-header" id="ftm-wa-handle">
+        <div class="ftm-wa-header-content">
+          <div class="ftm-wa-avatar">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.226 1.36.194 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+            </svg>
+          </div>
+          <div class="ftm-wa-header-text">
+            <p class="ftm-wa-title" id="ftm-wa-title">Halo, ada yang bisa kami bantu?</p>
+            <p class="ftm-wa-subtitle">
+              <span class="ftm-wa-online-dot"></span>
+              Tim FTM biasanya membalas dalam beberapa menit
+            </p>
+          </div>
+        </div>
+        <button type="button" id="ftm-wa-close" class="ftm-wa-close" aria-label="Tutup">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      {{-- Body --}}
+      <div class="ftm-wa-body">
+        <div class="ftm-wa-greeting">
+          <p>Hai, <strong>FTM Society</strong> di sini.</p>
+          <p>Tulis nama dan pertanyaanmu &mdash; kami akan respons via WhatsApp secepatnya.</p>
+        </div>
+
+        <form id="ftm-wa-form" class="ftm-wa-form" autocomplete="off">
+          <div class="ftm-wa-field">
+            <label for="ftm-wa-name">Nama</label>
+            <input type="text"
+                   id="ftm-wa-name"
+                   name="name"
+                   placeholder="Nama lengkap kamu"
+                   required
+                   maxlength="80">
+          </div>
+          <div class="ftm-wa-field">
+            <label for="ftm-wa-message">Pertanyaan</label>
+            <textarea id="ftm-wa-message"
+                      name="message"
+                      rows="4"
+                      placeholder="Tulis pertanyaan kamu di sini..."
+                      required
+                      maxlength="500"></textarea>
+            <span class="ftm-wa-counter" id="ftm-wa-counter">0 / 500</span>
+          </div>
+
+          <button type="submit" class="ftm-wa-submit">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.226 1.36.194 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+            </svg>
+            <span>Kirim ke WhatsApp</span>
+          </button>
+        </form>
+
+        <p class="ftm-wa-footnote">
+          Pesan akan terkirim melalui WhatsApp — <strong>gratis</strong>, tidak perlu daftar.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  {{-- ========================================================== --}}
+  {{-- WhatsApp Widget — Styles                                   --}}
+  {{-- ========================================================== --}}
+  <style>
+    /* Container — fixed position, position will be overridden by JS via inline style */
+    .ftm-wa-widget {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 9998;
+      font-family: 'Poppins', system-ui, sans-serif;
+      pointer-events: none;
+    }
+    .ftm-wa-widget > * { pointer-events: auto; }
+
+    /* ===== TRIGGER BUTTON (collapsed) ===== */
+    .ftm-wa-trigger {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #25D366;
+      color: #FFFFFF;
+      border: none;
+      box-shadow: 0 8px 24px rgba(37, 211, 102, 0.45);
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .ftm-wa-trigger:hover {
+      transform: scale(1.06);
+      box-shadow: 0 10px 28px rgba(37, 211, 102, 0.55);
+    }
+    .ftm-wa-trigger:active,
+    .ftm-wa-trigger.ftm-wa-dragging {
+      cursor: grabbing;
+      transform: scale(1.02);
+    }
+    .ftm-wa-icon {
+      width: 30px;
+      height: 30px;
+      pointer-events: none;
+    }
+    .ftm-wa-pulse {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #EE4E8B;
+      border: 2px solid #FFFFFF;
+      box-shadow: 0 0 0 0 rgba(238, 78, 139, 0.7);
+      animation: ftmWaPulse 1.8s infinite;
+      pointer-events: none;
+    }
+    @keyframes ftmWaPulse {
+      0%   { box-shadow: 0 0 0 0 rgba(238, 78, 139, 0.7); }
+      70%  { box-shadow: 0 0 0 10px rgba(238, 78, 139, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(238, 78, 139, 0); }
+    }
+
+    /* Hide trigger when card open */
+    .ftm-wa-widget.is-open .ftm-wa-trigger {
+      opacity: 0;
+      transform: scale(0.5);
+      pointer-events: none;
+    }
+
+    /* ===== CARD (open state) ===== */
+    .ftm-wa-card {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 350px;
+      max-width: calc(100vw - 32px);
+      background: #FCF9F2;
+      border-radius: 18px;
+      box-shadow: 0 20px 50px rgba(28, 28, 28, 0.25),
+                  0 0 0 1px rgba(244, 201, 223, 0.4);
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(20px) scale(0.96);
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .ftm-wa-widget.is-open .ftm-wa-card {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    /* ===== HEADER ===== */
+    .ftm-wa-header {
+      background: #25D366;
+      color: #FFFFFF;
+      padding: 0.95rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      cursor: grab;
+      user-select: none;
+      position: relative;
+    }
+    .ftm-wa-header.ftm-wa-dragging { cursor: grabbing; }
+    .ftm-wa-header::before {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.04));
+    }
+
+    .ftm-wa-header-content {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      flex: 1;
+      min-width: 0;
+    }
+    .ftm-wa-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .ftm-wa-avatar svg {
+      width: 22px;
+      height: 22px;
+      color: #FFFFFF;
+    }
+    .ftm-wa-header-text {
+      flex: 1;
+      min-width: 0;
+    }
+    .ftm-wa-title {
+      font-family: 'Nord', 'Poppins', sans-serif;
+      font-weight: 800;
+      font-size: 0.98rem;
+      margin: 0;
+      line-height: 1.2;
+      color: #FFFFFF;
+      letter-spacing: 0.01em;
+    }
+    .ftm-wa-subtitle {
+      font-size: 0.72rem;
+      margin: 0.15rem 0 0;
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      line-height: 1.3;
+    }
+    .ftm-wa-online-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #C5D79B;
+      box-shadow: 0 0 0 0 rgba(197, 215, 155, 0.7);
+      animation: ftmWaOnline 1.6s infinite;
+      flex-shrink: 0;
+    }
+    @keyframes ftmWaOnline {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0.55; }
+    }
+
+    .ftm-wa-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.16);
+      border: none;
+      color: #FFFFFF;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.18s ease, transform 0.18s ease;
+    }
+    .ftm-wa-close:hover {
+      background: rgba(255, 255, 255, 0.28);
+      transform: rotate(90deg);
+    }
+
+    /* ===== BODY ===== */
+    .ftm-wa-body {
+      padding: 1rem 1rem 1.1rem;
+      max-height: calc(100vh - 200px);
+      overflow-y: auto;
+    }
+    .ftm-wa-body::-webkit-scrollbar { width: 6px; }
+    .ftm-wa-body::-webkit-scrollbar-thumb {
+      background: #F4C9DF;
+      border-radius: 3px;
+    }
+
+    .ftm-wa-greeting {
+      background: #FFFFFF;
+      border: 1px solid #F4C9DF;
+      border-radius: 12px;
+      padding: 0.75rem 0.9rem;
+      margin-bottom: 0.85rem;
+      box-shadow: 0 1px 3px rgba(122, 43, 74, 0.04);
+      position: relative;
+    }
+    .ftm-wa-greeting::before {
+      content: '';
+      position: absolute;
+      top: -7px;
+      left: 18px;
+      width: 14px;
+      height: 14px;
+      background: #FFFFFF;
+      border-top: 1px solid #F4C9DF;
+      border-left: 1px solid #F4C9DF;
+      transform: rotate(45deg);
+    }
+    .ftm-wa-greeting p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #1C1C1C;
+      line-height: 1.55;
+      font-weight: 500;
+    }
+    .ftm-wa-greeting p + p { margin-top: 0.25rem; }
+    .ftm-wa-greeting strong { color: #7A2B4A; font-weight: 700; }
+
+    /* ===== FORM ===== */
+    .ftm-wa-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+    .ftm-wa-field {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .ftm-wa-field label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #7A2B4A;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+      font-family: 'Nord', 'Poppins', sans-serif;
+    }
+    .ftm-wa-field input,
+    .ftm-wa-field textarea {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      border: 1.5px solid #F4C9DF;
+      border-radius: 10px;
+      background: #FFFFFF;
+      color: #1C1C1C;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+      resize: vertical;
+    }
+    .ftm-wa-field input::placeholder,
+    .ftm-wa-field textarea::placeholder {
+      color: rgba(28, 28, 28, 0.4);
+    }
+    .ftm-wa-field input:focus,
+    .ftm-wa-field textarea:focus {
+      outline: none;
+      border-color: #25D366;
+      box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.15);
+    }
+    .ftm-wa-field textarea {
+      min-height: 84px;
+      max-height: 180px;
+    }
+    .ftm-wa-counter {
+      position: absolute;
+      bottom: 6px;
+      right: 10px;
+      font-size: 0.7rem;
+      color: rgba(28, 28, 28, 0.4);
+      font-weight: 500;
+      pointer-events: none;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    /* ===== SUBMIT BUTTON ===== */
+    .ftm-wa-submit {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      background: #25D366;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Nord', 'Poppins', sans-serif;
+      font-weight: 800;
+      font-size: 0.88rem;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      box-shadow: 0 6px 16px rgba(37, 211, 102, 0.32);
+      transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+      margin-top: 0.25rem;
+    }
+    .ftm-wa-submit:hover {
+      background: #128C7E;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(18, 140, 126, 0.38);
+    }
+    .ftm-wa-submit:active { transform: translateY(0); }
+    .ftm-wa-submit svg { flex-shrink: 0; }
+    .ftm-wa-submit:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .ftm-wa-footnote {
+      font-size: 0.7rem;
+      color: rgba(28, 28, 28, 0.5);
+      text-align: center;
+      margin: 0.7rem 0 0;
+      line-height: 1.5;
+    }
+    .ftm-wa-footnote strong { color: #1A7A5E; font-weight: 700; }
+
+    /* ===== RESPONSIVE — mobile ===== */
+    @media (max-width: 640px) {
+      .ftm-wa-widget {
+        right: 16px !important;
+        bottom: 16px !important;
+        left: auto !important;
+        top: auto !important;
+      }
+      .ftm-wa-card {
+        width: calc(100vw - 32px);
+        max-width: 360px;
+      }
+      .ftm-wa-header { cursor: default; }
+      .ftm-wa-trigger { cursor: pointer; }
+    }
+  </style>
+
+  {{-- ========================================================== --}}
+  {{-- WhatsApp Widget — Logic                                     --}}
+  {{-- ========================================================== --}}
+  <script>
+    (function() {
+      const widget   = document.getElementById('ftm-wa-widget');
+      const trigger  = document.getElementById('ftm-wa-trigger');
+      const card     = document.getElementById('ftm-wa-card');
+      const handle   = document.getElementById('ftm-wa-handle');
+      const closeBtn = document.getElementById('ftm-wa-close');
+      const form     = document.getElementById('ftm-wa-form');
+      const nameIn   = document.getElementById('ftm-wa-name');
+      const msgIn    = document.getElementById('ftm-wa-message');
+      const counter  = document.getElementById('ftm-wa-counter');
+      const waNumber = widget.dataset.waNumber || '6287785767395';
+
+      if (!widget || !trigger || !card) return;
+
+      const STORAGE_KEY = 'ftm_wa_widget_pos';
+      const SNAP_PADDING = 16;
+      const isMobile = () => window.matchMedia('(max-width: 640px)').matches;
+
+      /* ====== Restore saved position ====== */
+      function restorePosition() {
+        if (isMobile()) return; // mobile selalu di pojok kanan-bawah
+        try {
+          const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+          if (!saved) return;
+          // Validate within viewport
+          const w = trigger.offsetWidth || 60;
+          const h = trigger.offsetHeight || 60;
+          const maxLeft = window.innerWidth - w - SNAP_PADDING;
+          const maxTop  = window.innerHeight - h - SNAP_PADDING;
+          const left = Math.max(SNAP_PADDING, Math.min(saved.left, maxLeft));
+          const top  = Math.max(SNAP_PADDING, Math.min(saved.top, maxTop));
+          applyPosition(left, top);
+        } catch (e) { /* ignore */ }
+      }
+
+      function applyPosition(left, top) {
+        widget.style.left   = left + 'px';
+        widget.style.top    = top + 'px';
+        widget.style.right  = 'auto';
+        widget.style.bottom = 'auto';
+        // Card alignment (so it opens toward viewport center)
+        const isLeftHalf = (left + 30) < window.innerWidth / 2;
+        const isTopHalf  = (top  + 30) < window.innerHeight / 2;
+        card.style.left   = isLeftHalf ? '0' : 'auto';
+        card.style.right  = isLeftHalf ? 'auto' : '0';
+        card.style.top    = isTopHalf  ? '70px' : 'auto';
+        card.style.bottom = isTopHalf  ? 'auto' : '70px';
+      }
+
+      function snapToEdge(left, top) {
+        const w = widget.offsetWidth || 60;
+        const h = widget.offsetHeight || 60;
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        // Snap horizontally to nearest edge
+        const centerX = left + w / 2;
+        const snapLeft = (centerX < vw / 2)
+          ? SNAP_PADDING
+          : vw - w - SNAP_PADDING;
+        // Constrain vertically
+        const snapTop = Math.max(SNAP_PADDING, Math.min(top, vh - h - SNAP_PADDING));
+        applyPosition(snapLeft, snapTop);
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ left: snapLeft, top: snapTop }));
+        } catch (e) {}
+      }
+
+      /* ====== Drag logic ====== */
+      let dragState = null;
+
+      function startDrag(e, source) {
+        if (isMobile()) return;
+        const evt = e.touches ? e.touches[0] : e;
+        const rect = widget.getBoundingClientRect();
+        dragState = {
+          source: source,
+          startX: evt.clientX,
+          startY: evt.clientY,
+          origLeft: rect.left,
+          origTop:  rect.top,
+          moved:    false,
+        };
+        widget.style.transition = 'none';
+        source.classList.add('ftm-wa-dragging');
+      }
+      function onMove(e) {
+        if (!dragState) return;
+        const evt = e.touches ? e.touches[0] : e;
+        const dx = evt.clientX - dragState.startX;
+        const dy = evt.clientY - dragState.startY;
+        if (!dragState.moved && (Math.abs(dx) > 4 || Math.abs(dy) > 4)) {
+          dragState.moved = true;
+        }
+        if (dragState.moved) {
+          e.preventDefault();
+          applyPosition(dragState.origLeft + dx, dragState.origTop + dy);
+        }
+      }
+      function endDrag(e) {
+        if (!dragState) return;
+        const wasMoved = dragState.moved;
+        const source = dragState.source;
+        source.classList.remove('ftm-wa-dragging');
+        if (wasMoved) {
+          const rect = widget.getBoundingClientRect();
+          widget.style.transition = 'left 0.3s ease, top 0.3s ease';
+          snapToEdge(rect.left, rect.top);
+          // Prevent click after drag
+          source._dragJustEnded = true;
+          setTimeout(() => { source._dragJustEnded = false; }, 100);
+        }
+        dragState = null;
+      }
+
+      // Trigger drag (mouse + touch)
+      trigger.addEventListener('mousedown',  (e) => startDrag(e, trigger));
+      trigger.addEventListener('touchstart', (e) => startDrag(e, trigger), { passive: true });
+      // Header drag (when card open)
+      handle.addEventListener('mousedown',  (e) => {
+        if (e.target.closest('.ftm-wa-close')) return;
+        startDrag(e, handle);
+      });
+      handle.addEventListener('touchstart', (e) => {
+        if (e.target.closest('.ftm-wa-close')) return;
+        startDrag(e, handle);
+      }, { passive: true });
+
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('touchmove', onMove, { passive: false });
+      document.addEventListener('mouseup',   endDrag);
+      document.addEventListener('touchend',  endDrag);
+
+      /* ====== Open / Close ====== */
+      function openCard() {
+        widget.classList.add('is-open');
+        card.setAttribute('aria-hidden', 'false');
+        setTimeout(() => nameIn && nameIn.focus(), 280);
+      }
+      function closeCard() {
+        widget.classList.remove('is-open');
+        card.setAttribute('aria-hidden', 'true');
+      }
+
+      trigger.addEventListener('click', (e) => {
+        if (trigger._dragJustEnded) return;
+        openCard();
+      });
+      closeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeCard();
+      });
+
+      // Esc key to close
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && widget.classList.contains('is-open')) {
+          closeCard();
+        }
+      });
+
+      /* ====== Counter ====== */
+      function updateCounter() {
+        if (!msgIn || !counter) return;
+        counter.textContent = msgIn.value.length + ' / ' + msgIn.maxLength;
+      }
+      msgIn && msgIn.addEventListener('input', updateCounter);
+      updateCounter();
+
+      /* ====== Submit -> WhatsApp ====== */
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = (nameIn.value || '').trim();
+        const msg  = (msgIn.value  || '').trim();
+        if (!name || !msg) return;
+
+        // Pesan teks polos (tanpa emoji) — paling kompatibel di semua device
+        const text = 'Halo FTM Society,\n\n' +
+                     'Saya *' + name + '* ingin bertanya:\n' +
+                     '"' + msg + '"\n\n' +
+                     'Mohon informasinya. Terima kasih.';
+        const url = 'https://wa.me/' + waNumber + '?text=' + encodeURIComponent(text);
+        window.open(url, '_blank', 'noopener,noreferrer');
+
+        // Reset & give feedback
+        const submitBtn = form.querySelector('.ftm-wa-submit');
+        const orig = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Terkirim!</span>';
+        setTimeout(() => {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = orig;
+          form.reset();
+          updateCounter();
+          closeCard();
+        }, 1400);
+      });
+
+      /* ====== Reposition on resize ====== */
+      let resizeTimeout = null;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          if (isMobile()) {
+            // Reset to mobile fixed position
+            widget.style.left   = '';
+            widget.style.top    = '';
+            widget.style.right  = '';
+            widget.style.bottom = '';
+            card.style.left   = '';
+            card.style.right  = '';
+            card.style.top    = '';
+            card.style.bottom = '';
+          } else {
+            restorePosition();
+          }
+        }, 120);
+      });
+
+      /* ====== Init ====== */
+      restorePosition();
+    })();
+  </script>
 
   </body>
 </html>

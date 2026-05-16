@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 
@@ -152,8 +152,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
             </svg>
         </div>
-        <h3 class="text-xl font-bold text-gray-900 text-center mb-2">Batalkan Pembayaran?</h3>
-        <p class="text-gray-600 text-center text-sm mb-4">
+        <h3 class="text-xl font-bold text-dark text-center mb-2">Batalkan Pembayaran?</h3>
+        <p class="text-dark/70 text-center text-sm mb-4">
             Anda belum menyelesaikan pembayaran. Apakah Anda ingin melanjutkan atau membatalkan?
         </p>
         <div class="modal-buttons">
@@ -170,7 +170,7 @@
 <div class="bg-white flex justify-center items-start pt-12 pb-12">
     <div class="max-w-lg w-full px-6">
         <div class="bg-white rounded-2xl shadow-xl border border-gray-50 p-6 sm:p-8">
-            <h1 class="text-3xl font-bold text-gray-900 mb-8 text-center">Checkout</h1>
+            <h1 class="text-3xl font-bold text-dark mb-8 text-center">Checkout</h1>
 
             <form id="checkoutForm" method="POST">
                 @csrf
@@ -178,20 +178,20 @@
                 <input type="hidden" id="hiddenClassId" name="class_id" value="">
 
                 <div class="space-y-4">
-                    <h2 class="text-lg font-semibold text-gray-800">Program dan Kelas</h2>
+                    <h2 class="text-lg font-semibold text-dark">Program dan Kelas</h2>
                     
                     @if($showClassDropdown)
                         <div class="flex flex-col sm:flex-row gap-3">
                             <div class="flex-1">
-                                <label class="text-sm text-gray-500 mb-1 block">Program</label>
-                                <div class="flex items-center justify-between px-4 py-3 bg-gray-50 rounded-xl font-medium text-gray-900 border border-gray-200">
+                                <label class="text-sm text-cream0 mb-1 block">Program</label>
+                                <div class="flex items-center justify-between px-4 py-3 bg-cream rounded-xl font-medium text-dark border border-light-pink/50">
                                     <span class="truncate">{{ $pkg->name }}</span>
-                                    <span class="text-sm text-gray-500 ml-2">({{ $pkg->quota }}x)</span>
+                                    <span class="text-sm text-cream0 ml-2">({{ $pkg->quota }}x)</span>
                                 </div>
                             </div>
 
                             <div class="flex-1">
-                                <label class="text-sm text-gray-500 mb-1 block">Pilih Kelas</label>
+                                <label class="text-sm text-cream0 mb-1 block">Pilih Kelas</label>
                                 <select id="classOption" class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-violet-200 focus:border-violet-400" required>
                                     <option value="">Pilih Kelas</option>
                                     @foreach($classOptions as $classId => $opt)
@@ -202,21 +202,21 @@
                         </div>
                     @else
                         <div>
-                            <label class="text-sm text-gray-500 mb-1 block">Program</label>
-                            <div class="flex items-center justify-between px-4 py-3 bg-gray-50 rounded-xl font-medium text-gray-900 border border-gray-200">
+                            <label class="text-sm text-cream0 mb-1 block">Program</label>
+                            <div class="flex items-center justify-between px-4 py-3 bg-cream rounded-xl font-medium text-dark border border-light-pink/50">
                                 <span class="truncate">{{ $pkg->name }}</span>
-                                <span class="text-sm text-gray-500 ml-2">({{ $pkg->quota }}x)</span>
+                                <span class="text-sm text-cream0 ml-2">({{ $pkg->quota }}x)</span>
                             </div>
                         </div>
                         
-                        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mt-3">
+                        <div class="bg-light-pink/30 border border-primary/30 rounded-xl p-4 mt-3">
                             <div class="flex items-start gap-3">
-                                <svg class="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="w-5 h-5 text-primary mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                                 </svg>
                                 <div>
                                     <h4 class="font-semibold text-blue-900 text-sm">Cara Booking</h4>
-                                    <p class="text-sm text-blue-700 mt-1">Setelah pembayaran berhasil, Anda dapat memilih jadwal kelas di halaman <strong>Booking</strong>.</p>
+                                    <p class="text-sm text-secondary mt-1">Setelah pembayaran berhasil, Anda dapat memilih jadwal kelas di halaman <strong>Booking</strong>.</p>
                                 </div>
                             </div>
                         </div>
@@ -224,31 +224,31 @@
 
                     <div id="classSchedules"></div>
 
-                    <hr class="border-gray-100">
+                    <hr class="border-light-pink/30">
 
                     <div class="space-y-4">
-                        <h2 class="text-lg font-semibold text-gray-800">Ringkasan Pembayaran</h2>
-                        <div class="bg-gray-50 rounded-xl p-4 space-y-2 border border-gray-200">
-                            <div class="flex justify-between text-sm text-gray-700">
+                        <h2 class="text-lg font-semibold text-dark">Ringkasan Pembayaran</h2>
+                        <div class="bg-cream rounded-xl p-4 space-y-2 border border-light-pink/50">
+                            <div class="flex justify-between text-sm text-dark">
                                 <span>Harga Program (IDR)</span>
                                 <span id="priceValue" class="font-medium">{{ rp($pkg->price) }}</span>
                             </div>
-                            <div class="flex justify-between text-sm text-gray-700">
+                            <div class="flex justify-between text-sm text-dark">
                                 <span>Diskon Voucher</span>
-                                <span id="voucherValue" class="font-medium text-violet-600">Rp0</span>
+                                <span id="voucherValue" class="font-medium text-primary">Rp0</span>
                             </div>
-                            <hr class="border-gray-300 my-2">
+                            <hr class="border-light-pink/60 my-2">
                             <div class="flex justify-between items-center">
-                                <span class="text-lg font-semibold text-gray-900">Amount to Pay</span>
-                                <span id="totalValue" class="text-2xl font-bold text-gray-900">{{ rp($pkg->price) }}</span>
+                                <span class="text-lg font-semibold text-dark">Amount to Pay</span>
+                                <span id="totalValue" class="text-2xl font-bold text-dark">{{ rp($pkg->price) }}</span>
                             </div>
                         </div>
 
                         <div class="pt-4">
-                            <h3 class="text-md font-semibold text-gray-800 mb-3">Kode Voucher</h3>
+                            <h3 class="text-md font-semibold text-dark mb-3">Kode Voucher</h3>
                             <div class="flex gap-3">
                                 <input id="voucher" name="voucher_code" type="text" placeholder="Masukkan kode voucher"
-                                       class="flex-1 rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-violet-200 focus:border-violet-400">
+                                       class="flex-1 rounded-xl border border-light-pink/60 px-4 py-3 focus:ring-2 focus:ring-violet-200 focus:border-violet-400">
                                 <button id="applyVoucher" type="button" class="h-11 px-6 rounded-lg text-white font-semibold btn-purple shadow-md shadow-violet-500/20 text-sm">
                                     Apply
                                 </button>
@@ -261,7 +261,7 @@
                         <span>Bayar Sekarang</span>
                     </button>
 
-                    <div id="statusText" class="text-sm text-center mt-3 text-gray-600"></div>
+                    <div id="statusText" class="text-sm text-center mt-3 text-dark/70"></div>
                 </div>
             </form>
         </div>
@@ -336,10 +336,10 @@ window.__PAYMENT_DONE__ = false;
 
     function showMessage(element, message, type = 'error') {
         const colors = {
-            error: 'text-red-600',
-            success: 'text-green-600',
-            info: 'text-blue-600',
-            warning: 'text-yellow-600'
+            error: 'text-secondary',
+            success: 'text-accent',
+            info: 'text-primary',
+            warning: 'text-springs-ivy'
         };
         element.textContent = message;
         element.className = `mt-2 text-sm ${colors[type]}`;
@@ -352,11 +352,11 @@ window.__PAYMENT_DONE__ = false;
 
     function updateStatusText(message, type = 'info') {
         const colors = {
-            info: 'text-blue-600',
-            success: 'text-green-600',
-            error: 'text-red-600',
-            warning: 'text-yellow-600',
-            default: 'text-gray-600'
+            info: 'text-primary',
+            success: 'text-accent',
+            error: 'text-secondary',
+            warning: 'text-springs-ivy',
+            default: 'text-dark/70'
         };
         DOM.statusText.textContent = message;
         DOM.statusText.className = `text-sm text-center mt-3 ${colors[type]} font-semibold`;
@@ -453,12 +453,12 @@ window.__PAYMENT_DONE__ = false;
 
             const schedules = classOptions[key].schedules;
             DOM.scheduleContainer.innerHTML = `
-                <div class="bg-green-50 border border-green-200 rounded-xl p-4 mt-3">
+                <div class="bg-grounded-green/20 border border-accent/30 rounded-xl p-4 mt-3">
                     <h4 class="font-semibold text-green-900 mb-2">Jadwal Kelas Anda</h4>
                     <ul class="text-sm space-y-1">
                         ${schedules.map(s => `
-                            <li class="flex items-center gap-2 text-green-800">
-                                <span class="text-green-600 font-bold">✓</span>
+                            <li class="flex items-center gap-2 text-springs-ivy">
+                                <span class="text-accent font-bold">✓</span>
                                 <span>${s}</span>
                             </li>
                         `).join('')}

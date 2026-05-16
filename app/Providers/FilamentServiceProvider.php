@@ -25,9 +25,12 @@ class FilamentServiceProvider extends ServiceProvider
                 LatestOrders::class,
             ]);
 
-            // ✅ Register Custom Theme CSS
+            // ✅ Register Custom Theme CSS — pakai filemtime sebagai cache buster
+            $themePath = public_path('css/filament-theme.css');
+            $version = file_exists($themePath) ? filemtime($themePath) : time();
+
             Filament::registerStyles([
-                asset('css/filament-theme.css'),
+                asset('css/filament-theme.css') . '?v=' . $version,
             ]);
 
         });

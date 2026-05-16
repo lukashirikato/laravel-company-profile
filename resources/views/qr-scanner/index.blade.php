@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -98,17 +98,17 @@
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-100">
+<body class="bg-dark text-cream">
     <!-- FIXED HEADER -->
-    <header class="fixed top-0 w-full bg-gray-800 z-50 border-b border-gray-700">
+    <header class="fixed top-0 w-full bg-dark z-50 border-b border-gray-700">
         <div class="flex items-center justify-between p-4">
             <div class="flex items-center gap-3">
-                <a href="{{ route('member.dashboard') }}" class="text-gray-400 hover:text-white">
+                <a href="{{ route('member.dashboard') }}" class="text-dark/40 hover:text-white">
                     <i class="ri-arrow-left-line text-xl"></i>
                 </a>
                 <h1 class="text-lg font-semibold">QR Scanner</h1>
             </div>
-            <span class="text-sm text-gray-400">{{ auth('customer')->user()->name }}</span>
+            <span class="text-sm text-dark/40">{{ auth('customer')->user()->name }}</span>
         </div>
     </header>
 
@@ -135,7 +135,7 @@
                     <div class="animate-spin text-3xl text-primary mb-4">
                         <i class="ri-loader-4-line"></i>
                     </div>
-                    <p class="text-gray-300">Initializing camera...</p>
+                    <p class="text-dark/30">Initializing camera...</p>
                 </div>
             </div>
         </div>
@@ -148,8 +148,8 @@
                     <div id="status-icon" class="text-3xl mt-1"></div>
                     <div class="flex-1">
                         <h2 id="status-title" class="text-xl font-bold mb-2"></h2>
-                        <p id="status-message" class="text-gray-300 mb-4"></p>
-                        <div id="status-details" class="text-sm text-gray-400 space-y-1"></div>
+                        <p id="status-message" class="text-dark/30 mb-4"></p>
+                        <div id="status-details" class="text-sm text-dark/40 space-y-1"></div>
                     </div>
                 </div>
             </div>
@@ -158,7 +158,7 @@
             <div id="active-session-card" class="glass-effect rounded-xl p-6 mb-6 hidden bg-green-900/20 border-green-700">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-bold text-green-400">✓ Sesi Aktif</h3>
-                    <button onclick="checkoutSession()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-semibold transition">
+                    <button onclick="checkoutSession()" class="bg-secondary hover:bg-secondary px-4 py-2 rounded-lg font-semibold transition">
                         <i class="ri-logout-circle-r-line mr-2"></i>Checkout
                     </button>
                 </div>
@@ -170,7 +170,7 @@
                 <h3 class="font-semibold mb-4 flex items-center gap-2">
                     <i class="ri-information-line"></i> Petunjuk Penggunaan
                 </h3>
-                <ul class="space-y-3 text-sm text-gray-300">
+                <ul class="space-y-3 text-sm text-dark/30">
                     <li class="flex gap-3">
                         <div class="text-primary font-bold mt-1">1</div>
                         <span>Pastikan cahaya cukup dan QR code terlihat jelas dalam frame</span>
@@ -193,10 +193,10 @@
     </main>
 
     <!-- BOTTOM ACTION BAR -->
-    <div class="fixed bottom-0 w-full bg-gray-800 border-t border-gray-700 p-4">
+    <div class="fixed bottom-0 w-full bg-dark border-t border-gray-700 p-4">
         <div class="max-w-2xl mx-auto flex gap-3">
             <button onclick="toggleCamera()" id="camera-toggle-btn"
-                class="flex-1 bg-gray-700 hover:bg-gray-600 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2">
+                class="flex-1 bg-dark hover:bg-gray-600 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2">
                 <i class="ri-camera-line"></i>
                 <span>Stop Camera</span>
             </button>
@@ -308,19 +308,19 @@
             const sessionHTML = `
                 <div class="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                        <div class="text-gray-400 text-xs mb-1">MEMBER</div>
+                        <div class="text-dark/40 text-xs mb-1">MEMBER</div>
                         <div class="font-bold">${data.customer_name}</div>
                     </div>
                     <div>
-                        <div class="text-gray-400 text-xs mb-1">KELAS</div>
+                        <div class="text-dark/40 text-xs mb-1">KELAS</div>
                         <div class="font-bold">${data.class_name}</div>
                     </div>
                     <div>
-                        <div class="text-gray-400 text-xs mb-1">CHECK-IN</div>
+                        <div class="text-dark/40 text-xs mb-1">CHECK-IN</div>
                         <div class="font-bold">${data.check_in_time}</div>
                     </div>
                     <div>
-                        <div class="text-gray-400 text-xs mb-1">DURASI</div>
+                        <div class="text-dark/40 text-xs mb-1">DURASI</div>
                         <div class="font-bold">00:00</div>
                     </div>
                 </div>

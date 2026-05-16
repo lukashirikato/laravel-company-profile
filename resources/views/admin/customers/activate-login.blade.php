@@ -1,4 +1,4 @@
-<!-- resources/views/admin/customers/activate-login.blade.php -->
+﻿<!-- resources/views/admin/customers/activate-login.blade.php -->
 
 @extends('layouts.app')
 
@@ -10,10 +10,10 @@
 
     <form action="{{ route('customers.activateLogin', $customer->id) }}" method="POST">
         @csrf
-        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+        <button type="submit" class="bg-accent text-white px-4 py-2 rounded hover:bg-springs-ivy">
             Ya, Aktifkan Login
         </button>
-        <a href="{{ route('customers.index') }}" class="ml-4 text-gray-600 hover:underline">Kembali</a>
+        <a href="{{ route('customers.index') }}" class="ml-4 text-dark/70 hover:underline">Kembali</a>
     </form>
 </div>
 @endsection
