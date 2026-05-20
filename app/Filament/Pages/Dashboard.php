@@ -27,7 +27,7 @@ protected ?string $heading = ''; // ← TAMBAHKAN ini
     
     public function getHeading(): string
     {
-        return 'Dashboard';
+        return '';
     }
     
     public function getHeaderWidgets(): array

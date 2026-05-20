@@ -315,6 +315,156 @@
 .brand-float {
   animation: brandFloat 5s ease-in-out infinite;
 }
+
+/* ============================================ */
+/* FTM SOCIETY — 4-Logo Motion Showcase         */
+/* JavaScript-driven crossfade slider            */
+/* ============================================ */
+
+.ftm-logo-stage {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  background: #FCF9F2;
+  isolation: isolate;
+}
+
+/* Base — semua slide stack, hidden by default */
+.ftm-logo-slide,
+.ftm-logo-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.2s ease-in-out, transform 6s ease-in-out;
+}
+
+/* Active state: visible + ken-burns subtle scale */
+.ftm-logo-slide.is-active,
+.ftm-logo-bg.is-active {
+  opacity: 1;
+  transform: scale(1.04);
+}
+
+/* ──── BACKDROP per slide ──── */
+.ftm-logo-bg { z-index: 0; }
+.ftm-logo-bg-1 {
+  background: radial-gradient(circle at 30% 30%, #F4C9DF 0%, #FCF9F2 70%);
+}
+.ftm-logo-bg-2 {
+  background: radial-gradient(circle at 70% 30%, #F4C9DF 0%, #FCF9F2 60%, #F4C9DF 100%);
+}
+.ftm-logo-bg-3 {
+  background: radial-gradient(circle at 30% 70%, #C5D79B 0%, #FCF9F2 70%);
+}
+.ftm-logo-bg-4 {
+  background: radial-gradient(circle at 70% 70%, #FCF9F2 0%, #F4C9DF 100%);
+}
+
+/* ──── Subtle dotted pattern overlay ──── */
+.ftm-logo-pattern {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.18;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle, #EE4E8B 1px, transparent 1px),
+    radial-gradient(circle, #7A2B4A 1px, transparent 1px);
+  background-size: 32px 32px, 32px 32px;
+  background-position: 0 0, 16px 16px;
+  mix-blend-mode: multiply;
+}
+
+/* ──── Logo image slides ──── */
+.ftm-logo-slide {
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12%;
+  transform: scale(1.06);
+}
+.ftm-logo-slide.is-active {
+  transform: scale(1) translateY(0);
+}
+.ftm-logo-slide img {
+  max-width: 78%;
+  max-height: 78%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 18px 36px rgba(122, 43, 74, 0.18));
+}
+
+/* ──── Caption strip bawah ──── */
+.ftm-logo-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  padding: 1rem 1.25rem 1.1rem;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(28, 28, 28, 0.0) 30%,
+    rgba(28, 28, 28, 0.55) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  pointer-events: none;
+}
+.ftm-logo-caption-eyebrow {
+  font-family: 'Nord', 'Poppins', sans-serif;
+  font-weight: 800;
+  font-size: 0.68rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #F4C9DF;
+}
+.ftm-logo-caption-tag {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+  font-size: 1.35rem;
+  color: #FCF9F2;
+  text-shadow: 0 2px 10px rgba(28, 28, 28, 0.35);
+  line-height: 1.1;
+}
+
+/* ──── Indicator dots ──── */
+.ftm-logo-dots {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 5;
+  display: flex;
+  gap: 0.4rem;
+}
+.ftm-logo-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(122, 43, 74, 0.25);
+  transition: background 0.4s ease, width 0.4s ease;
+  display: block;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+.ftm-logo-dot.is-active {
+  background: #EE4E8B;
+  width: 22px;
+}
+
+/* ──── Responsive tuning ──── */
+@media (max-width: 640px) {
+  .ftm-logo-slide { padding: 14%; }
+  .ftm-logo-caption-tag { font-size: 1.1rem; }
+  .ftm-logo-caption-eyebrow { font-size: 0.6rem; }
+}
     </style>
   </head>
   <body class="bg-cream text-dark">
@@ -339,14 +489,21 @@
         </nav>
 
         <!-- LOGIN + HAMBURGER (kanan) -->
-        <div class="flex items-center justify-end gap-4">
+        <div class="flex items-center justify-end gap-3 col-start-3 justify-self-end">
             <a href="{{ route('member.login') }}"
                class="hidden md:inline-flex bg-primary text-white px-6 py-2 rounded-button hover:bg-secondary hover:scale-105 transition font-semibold">
                 Login
             </a>
             <button id="mobile-menu-button"
-                class="block md:hidden text-dark text-4xl font-bold leading-none">
-                ⋮
+                    type="button"
+                    aria-label="Buka menu"
+                    aria-expanded="false"
+                    class="md:hidden inline-flex items-center justify-center w-11 h-11 rounded-full bg-white/80 backdrop-blur border border-[#F4C9DF] text-[#7A2B4A] hover:bg-[#F4C9DF] hover:border-[#EE4E8B] hover:text-[#EE4E8B] active:scale-95 transition shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="7"  x2="20" y2="7"></line>
+                    <line x1="4" y1="12" x2="20" y2="12"></line>
+                    <line x1="4" y1="17" x2="20" y2="17"></line>
+                </svg>
             </button>
         </div>
 
@@ -645,31 +802,120 @@
             <!-- LEFT COLUMN - Image Gallery (5 cols) -->
             <div class="lg:col-span-5 order-2 lg:order-1" data-aos="fade-right" data-aos-delay="100">
                 <div class="relative">
-                    
+
                     <!-- Main Image Frame -->
                     <div class="relative group">
-                        
+
                         <!-- Decorative Border Frame -->
                         <div class="absolute -inset-4 bg-gradient-to-r from-secondary via-primary to-primary rounded-[2rem] opacity-20 group-hover:opacity-30 blur-xl transition-all duration-500"></div>
-                        
-                        <!-- Main Image Container -->
-                        <div class="relative rounded-[2rem] overflow-hidden shadow-2xl ring-4 ring-white/50 transform group-hover:scale-[1.02] transition-all duration-500">
-                            <img src="./images/logo ftm (1).jpg"
-                                 alt="FTM Society - Empowering Muslimah"
-                                 class="w-full h-auto object-cover" />
-                            
-                            <!-- Gradient Overlay -->
-                            <div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            
-                            <!-- Hover Content -->
-                            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
-                                <div class="text-center text-white transform scale-75 group-hover:scale-100 transition-transform duration-500">
-                                    <i class="ri-heart-pulse-fill text-5xl mb-3 drop-shadow-lg"></i>
-                                    <p class="text-lg font-bold drop-shadow-lg">Empowering Muslimah</p>
-                                </div>
+
+                        <!-- ════════════════════════════════════════════════════ -->
+                        <!-- MAIN: 4-Logo Motion Showcase                          -->
+                        <!-- 4 logogram bergantian dengan transisi smooth + ken-burns -->
+                        <!-- ════════════════════════════════════════════════════ -->
+                        <div class="ftm-logo-stage relative rounded-[2rem] overflow-hidden shadow-2xl ring-4 ring-white/50">
+
+                            {{-- Backdrop yang ikut bergerak per slide --}}
+                            <div class="ftm-logo-bg ftm-logo-bg-1"></div>
+                            <div class="ftm-logo-bg ftm-logo-bg-2"></div>
+                            <div class="ftm-logo-bg ftm-logo-bg-3"></div>
+                            <div class="ftm-logo-bg ftm-logo-bg-4"></div>
+
+                            {{-- Subtle dotted pattern overlay --}}
+                            <div class="ftm-logo-pattern"></div>
+
+                            {{-- Empat logo, masing-masing dengan animasi sendiri --}}
+                            <div class="ftm-logo-slide ftm-logo-slide-1">
+                                <img src="{{ asset('images/LOGOGRAM PINK.png') }}"
+                                     alt="FTM Society Logogram - Power Pink"
+                                     loading="eager">
+                            </div>
+                            <div class="ftm-logo-slide ftm-logo-slide-2">
+                                <img src="{{ asset('images/LOGOGRAM DARK.png') }}"
+                                     alt="FTM Society Logogram - Burnt Cherry"
+                                     loading="lazy">
+                            </div>
+                            <div class="ftm-logo-slide ftm-logo-slide-3">
+                                <img src="{{ asset('images/LOGOGRAM HIJAU.png') }}"
+                                     alt="FTM Society Logogram - Patina Green"
+                                     loading="lazy">
+                            </div>
+                            <div class="ftm-logo-slide ftm-logo-slide-4">
+                                <img src="{{ asset('images/LOGOGRAM LIGHT.png') }}"
+                                     alt="FTM Society Logogram - Soft Petals"
+                                     loading="lazy">
+                            </div>
+
+                            {{-- Caption strip di bawah --}}
+                            <div class="ftm-logo-caption">
+                                <span class="ftm-logo-caption-eyebrow">FTM Society</span>
+                                <span class="ftm-logo-caption-tag">Empowering Muslimah</span>
+                            </div>
+
+                            {{-- Indicator dots --}}
+                            <div class="ftm-logo-dots">
+                                <button type="button" class="ftm-logo-dot" data-slide="0" aria-label="Slide 1"></button>
+                                <button type="button" class="ftm-logo-dot" data-slide="1" aria-label="Slide 2"></button>
+                                <button type="button" class="ftm-logo-dot" data-slide="2" aria-label="Slide 3"></button>
+                                <button type="button" class="ftm-logo-dot" data-slide="3" aria-label="Slide 4"></button>
                             </div>
                         </div>
                     </div>
+
+                    {{-- ════════════════════════════════════════════════════ --}}
+                    {{-- 4-Logo Slider Controller — pure JS (no animation lib) --}}
+                    {{-- ════════════════════════════════════════════════════ --}}
+                    <script>
+                    (function() {
+                        const stage = document.querySelector('.ftm-logo-stage');
+                        if (!stage) return;
+
+                        const slides = stage.querySelectorAll('.ftm-logo-slide');
+                        const bgs    = stage.querySelectorAll('.ftm-logo-bg');
+                        const dots   = stage.querySelectorAll('.ftm-logo-dot');
+                        const total  = slides.length;
+                        if (!total) return;
+
+                        let current  = 0;
+                        let timer    = null;
+                        const DURATION = 4500; // ms per slide
+
+                        function setActive(idx) {
+                            slides.forEach((el, i) => el.classList.toggle('is-active', i === idx));
+                            bgs.forEach((el, i)    => el.classList.toggle('is-active', i === idx));
+                            dots.forEach((el, i)   => el.classList.toggle('is-active', i === idx));
+                            current = idx;
+                        }
+
+                        function next() {
+                            setActive((current + 1) % total);
+                        }
+
+                        function startAuto() {
+                            stopAuto();
+                            timer = setInterval(next, DURATION);
+                        }
+                        function stopAuto() {
+                            if (timer) { clearInterval(timer); timer = null; }
+                        }
+
+                        // Click dot to jump
+                        dots.forEach((dot, i) => {
+                            dot.addEventListener('click', () => {
+                                setActive(i);
+                                startAuto(); // restart timer
+                            });
+                        });
+
+                        // Pause on hover, resume on leave
+                        stage.addEventListener('mouseenter', stopAuto);
+                        stage.addEventListener('mouseleave', startAuto);
+
+                        // Init
+                        setActive(0);
+                        startAuto();
+                    })();
+                    </script>
 
                     
 

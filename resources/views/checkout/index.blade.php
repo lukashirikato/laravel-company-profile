@@ -29,22 +29,288 @@
 @endphp
 
 <style>
-    .btn-purple {
-        background: linear-gradient(90deg, #c08484, #d19a9a);
-        transition: all 0.25s ease;
+    /* ============================================ */
+    /* FTM CHECKOUT — Brand-aligned & mobile-first  */
+    /* Brand: Power Pink #EE4E8B · Burnt Cherry #7A2B4A */
+    /*        Soft Petals #F4C9DF · Rising #FCF9F2     */
+    /* ============================================ */
+
+    .ftm-checkout-page {
+        background: #FCF9F2;
+        min-height: 100vh;
     }
 
-    .btn-purple:hover:not(:disabled) {
-        background: linear-gradient(90deg, #b76e6e, #c08484);
-        transform: scale(1.03);
-        box-shadow: 0 12px 28px rgba(183, 110, 110, 0.35);
+    /* Heading utama "Checkout" */
+    .ftm-checkout-title {
+        font-family: 'Nord', 'Poppins', sans-serif;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        color: #7A2B4A;
+        font-size: 1.5rem;
+        line-height: 1.2;
+        text-align: center;
+        margin-bottom: 1.25rem;
+    }
+    @media (min-width: 640px) {
+        .ftm-checkout-title { font-size: 1.875rem; margin-bottom: 1.5rem; }
     }
 
-    .btn-purple:disabled {
-        opacity: 0.6;
+    /* Sub-heading section (Program dan Kelas / Ringkasan Pembayaran / Kode Voucher) */
+    .ftm-section-title {
+        font-family: 'Nord', 'Poppins', sans-serif;
+        font-weight: 700;
+        color: #7A2B4A;
+        font-size: 0.95rem;
+        letter-spacing: 0.02em;
+        text-transform: none;
+        line-height: 1.35;
+        margin: 0;
+    }
+
+    /* Label kecil di atas field */
+    .ftm-field-label {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 500;
+        font-size: 0.75rem;
+        color: rgba(28, 28, 28, 0.6);
+        margin-bottom: 0.35rem;
+        display: block;
+    }
+
+    /* Field readonly (Program name) */
+    .ftm-field-static {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.7rem 0.9rem;
+        background: #FCF9F2;
+        border: 1px solid rgba(244, 201, 223, 0.7);
+        border-radius: 0.75rem;
+        color: #1C1C1C;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 500;
+        font-size: 0.875rem;
+    }
+    .ftm-field-static .quota {
+        font-size: 0.75rem;
+        color: rgba(28, 28, 28, 0.55);
+        font-weight: 400;
+        margin-left: 0.5rem;
+        flex-shrink: 0;
+    }
+
+    /* Select & input dasar */
+    .ftm-input,
+    .ftm-select {
+        width: 100%;
+        padding: 0.7rem 0.9rem;
+        border: 1px solid rgba(244, 201, 223, 0.7);
+        border-radius: 0.75rem;
+        background: #FFFFFF;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 500;
+        font-size: 0.875rem;
+        color: #1C1C1C;
+        transition: border-color .15s ease, box-shadow .15s ease;
+    }
+    .ftm-input:focus,
+    .ftm-select:focus {
+        outline: none;
+        border-color: #EE4E8B;
+        box-shadow: 0 0 0 3px rgba(238, 78, 139, 0.15);
+    }
+    .ftm-input::placeholder { color: rgba(28, 28, 28, 0.4); }
+
+    /* Summary card */
+    .ftm-summary {
+        background: #FCF9F2;
+        border: 1px solid rgba(244, 201, 223, 0.7);
+        border-radius: 0.85rem;
+        padding: 0.9rem 1rem;
+    }
+    .ftm-summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.825rem;
+        color: #1C1C1C;
+        padding: 0.15rem 0;
+    }
+    .ftm-summary-row .val { font-weight: 500; }
+    .ftm-summary-divider {
+        height: 1px;
+        background: rgba(244, 201, 223, 0.7);
+        margin: 0.55rem 0;
+    }
+    .ftm-summary-total {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .ftm-summary-total .label {
+        font-family: 'Nord', 'Poppins', sans-serif;
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: #7A2B4A;
+    }
+    .ftm-summary-total .val {
+        font-family: 'Nord', 'Poppins', sans-serif;
+        font-weight: 800;
+        font-size: 1.1rem;
+        color: #7A2B4A;
+        letter-spacing: -0.01em;
+    }
+    @media (min-width: 640px) {
+        .ftm-summary-total .val { font-size: 1.25rem; }
+    }
+
+    /* Voucher input + apply */
+    .ftm-voucher-row {
+        display: flex;
+        gap: 0.5rem;
+    }
+    .ftm-btn-apply {
+        flex-shrink: 0;
+        background: #7A2B4A;
+        color: #FFFFFF;
+        font-family: 'Nord', 'Poppins', sans-serif;
+        font-weight: 700;
+        font-size: 0.78rem;
+        letter-spacing: 0.04em;
+        padding: 0 1.1rem;
+        border-radius: 0.7rem;
+        border: none;
+        cursor: pointer;
+        transition: background .15s ease, transform .1s ease;
+    }
+    .ftm-btn-apply:hover:not(:disabled) {
+        background: #EE4E8B;
+    }
+    .ftm-btn-apply:active:not(:disabled) { transform: scale(0.97); }
+    .ftm-btn-apply:disabled {
+        opacity: 0.55;
         cursor: not-allowed;
-        transform: none;
+    }
+
+    /* Tombol Bayar utama */
+    .ftm-btn-pay {
+        width: 100%;
+        background: #EE4E8B;
+        color: #FFFFFF;
+        font-family: 'Nord', 'Poppins', sans-serif;
+        font-weight: 700;
+        font-size: 0.95rem;
+        letter-spacing: 0.04em;
+        padding: 0.85rem 1.25rem;
+        border-radius: 0.85rem;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 8px 18px rgba(238, 78, 139, 0.28);
+        transition: background .15s ease, transform .1s ease, box-shadow .2s ease;
+    }
+    .ftm-btn-pay:hover:not(:disabled) {
+        background: #7A2B4A;
+        box-shadow: 0 10px 22px rgba(122, 43, 74, 0.35);
+    }
+    .ftm-btn-pay:active:not(:disabled) { transform: scale(0.99); }
+    .ftm-btn-pay:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
         box-shadow: none;
+    }
+
+    /* Info box "Cara Booking" */
+    .ftm-info-box {
+        background: rgba(244, 201, 223, 0.35);
+        border: 1px solid rgba(238, 78, 139, 0.25);
+        border-radius: 0.85rem;
+        padding: 0.85rem 1rem;
+        font-family: 'Poppins', sans-serif;
+    }
+    .ftm-info-box h4 {
+        font-family: 'Nord', 'Poppins', sans-serif;
+        font-weight: 700;
+        color: #7A2B4A;
+        font-size: 0.825rem;
+        margin: 0 0 0.2rem 0;
+    }
+    .ftm-info-box p {
+        color: rgba(28, 28, 28, 0.75);
+        font-size: 0.78rem;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    /* Schedule list (dynamic) */
+    .ftm-schedule-box {
+        background: rgba(197, 215, 155, 0.18);
+        border: 1px solid rgba(26, 122, 94, 0.25);
+        border-radius: 0.85rem;
+        padding: 0.85rem 1rem;
+        margin-top: 0.5rem;
+    }
+    .ftm-schedule-box h4 {
+        font-family: 'Nord', 'Poppins', sans-serif;
+        font-weight: 700;
+        color: #1A7A5E;
+        font-size: 0.825rem;
+        margin: 0 0 0.4rem 0;
+    }
+    .ftm-schedule-box ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    .ftm-schedule-box li {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.78rem;
+        color: #1D5A4B;
+    }
+    .ftm-schedule-box li .check {
+        color: #1A7A5E;
+        font-weight: 700;
+    }
+
+    /* Card wrapper */
+    .ftm-checkout-card {
+        background: #FFFFFF;
+        border: 1px solid rgba(244, 201, 223, 0.55);
+        border-radius: 1.1rem;
+        box-shadow: 0 6px 20px rgba(122, 43, 74, 0.06);
+        padding: 1.1rem;
+    }
+    @media (min-width: 640px) {
+        .ftm-checkout-card { padding: 1.5rem; }
+    }
+
+    /* Section divider */
+    .ftm-divider {
+        border: none;
+        border-top: 1px solid rgba(244, 201, 223, 0.6);
+        margin: 0.85rem 0;
+    }
+
+    /* Status text */
+    #statusText {
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.78rem;
+        text-align: center;
+        margin-top: 0.6rem;
+        color: rgba(28, 28, 28, 0.7);
+    }
+
+    /* Voucher message */
+    #voucherMessage {
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.75rem;
+        margin-top: 0.4rem;
     }
 
     /* Modal Konfirmasi */
@@ -56,7 +322,7 @@
         top: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.6);
+        background-color: rgba(28, 28, 28, 0.55);
         backdrop-filter: blur(4px);
         animation: fadeIn 0.2s ease;
     }
@@ -68,79 +334,89 @@
     }
 
     .modal-content {
-        background: white;
-        padding: 2rem;
+        background: #FCF9F2;
+        padding: 1.5rem;
         border-radius: 1rem;
-        max-width: 420px;
-        width: 90%;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 380px;
+        width: calc(100% - 2rem);
+        box-shadow: 0 20px 50px rgba(122, 43, 74, 0.25);
+        border: 1px solid rgba(244, 201, 223, 0.6);
         animation: slideUp 0.3s ease;
+    }
+    @media (min-width: 640px) {
+        .modal-content { padding: 2rem; max-width: 420px; }
     }
 
     @keyframes fadeIn {
         from { opacity: 0; }
         to { opacity: 1; }
     }
-
     @keyframes slideUp {
-        from { 
-            transform: translateY(30px);
-            opacity: 0;
-        }
-        to { 
-            transform: translateY(0);
-            opacity: 1;
-        }
+        from { transform: translateY(20px); opacity: 0; }
+        to   { transform: translateY(0); opacity: 1; }
     }
 
     .modal-icon {
-        width: 64px;
-        height: 64px;
-        margin: 0 auto 1rem;
-        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 0.85rem;
+        background: #F4C9DF;
+        border: 2px solid #EE4E8B;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
+        color: #7A2B4A;
+    }
+
+    .modal-content h3 {
+        font-family: 'Nord', 'Poppins', sans-serif;
+        font-weight: 700;
+        color: #7A2B4A;
+        text-align: center;
+        font-size: 1.05rem;
+        margin: 0 0 0.4rem 0;
+    }
+    .modal-content p {
+        font-family: 'Poppins', sans-serif;
+        color: rgba(28, 28, 28, 0.7);
+        text-align: center;
+        font-size: 0.825rem;
+        line-height: 1.5;
+        margin: 0;
     }
 
     .modal-buttons {
         display: flex;
-        gap: 0.75rem;
-        margin-top: 1.5rem;
+        gap: 0.6rem;
+        margin-top: 1.25rem;
     }
-
     .modal-btn {
         flex: 1;
-        padding: 0.75rem;
-        border-radius: 0.5rem;
-        font-weight: 600;
+        padding: 0.7rem 0.9rem;
+        border-radius: 0.65rem;
+        font-family: 'Nord', 'Poppins', sans-serif;
+        font-weight: 700;
+        font-size: 0.85rem;
+        letter-spacing: 0.02em;
         cursor: pointer;
-        transition: all 0.2s;
+        transition: background .15s ease, transform .1s ease;
         border: none;
-        font-size: 0.95rem;
     }
-
     .modal-btn-cancel {
-        background: #ef4444;
-        color: white;
+        background: transparent;
+        color: #7A2B4A;
+        border: 1.5px solid #7A2B4A;
     }
-
     .modal-btn-cancel:hover {
-        background: #dc2626;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        background: rgba(122, 43, 74, 0.08);
     }
-
     .modal-btn-continue {
-        background: linear-gradient(90deg, #c08484, #d19a9a);
-        color: white;
+        background: #EE4E8B;
+        color: #FFFFFF;
     }
-
     .modal-btn-continue:hover {
-        background: linear-gradient(90deg, #b76e6e, #c08484);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(192, 132, 132, 0.3);
+        background: #7A2B4A;
     }
 </style>
 
@@ -148,14 +424,12 @@
 <div id="confirmationModal" class="custom-modal">
     <div class="modal-content">
         <div class="modal-icon">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.5m0 3h.01M10.27 4.5l-7.43 12.86A2 2 0 0 0 4.57 20.5h14.86a2 2 0 0 0 1.73-3.14L13.73 4.5a2 2 0 0 0-3.46 0z"/>
             </svg>
         </div>
-        <h3 class="text-xl font-bold text-dark text-center mb-2">Batalkan Pembayaran?</h3>
-        <p class="text-dark/70 text-center text-sm mb-4">
-            Anda belum menyelesaikan pembayaran. Apakah Anda ingin melanjutkan atau membatalkan?
-        </p>
+        <h3>Batalkan Pembayaran?</h3>
+        <p>Anda belum menyelesaikan pembayaran. Apakah Anda ingin melanjutkan atau membatalkan?</p>
         <div class="modal-buttons">
             <button id="modalCancelBtn" class="modal-btn modal-btn-cancel">
                 Batalkan
@@ -167,10 +441,10 @@
     </div>
 </div>
 
-<div class="bg-white flex justify-center items-start pt-12 pb-12">
-    <div class="max-w-lg w-full px-6">
-        <div class="bg-white rounded-2xl shadow-xl border border-gray-50 p-6 sm:p-8">
-            <h1 class="text-3xl font-bold text-dark mb-8 text-center">Checkout</h1>
+<div class="ftm-checkout-page flex justify-center items-start py-8 sm:py-12 px-4">
+    <div class="max-w-md w-full">
+        <div class="ftm-checkout-card">
+            <h1 class="ftm-checkout-title">Checkout</h1>
 
             <form id="checkoutForm" method="POST">
                 @csrf
@@ -178,90 +452,94 @@
                 <input type="hidden" id="hiddenClassId" name="class_id" value="">
 
                 <div class="space-y-4">
-                    <h2 class="text-lg font-semibold text-dark">Program dan Kelas</h2>
-                    
-                    @if($showClassDropdown)
-                        <div class="flex flex-col sm:flex-row gap-3">
-                            <div class="flex-1">
-                                <label class="text-sm text-cream0 mb-1 block">Program</label>
-                                <div class="flex items-center justify-between px-4 py-3 bg-cream rounded-xl font-medium text-dark border border-light-pink/50">
-                                    <span class="truncate">{{ $pkg->name }}</span>
-                                    <span class="text-sm text-cream0 ml-2">({{ $pkg->quota }}x)</span>
-                                </div>
-                            </div>
 
-                            <div class="flex-1">
-                                <label class="text-sm text-cream0 mb-1 block">Pilih Kelas</label>
-                                <select id="classOption" class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-violet-200 focus:border-violet-400" required>
-                                    <option value="">Pilih Kelas</option>
-                                    @foreach($classOptions as $classId => $opt)
-                                        <option value="{{ $classId }}">{{ $opt['label'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    @else
-                        <div>
-                            <label class="text-sm text-cream0 mb-1 block">Program</label>
-                            <div class="flex items-center justify-between px-4 py-3 bg-cream rounded-xl font-medium text-dark border border-light-pink/50">
-                                <span class="truncate">{{ $pkg->name }}</span>
-                                <span class="text-sm text-cream0 ml-2">({{ $pkg->quota }}x)</span>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-light-pink/30 border border-primary/30 rounded-xl p-4 mt-3">
-                            <div class="flex items-start gap-3">
-                                <svg class="w-5 h-5 text-primary mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
-                                </svg>
+                    {{-- ── Section: Program dan Kelas ── --}}
+                    <div>
+                        <h2 class="ftm-section-title mb-3">Program dan Kelas</h2>
+
+                        @if($showClassDropdown)
+                            <div class="flex flex-col gap-3">
                                 <div>
-                                    <h4 class="font-semibold text-blue-900 text-sm">Cara Booking</h4>
-                                    <p class="text-sm text-secondary mt-1">Setelah pembayaran berhasil, Anda dapat memilih jadwal kelas di halaman <strong>Booking</strong>.</p>
+                                    <label class="ftm-field-label">Program</label>
+                                    <div class="ftm-field-static">
+                                        <span class="truncate">{{ $pkg->name }}</span>
+                                        <span class="quota">({{ $pkg->quota }}x)</span>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="ftm-field-label">Pilih Kelas</label>
+                                    <select id="classOption" class="ftm-select" required>
+                                        <option value="">Pilih Kelas</option>
+                                        @foreach($classOptions as $classId => $opt)
+                                            <option value="{{ $classId }}">{{ $opt['label'] }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
-                        </div>
-                    @endif
+                        @else
+                            <div>
+                                <label class="ftm-field-label">Program</label>
+                                <div class="ftm-field-static">
+                                    <span class="truncate">{{ $pkg->name }}</span>
+                                    <span class="quota">({{ $pkg->quota }}x)</span>
+                                </div>
+                            </div>
 
-                    <div id="classSchedules"></div>
+                            <div class="ftm-info-box mt-3">
+                                <div class="flex items-start gap-2.5">
+                                    <svg class="w-4 h-4 mt-0.5 flex-shrink-0" fill="none" stroke="#EE4E8B" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+                                    </svg>
+                                    <div>
+                                        <h4>Cara Booking</h4>
+                                        <p>Setelah pembayaran berhasil, Anda dapat memilih jadwal kelas di halaman <strong style="color:#7A2B4A;">Booking</strong>.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
 
-                    <hr class="border-light-pink/30">
+                        <div id="classSchedules"></div>
+                    </div>
 
-                    <div class="space-y-4">
-                        <h2 class="text-lg font-semibold text-dark">Ringkasan Pembayaran</h2>
-                        <div class="bg-cream rounded-xl p-4 space-y-2 border border-light-pink/50">
-                            <div class="flex justify-between text-sm text-dark">
+                    <hr class="ftm-divider">
+
+                    {{-- ── Section: Ringkasan Pembayaran ── --}}
+                    <div>
+                        <h2 class="ftm-section-title mb-3">Ringkasan Pembayaran</h2>
+                        <div class="ftm-summary">
+                            <div class="ftm-summary-row">
                                 <span>Harga Program (IDR)</span>
-                                <span id="priceValue" class="font-medium">{{ rp($pkg->price) }}</span>
+                                <span id="priceValue" class="val">{{ rp($pkg->price) }}</span>
                             </div>
-                            <div class="flex justify-between text-sm text-dark">
+                            <div class="ftm-summary-row">
                                 <span>Diskon Voucher</span>
-                                <span id="voucherValue" class="font-medium text-primary">Rp0</span>
+                                <span id="voucherValue" class="val" style="color:#EE4E8B;">Rp0</span>
                             </div>
-                            <hr class="border-light-pink/60 my-2">
-                            <div class="flex justify-between items-center">
-                                <span class="text-lg font-semibold text-dark">Amount to Pay</span>
-                                <span id="totalValue" class="text-2xl font-bold text-dark">{{ rp($pkg->price) }}</span>
+                            <div class="ftm-summary-divider"></div>
+                            <div class="ftm-summary-total">
+                                <span class="label">Amount to Pay</span>
+                                <span id="totalValue" class="val">{{ rp($pkg->price) }}</span>
                             </div>
-                        </div>
-
-                        <div class="pt-4">
-                            <h3 class="text-md font-semibold text-dark mb-3">Kode Voucher</h3>
-                            <div class="flex gap-3">
-                                <input id="voucher" name="voucher_code" type="text" placeholder="Masukkan kode voucher"
-                                       class="flex-1 rounded-xl border border-light-pink/60 px-4 py-3 focus:ring-2 focus:ring-violet-200 focus:border-violet-400">
-                                <button id="applyVoucher" type="button" class="h-11 px-6 rounded-lg text-white font-semibold btn-purple shadow-md shadow-violet-500/20 text-sm">
-                                    Apply
-                                </button>
-                            </div>
-                            <div id="voucherMessage"></div>
                         </div>
                     </div>
 
-                    <button id="pay-button" type="button" class="w-full mt-6 py-4 rounded-xl text-white font-semibold btn-purple shadow-lg shadow-violet-500/40 text-lg">
+                    {{-- ── Section: Kode Voucher ── --}}
+                    <div>
+                        <h2 class="ftm-section-title mb-2">Kode Voucher</h2>
+                        <div class="ftm-voucher-row">
+                            <input id="voucher" name="voucher_code" type="text" placeholder="Masukkan kode voucher" class="ftm-input" autocomplete="off">
+                            <button id="applyVoucher" type="button" class="ftm-btn-apply">Apply</button>
+                        </div>
+                        <div id="voucherMessage"></div>
+                    </div>
+
+                    {{-- ── Tombol Bayar ── --}}
+                    <button id="pay-button" type="button" class="ftm-btn-pay mt-2">
                         <span>Bayar Sekarang</span>
                     </button>
 
-                    <div id="statusText" class="text-sm text-center mt-3 text-dark/70"></div>
+                    <div id="statusText"></div>
                 </div>
             </form>
         </div>
@@ -336,13 +614,14 @@ window.__PAYMENT_DONE__ = false;
 
     function showMessage(element, message, type = 'error') {
         const colors = {
-            error: 'text-secondary',
-            success: 'text-accent',
-            info: 'text-primary',
-            warning: 'text-springs-ivy'
+            error:   '#7A2B4A',
+            success: '#1A7A5E',
+            info:    '#EE4E8B',
+            warning: '#1D5A4B'
         };
         element.textContent = message;
-        element.className = `mt-2 text-sm ${colors[type]}`;
+        element.style.color = colors[type] || colors.error;
+        element.style.marginTop = '0.4rem';
     }
 
     function setButtonState(button, disabled, text) {
@@ -352,14 +631,15 @@ window.__PAYMENT_DONE__ = false;
 
     function updateStatusText(message, type = 'info') {
         const colors = {
-            info: 'text-primary',
-            success: 'text-accent',
-            error: 'text-secondary',
-            warning: 'text-springs-ivy',
-            default: 'text-dark/70'
+            info:    '#EE4E8B',
+            success: '#1A7A5E',
+            error:   '#7A2B4A',
+            warning: '#1D5A4B',
+            default: 'rgba(28, 28, 28, 0.7)'
         };
         DOM.statusText.textContent = message;
-        DOM.statusText.className = `text-sm text-center mt-3 ${colors[type]} font-semibold`;
+        DOM.statusText.style.color = colors[type] || colors.default;
+        DOM.statusText.style.fontWeight = type === 'default' ? '500' : '600';
     }
 
     // ==================== MODAL FUNCTIONS ====================
@@ -453,12 +733,12 @@ window.__PAYMENT_DONE__ = false;
 
             const schedules = classOptions[key].schedules;
             DOM.scheduleContainer.innerHTML = `
-                <div class="bg-grounded-green/20 border border-accent/30 rounded-xl p-4 mt-3">
-                    <h4 class="font-semibold text-green-900 mb-2">Jadwal Kelas Anda</h4>
-                    <ul class="text-sm space-y-1">
+                <div class="ftm-schedule-box">
+                    <h4>Jadwal Kelas Anda</h4>
+                    <ul>
                         ${schedules.map(s => `
-                            <li class="flex items-center gap-2 text-springs-ivy">
-                                <span class="text-accent font-bold">✓</span>
+                            <li>
+                                <span class="check">✓</span>
                                 <span>${s}</span>
                             </li>
                         `).join('')}

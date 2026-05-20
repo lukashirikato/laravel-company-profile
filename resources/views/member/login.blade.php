@@ -41,6 +41,31 @@
             box-shadow: 0 4px 16px rgba(122, 43, 74, 0.25);
         }
 
+        /* FTM logogram badge — Soft Petals bg + Power Pink ring */
+        .ftm-logo-badge {
+            width: 96px;
+            height: 96px;
+            margin: 0 auto 0.85rem;
+            border-radius: 24px;
+            background: #FCF9F2;
+            border: 2px solid #F4C9DF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow:
+                0 10px 24px rgba(122, 43, 74, 0.18),
+                0 0 0 6px rgba(244, 201, 223, 0.35);
+            padding: 14px;
+            position: relative;
+        }
+        .ftm-logo-badge img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            filter: drop-shadow(0 4px 10px rgba(238, 78, 139, 0.25));
+        }
+
         .success-alert {
             background: linear-gradient(135deg, #1A7A5E 0%, #1D5A4B 100%);
         }
@@ -64,9 +89,14 @@
 
     <div class="card-glass shadow-2xl rounded-2xl p-8 w-full max-w-md border border-[#F4C9DF]">
         <div class="text-center mb-6">
-            <img src="{{ asset('icons/logo-ftm.jpg') }}" alt="Logo Gym" class="w-20 h-20 mx-auto mb-3 rounded-full logo-shadow">
+            <div class="ftm-logo-badge">
+                <img src="{{ asset('images/LOGOGRAM PINK.png') }}" alt="FTM Society Logogram">
+            </div>
             <h1 class="text-3xl font-bold text-[#7A2B4A]">Selamat Datang</h1>
-            <p class="text-sm text-[#1C1C1C]/60">FTM Society</p>
+            <p class="text-sm text-[#1C1C1C]/60">
+                <span style="font-family:'Nord','Poppins',sans-serif;font-weight:800;color:#EE4E8B;letter-spacing:0.04em;">FTM</span>
+                <span style="font-family:'Instrument Serif',Georgia,serif;font-style:italic;color:#7A2B4A;">Society</span>
+            </p>
         </div>
 
         {{-- Notifikasi sukses (suppressed jika popup welcome aktif) --}}

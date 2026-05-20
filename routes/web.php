@@ -430,6 +430,24 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
 /*
 |--------------------------------------------------------------------------
+| ADMIN NOTIFICATION CENTER (di luar prefix /admin agar tidak collide
+| dengan Filament 2 resource routing)
+|--------------------------------------------------------------------------
+| Pakai guard `web` (sama dengan Filament 2 admin) supaya session
+| admin yang login lewat Filament dianggap valid.
+*/
+Route::prefix('staff/notifications')
+    ->name('admin.notifications.')
+    ->middleware(['web', 'auth:web'])
+    ->group(function () {
+        Route::get('/feed',         [\App\Http\Controllers\Admin\NotificationController::class, 'feed'])->name('feed');
+        Route::post('/{id}/read',   [\App\Http\Controllers\Admin\NotificationController::class, 'markAsRead'])->name('read')->whereNumber('id');
+        Route::post('/read-all',    [\App\Http\Controllers\Admin\NotificationController::class, 'markAllRead'])->name('readAll');
+        Route::delete('/cleanup',   [\App\Http\Controllers\Admin\NotificationController::class, 'cleanup'])->name('cleanup');
+    });
+
+/*
+|--------------------------------------------------------------------------
 | DEBUG & TESTING ROUTES
 |--------------------------------------------------------------------------
 | ⚠️ REMOVE IN PRODUCTION OR PROTECT WITH MIDDLEWARE

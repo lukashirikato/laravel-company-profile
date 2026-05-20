@@ -404,7 +404,9 @@
       
       @media (max-width: 767px) {
         #mobile-menu-button {
-          display: flex !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
         }
       }
       
@@ -507,6 +509,181 @@
           padding: 0 !important;
         }
       }
+
+      /* ============================================ */
+      /* FTM SOCIETY BRAND ORNAMENTS & SIGNATURE      */
+      /* Ciri khas visual - Flower, Asterisk, C-mark  */
+      /* ============================================ */
+
+      .brand-flower {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%231C1C1E' d='M50 8c-13 0-20 10-20 20 0 6 3 11 7 14-6 3-10 8-10 15 0 10 9 18 23 18s23-8 23-18c0-7-4-12-10-15 4-3 7-8 7-14 0-10-7-20-20-20z'/%3E%3C/svg%3E");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        opacity: 0.85;
+      }
+      .brand-flower-pink   { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23EE4E8B' d='M50 8c-13 0-20 10-20 20 0 6 3 11 7 14-6 3-10 8-10 15 0 10 9 18 23 18s23-8 23-18c0-7-4-12-10-15 4-3 7-8 7-14 0-10-7-20-20-20z'/%3E%3C/svg%3E"); }
+      .brand-flower-cherry { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%237A2B4A' d='M50 8c-13 0-20 10-20 20 0 6 3 11 7 14-6 3-10 8-10 15 0 10 9 18 23 18s23-8 23-18c0-7-4-12-10-15 4-3 7-8 7-14 0-10-7-20-20-20z'/%3E%3C/svg%3E"); }
+      .brand-flower-ivory  { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23FCF9F2' d='M50 8c-13 0-20 10-20 20 0 6 3 11 7 14-6 3-10 8-10 15 0 10 9 18 23 18s23-8 23-18c0-7-4-12-10-15 4-3 7-8 7-14 0-10-7-20-20-20z'/%3E%3C/svg%3E"); }
+
+      .brand-asterisk {
+        display: inline-block;
+        width: 28px;
+        height: 28px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23EE4E8B' d='M45 5h10v90h-10zM5 45h90v10H5zM14.64 21.71l7.07-7.07 63.64 63.64-7.07 7.07zM85.36 14.64l7.07 7.07-63.64 63.64-7.07-7.07z'/%3E%3C/svg%3E");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+      .brand-asterisk-ivory { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23FCF9F2' d='M45 5h10v90h-10zM5 45h90v10H5zM14.64 21.71l7.07-7.07 63.64 63.64-7.07 7.07zM85.36 14.64l7.07 7.07-63.64 63.64-7.07-7.07z'/%3E%3C/svg%3E"); }
+
+      .brand-cmark {
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%237A2B4A' d='M10 50C10 28 28 10 50 10v18c-12 0-22 10-22 22s10 22 22 22v18C28 90 10 72 10 50zm80 0C90 28 72 10 50 10v18c12 0 22 10 22 22s-10 22-22 22v18c22 0 40-18 40-40z'/%3E%3C/svg%3E");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      @keyframes brandFloat {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50%      { transform: translateY(-10px) rotate(8deg); }
+      }
+      .brand-float {
+        animation: brandFloat 5s ease-in-out infinite;
+      }
+
+      /* ============================================ */
+      /* FTM SOCIETY — 4-Logo Motion Showcase         */
+      /* JS-driven crossfade slider (sync welcome)     */
+      /* ============================================ */
+
+      .ftm-logo-stage {
+        position: relative;
+        aspect-ratio: 1 / 1;
+        width: 100%;
+        background: #FCF9F2;
+        isolation: isolate;
+      }
+
+      .ftm-logo-slide,
+      .ftm-logo-bg {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 1.2s ease-in-out, transform 6s ease-in-out;
+      }
+
+      .ftm-logo-slide.is-active,
+      .ftm-logo-bg.is-active {
+        opacity: 1;
+        transform: scale(1.04);
+      }
+
+      .ftm-logo-bg { z-index: 0; }
+      .ftm-logo-bg-1 { background: radial-gradient(circle at 30% 30%, #F4C9DF 0%, #FCF9F2 70%); }
+      .ftm-logo-bg-2 { background: radial-gradient(circle at 70% 30%, #F4C9DF 0%, #FCF9F2 60%, #F4C9DF 100%); }
+      .ftm-logo-bg-3 { background: radial-gradient(circle at 30% 70%, #C5D79B 0%, #FCF9F2 70%); }
+      .ftm-logo-bg-4 { background: radial-gradient(circle at 70% 70%, #FCF9F2 0%, #F4C9DF 100%); }
+
+      .ftm-logo-pattern {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        opacity: 0.18;
+        pointer-events: none;
+        background-image:
+          radial-gradient(circle, #EE4E8B 1px, transparent 1px),
+          radial-gradient(circle, #7A2B4A 1px, transparent 1px);
+        background-size: 32px 32px, 32px 32px;
+        background-position: 0 0, 16px 16px;
+        mix-blend-mode: multiply;
+      }
+
+      .ftm-logo-slide {
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12%;
+        transform: scale(1.06);
+      }
+      .ftm-logo-slide.is-active {
+        transform: scale(1) translateY(0);
+      }
+      .ftm-logo-slide img {
+        max-width: 78%;
+        max-height: 78%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        filter: drop-shadow(0 18px 36px rgba(122, 43, 74, 0.18));
+      }
+
+      .ftm-logo-caption {
+        position: absolute;
+        left: 0; right: 0; bottom: 0;
+        z-index: 5;
+        padding: 1rem 1.25rem 1.1rem;
+        background: linear-gradient(180deg, transparent 0%, rgba(28,28,28,0) 30%, rgba(28,28,28,0.55) 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.15rem;
+        pointer-events: none;
+      }
+      .ftm-logo-caption-eyebrow {
+        font-family: 'Nord', 'Poppins', sans-serif;
+        font-weight: 800;
+        font-size: 0.68rem;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        color: #F4C9DF;
+      }
+      .ftm-logo-caption-tag {
+        font-family: 'Instrument Serif', Georgia, serif;
+        font-style: italic;
+        font-size: 1.35rem;
+        color: #FCF9F2;
+        text-shadow: 0 2px 10px rgba(28,28,28,0.35);
+        line-height: 1.1;
+      }
+
+      .ftm-logo-dots {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 5;
+        display: flex;
+        gap: 0.4rem;
+      }
+      .ftm-logo-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+        background: rgba(122, 43, 74, 0.25);
+        transition: background 0.4s ease, width 0.4s ease;
+        display: block;
+        cursor: pointer;
+        border: none;
+        padding: 0;
+      }
+      .ftm-logo-dot.is-active {
+        background: #EE4E8B;
+        width: 22px;
+      }
+
+      @media (max-width: 640px) {
+        .ftm-logo-slide { padding: 14%; }
+        .ftm-logo-caption-tag { font-size: 1.1rem; }
+        .ftm-logo-caption-eyebrow { font-size: 0.6rem; }
+      }
     </style>
   </head>
   <body class="bg-[#FCF9F2] text-[#1C1C1C] font-body">
@@ -572,30 +749,42 @@
 
         <!-- AUTHED MOBILE — avatar bulat di kanan (next to hamburger) -->
         @auth('customer')
-            <div class="md:hidden flex items-center gap-2 justify-self-end">
+            <div class="md:hidden flex items-center gap-2 col-start-3 justify-self-end">
                 @php
                     $authCustomerMobile = auth('customer')->user();
                     $authInitialMobile  = strtoupper(mb_substr($authCustomerMobile->name ?? 'M', 0, 1));
                 @endphp
                 <a href="{{ route('member.dashboard') }}"
                    aria-label="Buka Dashboard"
-                   class="w-10 h-10 rounded-full flex items-center justify-center font-nord font-black text-sm shadow text-white"
+                   class="w-11 h-11 rounded-full flex items-center justify-center font-nord font-black text-sm shadow text-white"
                    style="background:#EE4E8B; box-shadow:0 4px 10px rgba(238,78,139,0.30); border:2px solid #FCF9F2;">
                     {{ $authInitialMobile }}
                 </a>
                 <button id="mobile-menu-button"
-                    class="w-10 h-10 flex items-center justify-center text-[#EE4E8B]"
-                    aria-label="Toggle mobile menu">
-                    <i class="ri-menu-line ri-lg"></i>
+                        type="button"
+                        aria-label="Buka menu"
+                        aria-expanded="false"
+                        class="md:hidden inline-flex items-center justify-center w-11 h-11 rounded-full bg-white/80 backdrop-blur border border-[#F4C9DF] text-[#7A2B4A] hover:bg-[#F4C9DF] hover:border-[#EE4E8B] hover:text-[#EE4E8B] active:scale-95 transition shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="4" y1="7"  x2="20" y2="7"></line>
+                        <line x1="4" y1="12" x2="20" y2="12"></line>
+                        <line x1="4" y1="17" x2="20" y2="17"></line>
+                    </svg>
                 </button>
             </div>
         @else
             <!-- HAMBURGER (MOBILE) — guest only -->
-            <div class="md:hidden flex items-center justify-self-end">
+            <div class="md:hidden flex items-center col-start-3 justify-self-end">
               <button id="mobile-menu-button"
-                  class="w-10 h-10 flex items-center justify-center text-[#EE4E8B]"
-                  aria-label="Toggle mobile menu">
-                <i class="ri-menu-line ri-lg"></i>
+                      type="button"
+                      aria-label="Buka menu"
+                      aria-expanded="false"
+                      class="md:hidden inline-flex items-center justify-center w-11 h-11 rounded-full bg-white/80 backdrop-blur border border-[#F4C9DF] text-[#7A2B4A] hover:bg-[#F4C9DF] hover:border-[#EE4E8B] hover:text-[#EE4E8B] active:scale-95 transition shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="7"  x2="20" y2="7"></line>
+                    <line x1="4" y1="12" x2="20" y2="12"></line>
+                    <line x1="4" y1="17" x2="20" y2="17"></line>
+                </svg>
               </button>
             </div>
         @endauth
@@ -651,7 +840,7 @@
   <div class="absolute inset-0 z-0">
     <div id="hero-bg" 
        class="absolute inset-0 bg-cover bg-center transition-all duration-700 scale-105 backdrop-blur-xs"
-       style="background-image: url('/images/bg.JPG');"></div>
+        style="background-image: url('/images/bg.png');"></div>
         
     <!-- Luxury Gradient Overlay - Rose/Burgundy Blend -->
     <div class="absolute inset-0 bg-gradient-to-br from-[#7A2B4A]/85 via-[#EE4E8B]/70 to-[#1C1C1C]/80"></div>
@@ -664,6 +853,11 @@
   <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
     <div class="absolute top-1/4 -right-48 w-96 h-96 bg-[#F4C9DF]/15 rounded-full blur-3xl opacity-60 animate-pulse" style="animation-duration: 6s;"></div>
     <div class="absolute bottom-1/4 -left-48 w-96 h-96 bg-[#FCF9F2]/10 rounded-full blur-3xl opacity-50 animate-pulse" style="animation-duration: 7s; animation-delay: 1.5s;"></div>
+
+    <!-- Brand Ornament Signatures -->
+    <div class="brand-flower brand-flower-ivory brand-float absolute top-24 right-[12%] opacity-20" style="width: 70px; height: 70px;"></div>
+    <div class="brand-asterisk brand-asterisk-ivory brand-float absolute bottom-32 right-[8%] opacity-25" style="width: 42px; height: 42px; animation-delay: 1s;"></div>
+    <div class="brand-cmark brand-float absolute top-1/3 left-[6%] opacity-15" style="width: 60px; height: 60px; filter: invert(96%) sepia(10%) saturate(200%) hue-rotate(330deg); animation-delay: 2s;"></div>
   </div>
 
   <!-- Main Content Container -->
@@ -676,6 +870,7 @@
         <!-- Premium Glass Effect Badge -->
         <div data-aos="fade-right" 
            class="inline-flex items-center gap-3 px-6 py-3 rounded-full backdrop-blur-xl bg-white/[0.08] border-2 border-white/30 shadow-2xl hover:bg-white/[0.12] hover:border-white/50 transition-all duration-300 group">
+          <span class="brand-flower brand-flower-ivory" style="width: 18px; height: 18px;"></span>
           <span class="relative flex h-3 w-3">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#F4C9DF] opacity-80"></span>
             <span class="relative inline-flex rounded-full h-3 w-3 bg-[#F4C9DF] shadow-lg"></span>
@@ -775,6 +970,10 @@
     <div class="absolute -top-48 -left-48 w-96 h-96 bg-gradient-to-br from-[#7A2B4A]/20 to-[#F4C9DF]/20 rounded-full blur-3xl animate-pulse" style="animation-duration: 4s;"></div>
     <div class="absolute top-1/3 -right-64 w-[500px] h-[500px] bg-gradient-to-tl from-[#EE4E8B]/15 to-[#EE4E8B]/15 rounded-full blur-3xl animate-pulse" style="animation-duration: 6s; animation-delay: 1s;"></div>
     <div class="absolute -bottom-32 left-1/3 w-80 h-80 bg-gradient-to-tr from-[#EE4E8B]/20 to-[#7A2B4A]/20 rounded-full blur-3xl animate-pulse" style="animation-duration: 5s; animation-delay: 2s;"></div>
+
+    <!-- Brand Ornaments -->
+    <div class="brand-flower brand-flower-pink brand-float absolute top-12 right-[10%]" style="width: 55px; height: 55px; opacity: 0.35;"></div>
+    <div class="brand-asterisk brand-float absolute bottom-24 left-[8%]" style="width: 38px; height: 38px; opacity: 0.4; animation-delay: 1.5s;"></div>
   </div>
 
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -784,6 +983,7 @@
             
       <!-- Top Badge with Shimmer Effect -->
       <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-[#7A2B4A]/10 via-[#F4C9DF]/50 to-[#7A2B4A]/10 rounded-full border border-[#7A2B4A]/20 shadow-lg backdrop-blur-sm">
+        <span class="brand-flower brand-flower-cherry" style="width: 16px; height: 16px;"></span>
         <div class="relative">
           <div class="w-2 h-2 bg-[#7A2B4A] rounded-full animate-ping absolute"></div>
           <div class="w-2 h-2 bg-[#7A2B4A] rounded-full relative"></div>
@@ -822,28 +1022,52 @@
       <!-- LEFT COLUMN - Image Gallery (5 cols) -->
       <div class="lg:col-span-5 order-2 lg:order-1" data-aos="fade-right" data-aos-delay="100">
         <div class="relative">
-                    
+
           <!-- Main Image Frame -->
           <div class="relative group">
-                        
+
             <!-- Decorative Border Frame -->
             <div class="absolute -inset-4 bg-gradient-to-r from-[#7A2B4A] via-[#EE4E8B] to-[#EE4E8B] rounded-[2rem] opacity-20 group-hover:opacity-30 blur-xl transition-all duration-500"></div>
-                        
-            <!-- Main Image Container -->
-                        <div class="relative rounded-[2rem] overflow-hidden shadow-2xl ring-4 ring-white/50 transform group-hover:scale-[1.02] transition-all duration-500">
-                          <img src="{{ asset('images/logo ftm (1).jpg') }}"
-                             alt="FTM Society - Empowering Muslimah"
-                             class="w-full h-auto object-cover" />
-                            
-              <!-- Gradient Overlay -->
-              <div class="absolute inset-0 bg-gradient-to-t from-[#EE4E8B]/80 via-[#EE4E8B]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            
-              <!-- Hover Content -->
-              <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
-                <div class="text-center text-white transform scale-75 group-hover:scale-100 transition-transform duration-500">
-                  <i class="ri-heart-pulse-fill text-5xl mb-3 drop-shadow-lg"></i>
-                  <p class="text-lg font-bold drop-shadow-lg">Empowering Muslimah</p>
-                </div>
+
+            <!-- ════════════════════════════════════════════════════ -->
+            <!-- 4-Logo Motion Showcase (sync dengan welcome page)      -->
+            <!-- ════════════════════════════════════════════════════ -->
+            <div class="ftm-logo-stage relative rounded-[2rem] overflow-hidden shadow-2xl ring-4 ring-white/50">
+
+              <div class="ftm-logo-bg ftm-logo-bg-1"></div>
+              <div class="ftm-logo-bg ftm-logo-bg-2"></div>
+              <div class="ftm-logo-bg ftm-logo-bg-3"></div>
+              <div class="ftm-logo-bg ftm-logo-bg-4"></div>
+
+              <div class="ftm-logo-pattern"></div>
+
+              <div class="ftm-logo-slide ftm-logo-slide-1">
+                <img src="{{ asset('images/LOGOGRAM PINK.png') }}"
+                     alt="FTM Society Logogram - Power Pink" loading="eager">
+              </div>
+              <div class="ftm-logo-slide ftm-logo-slide-2">
+                <img src="{{ asset('images/LOGOGRAM DARK.png') }}"
+                     alt="FTM Society Logogram - Burnt Cherry" loading="lazy">
+              </div>
+              <div class="ftm-logo-slide ftm-logo-slide-3">
+                <img src="{{ asset('images/LOGOGRAM HIJAU.png') }}"
+                     alt="FTM Society Logogram - Patina Green" loading="lazy">
+              </div>
+              <div class="ftm-logo-slide ftm-logo-slide-4">
+                <img src="{{ asset('images/LOGOGRAM LIGHT.png') }}"
+                     alt="FTM Society Logogram - Soft Petals" loading="lazy">
+              </div>
+
+              <div class="ftm-logo-caption">
+                <span class="ftm-logo-caption-eyebrow">FTM Society</span>
+                <span class="ftm-logo-caption-tag">Empowering Muslimah</span>
+              </div>
+
+              <div class="ftm-logo-dots">
+                <button type="button" class="ftm-logo-dot" data-slide="0" aria-label="Slide 1"></button>
+                <button type="button" class="ftm-logo-dot" data-slide="1" aria-label="Slide 2"></button>
+                <button type="button" class="ftm-logo-dot" data-slide="2" aria-label="Slide 3"></button>
+                <button type="button" class="ftm-logo-dot" data-slide="3" aria-label="Slide 4"></button>
               </div>
             </div>
           </div>
@@ -859,10 +1083,14 @@
             </div>
           </div>
 
+          <!-- Signature Brand Flower Ornament -->
+          <div class="brand-flower brand-flower-pink brand-float absolute -bottom-8 -right-8 hidden lg:block" style="width: 80px; height: 80px; z-index: 5;"></div>
+          <div class="brand-asterisk brand-float absolute -top-10 right-10 hidden lg:block" style="width: 36px; height: 36px; animation-delay: 1s; z-index: 5;"></div>
+
           <!-- Decorative Blur Elements -->
           <div class="absolute -top-8 -left-8 w-32 h-32 bg-[#7A2B4A]/30 rounded-full blur-3xl -z-10"></div>
           <div class="absolute -bottom-8 -right-8 w-40 h-40 bg-[#EE4E8B]/30 rounded-full blur-3xl -z-10"></div>
-                    
+
         </div>
       </div>
 
@@ -959,7 +1187,7 @@
                         
             <div class="relative flex items-start gap-4">
               <div class="relative flex-shrink-0">
-                <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-100 to-indigo-200 text-primary group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
+                <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-gradient-to-br from-[#C5D79B] to-[#1A7A5E] text-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
                   <i class="ri-pray-line text-3xl"></i>
                 </div>
                 <div class="absolute -top-1 -right-1 w-4 h-4 bg-[#7A2B4A] rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -1030,6 +1258,7 @@
             
             <!-- Top Badge -->
             <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-[#EE4E8B]/10 via-[#7A2B4A]/10 to-[#EE4E8B]/10 rounded-full border border-[#EE4E8B]/20 shadow-lg backdrop-blur-sm">
+                <span class="brand-flower brand-flower-pink" style="width: 16px; height: 16px;"></span>
                 <div class="relative">
                     <div class="w-2 h-2 bg-[#EE4E8B] rounded-full animate-ping absolute"></div>
                     <div class="w-2 h-2 bg-[#EE4E8B] rounded-full relative"></div>
@@ -1154,12 +1383,12 @@
                 <div class="min-w-[300px] sm:min-w-[340px] max-w-[360px] flex-shrink-0" data-aos="fade-up" data-aos-delay="300">
                     <div class="group relative bg-[#FCF9F2] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-[#F4C9DF]/40 hover:border-[#7A2B4A]/30 overflow-hidden h-full flex flex-col">
                         
-                        <div class="absolute inset-0 bg-gradient-to-br from-indigo-50/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div class="absolute inset-0 bg-gradient-to-br from-[#C5D79B]/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         
                         <div class="relative z-10 flex flex-col items-center text-center flex-1">
                             
                             <div class="relative mb-6">
-                                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-100 to-indigo-200 text-primary group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
+                                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-[#C5D79B] to-[#1A7A5E] text-white group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
                                     <i class="ri-shield-user-line text-4xl"></i>
                                 </div>
                                 <div class="absolute -inset-2 rounded-2xl border-2 border-[#7A2B4A]/20 group-hover:border-[#7A2B4A]/40 group-hover:scale-110 transition-all duration-500"></div>
@@ -1183,12 +1412,12 @@
                 <div class="min-w-[300px] sm:min-w-[340px] max-w-[360px] flex-shrink-0" data-aos="fade-up" data-aos-delay="400">
                     <div class="group relative bg-[#FCF9F2] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-[#F4C9DF]/40 hover:border-[#EE4E8B]/30 overflow-hidden h-full flex flex-col">
                         
-                        <div class="absolute inset-0 bg-gradient-to-br from-rose-50/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div class="absolute inset-0 bg-gradient-to-br from-[#F4C9DF]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         
                         <div class="relative z-10 flex flex-col items-center text-center flex-1">
                             
                             <div class="relative mb-6">
-                                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-rose-100 to-rose-200 text-rose-600 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
+                                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-[#F4C9DF] to-[#EE4E8B] text-white group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
                                     <i class="ri-user-heart-line text-4xl"></i>
                                 </div>
                                 <div class="absolute -inset-2 rounded-2xl border-2 border-[#EE4E8B]/20 group-hover:border-[#EE4E8B]/40 group-hover:scale-110 transition-all duration-500"></div>
@@ -1277,6 +1506,7 @@
             
       <!-- Top Badge -->
       <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-[#7A2B4A]/10 via-[#F4C9DF]/50 to-[#7A2B4A]/10 rounded-full border border-[#7A2B4A]/20 shadow-lg backdrop-blur-sm">
+        <span class="brand-flower brand-flower-cherry" style="width: 16px; height: 16px;"></span>
         <div class="relative">
           <div class="w-2 h-2 bg-[#7A2B4A] rounded-full animate-ping absolute"></div>
           <div class="w-2 h-2 bg-[#7A2B4A] rounded-full relative"></div>
@@ -1440,16 +1670,16 @@
         <div class="min-w-[85vw] sm:min-w-[300px] max-w-[320px] flex-shrink-0 flex">
           <div class="group relative bg-[#FCF9F2] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-[#F4C9DF]/40 hover:border-[#7A2B4A]/30 overflow-hidden w-full flex flex-col">
                         
-            <div class="absolute inset-0 bg-gradient-to-br from-blue-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+            <div class="absolute inset-0 bg-gradient-to-br from-[#F4C9DF]/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                         
             <div class="relative z-10 flex flex-col items-center flex-1">
                             
               <div class="relative mb-6">
-                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200 text-primary shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
+                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-[#F4C9DF] to-[#EE4E8B] text-white shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
                   <i class="ri-calendar-check-line text-4xl"></i>
                 </div>
                 <div class="absolute -inset-2 rounded-2xl border-2 border-[#7A2B4A]/20 group-hover:border-[#7A2B4A]/40 transition-colors duration-300"></div>
-                <div class="absolute -top-2 -right-2 bg-gradient-to-r from-[#7A2B4A] to-blue-400 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div class="absolute -top-2 -right-2 bg-gradient-to-r from-[#7A2B4A] to-[#EE4E8B] text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   Flexible
                 </div>
               </div>
@@ -1541,16 +1771,16 @@
         <div class="min-w-[85vw] sm:min-w-[300px] max-w-[320px] flex-shrink-0 flex">
           <div class="group relative bg-[#FCF9F2] rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-[#F4C9DF]/40 hover:border-[#7A2B4A]/30 overflow-hidden w-full flex flex-col">
                         
-            <div class="absolute inset-0 bg-gradient-to-br from-amber-50/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+            <div class="absolute inset-0 bg-gradient-to-br from-[#C5D79B]/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                         
             <div class="relative z-10 flex flex-col items-center flex-1">
                             
               <div class="relative mb-6">
-                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-amber-100 to-amber-200 text-springs-ivy shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
+                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-[#C5D79B] to-[#1A7A5E] text-white shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
                   <i class="ri-award-line text-4xl"></i>
                 </div>
                 <div class="absolute -inset-2 rounded-2xl border-2 border-[#7A2B4A]/20 group-hover:border-[#7A2B4A]/40 transition-colors duration-300"></div>
-                <div class="absolute -top-2 -right-2 bg-gradient-to-r from-[#7A2B4A] to-amber-400 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div class="absolute -top-2 -right-2 bg-gradient-to-r from-[#7A2B4A] to-[#1A7A5E] text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   Premium
                 </div>
               </div>
@@ -2026,7 +2256,7 @@
                         shadow-lg hover:shadow-2xl transition-shadow duration-300
                         border-2 border-[#F4C9DF]/40 hover:border-[#7A2B4A]/30 flex flex-col">
 
-                <div class="absolute inset-0 bg-gradient-to-br from-blue-50/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"></div>
+                <div class="absolute inset-0 bg-gradient-to-br from-[#F4C9DF]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"></div>
 
                 <div class="relative h-52 overflow-hidden flex-shrink-0">
                     <img src="{{ asset('images/mat pilates.png') }}" alt="Mat Pilates" loading="lazy"
@@ -2041,7 +2271,7 @@
 
                     <div class="flex items-center gap-3 mb-3">
                         <div class="w-10 h-10 flex items-center justify-center rounded-xl
-                                    bg-gradient-to-br from-blue-100 to-blue-200 text-primary
+                                    bg-gradient-to-br from-[#F4C9DF] to-[#EE4E8B] text-white
                                     shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
                              style="will-change:transform; flex-shrink:0;">
                             <i class="ri-mental-health-line text-lg"></i>
@@ -2874,6 +3104,46 @@ window.classSchedules = {
 
     <!-- Compiled JavaScript via Vite -->
     @vite(['resources/js/member.js'])
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!-- 4-Logo Slider Controller — pure JS (sync welcome page) -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <script>
+    (function() {
+        const stage = document.querySelector('.ftm-logo-stage');
+        if (!stage) return;
+
+        const slides = stage.querySelectorAll('.ftm-logo-slide');
+        const bgs    = stage.querySelectorAll('.ftm-logo-bg');
+        const dots   = stage.querySelectorAll('.ftm-logo-dot');
+        const total  = slides.length;
+        if (!total) return;
+
+        let current  = 0;
+        let timer    = null;
+        const DURATION = 4500;
+
+        function setActive(idx) {
+            slides.forEach((el, i) => el.classList.toggle('is-active', i === idx));
+            bgs.forEach((el, i)    => el.classList.toggle('is-active', i === idx));
+            dots.forEach((el, i)   => el.classList.toggle('is-active', i === idx));
+            current = idx;
+        }
+        function next() { setActive((current + 1) % total); }
+        function startAuto() { stopAuto(); timer = setInterval(next, DURATION); }
+        function stopAuto()  { if (timer) { clearInterval(timer); timer = null; } }
+
+        dots.forEach((dot, i) => {
+            dot.addEventListener('click', () => { setActive(i); startAuto(); });
+        });
+
+        stage.addEventListener('mouseenter', stopAuto);
+        stage.addEventListener('mouseleave', startAuto);
+
+        setActive(0);
+        startAuto();
+    })();
+    </script>
   </body>
 </html>
 

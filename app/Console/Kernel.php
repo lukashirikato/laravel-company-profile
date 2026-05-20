@@ -50,6 +50,17 @@ class Kernel extends ConsoleKernel
             });
 
         // ========================================
+        // AUTO-CLEANUP ADMIN NOTIFICATIONS
+        // ========================================
+        // Hapus notif admin yang lebih dari 30 hari, jam 03:00 daily
+        $schedule->command('admin-notifications:cleanup --days=30')
+            ->daily()
+            ->at('03:00')
+            ->timezone('Asia/Jakarta')
+            ->withoutOverlapping()
+            ->runInBackground();
+
+        // ========================================
         // REMINDER PAKET AKAN EXPIRED (OPTIONAL)
         // ========================================
         // Kirim notifikasi untuk paket yang akan expired dalam 3 hari

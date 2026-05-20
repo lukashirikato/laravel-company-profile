@@ -5,6 +5,18 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Filament\Facades\Filament;
 use Midtrans\Config;
+use App\Models\Customer;
+use App\Models\Order;
+use App\Models\Transaction;
+use App\Models\CustomerSchedule;
+use App\Models\Booking;
+use App\Models\Attendance;
+use App\Observers\CustomerObserver;
+use App\Observers\OrderObserver;
+use App\Observers\TransactionObserver;
+use App\Observers\CustomerScheduleObserver;
+use App\Observers\BookingObserver;
+use App\Observers\AttendanceObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -38,5 +50,15 @@ class AppServiceProvider extends ServiceProvider
                 asset('css/ftm-filament-v2-theme.css'),
             ]);
         });
+
+        // ─────────────────────────────────────────────
+        // Admin Notification Observers
+        // ─────────────────────────────────────────────
+        Customer::observe(CustomerObserver::class);
+        Order::observe(OrderObserver::class);
+        Transaction::observe(TransactionObserver::class);
+        CustomerSchedule::observe(CustomerScheduleObserver::class);
+        Booking::observe(BookingObserver::class);
+        Attendance::observe(AttendanceObserver::class);
     }
 }
