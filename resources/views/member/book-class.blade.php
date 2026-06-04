@@ -265,6 +265,28 @@
             font-size: 0.875rem;
             font-weight: 500;
         }
+
+        .schedule-card.is-selected > div {
+            border-color: #EE4E8B;
+            background: #FFF7FB;
+            box-shadow: 0 10px 24px rgba(238, 78, 139, 0.12);
+        }
+
+        .schedule-card.is-selected .schedule-card-check {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .schedule-card.is-selected .schedule-card-accent {
+            background: #EE4E8B;
+            color: #FFFFFF;
+        }
+
+        .schedule-card.is-selected .schedule-card-status {
+            background: #FFF7FB;
+            color: #7A2B4A;
+            border-color: #EE4E8B;
+        }
         
         /* ============================================
            SCHEDULE TABLE
@@ -531,12 +553,8 @@
         }
     </style>
     <link rel="stylesheet" href="{{ asset('css/ftm-member-portal.css') }}?v={{ filemtime(public_path('css/ftm-member-portal.css')) }}">
-</head>
-<body class="bg-cream h-screen overflow-hidden">
-
  <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('css/ftm-member-portal.css') }}?v={{ filemtime(public_path('css/ftm-member-portal.css')) }}">
 </head>
 
 <body class="bg-cream h-screen overflow-hidden">
@@ -548,9 +566,6 @@
     {{-- ============================================
          MAIN CONTENT AREA
          ============================================ --}}
-    <!-- Mobile Sidebar Overlay -->
-    <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
-
     <!-- Mobile Hamburger Button -->
     <button id="hamburger-btn" class="hamburger-btn fixed top-4 left-4 z-30 w-10 h-10 bg-dark text-white rounded-lg items-center justify-center shadow-lg hover:bg-secondary transition" onclick="toggleSidebar()">
         <i class="fas fa-bars text-lg"></i>
@@ -680,103 +695,110 @@
              SCHEDULE SECTIONS - GROUPED BY DAY
              ============================================ --}}
         @if(isset($schedules) && $schedules->isNotEmpty())
-            @foreach($schedules as $day => $items)
-                <div class="schedule-section">
-                    <div class="day-header">
-                        <div class="day-badge">{{ $day }}</div>
-                        <div class="day-count">{{ $items->count() }} {{ $items->count() === 1 ? 'class' : 'classes' }} available</div>
-                    </div>
-                    
-                    <table class="schedule-table">
-                        <thead>
-                            <tr>
-                                <th>Class</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Coach</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+            <div class="space-y-6 pb-32">
+                @foreach($schedules as $day => $items)
+                    <section class="rounded-3xl border border-[#F4C9DF] bg-white/80 p-4 shadow-sm backdrop-blur-sm md:p-5">
+                        <div class="flex items-center justify-between gap-3 border-b border-[#F4C9DF] pb-4">
+                            <div class="flex items-center gap-3">
+                                <span class="rounded-full bg-[#7A2B4A] px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-white">{{ $day }}</span>
+                                <span class="text-sm font-medium text-[#7A2B4A]/70">{{ $items->count() }} classes available</span>
+                            </div>
+                            <span class="text-xs font-semibold uppercase tracking-[0.14em] text-[#7A2B4A]/45">Tap cards to select</span>
+                        </div>
+
+                        <div class="mt-4 grid gap-4">
                             @foreach($items as $s)
                                 @php
                                     $isBooked = isset($bookedScheduleIds) && in_array($s->id, $bookedScheduleIds);
                                     $isDisabled = $customer->quota <= 0;
+                                    $classIcon = match($s->classModel->class_name ?? '') {
+                                        'Reformer Pilates' => '🧘‍♀️',
+                                        'Mat Pilates' => '🧘',
+                                        'Muaythai Beginner', 'Muaythai Intermediate' => '🥊',
+                                        'Body Shaping' => '💪',
+                                        default => '🎯',
+                                    };
                                 @endphp
+
+                                {{-- Hidden form for single class booking --}}
+                                <form id="book-form-{{ $s->id }}" action="{{ route('member.book.store') }}" method="POST" style="display: none;">
+                                    @csrf
+                                    <input type="hidden" name="schedule_id" value="{{ $s->id }}">
+                                </form>
                                 
-                                <tr>
-                                    <td>
-                                        <div class="class-info">
-                                            <div class="class-icon">
-                                                @if(isset($s->classModel))
-                                                    @switch($s->classModel->class_name)
-                                                        @case('Reformer Pilates')
-                                                            🧘‍♀️
-                                                            @break
-                                                        @case('Mat Pilates')
-                                                            🧘
-                                                            @break
-                                                        @case('Muaythai Beginner')
-                                                        @case('Muaythai Intermediate')
-                                                            🥊
-                                                            @break
-                                                        @case('Body Shaping')
-                                                            💪
-                                                            @break
-                                                        @default
-                                                            🎯
-                                                    @endswitch
-                                                @else
-                                                    🎯
-                                                @endif
+                                <label class="schedule-card group block cursor-pointer select-none">
+                                    <input
+                                        type="checkbox"
+                                        class="peer sr-only schedule-checkbox"
+                                        value="{{ $s->id }}"
+                                        data-schedule-id="{{ $s->id }}"
+                                        data-class-name="{{ e($s->classModel->class_name ?? 'Class') }}"
+                                        data-day="{{ e($day) }}"
+                                        data-date="{{ e($s->schedule_date_formatted) }}"
+                                        data-time="{{ e(\Carbon\Carbon::parse($s->class_time)->format('H:i')) }}"
+                                        data-instructor="{{ e($s->instructor ?? '-') }}"
+                                        onclick="handleScheduleClick(event, this)"
+                                        {{ $isBooked || $isDisabled ? 'disabled' : '' }}
+                                    >
+
+                                    <div class="relative overflow-hidden rounded-2xl border border-[#F4C9DF] bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md peer-checked:border-[#EE4E8B] peer-checked:bg-[#FFF7FB] peer-checked:shadow-md {{ $isBooked ? 'opacity-60' : '' }} {{ $isDisabled ? 'opacity-50' : '' }}">
+                                        <div class="schedule-card-check absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full border border-[#EE4E8B] bg-white text-[0.75rem] text-[#EE4E8B] opacity-0 transition-all duration-200 peer-checked:opacity-100">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+
+                                        <div class="flex items-start gap-3">
+                                            <div class="schedule-card-accent flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#FBEAF0] text-lg text-[#EE4E8B] transition-colors duration-200">
+                                                {{ $classIcon }}
                                             </div>
-                                            <div class="class-name">{{ $s->classModel->class_name ?? 'Class' }}</div>
+
+                                            <div class="min-w-0 flex-1">
+                                                <div class="flex flex-wrap items-start justify-between gap-2">
+                                                    <div class="min-w-0">
+                                                        <h3 class="truncate text-base font-extrabold leading-tight text-[#7A2B4A]">{{ $s->classModel->class_name ?? 'Class' }}</h3>
+                                                        <p class="mt-1 text-sm font-medium text-[#1C1C1C]">Coach {{ $s->instructor ?? '-' }}</p>
+                                                        <p class="mt-1 text-sm text-[#7A2B4A]/80">{{ \Carbon\Carbon::parse($s->schedule_date)->format('M d, Y') }} • {{ \Carbon\Carbon::parse($s->class_time)->format('h:i A') }}</p>
+                                                    </div>
+
+                                                    @if($isBooked)
+                                                        <span class="schedule-card-status inline-flex items-center gap-2 rounded-full border border-transparent bg-[#F0FDF4] px-3 py-1 text-xs font-semibold text-[#1A7A5E]"><span class="h-2 w-2 rounded-full bg-[#1A7A5E]"></span>Booked</span>
+                                                    @elseif($isDisabled)
+                                                        <span class="schedule-card-status inline-flex items-center gap-2 rounded-full border border-transparent bg-[#F4C9DF]/50 px-3 py-1 text-xs font-semibold text-[#7A2B4A]">Quota empty</span>
+                                                    @else
+                                                        <span class="schedule-card-status inline-flex items-center gap-2 rounded-full border border-transparent bg-[#F0FDF4] px-3 py-1 text-xs font-semibold text-[#1A7A5E]"><span class="h-2 w-2 rounded-full bg-[#1A7A5E]"></span>Available</span>
+                                                    @endif
+                                                </div>
+
+                                                <div class="mt-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#7A2B4A]/55">
+                                                    <span class="rounded-full bg-[#7A2B4A] px-2.5 py-1 text-white">{{ $day }}</span>
+                                                    <span class="text-[#7A2B4A]/45">•</span>
+                                                    <span>{{ $isBooked ? 'Already booked' : 'Select this class' }}</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight:600; color:#7A2B4A; font-size:0.95rem;">
-                                            {{ $s->schedule_date_formatted }}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="time-badge">
-                                            <span>🕐</span>
-                                            <span>{{ \Carbon\Carbon::parse($s->class_time)->format('H:i') }}</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="coach-name"> {{ $s->instructor ?? '-' }}</div>
-                                    </td>
-                                    <td>
-                                        @if($isBooked)
-                                            <span class="status-badge booked">✓ Booked</span>
-                                        @else
-                                            <span class="status-badge available">Available</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if($isBooked)
-                                            <button class="btn btn-success" disabled>BOOKED</button>
-                                        @elseif($isDisabled)
-                                            <button class="btn btn-disabled" disabled>QUOTA EMPTY</button>
-                                        @else
-                                            <form method="POST" action="{{ route('member.book.store') }}" style="display: inline;" id="book-form-{{ $s->id }}">
-                                                @csrf
-                                                <input type="hidden" name="schedule_id" value="{{ $s->id }}">
-                                                <button type="button" class="btn btn-primary" 
-                                                    onclick="showBookConfirm('{{ $s->classModel->class_name ?? 'Class' }}', '{{ $day }}', '{{ $s->schedule_date_formatted }}', '{{ \Carbon\Carbon::parse($s->class_time)->format('H:i') }}', '{{ $s->instructor ?? '-' }}', '{{ $s->id }}')">
-                                                    BOOK NOW
-                                                </button>
-                                            </form>
-                                        @endif
-                                    </td>
-                                </tr>
+                                    </div>
+                                </label>
                             @endforeach
-                        </tbody>
-                    </table>
+                        </div>
+                    </section>
+                @endforeach
+
+                <div id="bulk-booking-bar" class="fixed inset-x-0 bottom-0 z-40 border-t border-[#F4C9DF] bg-[#FCF9F2]/95 px-4 py-4 backdrop-blur-md md:px-6">
+                    <div class="mx-auto flex w-full max-w-5xl items-center gap-3 rounded-2xl border border-[#F4C9DF] bg-white px-4 py-4 shadow-sm md:px-5">
+                        <div class="min-w-0 flex-1">
+                            <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                                <p class="text-sm font-semibold text-[#7A2B4A]"><span id="selected-class-count">0</span> Classes Selected</p>
+                                <span class="text-xs font-medium uppercase tracking-[0.14em] text-[#7A2B4A]/45">Single confirm booking</span>
+                            </div>
+                            <p class="mt-1 text-sm text-[#1C1C1C]/70"><span id="selected-session-count">0</span> booked sessions ready to submit</p>
+                        </div>
+
+                        <button type="button" id="book-selected-btn" onclick="bookSelectedClasses()" class="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-[#EE4E8B] px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#D9467D] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0">
+                            <i class="fas fa-calendar-plus"></i>
+                            <span>Book Selected Classes</span>
+                        </button>
+                    </div>
                 </div>
-            @endforeach
+            </div>
         @else
             {{-- ============================================
                  EMPTY STATE
@@ -864,15 +886,39 @@
     </div>
 </div>
 
-<style>
-    @keyframes modalIn {
-        0% { opacity: 0; transform: scale(0.95) translateY(10px); }
-        100% { opacity: 1; transform: scale(1) translateY(0); }
-    }
-</style>
+    <style>
+        @keyframes modalIn {
+            0% { opacity: 0; transform: scale(0.95) translateY(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+    </style>
 
 <script>
     let pendingScheduleId = null;
+
+    function handleScheduleClick(event, checkbox) {
+        if (checkbox.disabled) return;
+        
+        // Jika checkbox belum checked, tampilkan modal konfirmasi
+        if (!checkbox.checked) {
+            const className = checkbox.dataset.className;
+            const day = checkbox.dataset.day;
+            const date = checkbox.dataset.date;
+            const time = checkbox.dataset.time;
+            const coach = checkbox.dataset.instructor;
+            const scheduleId = checkbox.dataset.scheduleId;
+            
+            showBookConfirm(className, day, date, time, coach, scheduleId);
+            
+            // Prevent checkbox from being checked until user confirms
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
+        } else {
+            // If already checked, allow unchecking directly
+            return true;
+        }
+    }
 
     function showBookConfirm(className, day, date, time, coach, scheduleId) {
         document.getElementById('confirm-class').textContent = className;
@@ -897,6 +943,8 @@
     function confirmBook() {
         if (!pendingScheduleId) return;
         const form = document.getElementById('book-form-' + pendingScheduleId);
+        const checkbox = document.querySelector(`.schedule-checkbox[data-schedule-id="${pendingScheduleId}"]`);
+        
         if (form) {
             // Disable button to prevent double-click
             const btn = document.getElementById('confirm-book-btn');
@@ -904,7 +952,82 @@
             btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i>Booking...';
             btn.style.opacity = '0.7';
             btn.style.cursor = 'not-allowed';
+            
+            // Check the checkbox visually
+            if (checkbox) {
+                checkbox.checked = true;
+                updateSelectedCardStates();
+                updateBulkBookingBar();
+            }
+            
             form.submit();
+        }
+    }
+
+    const bookingStoreUrl = @json(route('member.book.store'));
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
+    function getSelectedScheduleCheckboxes() {
+        return Array.from(document.querySelectorAll('.schedule-checkbox:checked'));
+    }
+
+    function updateBulkBookingBar() {
+        const selected = getSelectedScheduleCheckboxes();
+        const count = selected.length;
+        const selectedClassCount = document.getElementById('selected-class-count');
+        const selectedSessionCount = document.getElementById('selected-session-count');
+        const button = document.getElementById('book-selected-btn');
+
+        if (selectedClassCount) selectedClassCount.textContent = count;
+        if (selectedSessionCount) selectedSessionCount.textContent = count;
+        if (button) button.disabled = count === 0;
+    }
+
+    function updateSelectedCardStates() {
+        document.querySelectorAll('.schedule-checkbox').forEach(checkbox => {
+            const card = checkbox.closest('.schedule-card');
+            if (!card) return;
+            card.classList.toggle('is-selected', checkbox.checked);
+        });
+    }
+
+    async function bookSelectedClasses() {
+        const selected = getSelectedScheduleCheckboxes();
+        if (!selected.length) return;
+
+        const button = document.getElementById('book-selected-btn');
+        const originalHtml = button?.innerHTML || '';
+        if (button) {
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Booking...</span>';
+        }
+
+        try {
+            for (const checkbox of selected) {
+                const formData = new FormData();
+                formData.append('_token', csrfToken);
+                formData.append('schedule_id', checkbox.value);
+
+                await fetch(bookingStoreUrl, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json, text/plain, */*'
+                    },
+                    body: formData,
+                });
+            }
+
+            window.location.reload();
+        } catch (error) {
+            console.error('Bulk booking failed', error);
+            window.location.reload();
+        } finally {
+            if (button) {
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+            }
         }
     }
 
@@ -918,21 +1041,38 @@
         if (e.key === 'Escape') closeBookConfirm();
     });
 
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.schedule-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                updateSelectedCardStates();
+                updateBulkBookingBar();
+            });
+        });
+        updateSelectedCardStates();
+        updateBulkBookingBar();
+    });
+
     // ===== SIDEBAR TOGGLE FUNCTION =====
     function toggleSidebar() {
         const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
         const hamburger = document.getElementById('hamburger-btn');
-        
+
+        if (!sidebar) return;
+
+        const willOpen = !sidebar.classList.contains('open') && !sidebar.classList.contains('active');
         sidebar.classList.toggle('open');
-        overlay.classList.toggle('active');
-        
-        if (sidebar.classList.contains('open')) {
+        sidebar.classList.toggle('active');
+
+        if (willOpen) {
+            document.body.classList.add('sidebar-open');
             document.body.style.overflow = 'hidden';
-            hamburger.innerHTML = '<i class="fas fa-times text-lg"></i>';
+            if (hamburger) hamburger.style.display = 'none';
+            document.querySelectorAll('.hamburger-btn, .more-btn, .dots-btn, .three-dots, .more-menu-btn').forEach(el => el.style.display = 'none');
         } else {
+            document.body.classList.remove('sidebar-open');
             document.body.style.overflow = '';
-            hamburger.innerHTML = '<i class="fas fa-bars text-lg"></i>';
+            if (hamburger) { hamburger.style.display = ''; hamburger.innerHTML = '<i class="fas fa-bars text-lg"></i>'; }
+            document.querySelectorAll('.hamburger-btn, .more-btn, .dots-btn, .three-dots, .more-menu-btn').forEach(el => el.style.display = '');
         }
     }
 
@@ -942,7 +1082,8 @@
         navLinks.forEach(link => {
             link.addEventListener('click', function() {
                 if (window.innerWidth <= 768) {
-                    toggleSidebar();
+                    const sidebar = document.getElementById('sidebar');
+                    if (sidebar && sidebar.classList.contains('open')) toggleSidebar();
                 }
             });
         });
@@ -951,13 +1092,16 @@
     // Reset sidebar on window resize
     window.addEventListener('resize', function() {
         const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
         const hamburger = document.getElementById('hamburger-btn');
         
         if (window.innerWidth > 768) {
             sidebar.classList.remove('open');
-            overlay.classList.remove('active');
-            hamburger.innerHTML = '<i class="fas fa-bars text-lg"></i>';
+            sidebar.classList.remove('active');
+            if (hamburger) {
+                hamburger.style.display = '';
+                hamburger.innerHTML = '<i class="fas fa-bars text-lg"></i>';
+            }
+            document.body.classList.remove('sidebar-open');
             document.body.style.overflow = '';
         }
     });

@@ -384,6 +384,32 @@
 
         .hamburger-btn {
             display: none !important;
+            position: fixed !important;
+            top: 1rem !important;
+            left: 1rem !important;
+            z-index: 9999 !important;
+            width: 3rem !important;
+            height: 3rem !important;
+            background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 0.5rem !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-shadow: 0 4px 12px rgba(122, 43, 74, 0.35) !important;
+            cursor: pointer !important;
+            transition: all 0.2s !important;
+            font-size: 1.25rem !important;
+        }
+
+        .hamburger-btn:hover {
+            background: linear-gradient(135deg, #5A1F3A 0%, #B83863 100%) !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 6px 16px rgba(122, 43, 74, 0.45) !important;
+        }
+
+        .hamburger-btn:active {
+            transform: translateY(0) !important;
         }
 
         @media (max-width: 768px) {
@@ -392,30 +418,12 @@
                 margin-top: 3rem;
             }
 
-            .sidebar {
-                position: fixed;
-                left: 0;
-                top: 0;
-                height: 100vh;
-                z-index: 30;
-                transform: translateX(-100%);
-                box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .sidebar-overlay.active {
-                display: block;
-            }
-
             .hamburger-btn {
                 display: flex !important;
             }
 
-            body.sidebar-open {
-                overflow: hidden;
+            .sidebar-overlay.active {
+                display: block !important;
             }
         }
     </style>
@@ -430,11 +438,11 @@
 
     <!-- MAIN CONTENT -->
     <!-- Mobile Sidebar Overlay -->
-    <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <!-- Mobile Sidebar Overlay removed to avoid dark backdrop -->
 
     <!-- Mobile Hamburger Button -->
-    <button id="hamburger-btn" class="hamburger-btn fixed top-4 left-4 z-30 w-10 h-10 bg-dark text-white rounded-lg items-center justify-center shadow-lg hover:bg-secondary transition" onclick="toggleSidebar()">
-        <i class="fas fa-bars text-lg"></i>
+    <button id="hamburger-btn" class="hamburger-btn" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
     </button>
 
     <main class="flex-1 overflow-y-auto">
@@ -509,7 +517,7 @@
                                     @if($t->payment_type && $t->payment_type !== '-')
                                         <span class="payment-badge">
                                             <i class="fas fa-credit-card"></i>
-                                            {{ strtoupper(str_replace('_', ' ', $t->payment_type)) }}
+                                            {{ formatPaymentMethod($t->payment_type) }}
                                         </span>
                                     @else
                                         <span class="detail-value" style="color: #94a3b8;">-</span>
@@ -574,28 +582,40 @@
 // ===== SIDEBAR TOGGLE FUNCTION =====
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
     const hamburger = document.getElementById('hamburger-btn');
-    
+    if (!sidebar) return;
+
+    const willOpen = !sidebar.classList.contains('active') && !sidebar.classList.contains('open');
+    sidebar.classList.toggle('active');
     sidebar.classList.toggle('open');
-    overlay.classList.toggle('active');
-    
-    if (sidebar.classList.contains('open')) {
+
+    if (willOpen) {
+        document.body.classList.add('sidebar-open');
         document.body.style.overflow = 'hidden';
-        hamburger.innerHTML = '<i class="fas fa-times text-lg"></i>';
+        if (hamburger) hamburger.style.display = 'none';
+        document.querySelectorAll('.hamburger-btn, .more-btn, .dots-btn, .three-dots, .more-menu-btn').forEach(el => el.style.display = 'none');
     } else {
+        document.body.classList.remove('sidebar-open');
         document.body.style.overflow = '';
-        hamburger.innerHTML = '<i class="fas fa-bars text-lg"></i>';
+        if (hamburger) { hamburger.style.display = ''; hamburger.innerHTML = '<i class="fas fa-bars"></i>'; }
+        document.querySelectorAll('.hamburger-btn, .more-btn, .dots-btn, .three-dots, .more-menu-btn').forEach(el => el.style.display = '');
     }
 }
 
 // Close sidebar when clicking on a nav link
 document.addEventListener('DOMContentLoaded', function() {
-    const navLinks = document.querySelectorAll('aside nav a');
+    console.log('DOM loaded, setting up sidebar');
+    
+    const navLinks = document.querySelectorAll('#sidebar nav a');
+    console.log('Found nav links:', navLinks.length);
+    
     navLinks.forEach(link => {
         link.addEventListener('click', function() {
             if (window.innerWidth <= 768) {
-                toggleSidebar();
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar && sidebar.classList.contains('active')) {
+                    toggleSidebar();
+                }
             }
         });
     });
@@ -604,13 +624,12 @@ document.addEventListener('DOMContentLoaded', function() {
 // Reset sidebar on window resize
 window.addEventListener('resize', function() {
     const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
     const hamburger = document.getElementById('hamburger-btn');
     
-    if (window.innerWidth > 768) {
-        sidebar.classList.remove('open');
-        overlay.classList.remove('active');
-        hamburger.innerHTML = '<i class="fas fa-bars text-lg"></i>';
+    if (window.innerWidth > 768 && sidebar) {
+        sidebar.classList.remove('active');
+        if (hamburger) hamburger.style.display = '';
+        if (hamburger) hamburger.innerHTML = '<i class="fas fa-bars"></i>';
         document.body.style.overflow = '';
     }
 });

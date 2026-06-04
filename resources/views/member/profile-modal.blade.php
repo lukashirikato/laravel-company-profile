@@ -465,8 +465,7 @@
 
 <body class="h-screen overflow-hidden">
 
-<!-- Sidebar Overlay (Mobile) -->
-<div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+<!-- Sidebar overlay removed to avoid dark backdrop on mobile -->
 
 <div class="flex h-screen">
 
@@ -808,20 +807,22 @@
 <script>
     function toggleSidebar() {
         const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
         const hamburger = document.getElementById('hamburger-btn');
+        if (!sidebar) return;
 
+        const willOpen = !sidebar.classList.contains('active') && !sidebar.classList.contains('open');
         sidebar.classList.toggle('active');
-        overlay.classList.toggle('active');
+        sidebar.classList.toggle('open');
 
-        const icon = hamburger.querySelector('i');
-        if (sidebar.classList.contains('active')) {
-            icon.classList.remove('fa-bars');
-            icon.classList.add('fa-times');
+        if (willOpen) {
+            document.body.classList.add('sidebar-open');
+            if (hamburger) hamburger.style.display = 'none';
             if (window.innerWidth <= 768) document.body.style.overflow = 'hidden';
+            document.querySelectorAll('.hamburger-btn, .more-btn, .dots-btn, .three-dots, .more-menu-btn').forEach(el => el.style.display = 'none');
         } else {
-            icon.classList.remove('fa-times');
-            icon.classList.add('fa-bars');
+            document.body.classList.remove('sidebar-open');
+            if (hamburger) { hamburger.style.display = ''; const icon = hamburger.querySelector('i'); if (icon) icon.classList.add('fa-bars'); }
+            document.querySelectorAll('.hamburger-btn, .more-btn, .dots-btn, .three-dots, .more-menu-btn').forEach(el => el.style.display = '');
             document.body.style.overflow = '';
         }
     }
@@ -840,9 +841,7 @@
     window.addEventListener('resize', function() {
         if (window.innerWidth > 768) {
             const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
             sidebar.classList.remove('active');
-            overlay.classList.remove('active');
             document.body.style.overflow = '';
         }
     });

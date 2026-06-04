@@ -391,15 +391,10 @@
                 <tr>
                     <td>Payment Method:</td>
                     <td>
-                        @if(isset($order->transaction) && isset($order->transaction->payment_type) && $order->transaction->payment_type !== '-')
-                            {{ strtoupper(str_replace('_', ' ', $order->transaction->payment_type)) }}
-                        @elseif(isset($order->payment_type) && $order->payment_type !== '-')
-                            {{ strtoupper(str_replace('_', ' ', $order->payment_type)) }}
-                        @elseif(isset($order->payment_method) && $order->payment_method !== '-')
-                            {{ strtoupper(str_replace('_', ' ', $order->payment_method)) }}
-                        @else
-                            -
-                        @endif
+                        @php
+                            $paymentType = $order->transaction->payment_type ?? $order->payment_type ?? $order->payment_method ?? null;
+                        @endphp
+                        {{ formatPaymentMethod($paymentType) }}
                     </td>
                 </tr>
                 <tr>

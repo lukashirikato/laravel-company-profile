@@ -31,10 +31,15 @@ class CustomerPackageController extends Controller
             ->whereIn('status', ['paid', 'active', 'settlement', 'success']) // ✅ Multiple status
             ->where(function($query) {
                 // Paket masih aktif jika:
-                // 1. expired_at NULL (unlimited), ATAU
-                // 2. expired_at masih di masa depan
+                // 1. expired_at NULL (belum diaktivasi atau unlimited), ATAU
+                // 2. expired_at masih di masa depan, ATAU
+                // 3. Baru dibeli dalam 7 hari terakhir (grace period untuk paket baru)
                 $query->whereNull('expired_at')
-                      ->orWhere('expired_at', '>', Carbon::now());
+                      ->orWhere('expired_at', '>', Carbon::now())
+                      ->orWhere(function($q) {
+                          $q->where('created_at', '>=', Carbon::now()->subDays(7))
+                            ->whereNotIn('status', ['expired', 'cancelled', 'failed']);
+                      });
             })
             ->orderByDesc('created_at')
             ->get();
@@ -101,6 +106,12 @@ class CustomerPackageController extends Controller
             
             // ✅ AJAX request → return JSON for modal
             if ($request->ajax() || $request->wantsJson()) {
+                // Get payment type from order or transaction
+                $paymentType = $order->payment_type;
+                if (!$paymentType && $order->transaction) {
+                    $paymentType = $order->transaction->payment_type;
+                }
+                
                 return response()->json([
                     'success' => true,
                     'order' => [
@@ -122,6 +133,8 @@ class CustomerPackageController extends Controller
                         'remaining_time' => $remainingTime,
                         'remaining_classes' => $classesLeft,
                         'remaining_quota' => $order->remaining_quota ?? 0,
+                        'payment_type' => $paymentType,
+                        'payment_method' => $this->formatPaymentMethod($paymentType),
                     ],
                     'package' => [
                         'id' => $pkg->id ?? null,
@@ -403,5 +416,41 @@ class CustomerPackageController extends Controller
                 'message' => 'Gagal memperpanjang package'
             ], 500);
         }
+    }
+    
+    /**
+     * Format payment method untuk display yang user-friendly
+     * 
+     * @param string|null $paymentType
+     * @return string
+     */
+    private function formatPaymentMethod($paymentType)
+    {
+        if (!$paymentType) {
+            return 'Menunggu Pembayaran';
+        }
+        
+        // Map Midtrans payment types ke format yang lebih readable
+        $paymentMethodMap = [
+            'gopay' => 'GoPay',
+            'shopeepay' => 'ShopeePay',
+            'qris' => 'QRIS',
+            'bank_transfer' => 'Virtual Account',
+            'bca_va' => 'Virtual Account BCA',
+            'bni_va' => 'Virtual Account BNI',
+            'bri_va' => 'Virtual Account BRI',
+            'permata_va' => 'Virtual Account Permata',
+            'other_va' => 'Virtual Account',
+            'echannel' => 'Mandiri Bill Payment',
+            'cstore' => 'Convenience Store',
+            'alfamart' => 'Alfamart',
+            'indomaret' => 'Indomaret',
+            'akulaku' => 'Akulaku',
+            'credit_card' => 'Kartu Kredit',
+            'debit_card' => 'Kartu Debit',
+        ];
+        
+        // Return mapped value atau original value dengan capitalize
+        return $paymentMethodMap[strtolower($paymentType)] ?? ucwords(str_replace('_', ' ', $paymentType));
     }
 }

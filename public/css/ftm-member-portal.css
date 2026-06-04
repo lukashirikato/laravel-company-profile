@@ -398,6 +398,17 @@ main input:focus, main select:focus, main textarea:focus,
     padding: 3px 10px !important;
 }
 
+/* When sidebar is open, hide floating menu buttons (hamburger / kebab / more) */
+body.sidebar-open .hamburger-btn,
+body.sidebar-open .more-btn,
+body.sidebar-open .dots-btn,
+body.sidebar-open .three-dots,
+body.sidebar-open .more-menu-btn,
+body.sidebar-open #mobile-menu-button,
+body.sidebar-open [data-role="more"] {
+    display: none !important;
+}
+
 /* ================================================================
    CLEANUP — kill rogue Tailwind colors in main
    ================================================================ */

@@ -19,6 +19,7 @@ use Carbon\Carbon;
 
 use Midtrans\Config;
 use Midtrans\Snap;
+use Midtrans\Transaction as MidtransTransactionApi;
 use Midtrans\Notification as MidtransNotification;
 
 class CheckoutController extends Controller
@@ -98,6 +99,12 @@ class CheckoutController extends Controller
         // Wait for webhook to process (sometimes webhook is faster than redirect)
         sleep(self::WEBHOOK_WAIT_SECONDS);
         $order->refresh();
+
+        // Fallback sync: if webhook missed/delayed, fetch latest status from Midtrans
+        if ($order->status === self::STATUS_PENDING) {
+            $this->syncOrderStatusFromMidtrans($order);
+            $order->refresh();
+        }
 
         Log::info('🔍 Payment Success Page Accessed', [
             'order_code' => $order_code,
@@ -689,12 +696,90 @@ class CheckoutController extends Controller
             return response()->json(['error' => 'Order not found'], 404);
         }
 
+        // Fallback sync for AJAX polling when webhook is delayed/missed
+        if ($order->status === self::STATUS_PENDING) {
+            $this->syncOrderStatusFromMidtrans($order);
+            $order->refresh();
+        }
+
         return response()->json([
             'status' => $order->status,
             'customer_name' => $order->customer_name ?? 'Unknown',
             'amount' => $order->amount,
             'payment_type' => $order->payment_type,
         ]);
+    }
+
+    /**
+     * Fallback: synchronize order status directly from Midtrans API.
+     * Used when webhook is delayed/missed but user already returned from payment page.
+     *
+     * @param Order $order
+     * @return void
+     */
+    private function syncOrderStatusFromMidtrans(Order $order): void
+    {
+        try {
+            $midtransStatus = MidtransTransactionApi::status($order->order_code);
+            $transactionStatus = $midtransStatus->transaction_status ?? null;
+
+            if (!$transactionStatus) {
+                Log::warning('⚠️ Midtrans status API returned empty transaction_status', [
+                    'order_code' => $order->order_code,
+                    'raw_response' => $midtransStatus,
+                ]);
+                return;
+            }
+
+            $newStatus = $this->mapMidtransStatus($transactionStatus);
+            $isPaid = in_array($transactionStatus, ['settlement', 'capture'])
+                && (($midtransStatus->fraud_status ?? null) !== 'deny');
+
+            // Always update order status with latest Midtrans response
+            $order->update([
+                'status' => $newStatus,
+                'payment_type' => $midtransStatus->payment_type ?? $order->payment_type,
+            ]);
+
+            // Keep transaction table in sync as well
+            $transaction = Transaction::where('transaction_id', $order->order_code)->first();
+            if ($transaction) {
+                $transaction->update([
+                    'status' => $newStatus,
+                    'payment_type' => $midtransStatus->payment_type ?? $transaction->payment_type,
+                    'midtrans_transaction_id' => $midtransStatus->transaction_id ?? $transaction->midtrans_transaction_id,
+                    'fraud_status' => $midtransStatus->fraud_status ?? $transaction->fraud_status,
+                    'signature_key' => $midtransStatus->signature_key ?? $transaction->signature_key,
+                    'amount' => data_get($midtransStatus, 'gross_amount') !== null
+                        ? (int) data_get($midtransStatus, 'gross_amount')
+                        : $transaction->amount,
+                ]);
+            }
+
+            // If payment settled and business process not yet applied, apply now
+            if ($isPaid && !$order->quota_applied) {
+                $this->processSuccessfulPayment($order, (object) [
+                    'transaction_status' => $transactionStatus,
+                    'fraud_status' => $midtransStatus->fraud_status ?? null,
+                    'payment_type' => $midtransStatus->payment_type ?? null,
+                    'transaction_id' => $midtransStatus->transaction_id ?? null,
+                    'signature_key' => $midtransStatus->signature_key ?? null,
+                    'gross_amount' => $midtransStatus->gross_amount ?? $order->amount,
+                ]);
+            }
+
+            Log::info('🔄 Midtrans fallback sync completed', [
+                'order_code' => $order->order_code,
+                'midtrans_status' => $transactionStatus,
+                'mapped_status' => $newStatus,
+                'quota_applied' => $order->quota_applied,
+            ]);
+        } catch (\Throwable $e) {
+            Log::warning('⚠️ Midtrans fallback sync failed', [
+                'order_code' => $order->order_code,
+                'message' => $e->getMessage(),
+            ]);
+        }
     }
 
     // ==================== HELPER METHODS ====================

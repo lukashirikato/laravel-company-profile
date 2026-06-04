@@ -923,7 +923,7 @@
 <div style="display:flex; height:100vh;">
     @include('partials.member-sidebar')
 
-    <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <!-- Sidebar overlay removed; hamburger toggle remains but will be hidden when sidebar open -->
     <button id="hamburger-btn" class="hamburger-btn fixed top-4 left-4 z-30 w-10 h-10 bg-[#7A2B4A] text-white rounded-lg items-center justify-center shadow-lg hover:bg-[#EE4E8B] transition" onclick="toggleSidebar()" type="button">
         <i class="fas fa-bars text-lg"></i>
     </button>
@@ -1586,23 +1586,30 @@ async function logoutAllDevices() {
 /* ════════════ SIDEBAR MOBILE ════════════ */
 function toggleSidebar() {
     const sidebar  = document.getElementById('sidebar');
-    const overlay  = document.getElementById('sidebar-overlay');
     const hamburger = document.getElementById('hamburger-btn');
     if (!sidebar) return;
+
+    const willOpen = !sidebar.classList.contains('open') && !sidebar.classList.contains('active');
     sidebar.classList.toggle('open');
-    overlay.classList.toggle('active');
-    if (sidebar.classList.contains('open')) {
+    sidebar.classList.toggle('active');
+
+    if (willOpen) {
+        document.body.classList.add('sidebar-open');
         document.body.style.overflow = 'hidden';
-        hamburger.innerHTML = '<i class="fas fa-times text-lg"></i>';
+        if (hamburger) hamburger.style.display = 'none';
+        document.querySelectorAll('.hamburger-btn, .more-btn, .dots-btn, .three-dots, .more-menu-btn').forEach(el => el.style.display = 'none');
     } else {
+        document.body.classList.remove('sidebar-open');
+        if (hamburger) { hamburger.style.display = ''; hamburger.innerHTML = '<i class="fas fa-bars text-lg"></i>'; }
+        document.querySelectorAll('.hamburger-btn, .more-btn, .dots-btn, .three-dots, .more-menu-btn').forEach(el => el.style.display = '');
         document.body.style.overflow = '';
-        hamburger.innerHTML = '<i class="fas fa-bars text-lg"></i>';
     }
 }
 window.addEventListener('resize', () => {
     if (window.innerWidth > 768) {
-        const s = document.getElementById('sidebar'), o = document.getElementById('sidebar-overlay'), h = document.getElementById('hamburger-btn');
-        s?.classList.remove('open'); o?.classList.remove('active');
+        const s = document.getElementById('sidebar'), h = document.getElementById('hamburger-btn');
+        s?.classList.remove('open');
+        if (h) h.style.display = '';
         if (h) h.innerHTML = '<i class="fas fa-bars text-lg"></i>';
         document.body.style.overflow = '';
     }

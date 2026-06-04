@@ -66,10 +66,18 @@
             opacity: 0;
             transition: opacity 0.3s ease;
             backdrop-filter: blur(0px);
+            background: rgba(0, 0, 0, 0);
         }
         .modal-backdrop.active {
             opacity: 1;
-            backdrop-filter: blur(6px);
+            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.75) !important;
+        }
+        
+        /* Hide page content when modal is open */
+        body.modal-open main > *:not(#packageModal) {
+            filter: blur(4px);
+            pointer-events: none;
         }
         .modal-content {
             transform: translateY(40px) scale(0.95);
@@ -147,33 +155,41 @@
 
         .hamburger-btn {
             display: none !important;
+            position: fixed !important;
+            top: 1rem !important;
+            left: 1rem !important;
+            z-index: 9999 !important;
+            width: 3rem !important;
+            height: 3rem !important;
+            background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 0.5rem !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-shadow: 0 4px 12px rgba(122, 43, 74, 0.35) !important;
+            cursor: pointer !important;
+            transition: all 0.2s !important;
+            font-size: 1.25rem !important;
+        }
+
+        .hamburger-btn:hover {
+            background: linear-gradient(135deg, #5A1F3A 0%, #B83863 100%) !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 6px 16px rgba(122, 43, 74, 0.45) !important;
+        }
+
+        .hamburger-btn:active {
+            transform: translateY(0) !important;
         }
 
         @media (max-width: 768px) {
-            .sidebar {
-                position: fixed;
-                left: 0;
-                top: 0;
-                height: 100vh;
-                z-index: 30;
-                transform: translateX(-100%);
-                box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .sidebar-overlay.active {
-                display: block;
-            }
-
             .hamburger-btn {
                 display: flex !important;
             }
 
-            body.sidebar-open {
-                overflow: hidden;
+            .sidebar-overlay.active {
+                display: block !important;
             }
         }
     </style>
@@ -193,15 +209,14 @@
 
     @include('partials.member-sidebar')
 
-    <!-- Mobile Sidebar Overlay -->
-    <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <!-- Mobile Sidebar Overlay removed to avoid dark backdrop -->
 
 {{-- ================= MAIN ================= --}}
 <main class="flex-1 p-4 md:p-8 overflow-y-auto">
 
     <!-- Mobile Hamburger Button -->
-    <button id="hamburger-btn" class="hamburger-btn fixed top-4 left-4 z-30 w-10 h-10 bg-dark text-white rounded-lg items-center justify-center shadow-lg hover:bg-secondary transition" onclick="toggleSidebar()">
-        <i class="fas fa-bars text-lg"></i>
+    <button id="hamburger-btn" class="hamburger-btn" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
     </button>
 
 {{-- ================= HEADER ================= --}}
@@ -396,10 +411,17 @@
                 </div>
 
                 {{-- Footer --}}
-                <div class="px-6 pb-6">
-                    <button onclick="openPackageModal({{ $order->id }})"
-                       class="block w-full text-center bg-gradient-to-r from-primary-dark to-primary hover:from-[#5A1F3A] hover:to-[#B83863] text-white py-3 rounded-lg font-medium transition-all cursor-pointer shadow hover:shadow-md">
-                        <i class="fas fa-eye mr-2"></i>Lihat Detail
+                <div class="px-6 pb-6 pt-2 border-t border-dashed border-light-pink/40 bg-cream/20 rounded-b-xl">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-[11px] font-semibold uppercase tracking-[0.18em] text-cream0">Aksi Paket</span>
+                        <span class="text-[11px] text-cream0">Klik tombol untuk lihat info paket user</span>
+                    </div>
+                    <button type="button" onclick="openPackageModal({{ $order->id }})"
+                       class="block w-full text-center text-white py-4 rounded-xl font-bold transition-all cursor-pointer shadow-lg hover:shadow-xl hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-primary/20"
+                       style="background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%); border: 0; min-height: 56px; display: flex; align-items: center; justify-content: center; gap: 0.5rem; box-shadow: 0 12px 24px rgba(122, 43, 74, 0.22);">
+                        <i class="fas fa-eye"></i>
+                        <span>Lihat Info Paket</span>
+                        <i class="fas fa-arrow-right text-xs"></i>
                     </button>
                 </div>
             </div>
@@ -446,7 +468,8 @@
         </span>
     </div>
 
-    <div class="bg-white rounded-xl shadow overflow-hidden">
+    <!-- Desktop Table View (hidden on mobile) -->
+    <div class="hidden md:block bg-white rounded-xl shadow overflow-hidden">
         <table class="w-full">
             <thead class="bg-gradient-to-r from-primary-dark to-primary text-white">
                 <tr>
@@ -522,7 +545,8 @@
 
                         <td class="px-6 py-4 text-center">
                             <button onclick="openPackageModal({{ $order->id }})"
-                               class="inline-flex items-center text-primary-dark hover:text-primary text-sm font-medium cursor-pointer">
+                               class="inline-flex items-center text-primary-dark hover:text-primary text-sm font-medium transition-all hover:underline"
+                               style="cursor: pointer; position: relative; z-index: 10;">
                                 <i class="fas fa-eye mr-1"></i>
                                 Detail
                             </button>
@@ -532,6 +556,99 @@
             </tbody>
         </table>
     </div>
+
+    <!-- Mobile Card View (visible on mobile only) -->
+    <div class="md:hidden space-y-4">
+        @foreach($pastPackages as $order)
+            @php 
+                $pkg = $order->package;
+                $expiredAt = $order->expired_at ? \Carbon\Carbon::parse($order->expired_at) : null;
+            @endphp
+
+            <div class="bg-white rounded-xl shadow-sm border border-light-pink/30">
+                <!-- Card Header -->
+                <div class="bg-gradient-to-r from-primary-dark to-primary p-4 rounded-t-xl">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center flex-1 min-w-0">
+                            <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                                <i class="fas fa-box text-white text-lg"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-bold text-white text-base leading-tight mb-1">
+                                    {{ $pkg->name ?? 'Package Deleted' }}
+                                </h3>
+                                <p class="text-xs text-white/80 font-mono">
+                                    {{ $order->order_code }}
+                                </p>
+                            </div>
+                        </div>
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white/20 text-white ml-2 flex-shrink-0">
+                            <i class="fas fa-times-circle mr-1"></i>
+                            Expired
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Card Body -->
+                <div class="p-4 space-y-3">
+                    <!-- Purchase Date -->
+                    <div class="flex items-center justify-between py-2 border-b border-light-pink/20">
+                        <div class="flex items-center flex-1">
+                            <div class="w-8 h-8 bg-light-pink/30 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
+                                <i class="fas fa-calendar-plus text-primary-dark text-sm"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-xs text-cream0 font-medium uppercase tracking-wide">Dibeli</p>
+                                <p class="text-sm font-bold text-dark">
+                                    {{ $order->created_at?->format('d M Y') }}
+                                </p>
+                                <p class="text-xs text-cream0">
+                                    {{ $order->created_at?->diffForHumans() }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expiry Date -->
+                    <div class="flex items-center justify-between py-2 border-b border-light-pink/20">
+                        <div class="flex items-center flex-1">
+                            <div class="w-8 h-8 bg-light-pink/30 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
+                                <i class="fas fa-calendar-times text-secondary text-sm"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-xs text-cream0 font-medium uppercase tracking-wide">Berakhir</p>
+                                @if($expiredAt)
+                                    <p class="text-sm font-bold text-dark">
+                                        {{ $expiredAt->format('d M Y') }}
+                                    </p>
+                                    <p class="text-xs text-cream0">
+                                        {{ $expiredAt->diffForHumans() }}
+                                    </p>
+                                @else
+                                    <p class="text-sm text-dark/40">-</p>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Section -->
+                    <div class="pt-4 pb-2" style="min-height: 80px !important; display: block !important;">
+                        <div class="flex items-center justify-between mb-2 px-1">
+                            <span class="text-[11px] font-semibold uppercase tracking-[0.18em] text-cream0">Aksi Paket</span>
+                            <span class="text-[11px] text-cream0">Klik tombol untuk lihat info paket user</span>
+                        </div>
+                        <button type="button" onclick="openPackageModal({{ $order->id }})"
+                               class="w-full text-white py-4 rounded-xl font-bold text-base shadow-lg"
+                               style="display: flex !important; align-items: center !important; justify-content: center !important; gap: 0.5rem !important; cursor: pointer !important; background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%) !important; border: none !important; min-height: 56px !important; position: relative !important; z-index: 100 !important; box-shadow: 0 12px 24px rgba(122, 43, 74, 0.22) !important;">
+                            <i class="fas fa-eye text-lg"></i>
+                            <span>Lihat Info Paket</span>
+                            <i class="fas fa-arrow-right text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
 </div>
 
 @endif
@@ -540,98 +657,148 @@
 </div>
 
 <!-- ========================================
-     PACKAGE DETAIL MODAL
+     PACKAGE DETAIL MODAL - PROFESSIONAL DESIGN
 ======================================== -->
 <div id="packageModal" class="fixed inset-0 z-50 hidden">
-    <div class="modal-backdrop absolute inset-0 bg-black/50 flex items-center justify-center p-4" onclick="closePackageModal(event)">
-        <div class="modal-content bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
+    <div class="modal-backdrop absolute inset-0 bg-black/60 flex items-end md:items-center justify-center" onclick="closePackageModal(event)">
+        <div class="modal-content bg-white w-full md:max-w-2xl md:rounded-2xl rounded-t-3xl shadow-2xl max-h-[95vh] md:max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
             
-            <!-- Modal Header -->
-            <div id="modalHeader" class="p-6 border-b border-light-pink/30 shrink-0">
+            <!-- Modal Header - Gradient -->
+            <div class="bg-gradient-to-r from-primary-dark to-primary p-4 md:p-6 shrink-0 rounded-t-3xl md:rounded-t-2xl">
                 <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: rgba(241,204,227,0.35);">
-                            <i class="fas fa-box" style="color: #7A2B4A;"></i>
-                        </div>
-                        <div>
-                            <h2 id="modalPackageName" class="text-xl font-bold text-dark">Loading...</h2>
-                            <p id="modalOrderCode" class="text-sm text-cream0"></p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <span id="modalStatusBadge" class="status-badge"></span>
-                        <button onclick="closePackageModal()" class="w-8 h-8 rounded-lg hover:bg-cream flex items-center justify-center transition text-dark/40 hover:text-dark/70">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
+                    <button onclick="closePackageModal()" class="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition">
+                        <i class="fas fa-arrow-left text-white"></i>
+                    </button>
+                    <h2 class="text-white font-bold text-lg">Detail Paket</h2>
+                    <button class="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition">
+                        <i class="fas fa-share-alt text-white"></i>
+                    </button>
                 </div>
             </div>
 
-            <!-- Modal Tabs -->
-            <div class="flex border-b border-light-pink/50 px-6 shrink-0" id="modalTabs">
-                <button class="modal-tab active" data-tab="info" onclick="switchTab('info')">
-                    <i class="fas fa-info-circle mr-1.5"></i>Info Paket
-                </button>
-                <button class="modal-tab" data-tab="schedules" onclick="switchTab('schedules')">
-                    <i class="fas fa-calendar mr-1.5"></i>Kelas Terdaftar
-                </button>
-                <button class="modal-tab" data-tab="attendance" onclick="switchTab('attendance')">
-                    <i class="fas fa-clipboard-check mr-1.5"></i>Riwayat Kehadiran
-                </button>
-            </div>
-
-            <!-- Modal Body -->
-            <div class="flex-1 overflow-y-auto" id="modalBody">
+            <!-- Modal Body - Scrollable -->
+            <div class="flex-1 overflow-y-auto bg-cream">
                 <!-- Loading State -->
-                <div id="modalLoading" class="modal-loading">
+                <div id="modalLoading" class="flex items-center justify-center min-h-[400px]">
                     <div class="text-center">
                         <div class="spinner mx-auto mb-3"></div>
                         <p class="text-sm text-cream0">Memuat detail paket...</p>
                     </div>
                 </div>
 
-                <!-- Tab: Info Paket -->
-                <div id="tabInfo" class="tab-panel active p-6">
-                    <!-- Usage Progress -->
-                    <div id="usageSection" class="mb-6 p-4 rounded-xl" style="background: linear-gradient(135deg, rgba(241,204,227,0.30) 0%, rgba(210,220,165,0.20) 100%);"></div>
-                    <!-- Package Info -->
-                    <div class="mb-6">
-                        <h4 class="text-sm font-semibold text-dark uppercase tracking-wider mb-3">
-                            <i class="fas fa-cube mr-1.5" style="color: #7A2B4A;"></i>Detail Paket
-                        </h4>
-                        <div id="packageInfoRows" class="bg-cream rounded-xl p-4"></div>
+                <!-- Content Container -->
+                <div id="modalContent" class="hidden p-4 md:p-6 space-y-4">
+                    
+                    <!-- Package Info Card -->
+                    <div class="bg-white rounded-2xl p-4 shadow-sm">
+                        <h3 id="modalPackageName" class="text-xl font-bold text-primary-dark mb-2">Loading...</h3>
+                        <p id="modalOrderCode" class="text-sm text-cream0 mb-4"></p>
+                        
+                        <!-- Info Boxes Grid -->
+                        <div class="grid grid-cols-3 gap-3" id="infoBoxes">
+                            <!-- Will be populated by JS -->
+                        </div>
                     </div>
-                    <!-- Order Info -->
-                    <div>
-                        <h4 class="text-sm font-semibold text-dark uppercase tracking-wider mb-3">
-                            <i class="fas fa-receipt mr-1.5" style="color: #7A2B4A;"></i>Detail Pembelian
-                        </h4>
-                        <div id="orderInfoRows" class="bg-cream rounded-xl p-4"></div>
+
+                    <!-- Warning Message -->
+                    <div id="warningMessage" class="hidden bg-amber-50 border-l-4 border-amber-400 p-4 rounded-lg">
+                        <div class="flex items-start">
+                            <i class="fas fa-exclamation-triangle text-amber-600 mt-0.5 mr-3"></i>
+                            <div class="flex-1">
+                                <p class="text-sm font-semibold text-amber-900" id="warningTitle"></p>
+                                <p class="text-xs text-amber-700 mt-1" id="warningText"></p>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Tab: Kelas Terdaftar -->
-                <div id="tabSchedules" class="tab-panel p-6">
-                    <div id="schedulesContent"></div>
-                </div>
+                    <!-- Usage Section -->
+                    <div class="bg-white rounded-2xl p-4 shadow-sm">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="font-bold text-dark">Kelas digunakan</h4>
+                            <span id="usageText" class="text-sm font-bold text-primary-dark"></span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-cream0">Kelas tersedia</span>
+                            <span id="availableBadge" class="px-3 py-1 rounded-full text-xs font-bold"></span>
+                        </div>
+                    </div>
 
-                <!-- Tab: Riwayat Kehadiran -->
-                <div id="tabAttendance" class="tab-panel p-6">
-                    <div id="attendanceContent"></div>
+                    <!-- Detail Cards Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <!-- HARGA -->
+                        <div class="bg-dark rounded-2xl p-4 text-white">
+                            <p class="text-xs font-semibold uppercase tracking-wider text-white/70 mb-2">HARGA</p>
+                            <p id="priceValue" class="text-2xl font-bold mb-1"></p>
+                            <p class="text-xs text-white/70">Sudah termasuk pajak</p>
+                        </div>
+
+                        <!-- METODE BAYAR -->
+                        <div class="bg-dark rounded-2xl p-4 text-white">
+                            <p class="text-xs font-semibold uppercase tracking-wider text-white/70 mb-2">METODE BAYAR</p>
+                            <p id="paymentMethod" class="text-lg font-bold mb-1"></p>
+                            <p id="paymentDate" class="text-xs text-white/70"></p>
+                        </div>
+
+                        <!-- SISA KELAS -->
+                        <div class="bg-dark rounded-2xl p-4 text-white">
+                            <p class="text-xs font-semibold uppercase tracking-wider text-white/70 mb-2">SISA KELAS</p>
+                            <p id="remainingClasses" class="text-2xl font-bold mb-1"></p>
+                            <p id="classType" class="text-xs text-white/70"></p>
+                        </div>
+
+                        <!-- STATUS -->
+                        <div class="bg-dark rounded-2xl p-4 text-white">
+                            <p class="text-xs font-semibold uppercase tracking-wider text-white/70 mb-2">STATUS</p>
+                            <p id="statusValue" class="text-lg font-bold mb-2"></p>
+                            <span id="statusBadge" class="inline-block px-3 py-1 rounded-full text-xs font-bold"></span>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Section -->
+                    <div class="bg-white rounded-2xl p-4 shadow-sm">
+                        <h4 class="font-bold text-dark mb-4 flex items-center">
+                            <i class="fas fa-clock mr-2 text-primary-dark"></i>
+                            RIWAYAT WAKTU
+                        </h4>
+                        
+                        <div class="space-y-4">
+                            <!-- Purchase Date -->
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 rounded-full bg-grounded-green/40 flex items-center justify-center mr-3 flex-shrink-0">
+                                    <i class="fas fa-calendar-plus text-accent text-sm"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-xs font-semibold uppercase tracking-wider text-cream0 mb-1">TANGGAL PEMBELIAN</p>
+                                    <p id="purchaseDate" class="text-sm font-bold text-dark mb-1"></p>
+                                    <span id="purchaseBadge" class="inline-block px-2.5 py-1 rounded-full text-xs font-bold bg-grounded-green/40 text-springs-ivy">Paket berhasil</span>
+                                </div>
+                            </div>
+
+                            <!-- Expiry Date -->
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 rounded-full bg-light-pink/50 flex items-center justify-center mr-3 flex-shrink-0">
+                                    <i class="fas fa-calendar-times text-secondary text-sm"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-xs font-semibold uppercase tracking-wider text-cream0 mb-1">TANGGAL BERAKHIR</p>
+                                    <p id="expiryDate" class="text-sm font-bold text-dark mb-1"></p>
+                                    <span id="expiryBadge" class="inline-block px-2.5 py-1 rounded-full text-xs font-bold"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Benefits Section -->
+                    <div class="bg-white rounded-2xl p-4 shadow-sm">
+                        <h4 class="font-bold text-dark mb-3">Yang kamu dapatkan</h4>
+                        <div id="benefitsList" class="space-y-3">
+                            <!-- Will be populated by JS -->
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
-            <!-- Modal Footer -->
-            <div class="p-6 border-t border-light-pink/30 shrink-0">
-                <div class="flex items-center gap-3">
-                    <a id="btnExtend" href="#" class="flex-1 text-center text-white py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 inline-flex items-center justify-center" style="background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%);">
-                        <i class="fas fa-sync-alt mr-2"></i>Perpanjang Paket
-                    </a>
-                    <a href="{{ route('member.book') }}" class="flex-1 text-center bg-white py-3 rounded-xl font-semibold transition-all inline-flex items-center justify-center" style="border: 2px solid #7A2B4A; color: #7A2B4A;" onmouseover="this.style.background='rgba(241,204,227,0.25)'" onmouseout="this.style.background='white'">
-                        <i class="fas fa-calendar-plus mr-2"></i>Book Class
-                    </a>
-                </div>
-            </div>
         </div>
     </div>
 </div>
@@ -645,9 +812,10 @@ function openPackageModal(orderId) {
     const modal = document.getElementById('packageModal');
     const backdrop = modal.querySelector('.modal-backdrop');
     
-    // Show modal
+    // Show modal and disable page interaction
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
+    document.body.classList.add('modal-open');
     
     // Show loading, hide content
     document.getElementById('modalLoading').style.display = 'flex';
@@ -669,6 +837,7 @@ function closePackageModal(event) {
     const backdrop = modal.querySelector('.modal-backdrop');
     
     backdrop.classList.remove('active');
+    document.body.classList.remove('modal-open');
     
     setTimeout(() => {
         modal.classList.add('hidden');
@@ -730,179 +899,153 @@ async function fetchPackageDetail(orderId) {
 function populateModal(data) {
     const { order, package: pkg, usage, booked_schedules, attendance_history, stats } = data;
     
-    // Header
+    // Package Name & Order Code
     document.getElementById('modalPackageName').textContent = pkg.name;
     document.getElementById('modalOrderCode').innerHTML = `<i class="fas fa-barcode mr-1"></i>${order.order_code}`;
     
-    const badge = document.getElementById('modalStatusBadge');
+    // Info Boxes (DIBELI, BERAKHIR, DURASI)
+    const infoBoxes = document.getElementById('infoBoxes');
+    infoBoxes.innerHTML = `
+        <div class="bg-cream rounded-xl p-3">
+            <p class="text-xs font-semibold uppercase tracking-wider text-cream0 mb-1">DIBELI</p>
+            <p class="text-sm font-bold text-dark">${order.created_at_short || order.created_at}</p>
+        </div>
+        <div class="bg-cream rounded-xl p-3">
+            <p class="text-xs font-semibold uppercase tracking-wider text-cream0 mb-1">BERAKHIR</p>
+            <p class="text-sm font-bold text-dark">${order.expired_at_short || order.expired_at_full || '-'}</p>
+        </div>
+        <div class="bg-cream rounded-xl p-3">
+            <p class="text-xs font-semibold uppercase tracking-wider text-cream0 mb-1">DURASI</p>
+            <p class="text-sm font-bold text-dark">${pkg.duration_days ? pkg.duration_days + ' hari' : 'Unlimited'}</p>
+        </div>
+    `;
+    
+    // Warning Message (if applicable)
+    const warningMsg = document.getElementById('warningMessage');
+    if (!order.is_expired && order.remaining_days <= 7 && order.remaining_days > 0) {
+        warningMsg.classList.remove('hidden');
+        document.getElementById('warningTitle').textContent = 'Belum dimulai';
+        document.getElementById('warningText').textContent = 'Masa aktif dihitung sejak booking pertama dilakukan.';
+    } else if (order.is_expired) {
+        warningMsg.classList.remove('hidden');
+        warningMsg.className = 'bg-red-50 border-l-4 border-red-400 p-4 rounded-lg';
+        document.getElementById('warningTitle').textContent = 'Paket Expired';
+        document.getElementById('warningText').textContent = 'Paket ini sudah tidak aktif. Perpanjang untuk melanjutkan.';
+    } else {
+        warningMsg.classList.add('hidden');
+    }
+    
+    // Usage Section
+    document.getElementById('usageText').textContent = `${usage.used}/${usage.total_quota} kelas`;
+    const availableBadge = document.getElementById('availableBadge');
+    if (usage.remaining <= 0) {
+        availableBadge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700';
+        availableBadge.textContent = 'Habis';
+    } else if (usage.remaining <= 2) {
+        availableBadge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700';
+        availableBadge.textContent = 'Hampir habis';
+    } else {
+        availableBadge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700';
+        availableBadge.textContent = 'Tersedia';
+    }
+    
+    // Detail Cards
+    document.getElementById('priceValue').textContent = pkg.price_formatted || order.amount_formatted;
+    document.getElementById('paymentMethod').textContent = order.payment_method || 'Menunggu Pembayaran';
+    document.getElementById('paymentDate').textContent = order.created_at_short || order.created_at;
+    document.getElementById('remainingClasses').textContent = usage.remaining;
+    document.getElementById('classType').textContent = pkg.is_exclusive ? 'Eksklusif' : 'Reguler';
+    
+    // Status
+    document.getElementById('statusValue').textContent = order.is_expired ? 'Expired' : 'Aktif';
+    const statusBadge = document.getElementById('statusBadge');
     if (order.is_expired) {
-        badge.className = 'status-badge status-expired';
-        badge.innerHTML = '<i class="fas fa-times-circle"></i> Expired';
+        statusBadge.className = 'inline-block px-3 py-1 rounded-full text-xs font-bold bg-red-500 text-white';
+        statusBadge.textContent = 'Tidak aktif';
+    } else if (!order.expired_at) {
+        statusBadge.className = 'inline-block px-3 py-1 rounded-full text-xs font-bold bg-blue-500 text-white';
+        statusBadge.textContent = 'Belum dimulai';
     } else {
-        badge.className = 'status-badge status-active';
-        badge.innerHTML = '<i class="fas fa-check-circle"></i> Active';
+        statusBadge.className = 'inline-block px-3 py-1 rounded-full text-xs font-bold bg-green-500 text-white';
+        statusBadge.textContent = 'Aktif';
     }
     
-    // Usage Progress
-    const usageColor = usage.remaining <= 0 ? 'red' : (usage.remaining <= 2 ? 'amber' : 'brand');
-    document.getElementById('usageSection').innerHTML = `
-        <div class="flex items-center justify-between mb-2">
-            <span class="text-sm font-semibold" style="color:#1C1C1C">Pemakaian Kelas</span>
-            <span class="text-sm font-bold" style="color: ${usageColor === 'red' ? '#dc2626' : usageColor === 'amber' ? '#d97706' : '#7A2B4A'}">${usage.used}/${usage.total_quota} terpakai</span>
-        </div>
-        <div class="h-3 rounded-full overflow-hidden" style="background: rgba(255,255,255,0.60);">
-            <div class="h-full rounded-full transition-all duration-700" style="width: ${Math.min(usage.percentage, 100)}%; background: ${usageColor === 'red' ? '#ef4444' : usageColor === 'amber' ? '#f59e0b' : 'linear-gradient(90deg,#7A2B4A,#EE4E8B)'}"></div>
-        </div>
-        <div class="flex justify-between mt-2">
-            <span class="text-xs text-cream0">${usage.remaining} kelas tersisa</span>
-            ${order.remaining_days > 0 ? `<span class="text-xs text-cream0">${order.remaining_days} hari tersisa</span>` : ''}
-        </div>
-    `;
-    
-    // Package Info
-    document.getElementById('packageInfoRows').innerHTML = `
-        <div class="info-row"><span class="info-label">Nama Paket</span><span class="info-value">${pkg.name}</span></div>
-        <div class="info-row"><span class="info-label">Deskripsi</span><span class="info-value">${pkg.description}</span></div>
-        <div class="info-row"><span class="info-label">Harga</span><span class="info-value">${pkg.price_formatted}</span></div>
-        <div class="info-row"><span class="info-label">Total Kuota</span><span class="info-value">${pkg.quota} kelas</span></div>
-        <div class="info-row"><span class="info-label">Durasi</span><span class="info-value">${pkg.duration_days ? pkg.duration_days + ' hari' : 'Unlimited'}</span></div>
-        <div class="info-row"><span class="info-label">Mode Jadwal</span><span class="info-value capitalize">${pkg.schedule_mode}</span></div>
-    `;
-    
-    // Order Info
-    document.getElementById('orderInfoRows').innerHTML = `
-        <div class="info-row"><span class="info-label">Kode Order</span><span class="info-value">${order.order_code}</span></div>
-        <div class="info-row"><span class="info-label">Tanggal Pembelian</span><span class="info-value">${order.created_at}</span></div>
-        <div class="info-row"><span class="info-label">Berakhir</span><span class="info-value">${order.expired_at_full || '<span class="text-accent"><i class="fas fa-infinity mr-1"></i>Unlimited</span>'}</span></div>
-        <div class="info-row"><span class="info-label">Sisa Waktu</span><span class="info-value">${order.remaining_time}</span></div>
-        <div class="info-row"><span class="info-label">Harga Dibayar</span><span class="info-value">${order.amount_formatted}</span></div>
-        ${order.discount > 0 ? `<div class="info-row"><span class="info-label">Diskon</span><span class="info-value text-accent">-Rp ${Number(order.discount).toLocaleString('id-ID')}</span></div>` : ''}
-        <div class="info-row"><span class="info-label">Sisa Kelas</span><span class="info-value">${order.remaining_classes}</span></div>
-        <div class="info-row"><span class="info-label">Sisa Kuota Check-in</span><span class="info-value">${order.remaining_quota}</span></div>
-    `;
-    
-    // Booked Schedules Tab
-    if (booked_schedules.length > 0) {
-        let schedulesHtml = `<div class="space-y-3">`;
-        booked_schedules.forEach(s => {
-            const statusClass = s.status === 'confirmed' ? 'bg-grounded-green/40 text-springs-ivy' : 'bg-cream text-dark';
-            schedulesHtml += `
-                <div class="flex items-center justify-between p-4 bg-cream rounded-xl hover:bg-cream transition">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: rgba(241,204,227,0.35);">
-                            <i class="fas fa-dumbbell" style="color: #7A2B4A;"></i>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-dark text-sm">${s.schedule_name}</p>
-                            <p class="text-xs text-cream0 mt-0.5">
-                                <i class="fas fa-calendar-day mr-1"></i>${s.day},
-                                <i class="fas fa-calendar mr-1 ml-1"></i><span class="font-semibold" style="color:#7A2B4A">${s.date}</span> &bull;
-                                <i class="fas fa-clock mr-1 ml-1"></i>${s.time} &bull;
-                                <i class="fas fa-user mr-1 ml-1"></i>${s.instructor}
-                            </p>
-                        </div>
-                    </div>
-                    <span class="text-xs font-semibold px-2.5 py-1 rounded-full ${statusClass} capitalize">${s.status}</span>
-                </div>
-            `;
-        });
-        schedulesHtml += `</div>`;
-        document.getElementById('schedulesContent').innerHTML = schedulesHtml;
+    // Timeline
+    document.getElementById('purchaseDate').textContent = order.created_at;
+    document.getElementById('expiryDate').textContent = order.expired_at_full || 'Belum dimulai';
+    const expiryBadge = document.getElementById('expiryBadge');
+    if (order.is_expired) {
+        expiryBadge.className = 'inline-block px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700';
+        expiryBadge.textContent = 'Paket berakhir';
+    } else if (!order.expired_at) {
+        expiryBadge.className = 'inline-block px-2.5 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700';
+        expiryBadge.textContent = 'Belum dimulai';
     } else {
-        document.getElementById('schedulesContent').innerHTML = `
-            <div class="text-center py-12">
-                <div class="w-16 h-16 bg-cream rounded-full flex items-center justify-center mx-auto mb-3">
-                    <i class="fas fa-calendar-xmark text-dark/40 text-xl"></i>
-                </div>
-                <p class="text-sm text-cream0">Belum ada kelas terdaftar</p>
-                <a href="{{ route('member.book') }}" class="inline-flex items-center text-sm font-medium mt-2" style="color: #7A2B4A;">
-                    <i class="fas fa-plus mr-1"></i>Book Kelas Sekarang
-                </a>
-            </div>
-        `;
+        expiryBadge.className = 'inline-block px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700';
+        expiryBadge.textContent = `${order.remaining_days} hari lagi`;
     }
     
-    // Attendance Tab
-    if (attendance_history.length > 0) {
-        let attendanceHtml = `
-            <div class="flex items-center justify-between mb-4">
-                <p class="text-sm text-cream0">
-                    <i class="fas fa-chart-bar mr-1"></i>
-                    Total kehadiran: <span class="font-bold text-dark">${stats.total_attendance}x</span>
-                </p>
-            </div>
-            <div class="space-y-3">
-        `;
-        attendance_history.forEach(a => {
-            const statusIcon = a.check_out_at ? 'fa-check-circle text-accent' : 'fa-clock text-springs-ivy';
-            attendanceHtml += `
-                <div class="flex items-center justify-between p-4 bg-cream rounded-xl">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-grounded-green/40 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-clipboard-check text-accent"></i>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-dark text-sm">${a.program}</p>
-                            <p class="text-xs text-cream0">
-                                <i class="fas fa-clock mr-1"></i>${a.check_in_at}
-                                ${a.check_out_at ? ` - ${a.check_out_at}` : ''}
-                            </p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-sm font-bold text-dark">${a.short_duration}</span>
-                        <p class="text-xs text-dark/40 capitalize">${a.check_in_type}</p>
-                    </div>
-                </div>
-            `;
-        });
-        attendanceHtml += `</div>`;
-        document.getElementById('attendanceContent').innerHTML = attendanceHtml;
-    } else {
-        document.getElementById('attendanceContent').innerHTML = `
-            <div class="text-center py-12">
-                <div class="w-16 h-16 bg-cream rounded-full flex items-center justify-center mx-auto mb-3">
-                    <i class="fas fa-clipboard text-dark/40 text-xl"></i>
-                </div>
-                <p class="text-sm text-cream0">Belum ada riwayat kehadiran</p>
-            </div>
-        `;
-    }
+    // Benefits List
+    const benefitsList = document.getElementById('benefitsList');
+    const benefits = [
+        { icon: 'fa-dumbbell', text: `${pkg.quota} kelas ${pkg.is_exclusive ? 'eksklusif' : 'reguler'}` },
+        { icon: 'fa-calendar-check', text: `Durasi ${pkg.duration_days ? pkg.duration_days + ' hari' : 'unlimited'}` },
+        { icon: 'fa-user-check', text: '1 kelas / 1 personal' },
+        { icon: 'fa-certificate', text: 'Sertifikat kehadiran' }
+    ];
     
-    // Set Extend button link
-    document.getElementById('btnExtend').href = `{{ route('member.profile') }}#Packages`;
+    benefitsList.innerHTML = benefits.map(b => `
+        <div class="flex items-center">
+            <div class="w-8 h-8 bg-light-pink/30 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
+                <i class="fas ${b.icon} text-primary-dark text-sm"></i>
+            </div>
+            <p class="text-sm text-dark">${b.text}</p>
+        </div>
+    `).join('');
     
-    // Hide loading, show first tab
+    // Hide loading, show content
     document.getElementById('modalLoading').style.display = 'none';
-    switchTab('info');
-    document.querySelectorAll('.tab-panel.active').forEach(p => p.style.display = 'block');
+    document.getElementById('modalContent').classList.remove('hidden');
 }
 
 // ===== SIDEBAR TOGGLE FUNCTION =====
-function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
-    const hamburger = document.getElementById('hamburger-btn');
-    
-    sidebar.classList.toggle('open');
-    overlay.classList.toggle('active');
-    
-    if (sidebar.classList.contains('open')) {
-        document.body.style.overflow = 'hidden';
-        hamburger.innerHTML = '<i class="fas fa-times text-lg"></i>';
-    } else {
-        document.body.style.overflow = '';
-        hamburger.innerHTML = '<i class="fas fa-bars text-lg"></i>';
-    }
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const hamburger = document.getElementById('hamburger-btn');
+        if (!sidebar) return;
+
+        const willOpen = !sidebar.classList.contains('active') && !sidebar.classList.contains('open');
+        // toggle both class names to support pages using either 'active' or 'open'
+        sidebar.classList.toggle('active');
+        sidebar.classList.toggle('open');
+
+        if (willOpen) {
+            document.body.classList.add('sidebar-open');
+            document.body.style.overflow = 'hidden';
+            if (hamburger) hamburger.style.display = 'none';
+            document.querySelectorAll('.hamburger-btn, .more-btn, .dots-btn, .three-dots, .more-menu-btn').forEach(el => el.style.display = 'none');
+        } else {
+            document.body.classList.remove('sidebar-open');
+            document.body.style.overflow = '';
+            if (hamburger) { hamburger.style.display = ''; hamburger.innerHTML = '<i class="fas fa-bars"></i>'; }
+            document.querySelectorAll('.hamburger-btn, .more-btn, .dots-btn, .three-dots, .more-menu-btn').forEach(el => el.style.display = '');
+        }
 }
 
 // Close sidebar when clicking on a nav link
 document.addEventListener('DOMContentLoaded', function() {
-    const navLinks = document.querySelectorAll('aside nav a');
+    console.log('DOM loaded, setting up sidebar');
+    
+    const navLinks = document.querySelectorAll('#sidebar nav a');
+    console.log('Found nav links:', navLinks.length);
+    
     navLinks.forEach(link => {
         link.addEventListener('click', function() {
             if (window.innerWidth <= 768) {
-                toggleSidebar();
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar && sidebar.classList.contains('active')) {
+                    toggleSidebar();
+                }
             }
         });
     });
@@ -911,13 +1054,12 @@ document.addEventListener('DOMContentLoaded', function() {
 // Reset sidebar on window resize
 window.addEventListener('resize', function() {
     const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
     const hamburger = document.getElementById('hamburger-btn');
     
-    if (window.innerWidth > 768) {
-        sidebar.classList.remove('open');
-        overlay.classList.remove('active');
-        hamburger.innerHTML = '<i class="fas fa-bars text-lg"></i>';
+    if (window.innerWidth > 768 && sidebar) {
+        sidebar.classList.remove('active');
+        if (hamburger) hamburger.style.display = '';
+        if (hamburger) hamburger.innerHTML = '<i class="fas fa-bars"></i>';
         document.body.style.overflow = '';
     }
 });

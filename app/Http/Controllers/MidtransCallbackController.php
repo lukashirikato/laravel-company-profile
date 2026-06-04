@@ -29,10 +29,12 @@ class MidtransCallbackController extends Controller
             return response()->json(['message' => 'Invalid signature'], 403);
         }
 
-        // Ambil order
-        $order = Order::find($request->order_id);
+        // Ambil order berdasarkan order_code (Midtrans mengirim order_id = order_code, bukan PK id)
+        $order = Order::where('order_code', $request->order_id)->first();
         if (!$order) {
-            Log::error('Order tidak ditemukan');
+            Log::error('Order tidak ditemukan', [
+                'midtrans_order_id' => $request->order_id,
+            ]);
             return response()->json(['message' => 'Order not found'], 404);
         }
 
@@ -42,9 +44,21 @@ class MidtransCallbackController extends Controller
         // Ambil package
         $package = Package::find($order->package_id);
 
-        // Update order
+        // Update order (normalisasi status ke internal status agar konsisten dengan flow checkout)
+        $statusMap = [
+            'capture'    => 'paid',
+            'settlement' => 'paid',
+            'pending'    => 'pending',
+            'deny'       => 'failed',
+            'cancel'     => 'cancelled',
+            'expire'     => 'expired',
+            'failure'    => 'failed',
+        ];
+
+        $mappedStatus = $statusMap[$request->transaction_status] ?? 'failed';
+
         $order->update([
-            'status'         => $request->transaction_status,
+            'status'         => $mappedStatus,
             'payment_type'   => $request->payment_type,
             'transaction_id' => $request->transaction_id,
         ]);
@@ -64,7 +78,7 @@ class MidtransCallbackController extends Controller
                 'package_id'               => $order->package_id,
                 'description'              => $package->description ?? '-',
                 'amount'                   => $order->amount,
-                'status'                   => $request->transaction_status,
+                'status'                   => $mappedStatus,
                 'payment_type'             => $request->payment_type,
                 'transaction_id'           => $request->transaction_id,
                 'midtrans_transaction_id'  => $request->transaction_id,
@@ -75,7 +89,7 @@ class MidtransCallbackController extends Controller
         } else {
             // Kalau callback datang lagi → update saja
             $transaction->update([
-                'status'                   => $request->transaction_status,
+                'status'                   => $mappedStatus,
                 'payment_type'             => $request->payment_type,
                 'fraud_status'             => $request->fraud_status ?? null,
                 'signature_key'            => $request->signature_key,
