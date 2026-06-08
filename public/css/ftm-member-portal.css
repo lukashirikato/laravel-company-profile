@@ -200,16 +200,26 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Sidebar overlay (mobile) */
 .ftm-sidebar-overlay {
-    display: none;
     position: fixed;
     inset: 0;
-    background: rgba(28, 28, 28, 0.55);
+    background: rgba(28, 28, 28, 0.6);
     z-index: 40;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
 }
-.ftm-sidebar-overlay.active { display: block; }
+
+.ftm-sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
 
 @media (min-width: 769px) {
-    .ftm-sidebar-overlay { display: none !important; }
+    .ftm-sidebar-overlay {
+        display: none !important;
+    }
 }
 
 /* ================================================================
@@ -225,10 +235,62 @@ main.main-content,
 /* Mobile hamburger */
 .hamburger-btn,
 #hamburger-btn {
+    display: none !important;
+    position: fixed !important;
+    top: 1rem !important;
+    left: 1rem !important;
+    z-index: 60 !important;
+    width: 3rem !important;
+    height: 3rem !important;
     background: var(--ftm-pink) !important;
     background-image: none !important;
     color: var(--ftm-rising) !important;
-    box-shadow: 0 4px 12px rgba(238, 78, 139, 0.3) !important;
+    border: none !important;
+    border-radius: 0.5rem !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 4px 12px rgba(238, 78, 139, 0.35) !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    font-size: 1.25rem !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.hamburger-btn:hover,
+#hamburger-btn:hover {
+    background: var(--ftm-cherry) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 16px rgba(122, 43, 74, 0.45) !important;
+}
+
+.hamburger-btn:active,
+#hamburger-btn:active {
+    transform: translateY(0) !important;
+}
+
+@media (max-width: 768px) {
+    .hamburger-btn,
+    #hamburger-btn {
+        display: flex !important;
+    }
+}
+
+@media (min-width: 769px) {
+    .hamburger-btn,
+    #hamburger-btn {
+        display: none !important;
+    }
+}
+
+/* Hide hamburger when sidebar is active/open */
+.ftm-sidebar.active ~ .hamburger-btn,
+.ftm-sidebar.active ~ * .hamburger-btn,
+body:has(.ftm-sidebar.active) .hamburger-btn,
+body:has(.ftm-sidebar.active) #hamburger-btn {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
 }
 
 /* ================================================================

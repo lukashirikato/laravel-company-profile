@@ -22,6 +22,9 @@
     ];
 @endphp
 
+{{-- Sidebar Overlay (Mobile) - Click to close sidebar --}}
+<div id="sidebar-overlay" class="ftm-sidebar-overlay" onclick="closeSidebar()"></div>
+
 <aside id="sidebar" class="ftm-sidebar">
     {{-- Logo / Brand — klik kembali ke /member/profile#home (landing member) --}}
     <a href="{{ route('member.profile') }}#home" class="ftm-sidebar-brand" title="Kembali ke beranda member">
@@ -125,5 +128,116 @@
     // Esc to close
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') ftmCloseLogoutModal();
+    });
+
+    /* ============================================================
+       UNIFIED SIDEBAR TOGGLE — Works on all member pages
+       Handles mobile sidebar with overlay and click-outside
+       ============================================================ */
+    
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        
+        if (!sidebar) return;
+        
+        const isOpen = sidebar.classList.contains('active');
+        
+        if (isOpen) {
+            closeSidebar();
+        } else {
+            openSidebar();
+        }
+    }
+    
+    function openSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        
+        if (!sidebar) return;
+        
+        sidebar.classList.add('active');
+        if (overlay) overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        
+        if (!sidebar) return;
+        
+        sidebar.classList.remove('active');
+        if (overlay) overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    
+    // Make functions globally available
+    window.toggleSidebar = toggleSidebar;
+    window.openSidebar = openSidebar;
+    window.closeSidebar = closeSidebar;
+    
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        
+        if (!sidebar) return;
+        
+        // Close sidebar when clicking nav links on mobile
+        const navLinks = sidebar.querySelectorAll('.ftm-nav-item');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Don't close immediately - let the link navigate first
+                if (window.innerWidth <= 768) {
+                    setTimeout(() => closeSidebar(), 100);
+                }
+            });
+        });
+        
+        // Handle touch events for mobile (better than mousedown)
+        document.addEventListener('touchstart', function(e) {
+            if (window.innerWidth > 768) return;
+            if (!sidebar.classList.contains('active')) return;
+            
+            // Check if touch is outside sidebar
+            const isClickInsideSidebar = sidebar.contains(e.target);
+            const isClickOnOverlay = overlay && overlay.contains(e.target);
+            const isClickOnHamburger = e.target.closest('#hamburger-btn');
+            
+            if (!isClickInsideSidebar && !isClickOnHamburger) {
+                closeSidebar();
+            }
+        }, { passive: true });
+        
+        // Handle mouse events for desktop testing
+        document.addEventListener('mousedown', function(e) {
+            if (window.innerWidth > 768) return;
+            if (!sidebar.classList.contains('active')) return;
+            
+            // Check if click is outside sidebar
+            const isClickInsideSidebar = sidebar.contains(e.target);
+            const isClickOnHamburger = e.target.closest('#hamburger-btn');
+            
+            if (!isClickInsideSidebar && !isClickOnHamburger) {
+                closeSidebar();
+            }
+        });
+        
+        // Close on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+                closeSidebar();
+            }
+        });
+        
+        // Reset sidebar state on window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('active');
+                if (overlay) overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
     });
 </script>

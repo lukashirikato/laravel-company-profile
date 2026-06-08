@@ -2,6 +2,10 @@
 
 @section('content')
 
+@php
+    $paymentType = $order->payment_type ?? $order->transaction->payment_type ?? null;
+@endphp
+
 {{-- ⚠️ IMPORTANT: Redirect jika payment belum complete --}}
 @if(!in_array($order->status, ['paid', 'active', 'settlement']))
     <script>
@@ -99,7 +103,7 @@
                 <div class="flex justify-between">
                     <span class="text-cream0">Payment Method</span>
                     <span class="font-medium text-dark">
-                        {{ strtoupper($order->payment_type ?? '-') }}
+                        {{ formatPaymentMethod($paymentType) }}
                     </span>
                 </div>
 

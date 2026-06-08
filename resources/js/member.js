@@ -75,6 +75,7 @@ window.closeLogoutModal = function() {
 
         openBtn.addEventListener('click', function(e) {
             e.preventDefault();
+            e.stopPropagation();
             if (mobileMenu.classList.contains('active')) { 
                 closeMenu(); 
             } else { 
@@ -113,6 +114,36 @@ window.closeLogoutModal = function() {
         document.addEventListener('keydown', function(e) { 
             if (e.key === 'Escape') { closeMenu(); } 
         });
+
+        // Click outside to close menu - simpler approach using mousedown
+        document.addEventListener('mousedown', function(e) {
+            // Only proceed if menu is open
+            if (!mobileMenu.classList.contains('active')) return;
+            
+            // Check if click is outside mobile menu and not on the open button
+            const isClickInsideMenu = mobileMenu.contains(e.target);
+            const isClickOnOpenButton = openBtn.contains(e.target);
+            
+            // Close menu if clicking outside
+            if (!isClickInsideMenu && !isClickOnOpenButton) {
+                closeMenu();
+            }
+        });
+
+        // Also handle touch events for mobile
+        document.addEventListener('touchstart', function(e) {
+            // Only proceed if menu is open
+            if (!mobileMenu.classList.contains('active')) return;
+            
+            // Check if touch is outside mobile menu and not on the open button
+            const isClickInsideMenu = mobileMenu.contains(e.target);
+            const isClickOnOpenButton = openBtn.contains(e.target);
+            
+            // Close menu if touching outside
+            if (!isClickInsideMenu && !isClickOnOpenButton) {
+                closeMenu();
+            }
+        }, { passive: true });
 
         // Initial state
         hideBackdrop();

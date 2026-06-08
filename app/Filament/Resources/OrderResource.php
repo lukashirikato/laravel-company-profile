@@ -58,7 +58,7 @@ class OrderResource extends Resource
                             ->unique(ignorable: fn ($record) => $record)
                             ->default(fn () => 'ORD-' . strtoupper(uniqid()))
                             ->label('Order Code')
-                            ->disabled(fn ($operation) => $operation === 'edit'),
+                            ->disabled(fn ($record = null) => filled($record)),
                         
                         Forms\Components\Select::make('package_id')
                             ->relationship('package', 'name')

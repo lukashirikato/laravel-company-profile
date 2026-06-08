@@ -1,4 +1,36 @@
-﻿<!DOCTYPE html>
+﻿@php
+    $formatPaymentMethod = function ($paymentType) {
+        if (function_exists('formatPaymentMethod')) {
+            return formatPaymentMethod($paymentType);
+        }
+
+        if (!$paymentType) {
+            return 'Menunggu Pembayaran';
+        }
+
+        $paymentMethodMap = [
+            'gopay' => 'GoPay',
+            'shopeepay' => 'ShopeePay',
+            'qris' => 'QRIS',
+            'bank_transfer' => 'Virtual Account',
+            'bca_va' => 'Virtual Account BCA',
+            'bni_va' => 'Virtual Account BNI',
+            'bri_va' => 'Virtual Account BRI',
+            'permata_va' => 'Virtual Account Permata',
+            'other_va' => 'Virtual Account',
+            'echannel' => 'Mandiri Bill Payment',
+            'cstore' => 'Convenience Store',
+            'alfamart' => 'Alfamart',
+            'indomaret' => 'Indomaret',
+            'akulaku' => 'Akulaku',
+            'credit_card' => 'Kartu Kredit',
+            'debit_card' => 'Kartu Debit',
+        ];
+
+        return $paymentMethodMap[strtolower($paymentType)] ?? ucwords(str_replace('_', ' ', $paymentType));
+    };
+@endphp
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -456,7 +488,7 @@
 
             <!-- Transactions Grid -->
             <div class="transactions-grid">
-                @forelse ($transactions as $t)
+        @forelse ($transactions as $t)
                     @php
                         $status = strtolower($t->status ?? 'pending');
                         $statusClass = 'pending';
@@ -517,7 +549,7 @@
                                     @if($t->payment_type && $t->payment_type !== '-')
                                         <span class="payment-badge">
                                             <i class="fas fa-credit-card"></i>
-                                            {{ formatPaymentMethod($t->payment_type) }}
+                                            {{ $formatPaymentMethod($t->payment_type) }}
                                         </span>
                                     @else
                                         <span class="detail-value" style="color: #94a3b8;">-</span>
@@ -557,7 +589,7 @@
 
                         </div>
                     </div>
-                @empty
+        @empty
                     <!-- Empty State -->
                     <div class="empty-state">
                         <div class="empty-icon">
@@ -570,7 +602,14 @@
                             Start Shopping
                         </a>
                     </div>
-                @endforelse
+        @endforelse
+
+        <!-- Pagination Links -->
+        @if(method_exists($transactions, 'links'))
+            <div class="mt-6 flex justify-center">
+                {{ $transactions->links('pagination::bootstrap-4') }}
+            </div>
+        @endif
             </div>
 
         </div>

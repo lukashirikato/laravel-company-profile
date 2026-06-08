@@ -1,4 +1,5 @@
 <?php
+// Performance audit: added task progress tracking
 
 if (!function_exists('formatPaymentMethod')) {
     /**

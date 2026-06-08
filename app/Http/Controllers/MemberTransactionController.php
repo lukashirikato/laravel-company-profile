@@ -18,11 +18,14 @@ class MemberTransactionController extends Controller
             return view('member.transactions.index', compact('transactions'));
         }
 
-        // Ambil transaksi milik customer yang login
+        // Ambil transaksi milik customer yang login dengan eager loading paket
+        // dan gunakan pagination untuk menghindari full page reload & beban berat
         $transactions = Transaction::where('customer_id', $member->id)
+                                   ->with('package') // eager load related package
                                    ->latest()
-                                   ->get();
+                                   ->paginate(15); // 15 per page, lazy load via pagination links
 
+        // Filament / Blade pagination links will be rendered in view
         return view('member.transactions.index', compact('transactions'));
     }
 }

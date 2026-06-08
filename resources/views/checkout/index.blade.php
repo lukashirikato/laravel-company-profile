@@ -278,6 +278,22 @@
         font-weight: 700;
     }
 
+    .ftm-professional-note {
+        background: rgba(238, 78, 139, 0.08);
+        border: 1px solid rgba(238, 78, 139, 0.22);
+        border-radius: 0.85rem;
+        padding: 0.8rem 0.95rem;
+        margin-top: 0.65rem;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.76rem;
+        line-height: 1.55;
+        color: rgba(28, 28, 28, 0.72);
+    }
+    .ftm-professional-note strong {
+        color: #7A2B4A;
+        font-weight: 700;
+    }
+
     /* Card wrapper */
     .ftm-checkout-card {
         background: #FFFFFF;
@@ -475,6 +491,7 @@
                                             <option value="{{ $classId }}">{{ $opt['label'] }}</option>
                                         @endforeach
                                     </select>
+                                    
                                 </div>
                             </div>
                         @else
@@ -734,7 +751,7 @@ window.__PAYMENT_DONE__ = false;
             const schedules = classOptions[key].schedules;
             DOM.scheduleContainer.innerHTML = `
                 <div class="ftm-schedule-box">
-                    <h4>Jadwal Kelas Anda</h4>
+                    <h4>Jadwal Kelas Anda dari Admin Schedule</h4>
                     <ul>
                         ${schedules.map(s => `
                             <li>

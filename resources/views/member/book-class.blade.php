@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Book Class | Studio</title>
     @vite('resources/css/app.css')
     
-    {{-- Google Fonts --}}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/ftm-typography.css') }}">
     
     <style>
         * {
@@ -19,9 +17,24 @@
         }
         
         body {
-            font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Instrument Serif', Georgia, serif;
             background: #FCF9F2;
             color: #1C1C1C;
+        }
+
+        :root {
+            --power-pink: #EE4E8B;
+            --burnt-cherry: #7A2B4A;
+            --soft-petals: #F4C9DF;
+            --patina-green: #1A7A5E;
+            --springs-ivy: #1D5A4B;
+            --grounded-green: #C5D79B;
+            --layl: #1C1C1C;
+            --rising: #FCF9F2;
+        }
+
+        h1, h2, h3, .brand-label, .day-pill, .schedule-action, .schedule-status {
+            font-family: 'Nord', 'Arial Narrow', sans-serif;
         }
         
         /* ============================================
@@ -286,6 +299,112 @@
             background: #FFF7FB;
             color: #7A2B4A;
             border-color: #EE4E8B;
+        }
+
+        .booking-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 22px;
+            border: 1.5px solid rgba(244, 201, 223, 0.95);
+            background:
+                radial-gradient(circle at 92% 0%, rgba(244, 201, 223, 0.44) 0 68px, transparent 69px),
+                linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(252, 249, 242, 0.92));
+            padding: 1rem;
+            box-shadow: 0 16px 40px rgba(122, 43, 74, 0.08);
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .booking-card::after {
+            content: "";
+            position: absolute;
+            right: -32px;
+            top: -32px;
+            width: 112px;
+            height: 112px;
+            border-radius: 999px;
+            border: 22px solid rgba(238, 78, 139, 0.08);
+            pointer-events: none;
+        }
+
+        .schedule-card:not(.is-booked):not(.is-disabled):hover .booking-card {
+            transform: translateY(-3px);
+            border-color: rgba(238, 78, 139, 0.85);
+            box-shadow: 0 22px 48px rgba(122, 43, 74, 0.14);
+        }
+
+        .class-mark {
+            position: relative;
+            width: 3.25rem;
+            height: 3.25rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 1rem;
+            background: linear-gradient(145deg, #FFF7FB, #FCF9F2);
+            border: 1px solid rgba(238, 78, 139, 0.22);
+            color: var(--power-pink);
+            box-shadow: inset 0 0 0 6px rgba(244, 201, 223, 0.18);
+        }
+
+        .class-mark i {
+            font-size: 1.1rem;
+            z-index: 1;
+        }
+
+        .class-mark::before,
+        .class-mark::after {
+            content: "";
+            position: absolute;
+            width: 0.72rem;
+            height: 0.72rem;
+            border-radius: 999px 999px 999px 0;
+            background: rgba(26, 122, 94, 0.18);
+            transform: rotate(-45deg);
+        }
+
+        .class-mark::before { left: 0.62rem; top: 0.62rem; }
+        .class-mark::after { right: 0.62rem; bottom: 0.62rem; background: rgba(238, 78, 139, 0.18); }
+
+        .schedule-card.is-booked .booking-card {
+            background:
+                linear-gradient(135deg, rgba(26, 122, 94, 0.08), rgba(197, 215, 155, 0.28)),
+                rgba(252, 249, 242, 0.94);
+            border-color: rgba(26, 122, 94, 0.42);
+            box-shadow: inset 0 0 0 1px rgba(26, 122, 94, 0.10), 0 12px 30px rgba(26, 122, 94, 0.08);
+        }
+
+        .schedule-card.is-booked .class-mark {
+            color: #1A7A5E;
+            border-color: rgba(26, 122, 94, 0.28);
+            background: linear-gradient(145deg, #F0F7E3, #FCF9F2);
+        }
+
+        .schedule-card.is-booked .booked-ribbon {
+            display: inline-flex;
+        }
+
+        @media (max-width: 640px) {
+            .schedule-card.is-booked .booking-card {
+                padding-top: 1rem;
+            }
+
+            .schedule-card.is-booked .booked-ribbon {
+                position: static;
+                width: fit-content;
+                margin: 0 0 0.75rem auto;
+                padding: 0.35rem 0.7rem;
+                font-size: 0.6rem;
+                letter-spacing: 0.08em;
+            }
+
+            .schedule-card.is-booked .booking-card::after {
+                top: -48px;
+                right: -48px;
+            }
+
+            .schedule-card-status {
+                margin-top: 0.25rem;
+            }
         }
         
         /* ============================================
@@ -604,6 +723,11 @@
             </div>
         @endif
 
+        <div id="credit-limit-alert" class="alert alert-warning" style="display:none;">
+            <span class="alert-icon">ⓘ</span>
+            <span id="credit-limit-message">Credit kamu tidak cukup untuk memilih kelas tambahan.</span>
+        </div>
+
         {{-- ============================================
              PACKAGE STATUS CARD
              ============================================ --}}
@@ -671,23 +795,87 @@
         {{-- ============================================
              PACKAGE SELECTOR (Multiple Packages)
              ============================================ --}}
-        @if(isset($activeOrders) && $activeOrders->count() > 1)
-            <div class="package-selector">
-                <label for="packageSelect">Select Package</label>
-                <form method="GET" action="{{ route('member.book') }}" id="packageForm">
-                    <select name="order_id" id="packageSelect" onchange="document.getElementById('packageForm').submit()">
-                        @foreach($activeOrders as $order)
-                            <option 
-                                value="{{ $order->id }}" 
-                                {{ isset($selectedOrderId) && $selectedOrderId == $order->id ? 'selected' : '' }}>
-                                {{ $order->package->name ?? 'Unknown Package' }}
-                                @if($order->package && $order->package->is_exclusive)
-                                    ⭐ (Exclusive)
+        @php
+            $bookableOrders = isset($activeOrders) ? $activeOrders->filter(fn($order) => $order->package) : collect();
+            $packageGroups = $bookableOrders
+                ->groupBy('package_id')
+                ->map(function ($orders) use ($selectedOrderId) {
+                    $firstOrder = $orders->first();
+                    $selectedOrder = $orders->firstWhere('id', $selectedOrderId) ?? $firstOrder;
+
+                    return (object) [
+                        'package' => $firstOrder->package,
+                        'orders' => $orders,
+                        'selected_order' => $selectedOrder,
+                        'total_credits' => (int) $orders->sum('remaining_classes'),
+                        'purchase_count' => $orders->count(),
+                        'is_selected' => $orders->contains('id', $selectedOrderId),
+                    ];
+                })
+                ->values();
+            $uniquePackageCount = $packageGroups->count();
+        @endphp
+
+        @if($packageGroups->count() > 0)
+            <div class="package-selector" style="border:1px solid rgba(244,201,223,0.9);">
+                <div style="display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; gap:0.75rem; margin-bottom:1rem;">
+                    <div>
+                        <label style="margin-bottom:0.25rem;">Your Active Packages</label>
+                        <div style="font-size:0.82rem; color:#7A2B4A;">
+                            @if($uniquePackageCount > 1)
+                                You have {{ $uniquePackageCount }} active package types. Choose which package you want to use for booking.
+                            @else
+                                Package purchases are combined into one balance so booking stays simple.
+                            @endif
+                        </div>
+                    </div>
+                    <div style="background:#FCF9F2; border:1px solid #F4C9DF; border-radius:999px; padding:0.55rem 0.9rem; color:#7A2B4A; font-weight:700; font-size:0.9rem; white-space:nowrap;">
+                        {{ (int) $packageGroups->sum('total_credits') }} total credits
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:0.9rem;">
+                    @foreach($packageGroups as $group)
+                        <div style="border:1.5px solid {{ $group->is_selected ? '#EE4E8B' : '#F4C9DF' }}; background:{{ $group->is_selected ? '#FFF7FB' : '#FFFFFF' }}; border-radius:16px; padding:1rem; box-shadow:0 10px 26px rgba(122,43,74,0.06);">
+                            <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:0.75rem;">
+                                <div style="min-width:0;">
+                                    <div style="font-size:1rem; color:#1C1C1C; font-weight:700; line-height:1.25;">
+                                        {{ $group->package->name ?? 'Active Package' }}
+                                    </div>
+                                    <div style="font-size:0.78rem; color:#7A2B4A; margin-top:0.35rem;">
+                                        {{ $group->purchase_count }} {{ $group->purchase_count > 1 ? 'purchases' : 'purchase' }}
+                                        @if($group->package && $group->package->is_exclusive)
+                                            • Exclusive
+                                        @else
+                                            • Regular
+                                        @endif
+                                    </div>
+                                </div>
+                                <div style="background:#FCF9F2; border:1px solid #F4C9DF; border-radius:999px; padding:0.45rem 0.75rem; color:#7A2B4A; font-weight:800; font-size:0.82rem; white-space:nowrap;">
+                                    {{ $group->total_credits }} credit{{ $group->total_credits === 1 ? '' : 's' }}
+                                </div>
+                            </div>
+
+                            <div style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; margin-top:1rem;">
+                                @if($group->is_selected || $uniquePackageCount === 1)
+                                    <span style="display:inline-flex; align-items:center; gap:0.4rem; border-radius:999px; background:#EAF5DF; color:#1A7A5E; padding:0.45rem 0.75rem; font-size:0.74rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em;">
+                                        <i class="fas fa-check-circle"></i> Active for booking
+                                    </span>
+                                @else
+                                    <a href="{{ route('member.book', ['order_id' => $group->selected_order->id]) }}" style="display:inline-flex; align-items:center; justify-content:center; gap:0.45rem; border-radius:999px; background:#7A2B4A; color:white; padding:0.5rem 0.85rem; font-size:0.78rem; font-weight:800; text-decoration:none; text-transform:uppercase; letter-spacing:0.08em;">
+                                        <i class="fas fa-arrow-right"></i> Use This Package
+                                    </a>
                                 @endif
-                            </option>
-                        @endforeach
-                    </select>
-                </form>
+
+                                @if($group->selected_order && $group->selected_order->created_at)
+                                    <span style="font-size:0.72rem; color:#94a3b8; white-space:nowrap;">
+                                        Latest {{ $group->selected_order->created_at->format('d M Y') }}
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
             </div>
         @endif
 
@@ -726,7 +914,7 @@
                                     <input type="hidden" name="schedule_id" value="{{ $s->id }}">
                                 </form>
                                 
-                                <label class="schedule-card group block cursor-pointer select-none">
+                                <label class="schedule-card group block cursor-pointer select-none {{ $isBooked ? 'is-booked' : '' }} {{ $isDisabled ? 'is-disabled' : '' }}" onclick="handleCardClick(event, this)">
                                     <input
                                         type="checkbox"
                                         class="peer sr-only schedule-checkbox"
@@ -737,18 +925,28 @@
                                         data-date="{{ e($s->schedule_date_formatted) }}"
                                         data-time="{{ e(\Carbon\Carbon::parse($s->class_time)->format('H:i')) }}"
                                         data-instructor="{{ e($s->instructor ?? '-') }}"
-                                        onclick="handleScheduleClick(event, this)"
                                         {{ $isBooked || $isDisabled ? 'disabled' : '' }}
                                     >
 
-                                    <div class="relative overflow-hidden rounded-2xl border border-[#F4C9DF] bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md peer-checked:border-[#EE4E8B] peer-checked:bg-[#FFF7FB] peer-checked:shadow-md {{ $isBooked ? 'opacity-60' : '' }} {{ $isDisabled ? 'opacity-50' : '' }}">
+                                    <div class="booking-card {{ $isDisabled ? 'opacity-60' : '' }}">
                                         <div class="schedule-card-check absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full border border-[#EE4E8B] bg-white text-[0.75rem] text-[#EE4E8B] opacity-0 transition-all duration-200 peer-checked:opacity-100">
                                             <i class="fas fa-check"></i>
                                         </div>
 
+                                        @if($isBooked)
+                                            <div class="booked-ribbon absolute right-3 top-3 hidden items-center gap-1.5 rounded-full bg-[#1A7A5E] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.12em] text-white shadow-sm">
+                                                <i class="fas fa-shield-heart"></i>
+                                                Your Class
+                                            </div>
+                                        @endif
+
                                         <div class="flex items-start gap-3">
-                                            <div class="schedule-card-accent flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#FBEAF0] text-lg text-[#EE4E8B] transition-colors duration-200">
-                                                {{ $classIcon }}
+                                            <div class="schedule-card-accent class-mark shrink-0 transition-colors duration-200">
+                                                @if($isBooked)
+                                                    <i class="fas fa-circle-check"></i>
+                                                @else
+                                                    <i class="fas fa-spa"></i>
+                                                @endif
                                             </div>
 
                                             <div class="min-w-0 flex-1">
@@ -756,11 +954,15 @@
                                                     <div class="min-w-0">
                                                         <h3 class="truncate text-base font-extrabold leading-tight text-[#7A2B4A]">{{ $s->classModel->class_name ?? 'Class' }}</h3>
                                                         <p class="mt-1 text-sm font-medium text-[#1C1C1C]">Coach {{ $s->instructor ?? '-' }}</p>
-                                                        <p class="mt-1 text-sm text-[#7A2B4A]/80">{{ \Carbon\Carbon::parse($s->schedule_date)->format('M d, Y') }} • {{ \Carbon\Carbon::parse($s->class_time)->format('h:i A') }}</p>
+                                                        <p class="mt-1 flex flex-wrap items-center gap-2 text-sm text-[#7A2B4A]/80">
+                                                            <span><i class="far fa-calendar mr-1 text-[#EE4E8B]"></i>{{ \Carbon\Carbon::parse($s->schedule_date)->format('M d, Y') }}</span>
+                                                            <span class="text-[#F4C9DF]">•</span>
+                                                            <span><i class="far fa-clock mr-1 text-[#1A7A5E]"></i>{{ \Carbon\Carbon::parse($s->class_time)->format('h:i A') }}</span>
+                                                        </p>
                                                     </div>
 
                                                     @if($isBooked)
-                                                        <span class="schedule-card-status inline-flex items-center gap-2 rounded-full border border-transparent bg-[#F0FDF4] px-3 py-1 text-xs font-semibold text-[#1A7A5E]"><span class="h-2 w-2 rounded-full bg-[#1A7A5E]"></span>Booked</span>
+                                                        <span class="schedule-card-status inline-flex items-center gap-2 rounded-full border border-[#1A7A5E]/20 bg-[#EAF5DF] px-3 py-1 text-xs font-semibold text-[#1A7A5E]"><i class="fas fa-circle-check"></i>Booked</span>
                                                     @elseif($isDisabled)
                                                         <span class="schedule-card-status inline-flex items-center gap-2 rounded-full border border-transparent bg-[#F4C9DF]/50 px-3 py-1 text-xs font-semibold text-[#7A2B4A]">Quota empty</span>
                                                     @else
@@ -769,9 +971,9 @@
                                                 </div>
 
                                                 <div class="mt-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#7A2B4A]/55">
-                                                    <span class="rounded-full bg-[#7A2B4A] px-2.5 py-1 text-white">{{ $day }}</span>
+                                                    <span class="day-pill rounded-full bg-[#7A2B4A] px-2.5 py-1 text-white">{{ $day }}</span>
                                                     <span class="text-[#7A2B4A]/45">•</span>
-                                                    <span>{{ $isBooked ? 'Already booked' : 'Select this class' }}</span>
+                                                    <span class="schedule-action">{{ $isBooked ? 'Already booked by you' : 'Select this class' }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -782,19 +984,21 @@
                     </section>
                 @endforeach
 
-                <div id="bulk-booking-bar" class="fixed inset-x-0 bottom-0 z-40 border-t border-[#F4C9DF] bg-[#FCF9F2]/95 px-4 py-4 backdrop-blur-md md:px-6">
-                    <div class="mx-auto flex w-full max-w-5xl items-center gap-3 rounded-2xl border border-[#F4C9DF] bg-white px-4 py-4 shadow-sm md:px-5">
-                        <div class="min-w-0 flex-1">
-                            <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
-                                <p class="text-sm font-semibold text-[#7A2B4A]"><span id="selected-class-count">0</span> Classes Selected</p>
-                                <span class="text-xs font-medium uppercase tracking-[0.14em] text-[#7A2B4A]/45">Single confirm booking</span>
+                <div id="bulk-booking-bar" class="fixed inset-x-0 bottom-0 z-40 bg-[#2C2C2C] px-3 py-3 shadow-lg md:px-4">
+                    <div class="mx-auto flex w-full max-w-5xl items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#EE4E8B] text-white shadow-md">
+                                <span id="selected-class-count" class="text-lg font-bold">0</span>
                             </div>
-                            <p class="mt-1 text-sm text-[#1C1C1C]/70"><span id="selected-session-count">0</span> booked sessions ready to submit</p>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-white leading-tight">Selected</span>
+                                <span class="text-xs text-gray-400 leading-tight">Tap book to confirm</span>
+                            </div>
                         </div>
 
-                        <button type="button" id="book-selected-btn" onclick="bookSelectedClasses()" class="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-[#EE4E8B] px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#D9467D] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0">
-                            <i class="fas fa-calendar-plus"></i>
-                            <span>Book Selected Classes</span>
+                        <button type="button" id="book-selected-btn" onclick="bookSelectedClasses()" class="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg bg-white px-5 text-sm font-bold text-[#2C2C2C] shadow-md transition-all hover:bg-gray-100 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Book Now</span>
                         </button>
                     </div>
                 </div>
@@ -886,6 +1090,53 @@
     </div>
 </div>
 
+{{-- ============================================
+     BULK BOOKING CONFIRMATION MODAL
+     ============================================ --}}
+<div id="bulk-confirm-modal" style="display:none; position:fixed; inset:0; z-index:100; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:1rem;">
+    <div style="background:white; border-radius:16px; max-width:540px; width:100%; max-height:90vh; box-shadow:0 25px 60px rgba(0,0,0,0.2); animation:modalIn 0.25s ease-out; overflow:hidden; display:flex; flex-direction:column;">
+        
+        {{-- Header --}}
+        <div style="background: linear-gradient(135deg, rgba(241,204,227,0.30) 0%, rgba(244,238,230,1) 100%); padding:1.5rem 2rem; border-bottom:1px solid rgba(238, 78, 139,0.20); text-align:center; flex-shrink:0;">
+            <div style="width:56px; height:56px; background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem; font-size:1.5rem; color:white;">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <h3 style="font-size:1.15rem; font-weight:700; color:#7A2B4A; margin:0;">Konfirmasi Booking</h3>
+            <p style="font-size:0.825rem; color:#64748b; margin-top:4px;">Anda akan booking <span id="bulk-confirm-count">0</span> kelas sekaligus</p>
+        </div>
+
+        {{-- Class List (Scrollable) --}}
+        <div style="flex:1; overflow-y:auto; padding:1.5rem 2rem;">
+            <div style="font-size:0.75rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.75rem;">Daftar Kelas:</div>
+            <div id="bulk-confirm-list" style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom:1.25rem;">
+                {{-- Will be populated by JavaScript --}}
+            </div>
+
+            {{-- Warning --}}
+            <div style="background:#fef3c7; border-left:3px solid #f59e0b; border-radius:0 8px 8px 0; padding:0.75rem 1rem; font-size:0.8rem; color:#92400e; display:flex; gap:8px; align-items:flex-start;">
+                <i class="fas fa-exclamation-triangle" style="margin-top:2px; flex-shrink:0;"></i>
+                <span>Booking ini akan mengurangi kuota kelas Anda sesuai jumlah kelas yang dipilih. Pastikan semua jadwal sudah benar.</span>
+            </div>
+        </div>
+
+        {{-- Buttons --}}
+        <div style="padding:1.5rem 2rem; border-top:1px solid #e2e8f0; flex-shrink:0; display:flex; gap:0.75rem;">
+            <button onclick="closeBulkConfirm()" 
+                style="flex:1; padding:0.8rem; border:2px solid #e2e8f0; background:white; color:#64748b; border-radius:10px; font-weight:600; font-size:0.875rem; cursor:pointer; transition:all 0.2s; font-family:inherit;"
+                onmouseover="this.style.background='#f8fafc'; this.style.borderColor='#cbd5e1'" 
+                onmouseout="this.style.background='white'; this.style.borderColor='#e2e8f0'">
+                <i class="fas fa-times" style="margin-right:6px;"></i>Batal
+            </button>
+            <button id="confirm-bulk-book-btn" onclick="confirmBulkBooking()" 
+                style="flex:1; padding:0.8rem; border:none; background:linear-gradient(135deg,#7A2B4A,#EE4E8B); color:white; border-radius:10px; font-weight:600; font-size:0.875rem; cursor:pointer; transition:all 0.2s; font-family:inherit; box-shadow:0 4px 12px rgba(122, 43, 74,0.30);"
+                onmouseover="this.style.background='linear-gradient(135deg,#5A1F3A,#B83863)'" 
+                onmouseout="this.style.background='linear-gradient(135deg,#7A2B4A,#EE4E8B)'">
+                <i class="fas fa-check" style="margin-right:6px;"></i>Ya, Book Semua
+            </button>
+        </div>
+    </div>
+</div>
+
     <style>
         @keyframes modalIn {
             0% { opacity: 0; transform: scale(0.95) translateY(10px); }
@@ -895,29 +1146,40 @@
 
 <script>
     let pendingScheduleId = null;
+    const maxSelectableClasses = {{ (int) ($remainingClasses ?? $customer->quota ?? 0) }};
 
-    function handleScheduleClick(event, checkbox) {
-        if (checkbox.disabled) return;
+    function showCreditLimitAlert() {
+        const alert = document.getElementById('credit-limit-alert');
+        const message = document.getElementById('credit-limit-message');
+        if (!alert || !message) return;
+
+        message.textContent = `Credit aktif kamu hanya ${maxSelectableClasses}. Silakan pilih maksimal ${maxSelectableClasses} kelas atau beli package tambahan untuk booking lebih banyak kelas.`;
+        alert.style.display = 'flex';
+        alert.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        window.clearTimeout(window.creditLimitAlertTimer);
+        window.creditLimitAlertTimer = window.setTimeout(() => {
+            alert.style.display = 'none';
+        }, 6000);
+    }
+
+    function handleCardClick(event, label) {
+        event.preventDefault();
         
-        // Jika checkbox belum checked, tampilkan modal konfirmasi
-        if (!checkbox.checked) {
-            const className = checkbox.dataset.className;
-            const day = checkbox.dataset.day;
-            const date = checkbox.dataset.date;
-            const time = checkbox.dataset.time;
-            const coach = checkbox.dataset.instructor;
-            const scheduleId = checkbox.dataset.scheduleId;
-            
-            showBookConfirm(className, day, date, time, coach, scheduleId);
-            
-            // Prevent checkbox from being checked until user confirms
-            event.preventDefault();
-            event.stopPropagation();
-            return false;
-        } else {
-            // If already checked, allow unchecking directly
-            return true;
+        const checkbox = label.querySelector('.schedule-checkbox');
+        if (!checkbox || checkbox.disabled) return;
+
+        if (!checkbox.checked && getSelectedScheduleCheckboxes().length >= maxSelectableClasses) {
+            showCreditLimitAlert();
+            return;
         }
+        
+        // Toggle checkbox - biarkan user select/unselect tanpa modal
+        checkbox.checked = !checkbox.checked;
+        
+        // Update visual states
+        updateSelectedCardStates();
+        updateBulkBookingBar();
     }
 
     function showBookConfirm(className, day, date, time, coach, scheduleId) {
@@ -991,15 +1253,68 @@
         });
     }
 
-    async function bookSelectedClasses() {
+    function bookSelectedClasses() {
         const selected = getSelectedScheduleCheckboxes();
         if (!selected.length) return;
 
-        const button = document.getElementById('book-selected-btn');
+        if (selected.length > maxSelectableClasses) {
+            showCreditLimitAlert();
+            return;
+        }
+        
+        // Tampilkan modal konfirmasi dengan daftar class yang dipilih
+        showBulkBookingConfirm(selected);
+    }
+    
+    function showBulkBookingConfirm(selectedCheckboxes) {
+        // Build class list
+        let classListHtml = '';
+        selectedCheckboxes.forEach((checkbox, index) => {
+            const className = checkbox.dataset.className;
+            const day = checkbox.dataset.day;
+            const date = checkbox.dataset.date;
+            const time = checkbox.dataset.time;
+            
+            classListHtml += `
+                <div style="display:flex; align-items:center; gap:0.75rem; padding:0.75rem; background:${index % 2 === 0 ? '#f8fafc' : 'white'}; border-radius:8px;">
+                    <div style="width:32px; height:32px; background:#EE4E8B; color:white; border-radius:6px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.75rem; flex-shrink:0;">
+                        ${index + 1}
+                    </div>
+                    <div style="flex:1; min-width:0;">
+                        <div style="font-weight:700; color:#7A2B4A; font-size:0.85rem; margin-bottom:2px;">${className}</div>
+                        <div style="font-size:0.75rem; color:#64748b;">${day}, ${date} • ${time}</div>
+                    </div>
+                    <i class="fas fa-check-circle" style="color:#10b981; font-size:1.25rem;"></i>
+                </div>
+            `;
+        });
+        
+        // Update modal content
+        document.getElementById('bulk-confirm-list').innerHTML = classListHtml;
+        document.getElementById('bulk-confirm-count').textContent = selectedCheckboxes.length;
+        
+        // Show modal
+        const modal = document.getElementById('bulk-confirm-modal');
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeBulkConfirm() {
+        const modal = document.getElementById('bulk-confirm-modal');
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+    
+    async function confirmBulkBooking() {
+        const selected = getSelectedScheduleCheckboxes();
+        if (!selected.length) return;
+
+        const button = document.getElementById('confirm-bulk-book-btn');
         const originalHtml = button?.innerHTML || '';
         if (button) {
             button.disabled = true;
-            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Booking...</span>';
+            button.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i>Booking...';
+            button.style.opacity = '0.7';
         }
 
         try {

@@ -77,7 +77,7 @@ class CheckoutController extends Controller
         $canSelectSchedule = false;
 
         if ($isExclusiveClass) {
-            $classOptions = $this->getExclusiveClassOptions();
+            $classOptions = $this->getExclusiveClassOptions($package);
             $canSelectSchedule = true;
         }
 
@@ -93,18 +93,16 @@ class CheckoutController extends Controller
     public function success(string $order_code)
     {
         $order = Order::where('order_code', $order_code)
-            ->with('package')
+            ->with(['package', 'transaction'])
             ->firstOrFail();
 
         // Wait for webhook to process (sometimes webhook is faster than redirect)
         sleep(self::WEBHOOK_WAIT_SECONDS);
         $order->refresh();
 
-        // Fallback sync: if webhook missed/delayed, fetch latest status from Midtrans
-        if ($order->status === self::STATUS_PENDING) {
-            $this->syncOrderStatusFromMidtrans($order);
-            $order->refresh();
-        }
+        // Always refresh from Midtrans so the displayed payment method matches the real channel selected by the user.
+        $this->syncOrderStatusFromMidtrans($order);
+        $order->refresh()->loadMissing(['package', 'transaction']);
 
         Log::info('🔍 Payment Success Page Accessed', [
             'order_code' => $order_code,
@@ -167,11 +165,13 @@ class CheckoutController extends Controller
             $customer = Auth::guard('customer')->user();
             $package = Package::findOrFail($request->package_id);
 
-            // Validate exclusive class selection
-            if ($package->is_exclusive && !$request->input('class_id')) {
+            $selectedClassKey = $request->input('class_id');
+
+            // Validate exclusive class selection against live admin schedule data.
+            if ($package->is_exclusive && (!$selectedClassKey || !array_key_exists($selectedClassKey, $this->getExclusiveClassOptions($package)))) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Silakan pilih kelas terlebih dahulu'
+                    'message' => 'Silakan pilih kelas yang tersedia terlebih dahulu'
                 ], 422);
             }
 
@@ -465,7 +465,7 @@ class CheckoutController extends Controller
         }
 
         // Exclusive class - auto-assign schedules
-        $this->assignExclusiveClassSchedules($order, $classKey, $customer);
+        $this->assignExclusiveClassSchedules($order, $package, $classKey, $customer);
     }
 
     /**
@@ -476,9 +476,9 @@ class CheckoutController extends Controller
      * @param $customer
      * @throws \Exception
      */
-    private function assignExclusiveClassSchedules(Order $order, string $classKey, $customer): void
+    private function assignExclusiveClassSchedules(Order $order, Package $package, string $classKey, $customer): void
     {
-        $scheduleMap = $this->getExclusiveScheduleMap();
+        $scheduleMap = $this->getExclusiveScheduleMap($package);
 
         if (!isset($scheduleMap[$classKey])) {
             Log::error('❌ Invalid class key', [
@@ -617,9 +617,17 @@ class CheckoutController extends Controller
             ? $scheduleData['time'] . ':00'
             : $scheduleData['time'];
 
-        $classOptions = $this->getExclusiveClassOptions();
+        $classOptions = $this->getExclusiveClassOptions($order->package);
         $selectedLabel = $classOptions[$classKey]['label'] ?? null;
         $today = Carbon::today()->toDateString();
+
+        if (!empty($scheduleData['schedule_id'])) {
+            return Schedule::whereKey($scheduleData['schedule_id'])
+                ->whereHas('packages', function ($q) use ($order) {
+                    $q->where('packages.id', $order->package_id);
+                })
+                ->first();
+        }
 
         $query = Schedule::query()
             ->where('day', $scheduleData['day'])
@@ -732,21 +740,27 @@ class CheckoutController extends Controller
             }
 
             $newStatus = $this->mapMidtransStatus($transactionStatus);
+            $paymentType = $this->resolveMidtransPaymentMethod($midtransStatus, $order->payment_type);
             $isPaid = in_array($transactionStatus, ['settlement', 'capture'])
                 && (($midtransStatus->fraud_status ?? null) !== 'deny');
 
-            // Always update order status with latest Midtrans response
-            $order->update([
-                'status' => $newStatus,
-                'payment_type' => $midtransStatus->payment_type ?? $order->payment_type,
-            ]);
+            $orderUpdate = [
+                'payment_type' => $paymentType,
+            ];
+
+            // Do not downgrade business statuses that were already activated after payment success.
+            if (!in_array($order->status, [self::STATUS_ACTIVE, 'waiting_admin'], true)) {
+                $orderUpdate['status'] = $newStatus;
+            }
+
+            $order->update($orderUpdate);
 
             // Keep transaction table in sync as well
             $transaction = Transaction::where('transaction_id', $order->order_code)->first();
             if ($transaction) {
                 $transaction->update([
                     'status' => $newStatus,
-                    'payment_type' => $midtransStatus->payment_type ?? $transaction->payment_type,
+                    'payment_type' => $paymentType,
                     'midtrans_transaction_id' => $midtransStatus->transaction_id ?? $transaction->midtrans_transaction_id,
                     'fraud_status' => $midtransStatus->fraud_status ?? $transaction->fraud_status,
                     'signature_key' => $midtransStatus->signature_key ?? $transaction->signature_key,
@@ -761,7 +775,7 @@ class CheckoutController extends Controller
                 $this->processSuccessfulPayment($order, (object) [
                     'transaction_status' => $transactionStatus,
                     'fraud_status' => $midtransStatus->fraud_status ?? null,
-                    'payment_type' => $midtransStatus->payment_type ?? null,
+                    'payment_type' => $paymentType,
                     'transaction_id' => $midtransStatus->transaction_id ?? null,
                     'signature_key' => $midtransStatus->signature_key ?? null,
                     'gross_amount' => $midtransStatus->gross_amount ?? $order->amount,
@@ -772,6 +786,7 @@ class CheckoutController extends Controller
                 'order_code' => $order->order_code,
                 'midtrans_status' => $transactionStatus,
                 'mapped_status' => $newStatus,
+                'payment_type' => $paymentType,
                 'quota_applied' => $order->quota_applied,
             ]);
         } catch (\Throwable $e) {
@@ -780,6 +795,36 @@ class CheckoutController extends Controller
                 'message' => $e->getMessage(),
             ]);
         }
+    }
+
+    /**
+     * Resolve Midtrans payment type into the most specific displayable channel.
+     */
+    private function resolveMidtransPaymentMethod(object|array $midtransStatus, ?string $fallback = null): ?string
+    {
+        $paymentType = data_get($midtransStatus, 'payment_type', $fallback);
+
+        if ($paymentType === 'bank_transfer') {
+            $bank = data_get($midtransStatus, 'va_numbers.0.bank');
+
+            if ($bank) {
+                return strtolower($bank) . '_va';
+            }
+
+            if (data_get($midtransStatus, 'permata_va_number')) {
+                return 'permata_va';
+            }
+        }
+
+        if ($paymentType === 'echannel') {
+            return 'mandiri_bill';
+        }
+
+        if ($paymentType === 'cstore') {
+            return strtolower(data_get($midtransStatus, 'store') ?? 'cstore');
+        }
+
+        return $paymentType;
     }
 
     // ==================== HELPER METHODS ====================
@@ -1046,8 +1091,16 @@ class CheckoutController extends Controller
      * 
      * @return array
      */
-    private function getExclusiveClassOptions(): array
+    private function getExclusiveClassOptions(?Package $package = null): array
     {
+        if ($package) {
+            $dynamicOptions = $this->buildExclusiveClassOptionsFromSchedules($package);
+
+            if (!empty($dynamicOptions)) {
+                return $dynamicOptions;
+            }
+        }
+
         return [
             'muaythai_intermediate' => [
                 'label' => 'Muaythai Intermediate',
@@ -1106,8 +1159,16 @@ class CheckoutController extends Controller
      * 
      * @return array
      */
-    private function getExclusiveScheduleMap(): array
+    private function getExclusiveScheduleMap(?Package $package = null): array
     {
+        if ($package) {
+            $dynamicMap = $this->buildExclusiveScheduleMapFromSchedules($package);
+
+            if (!empty($dynamicMap)) {
+                return $dynamicMap;
+            }
+        }
+
         return [
             'muaythai_intermediate' => [
                 ['class_id' => 17, 'day' => 'Monday', 'time' => '19:00:00'],
@@ -1138,6 +1199,70 @@ class CheckoutController extends Controller
                 ['class_id' => 15, 'day' => 'Saturday', 'time' => '08:00:00'],
             ],
         ];
+    }
+
+    /**
+     * Build checkout dropdown options from schedules configured in admin.
+     */
+    private function buildExclusiveClassOptionsFromSchedules(Package $package): array
+    {
+        return $this->getExclusiveScheduleGroups($package)
+            ->mapWithKeys(function ($schedules, string $label) {
+                return [Str::slug($label, '_') => [
+                    'label' => $label,
+                    'schedules' => $schedules->map(fn (Schedule $schedule) => $this->formatScheduleForCheckout($schedule))->values()->all(),
+                ]];
+            })
+            ->all();
+    }
+
+    /**
+     * Build the payment assignment map from the same schedule records used by checkout.
+     */
+    private function buildExclusiveScheduleMapFromSchedules(Package $package): array
+    {
+        return $this->getExclusiveScheduleGroups($package)
+            ->mapWithKeys(function ($schedules, string $label) {
+                return [Str::slug($label, '_') => $schedules->map(fn (Schedule $schedule) => [
+                    'schedule_id' => $schedule->id,
+                    'class_id' => $schedule->class_id,
+                    'day' => $schedule->day,
+                    'time' => $schedule->class_time,
+                ])->values()->all()];
+            })
+            ->all();
+    }
+
+    private function getExclusiveScheduleGroups(Package $package)
+    {
+        $today = Carbon::today()->toDateString();
+
+        return Schedule::query()
+            ->with('classModel')
+            ->whereHas('packages', fn ($q) => $q->where('packages.id', $package->id))
+            ->where(function ($q) use ($today) {
+                $q->whereNull('schedule_date')
+                    ->orWhereDate('schedule_date', '>=', $today);
+            })
+            ->orderByRaw('CASE WHEN schedule_date IS NULL THEN 1 ELSE 0 END')
+            ->orderBy('schedule_date')
+            ->orderBy('class_time')
+            ->get()
+            ->groupBy(fn (Schedule $schedule) => $schedule->schedule_label ?: ($schedule->classModel->class_name ?? 'Kelas Exclusive'));
+    }
+
+    private function formatScheduleForCheckout(Schedule $schedule): string
+    {
+        $date = $schedule->schedule_date ? Carbon::parse($schedule->schedule_date)->format('d/M/Y') : null;
+        $time = $schedule->class_time ? Carbon::parse($schedule->class_time)->format('H:i') : '-';
+        $className = $schedule->classModel->class_name ?? null;
+
+        return trim(implode(' ', array_filter([
+            $date,
+            $schedule->day,
+            $time,
+            $className ? '- ' . $className : null,
+        ])));
     }
 
     // ==================== WHATSAPP NOTIFICATION METHODS ====================
