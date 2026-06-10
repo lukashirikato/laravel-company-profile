@@ -1045,9 +1045,9 @@
                 </div>
             </div>
 
-            {{-- ══════════════════════════════════════
-                 QR ACTIONS + QUICK LINKS
-            ══════════════════════════════════════ --}}
+  {{-- ══════════════════════════════════════════════
+       QR ACTIONS
+  ══════════════════════════════════════════════ --}}
             <div class="content-grid">
                 {{-- QR Actions --}}
                 <div class="content-card">
@@ -1075,43 +1075,6 @@
                     <div class="info-tip">
                         <i class="fas fa-info-circle"></i>
                         <span>Tunjukkan QR code di pintu masuk gym untuk check-in. Staff akan scan otomatis.</span>
-                    </div>
-                </div>
-
-                {{-- Quick Links --}}
-                <div class="content-card">
-                    <div class="cc-title"><i class="fas fa-link"></i> Akses Cepat</div>
-                    <div class="quick-links">
-                        <a href="{{ route('member.dashboard') }}" class="quick-link">
-                            <span class="ql-icon"><i class="fas fa-home"></i></span>
-                            Dashboard
-                            <i class="fas fa-arrow-right ql-arrow"></i>
-                        </a>
-                        <a href="{{ url('/member/my-packages') }}" class="quick-link">
-                            <span class="ql-icon"><i class="fas fa-box"></i></span>
-                            My Packages
-                            <i class="fas fa-arrow-right ql-arrow"></i>
-                        </a>
-                        <a href="{{ url('/member/book-class') }}" class="quick-link">
-                            <span class="ql-icon"><i class="fas fa-calendar-plus"></i></span>
-                            Book Class
-                            <i class="fas fa-arrow-right ql-arrow"></i>
-                        </a>
-                        <a href="{{ url('/member/my-classes') }}" class="quick-link">
-                            <span class="ql-icon"><i class="fas fa-dumbbell"></i></span>
-                            My Classes
-                            <i class="fas fa-arrow-right ql-arrow"></i>
-                        </a>
-                        <a href="{{ url('/member/transactions') }}" class="quick-link">
-                            <span class="ql-icon"><i class="fas fa-receipt"></i></span>
-                            Transactions
-                            <i class="fas fa-arrow-right ql-arrow"></i>
-                        </a>
-                        <a href="{{ route('member.attendance') }}" class="quick-link">
-                            <span class="ql-icon"><i class="fas fa-calendar-check"></i></span>
-                            Attendance
-                            <i class="fas fa-arrow-right ql-arrow"></i>
-                        </a>
                     </div>
                 </div>
             </div>

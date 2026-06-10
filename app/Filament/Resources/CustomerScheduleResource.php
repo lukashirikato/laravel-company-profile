@@ -227,11 +227,16 @@ class CustomerScheduleResource extends Resource
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
                     ->requiresConfirmation()
-                    ->modalHeading('Delete Booking')
-                    ->modalSubheading('Anda yakin ingin menghapus booking ini?'),
+                    ->modalHeading('Konfirmasi Hapus Booking')
+                    ->modalSubheading('Anda yakin ingin menghapus data booking ini? Tindakan ini tidak dapat dibatalkan.')
+                    ->successNotificationTitle('Data berhasil dihapus.'),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()
+                    ->requiresConfirmation()
+                    ->modalHeading('Konfirmasi Hapus Booking Terpilih')
+                    ->modalSubheading('Semua data booking yang dipilih akan dihapus permanen.')
+                    ->successNotificationTitle('Data berhasil dihapus.'),
             ])
             ->defaultSort('created_at', 'desc');
     }

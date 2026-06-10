@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CheckInCheckOutController;
 use App\Http\Controllers\MemberTransactionController;
+use App\Http\Controllers\MemberAttendanceController;
 use App\Http\Controllers\Member\ProfileController as MemberProfileController;
 use App\Http\Controllers\GuestCheckoutController;
 use App\Http\Controllers\CheckoutController;
@@ -348,10 +349,8 @@ Route::prefix('member')
         | ATTENDANCE (Check-in/Check-out)
         |--------------------------------------------------------------------------
         */
-        Route::get('/attendance', function () {
-            // TODO: Create dedicated AttendanceController
-            return view('member.attendance');
-        })->name('attendance');
+        Route::get('/attendance', [MemberAttendanceController::class, 'index'])
+            ->name('attendance');
         
         Route::post('/check-in', [CheckInCheckOutController::class, 'checkIn'])
             ->name('checkin');
@@ -392,9 +391,6 @@ Route::prefix('member')
         Route::get('/account', function () {
             return view('member.account');
         })->name('account');
-        Route::get('/attendance', function () {
-            return view('member.attendance');
-        })->name('attendance');
         Route::get('/program-saya', [CustomerController::class, 'program'])
             ->name('program');
 

@@ -1,471 +1,175 @@
 ﻿@extends('layouts.app')
 
 @section('content')
+@php
+    $totalAttendances = $totalAttendances ?? 0;
+    $monthAttendances = $monthAttendances ?? 0;
+    $weekAttendances = $weekAttendances ?? 0;
+    $totalDurationLabel = $totalDurationLabel ?? '0 menit';
+    $averageDurationLabel = $averageDurationLabel ?? '-';
+    $lastAttendanceLabel = $lastAttendanceLabel ?? 'Belum ada aktivitas';
+    $activeAttendance = $activeAttendance ?? null;
+    $member = auth('customer')->user();
+    $memberQrData = $member?->qr_token && $member?->qr_active ? $member->getQRData() : null;
+@endphp
+
 <style>
-    /* ═══════════════════════════════════════════ RESPONSIVE SIDEBAR ═══════════════════════════════════════════ */
-    .sidebar {
-        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    }
-
-    .sidebar-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 20;
-        backdrop-filter: blur(4px);
-    }
-
-    .hamburger-btn {
-        display: none !important;
-        position: fixed !important;
-        top: 1rem !important;
-        left: 1rem !important;
-        z-index: 9999 !important;
-        width: 3rem !important;
-        height: 3rem !important;
-        background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%) !important;
-        color: white !important;
-        border: none !important;
-        border-radius: 0.5rem !important;
-        align-items: center !important;
-        justify-content: center !important;
-        box-shadow: 0 4px 12px rgba(122, 43, 74, 0.35) !important;
-        cursor: pointer !important;
-        transition: all 0.2s !important;
-        font-size: 1.25rem !important;
-    }
-
-    .hamburger-btn:hover {
-        background: linear-gradient(135deg, #5A1F3A 0%, #B83863 100%) !important;
-        transform: translateY(-1px) !important;
-        box-shadow: 0 6px 16px rgba(122, 43, 74, 0.45) !important;
-    }
-
-    .hamburger-btn:active {
-        transform: translateY(0) !important;
-    }
-
-    @media (max-width: 768px) {
-        .hamburger-btn {
-            display: flex !important;
-        }
-
-        .sidebar-overlay.active {
-            display: block !important;
-        }
-    }
+    .attendance-page { --att-plum:#762645; --att-rose:#e94683; background: radial-gradient(circle at 9% 6%, rgba(233,70,131,.18), transparent 18rem), radial-gradient(circle at 96% 1%, rgba(220,233,189,.58), transparent 22rem), linear-gradient(180deg, #fffaf7 0%, #fff6ef 46%, #ffffff 100%); }
+    .attendance-shell { max-width: 1180px; }
+    .attendance-hero { background: linear-gradient(135deg, rgba(118,38,69,.98) 0%, rgba(160,48,92,.98) 56%, rgba(233,70,131,.96) 100%); box-shadow: 0 24px 64px rgba(118,38,69,.22); }
+    .attendance-hero:after { content:''; position:absolute; right:-5rem; bottom:-8rem; width:20rem; height:20rem; border-radius:999px; background:rgba(255,255,255,.12); }
+    .attendance-panel { border:1px solid rgba(118,38,69,.11); background:rgba(255,255,255,.86); box-shadow:0 18px 58px rgba(118,38,69,.09); backdrop-filter:blur(18px); }
+    .attendance-metric { background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,248,242,.9)); border:1px solid rgba(118,38,69,.10); }
+    .attendance-quick { border:1px solid rgba(255,255,255,.24); background:rgba(255,255,255,.13); }
+    .attendance-chip { border:1px solid rgba(118,38,69,.10); background:rgba(255,255,255,.74); }
+    .attendance-row { transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+    .attendance-row:hover { transform: translateY(-2px); border-color: rgba(233,70,131,.30); box-shadow: 0 18px 44px rgba(118,38,69,.09); }
+    .qr-attendance-modal { position:fixed; inset:0; z-index:80; display:none; align-items:center; justify-content:center; padding:1rem; background:rgba(25,21,23,.72); backdrop-filter:blur(14px); }
+    .qr-attendance-modal.open { display:flex; }
+    .qr-attendance-card { width:min(92vw,25rem); background:#fffaf2; border-radius:2rem; padding:1.25rem; box-shadow:0 28px 90px rgba(25,21,23,.35); }
+    .qr-attendance-box { background:#fff; border:1px solid rgba(118,38,69,.12); border-radius:1.5rem; padding:1rem; }
+    .qr-attendance-box img { width:100%; max-width:260px; height:auto; margin:0 auto; display:block; }
+    .attendance-empty-icon { background:linear-gradient(135deg, #fff8ee 0%, #ffe5f0 100%); box-shadow:0 18px 42px rgba(233,70,131,.16); }
+    .attendance-empty-icon i { display:block; color:#e94683; }
+    .qr-close-icon { color:#762645; }
+    .attendance-timeline:before { content:''; position:absolute; left:1.15rem; top:3rem; bottom:-1.25rem; width:1px; background:linear-gradient(180deg, rgba(233,70,131,.36), rgba(233,70,131,0)); }
+    .attendance-row:last-child .attendance-timeline:before { display:none; }
+    @keyframes attendanceRise { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+    .attendance-animate { animation: attendanceRise .42s ease both; }
+    @media (max-width: 768px) { .hamburger-btn { display:flex !important; } .attendance-page main { width:100%; } .attendance-hero { border-radius:1.65rem; } .attendance-hero:after { width:12rem; height:12rem; right:-4rem; bottom:-5rem; } .attendance-mobile-tight { padding-top:4.25rem; } .attendance-timeline:before { left:1rem; } }
 </style>
 
-<div class="min-h-screen bg-cream flex">
-    
+<div class="attendance-page min-h-screen flex">
     @include('partials.member-sidebar')
 
-    <!-- MAIN CONTENT -->
-    <!-- Mobile Sidebar Overlay -->
-    <!-- Mobile Sidebar Overlay removed to avoid dark backdrop -->
-
-    <!-- Mobile Hamburger Button -->
-    <button id="hamburger-btn" class="hamburger-btn" onclick="toggleSidebar()">
+    <button id="hamburger-btn" class="hamburger-btn" onclick="toggleSidebar()" aria-label="Open menu">
         <i class="fas fa-bars"></i>
     </button>
 
-    <div class="flex-1 overflow-auto">
-        <!-- HEADER SECTION -->
-        <div class="bg-white border-b border-light-pink/50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <main class="main-content flex-1 overflow-auto">
+        <div class="attendance-shell mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-10">
+            <section class="attendance-hero attendance-mobile-tight relative overflow-hidden p-5 sm:p-8 lg:p-10 text-white attendance-animate">
+                <div class="relative z-10 grid gap-5 lg:grid-cols-[1fr_21rem] lg:items-end">
                     <div>
-                        <h1 class="text-3xl font-bold text-dark">
-                            <i class="ri-calendar-check-line text-secondary mr-2"></i>Attendance History
-                        </h1>
-                        <p class="text-dark/70 mt-2">Monitor your training consistency</p>
-                    </div>
-                    <a href="{{ route('member.dashboard') }}" 
-                       class="inline-flex items-center gap-2 bg-dark hover:bg-dark text-white px-4 py-2 rounded-lg transition-colors duration-200">
-                        <i class="ri-arrow-left-line"></i> 
-                        <span>Back</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
-        @php
-            $user = auth('customer')->user();
-            $totalAttendances = $user->attendances()->count();
-            $monthAttendances = $user->attendances()->whereDate('created_at', '>=', now()->startOfMonth())->count();
-            $weekAttendances = $user->attendances()->whereDate('created_at', '>=', now()->startOfWeek())->count();
-            $memberMonths = max(1, now()->diffInMonths($user->created_at) + 1);
-            $monthlyAverage = $totalAttendances > 0 ? round($totalAttendances / $memberMonths) : 0;
-            $weekStreak = $user->attendances()->whereDate('created_at', '>=', now()->subDays(7))->count();
-
-            // Duration stats
-            $totalDurationMinutes = $user->attendances()->whereNotNull('check_out_at')->sum('duration_minutes') ?? 0;
-            $avgDurationMinutes = $user->attendances()->whereNotNull('check_out_at')->avg('duration_minutes') ?? 0;
-            $totalHours = intdiv((int)$totalDurationMinutes, 60);
-            $totalMins = (int)$totalDurationMinutes % 60;
-            $avgMins = round($avgDurationMinutes);
-            $monthDurationMinutes = $user->attendances()->whereNotNull('check_out_at')->whereDate('created_at', '>=', now()->startOfMonth())->sum('duration_minutes') ?? 0;
-            $monthDurHours = intdiv((int)$monthDurationMinutes, 60);
-            $monthDurMins = (int)$monthDurationMinutes % 60;
-        @endphp
-
-        
-
-        <!-- ATTENDANCE RECORDS -->
-        <div class="bg-white rounded-lg border border-light-pink/50 overflow-hidden shadow-sm">
-            
-            <!-- Header -->
-            <div class="px-6 py-5 border-b border-light-pink/50 bg-cream flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <h2 class="text-lg font-bold text-dark">Attendance Records</h2>
-                <div class="w-full sm:w-auto">
-                    <div class="relative">
-                        <input type="text" 
-                               placeholder="Search..." 
-                               class="w-full sm:w-64 pl-10 pr-4 py-2 border border-light-pink/60 rounded-lg text-dark placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-red-600 focus:border-red-600 transition-colors"
-                               id="searchInput">
-                        <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-dark/40"></i>
-                    </div>
-                </div>
-            </div>
-
-            @if($totalAttendances > 0)
-                <!-- Desktop Table View -->
-                <div class="hidden md:block overflow-x-auto">
-                    <table class="w-full" id="attendanceTable">
-                        <thead>
-                            <tr class="bg-cream border-b border-light-pink/50">
-                                <th class="text-left px-6 py-3 text-dark/70 font-semibold text-sm">Date</th>
-                                <th class="text-left px-6 py-3 text-dark/70 font-semibold text-sm">Program</th>
-                                <th class="text-left px-6 py-3 text-dark/70 font-semibold text-sm">Check-In</th>
-                                <th class="text-left px-6 py-3 text-dark/70 font-semibold text-sm">Check-Out</th>
-                                <th class="text-left px-6 py-3 text-dark/70 font-semibold text-sm">Duration</th>
-                                <th class="text-left px-6 py-3 text-dark/70 font-semibold text-sm">Type</th>
-                                <th class="text-left px-6 py-3 text-dark/70 font-semibold text-sm">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-light-pink/40" id="attendanceTableBody">
-                            @foreach($user->attendances()->latest()->paginate(20) as $index => $attendance)
-                                <tr class="hover:bg-cream transition-colors attendance-row">
-                                    <td class="px-6 py-4 text-sm">
-                                        <div>
-                                            <div class="font-semibold text-dark">{{ $attendance->created_at->format('d M Y') }}</div>
-                                            <div class="text-cream0">{{ $attendance->created_at->format('l') }}</div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 text-sm">
-                                        @if($attendance->program)
-                                            <span class="inline-flex items-center gap-2 px-3 py-1 bg-light-pink/30 border border-secondary/30 text-secondary rounded-lg font-medium">
-                                                <i class="ri-dumbbell-line"></i>
-                                                {{ $attendance->program }}
-                                            </span>
-                                        @else
-                                            <span class="inline-flex items-center gap-2 px-3 py-1 bg-cream border border-light-pink/50 text-cream0 rounded-lg font-medium">
-                                                <i class="ri-dumbbell-line"></i>
-                                                General Fitness
-                                            </span>
-                                        @endif
-                                    </td>
-                                    <td class="px-6 py-4 text-sm text-dark font-medium">{{ $attendance->check_in_at?->format('H:i') ?? '-' }}</td>
-                                    <td class="px-6 py-4 text-sm {{ $attendance->check_out_at ? 'text-accent font-medium' : 'text-secondary' }}">
-                                        {{ $attendance->check_out_at?->format('H:i') ?? 'Aktif' }}
-                                    </td>
-                                    <td class="px-6 py-4 text-sm">
-                                        @php
-                                            $duration = $attendance->getFormattedDuration();
-                                            $durationMins = $attendance->getDurationInMinutes();
-                                            $isActive = $attendance->check_out_at === null;
-                                        @endphp
-                                        @if($isActive)
-                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-light-pink/30 border border-light-pink text-secondary rounded-lg text-xs font-semibold">
-                                                <span class="relative flex h-2 w-2">
-                                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-light-pink"></span>
-                                                </span>
-                                                Sedang Latihan
-                                            </span>
-                                        @elseif($durationMins !== null)
-                                            <div class="flex items-center gap-2">
-                                                <div class="w-8 h-8 rounded-lg flex items-center justify-center
-                                                    {{ $durationMins >= 60 ? 'bg-grounded-green/40 text-accent' : ($durationMins >= 30 ? 'bg-light-pink/50 text-primary' : 'bg-cream text-cream0') }}">
-                                                    <i class="fas fa-stopwatch text-xs"></i>
-                                                </div>
-                                                <div>
-                                                    <p class="font-bold text-dark text-sm">{{ $duration }}</p>
-                                                    @if($durationMins >= 60)
-                                                        <p class="text-xs text-accent font-medium">Great session!</p>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        @else
-                                            <span class="text-dark/40">-</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-6 py-4 text-sm">
-                                        @if($attendance->check_in_type === 'qr')
-                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-light-pink/50 text-secondary rounded text-xs font-medium">
-                                                <i class="ri-qr-code-line"></i>QR Scan
-                                            </span>
-                                        @elseif($attendance->check_in_type === 'manual')
-                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-light-pink/50 text-secondary rounded text-xs font-medium">
-                                                <i class="ri-user-line"></i>Manual
-                                            </span>
-                                        @else
-                                            <span class="inline-flex px-2.5 py-1 bg-cream text-dark rounded text-xs font-medium">
-                                                {{ ucfirst($attendance->check_in_type ?? 'system') }}
-                                            </span>
-                                        @endif
-                                    </td>
-                                    <td class="px-6 py-4 text-sm">
-                                        @if($attendance->attendance_status === 'present')
-                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-grounded-green/40 text-springs-ivy rounded text-xs font-medium">
-                                                <i class="ri-checkbox-circle-line"></i>Present
-                                            </span>
-                                        @elseif($attendance->attendance_status === 'late')
-                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-grounded-green/40 text-springs-ivy rounded text-xs font-medium">
-                                                <i class="ri-alarm-warning-line"></i>Late
-                                            </span>
-                                        @elseif($attendance->attendance_status === 'absent')
-                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-light-pink/50 text-secondary rounded text-xs font-medium">
-                                                <i class="ri-close-circle-line"></i>Absent
-                                            </span>
-                                        @else
-                                            <span class="inline-flex px-2.5 py-1 bg-cream text-dark rounded text-xs font-medium">
-                                                {{ ucfirst($attendance->attendance_status ?? 'unknown') }}
-                                            </span>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Mobile Card View -->
-                <div class="md:hidden divide-y divide-light-pink/40" id="attendanceCards">
-                    @foreach($user->attendances()->latest()->paginate(20) as $attendance)
-                        <div class="p-4 hover:bg-cream transition-colors attendance-row">
-                            <div class="flex justify-between items-start mb-3">
-                                <div>
-                                    <p class="font-semibold text-dark">{{ $attendance->created_at->format('d M Y') }}</p>
-                                    <p class="text-sm text-cream0">{{ $attendance->created_at->format('l, H:i') }}</p>
-                                </div>
-                                @if($attendance->attendance_status === 'present')
-                                    <span class="inline-flex items-center gap-1 px-2 py-1 bg-grounded-green/40 text-springs-ivy rounded text-xs font-medium">
-                                        <i class="ri-checkbox-circle-line"></i>Present
-                                    </span>
-                                @elseif($attendance->attendance_status === 'late')
-                                    <span class="inline-flex items-center gap-1 px-2 py-1 bg-grounded-green/40 text-springs-ivy rounded text-xs font-medium">
-                                        <i class="ri-alarm-warning-line"></i>Late
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center gap-1 px-2 py-1 bg-light-pink/50 text-secondary rounded text-xs font-medium">
-                                        <i class="ri-close-circle-line"></i>Absent
-                                    </span>
-                                @endif
-                            </div>
-                            <div class="grid grid-cols-2 gap-3 text-sm">
-                                <div>
-                                    <p class="text-cream0">Program</p>
-                                    <p class="font-semibold text-dark">{{ $attendance->program ?? 'General Fitness' }}</p>
-                                </div>
-                                <div>
-                                    <p class="text-cream0">Check-In</p>
-                                    <p class="font-semibold text-dark">{{ $attendance->check_in_at?->format('H:i') ?? '-' }}</p>
-                                </div>
-                                <div>
-                                    <p class="text-cream0">Check-Out</p>
-                                    <p class="font-semibold {{ $attendance->check_out_at ? 'text-accent' : 'text-secondary' }}">
-                                        {{ $attendance->check_out_at?->format('H:i') ?? 'Aktif' }}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p class="text-cream0">Duration</p>
-                                    @php
-                                        $mobDuration = $attendance->getFormattedDuration();
-                                        $mobDurationMins = $attendance->getDurationInMinutes();
-                                        $mobIsActive = $attendance->check_out_at === null;
-                                    @endphp
-                                    @if($mobIsActive)
-                                        <p class="font-semibold text-secondary flex items-center gap-1">
-                                            <span class="relative flex h-2 w-2">
-                                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                                                <span class="relative inline-flex rounded-full h-2 w-2 bg-light-pink"></span>
-                                            </span>
-                                            Sedang Latihan
-                                        </p>
-                                    @elseif($mobDurationMins !== null)
-                                        <p class="font-semibold text-dark">{{ $mobDuration }}</p>
-                                    @else
-                                        <p class="font-semibold text-dark/40">-</p>
-                                    @endif
-                                </div>
-                            </div>
+                        <div class="inline-flex items-center gap-2 rounded-full bg-white/14 px-3 py-1.5 text-[10px] sm:text-xs font-black uppercase tracking-[0.18em] text-white/88 ring-1 ring-white/20">
+                            <i class="ri-calendar-check-line"></i> Attendance Center
                         </div>
-                    @endforeach
-                </div>
+                        <h1 class="mt-3 max-w-2xl text-[2rem] sm:text-5xl font-black leading-[1.08] !text-white">Pusat kehadiran latihan member.</h1>
+                        <p class="mt-2 max-w-xl text-sm sm:text-base leading-relaxed text-white/78">Pantau check-in, check-out, durasi, dan riwayat scan QR setiap sesi latihan Anda.</p>
 
-                <!-- Pagination -->
-                <div class="px-6 py-5 border-t border-light-pink/50 bg-cream">
-                    {{ $user->attendances()->latest()->paginate(20)->links() }}
-                </div>
-                
-            @else
-                <!-- Empty State -->
-                <div class="py-16 text-center px-6">
-                    <div class="inline-flex items-center justify-center w-16 h-16 bg-cream rounded-lg mb-4">
-                        <i class="ri-calendar-x-line text-3xl text-dark/40"></i>
+                        <div class="mt-5 grid grid-cols-3 gap-2 sm:max-w-xl sm:gap-3">
+                            <div class="attendance-quick rounded-2xl p-3"><p class="text-[10px] font-black uppercase tracking-widest text-white/58">Total</p><p class="mt-1 text-2xl font-black text-white">{{ $totalAttendances }}</p></div>
+                            <div class="attendance-quick rounded-2xl p-3"><p class="text-[10px] font-black uppercase tracking-widest text-white/58">Bulan</p><p class="mt-1 text-2xl font-black text-white">{{ $monthAttendances }}</p></div>
+                            <div class="attendance-quick rounded-2xl p-3"><p class="text-[10px] font-black uppercase tracking-widest text-white/58">Minggu</p><p class="mt-1 text-2xl font-black text-white">{{ $weekAttendances }}</p></div>
+                        </div>
                     </div>
-                    <h3 class="text-lg font-semibold text-dark mb-2">No Records Yet</h3>
-                    <p class="text-cream0 mb-6">Your attendance records will appear here once you check in.</p>
-                    <a href="{{ route('member.dashboard') }}" 
-                       class="inline-flex items-center gap-2 bg-secondary hover:bg-secondary text-white font-semibold px-6 py-2.5 rounded-lg transition-colors duration-200">
-                        <i class="ri-dashboard-line"></i>
-                        <span>Go to Dashboard</span>
-                    </a>
+
+                    <div class="rounded-[1.35rem] bg-white p-3 text-dark shadow-2xl shadow-black/10 sm:p-4">
+                        <div class="flex items-start gap-3">
+                            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-light-pink text-secondary"><i class="ri-pulse-line text-xl"></i></div>
+                            <div class="min-w-0 flex-1"><p class="text-[10px] font-black uppercase tracking-widest text-dark/45">Aktivitas terakhir</p><p class="mt-1 truncate text-lg font-black text-dark">{{ $lastAttendanceLabel }}</p><p class="mt-1 text-xs text-dark/50">Rata-rata durasi {{ $averageDurationLabel }}</p></div>
+                        </div>
+                        <div class="mt-3 grid grid-cols-2 gap-2">
+                            <a href="{{ route('member.qr.scanner') }}" class="inline-flex items-center justify-center gap-2 rounded-2xl bg-secondary px-3 py-3 text-sm font-black text-white transition hover:bg-dark"><i class="ri-qr-scan-2-line"></i> Scan QR</a>
+                            <a href="{{ route('member.dashboard') }}" class="inline-flex items-center justify-center gap-2 rounded-2xl bg-cream px-3 py-3 text-sm font-black text-secondary transition hover:bg-light-pink"><i class="ri-home-5-line"></i> Dashboard</a>
+                        </div>
+                    </div>
                 </div>
+            </section>
+
+            @if($activeAttendance)
+                @php $activeProgram = $activeAttendance->program ?? $activeAttendance->schedule?->classModel?->name ?? 'General Fitness'; @endphp
+                <section class="mt-4 rounded-[1.5rem] bg-[#176a54] p-4 sm:p-5 text-white shadow-xl shadow-green-900/10 attendance-animate">
+                    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div class="flex gap-3"><div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/15"><span class="relative flex h-3 w-3"><span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-70"></span><span class="relative inline-flex h-3 w-3 rounded-full bg-white"></span></span></div><div><p class="text-[10px] font-black uppercase tracking-widest text-white/60">Sedang check-in</p><h2 class="text-xl sm:text-2xl font-black !text-white">{{ $activeProgram }}</h2><p class="mt-1 text-sm text-white/75">Masuk {{ $activeAttendance->check_in_at?->format('H:i') ?? '-' }}. Scan QR untuk check-out.</p></div></div>
+                        <a href="{{ route('member.qr.scanner') }}" class="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 font-black text-accent transition hover:bg-cream">Check-out <i class="ri-arrow-right-line"></i></a>
+                    </div>
+                </section>
             @endif
+
+            <section class="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+                <div class="attendance-metric rounded-[1.35rem] p-4 sm:p-5 attendance-animate" style="animation-delay:.04s"><div class="flex items-center justify-between gap-3"><p class="text-[10px] font-black uppercase tracking-widest text-dark/45">Total Visit</p><i class="ri-footprint-line text-secondary/70"></i></div><p class="mt-2 text-3xl sm:text-4xl font-black text-dark">{{ $totalAttendances }}</p><p class="mt-1 text-xs text-dark/55">Semua sesi tercatat</p></div>
+                <div class="attendance-metric rounded-[1.35rem] p-4 sm:p-5 attendance-animate" style="animation-delay:.08s"><div class="flex items-center justify-between gap-3"><p class="text-[10px] font-black uppercase tracking-widest text-dark/45">Bulan Ini</p><i class="ri-calendar-event-line text-secondary/70"></i></div><p class="mt-2 text-3xl sm:text-4xl font-black text-secondary">{{ $monthAttendances }}</p><p class="mt-1 text-xs text-dark/55">Konsistensi bulanan</p></div>
+                <div class="attendance-metric rounded-[1.35rem] p-4 sm:p-5 attendance-animate" style="animation-delay:.12s"><div class="flex items-center justify-between gap-3"><p class="text-[10px] font-black uppercase tracking-widest text-dark/45">Minggu Ini</p><i class="ri-fire-line text-secondary/70"></i></div><p class="mt-2 text-3xl sm:text-4xl font-black text-accent">{{ $weekAttendances }}</p><p class="mt-1 text-xs text-dark/55">Progress mingguan</p></div>
+                <div class="attendance-metric rounded-[1.35rem] p-4 sm:p-5 attendance-animate" style="animation-delay:.16s"><div class="flex items-center justify-between gap-3"><p class="text-[10px] font-black uppercase tracking-widest text-dark/45">Durasi</p><i class="ri-timer-flash-line text-secondary/70"></i></div><p class="mt-2 text-3xl sm:text-4xl font-black text-dark">{{ $totalDurationLabel }}</p><p class="mt-1 text-xs text-dark/55">Rata-rata {{ $averageDurationLabel }}</p></div>
+            </section>
+
+            <section class="attendance-panel mt-4 rounded-[1.75rem] overflow-hidden attendance-animate" style="animation-delay:.2s">
+                <div class="border-b border-light-pink/60 bg-white/76 p-4 sm:p-6">
+                    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                        <div><p class="text-[10px] font-black uppercase tracking-[0.18em] text-secondary/70">Attendance Log</p><h2 class="mt-1 text-2xl sm:text-3xl font-black text-dark">Riwayat Attendance</h2><p class="mt-1 text-sm text-dark/55">Filter kelas, tanggal, status, paket, atau metode scan.</p></div>
+                        <div class="relative w-full lg:w-96"><i class="ri-search-line absolute left-4 top-1/2 -translate-y-1/2 text-dark/35"></i><input id="attendanceSearch" type="search" placeholder="Cari attendance..." class="w-full rounded-2xl border border-light-pink/80 bg-white py-3.5 pl-11 pr-4 text-sm font-semibold text-dark placeholder:text-dark/35 focus:border-secondary focus:outline-none focus:ring-4 focus:ring-light-pink/40"></div>
+                    </div>
+                </div>
+
+                @if($attendances->count())
+                    <div class="p-3 sm:p-6 space-y-3 sm:space-y-4">
+                        @foreach($attendances as $attendance)
+                            @php
+                                $isActive = is_null($attendance->check_out_at);
+                                $program = $attendance->program ?? $attendance->schedule?->classModel?->name ?? 'General Fitness';
+                                $date = $attendance->check_in_at ?? $attendance->created_at;
+                                $status = $isActive ? 'Aktif' : ucfirst($attendance->attendance_status ?? 'Selesai');
+                                $duration = $isActive ? 'Berjalan' : $attendance->getShortDuration();
+                                $method = strtoupper($attendance->check_in_type ?? 'SYS');
+                                $package = $attendance->order?->package?->name ?? 'Paket tidak tersedia';
+                            @endphp
+                            <article class="attendance-row rounded-[1.35rem] border border-light-pink/60 bg-white p-4 sm:p-5" data-search="{{ strtolower($program.' '.$status.' '.$method.' '.$package.' '.$date?->format('d M Y l')) }}">
+                                <div class="flex gap-3 sm:gap-4">
+                                    <div class="attendance-timeline relative shrink-0"><div class="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-2xl {{ $isActive ? 'bg-secondary text-white' : 'bg-grounded-green/40 text-accent' }}"><i class="{{ $isActive ? 'ri-loader-4-line' : 'ri-check-line' }} text-lg"></i></div></div>
+                                    <div class="min-w-0 flex-1">
+                                        <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"><div class="min-w-0"><p class="text-[10px] sm:text-xs font-black uppercase tracking-[0.16em] text-dark/42">{{ $date?->format('l, d M Y') ?? '-' }}</p><h3 class="mt-1 truncate text-lg sm:text-xl font-black text-dark">{{ $program }}</h3><p class="mt-1 truncate text-sm text-dark/50">{{ $package }}</p></div><span class="inline-flex w-fit items-center gap-2 rounded-full px-3 py-1.5 text-xs font-black {{ $isActive ? 'bg-light-pink text-secondary' : 'bg-grounded-green/40 text-accent' }}"><i class="{{ $isActive ? 'ri-time-line' : 'ri-checkbox-circle-line' }}"></i>{{ $status }}</span></div>
+                                        <div class="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3"><div class="attendance-chip rounded-2xl p-3"><p class="text-[10px] font-black uppercase tracking-widest text-dark/40">Check-in</p><p class="mt-1 font-black text-dark">{{ $attendance->check_in_at?->format('H:i') ?? '-' }}</p></div><div class="attendance-chip rounded-2xl p-3"><p class="text-[10px] font-black uppercase tracking-widest text-dark/40">Check-out</p><p class="mt-1 font-black {{ $isActive ? 'text-secondary' : 'text-dark' }}">{{ $attendance->check_out_at?->format('H:i') ?? 'Aktif' }}</p></div><div class="attendance-chip rounded-2xl p-3"><p class="text-[10px] font-black uppercase tracking-widest text-dark/40">Durasi</p><p class="mt-1 font-black text-dark">{{ $duration }}</p></div><div class="attendance-chip rounded-2xl p-3"><p class="text-[10px] font-black uppercase tracking-widest text-dark/40">Metode</p><p class="mt-1 font-black text-dark">{{ $method }}</p></div></div>
+                                    </div>
+                                </div>
+                            </article>
+                        @endforeach
+                    </div>
+                    <div id="attendanceEmptySearch" class="hidden px-6 py-14 text-center"><div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-cream text-secondary"><i class="ri-search-eye-line text-3xl"></i></div><h3 class="text-xl font-black text-dark">Data tidak ditemukan</h3><p class="mt-2 text-dark/55">Coba kata kunci lain, misalnya nama kelas atau tanggal.</p></div>
+                    <div class="border-t border-light-pink/60 bg-cream/50 px-4 py-4 sm:px-6 sm:py-5">{{ $attendances->links() }}</div>
+                @else
+                    <div class="px-6 py-14 sm:py-20 text-center"><div class="attendance-empty-icon mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-[1.75rem]"><i class="ri-qr-code-line text-4xl"></i></div><h3 class="text-2xl font-black text-dark">Belum ada attendance</h3><p class="mx-auto mt-2 max-w-md text-dark/55">Tampilkan QR member Anda ke staff untuk check-in. Setelah dipindai, aktivitas latihan akan tersimpan otomatis di sini.</p>@if($memberQrData)<button type="button" onclick="openAttendanceQR()" class="mt-6 inline-flex items-center gap-2 rounded-2xl bg-secondary px-6 py-3 font-black text-white transition hover:bg-dark">Mulai Check-in <i class="ri-qr-code-line"></i></button>@else<a href="{{ route('member.account') }}" class="mt-6 inline-flex items-center gap-2 rounded-2xl bg-secondary px-6 py-3 font-black text-white transition hover:bg-dark">Aktifkan QR Member <i class="ri-arrow-right-line"></i></a>@endif</div>
+                @endif
+            </section>
         </div>
+    </main>
+</div>
 
-        
+@if($memberQrData)
+<div id="attendanceQrModal" class="qr-attendance-modal" onclick="closeAttendanceQR(event)">
+    <div class="qr-attendance-card text-center" onclick="event.stopPropagation()">
+        <div class="flex items-center justify-between gap-3 text-left">
+            <div>
+                <p class="text-[10px] font-black uppercase tracking-[0.18em] text-secondary/70">Member QR Code</p>
+                <h3 class="mt-1 text-2xl font-black text-dark">Scan untuk check-in</h3>
+            </div>
+            <button type="button" onclick="closeAttendanceQR()" class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-light-pink text-secondary" aria-label="Tutup QR"><i class="ri-close-line qr-close-icon text-xl"></i></button>
+        </div>
+        <div class="qr-attendance-box mt-5">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=280x280&data={{ urlencode($memberQrData) }}&bgcolor=ffffff&color=7A2B4A" alt="QR Code Member">
+        </div>
+        <p class="mt-4 text-sm text-dark/60">Tunjukkan QR ini ke staff atau trainer. Jangan bagikan QR ke orang lain.</p>
+        <p class="mt-2 font-black text-secondary">{{ $member?->name }}</p>
+    </div>
+</div>
+@endif
 
-<!-- Scripts -->
 <script>
-    // Export CSV Function
-    function exportCSV() {
-        const table = document.getElementById('attendanceTable');
-        if (!table) {
-            alert('No data to export');
-            return;
-        }
-        
-        let csv = [];
-        const rows = table.querySelectorAll('tr');
-        
-        rows.forEach(row => {
-            const cols = row.querySelectorAll('td, th');
-            const csvRow = [];
-            cols.forEach(col => {
-                let text = col.innerText.replace(/\s+/g, ' ').trim();
-                csvRow.push('"' + text.replace(/"/g, '""') + '"');
-            });
-            if (csvRow.length > 0) {
-                csv.push(csvRow.join(','));
-            }
-        });
-        
-        const csvContent = 'data:text/csv;charset=utf-8,' + csv.join('\n');
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement('a');
-        link.setAttribute('href', encodedUri);
-        link.setAttribute('download', 'attendance-' + new Date().toISOString().split('T')[0] + '.csv');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-    
-    // Print Records Function
-    function printRecords() {
-        window.print();
-    }
-    
-    // Search Functionality
-    document.getElementById('searchInput')?.addEventListener('input', function(e) {
-        const searchTerm = e.target.value.toLowerCase();
+    function openAttendanceQR() { document.getElementById('attendanceQrModal')?.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeAttendanceQR(event) { if (event && event.target.id !== 'attendanceQrModal') return; document.getElementById('attendanceQrModal')?.classList.remove('open'); document.body.style.overflow = ''; }
+
+    document.getElementById('attendanceSearch')?.addEventListener('input', function (event) {
+        const keyword = event.target.value.toLowerCase().trim();
         const rows = document.querySelectorAll('.attendance-row');
-        
-        rows.forEach(row => {
-            const text = row.textContent.toLowerCase();
-            row.style.display = text.includes(searchTerm) ? '' : 'none';
+        const empty = document.getElementById('attendanceEmptySearch');
+        let visible = 0;
+        rows.forEach((row) => {
+            const match = (row.dataset.search || row.textContent.toLowerCase()).includes(keyword);
+            row.style.display = match ? '' : 'none';
+            if (match) visible++;
         });
+        empty?.classList.toggle('hidden', visible !== 0 || keyword === '');
     });
 </script>
-
-<!-- Print Styles -->
-<style>
-    @media print {
-        body * {
-            visibility: hidden;
-        }
-        
-        #attendanceTable,
-        #attendanceTable * {
-            visibility: visible;
-        }
-        
-        #attendanceTable {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-        }
-        
-        button, input, a {
-            display: none !important;
-        }
-    }
-</style>
-
-<script>
-// ===== SIDEBAR TOGGLE FUNCTION =====
-function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const hamburger = document.getElementById('hamburger-btn');
-    if (!sidebar) return;
-
-    const willOpen = !sidebar.classList.contains('active') && !sidebar.classList.contains('open');
-    sidebar.classList.toggle('active');
-    sidebar.classList.toggle('open');
-
-    if (willOpen) {
-        document.body.classList.add('sidebar-open');
-        document.body.style.overflow = 'hidden';
-        if (hamburger) hamburger.style.display = 'none';
-        document.querySelectorAll('.hamburger-btn, .more-btn, .dots-btn, .three-dots, .more-menu-btn').forEach(el => el.style.display = 'none');
-    } else {
-        document.body.classList.remove('sidebar-open');
-        document.body.style.overflow = '';
-        if (hamburger) { hamburger.style.display = ''; hamburger.innerHTML = '<i class="fas fa-bars"></i>'; }
-        document.querySelectorAll('.hamburger-btn, .more-btn, .dots-btn, .three-dots, .more-menu-btn').forEach(el => el.style.display = '');
-    }
-}
-
-// Close sidebar when clicking on a nav link
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM loaded, setting up sidebar');
-    
-    const navLinks = document.querySelectorAll('#sidebar nav a');
-    console.log('Found nav links:', navLinks.length);
-    
-    navLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            if (window.innerWidth <= 768) {
-                const sidebar = document.getElementById('sidebar');
-                if (sidebar && sidebar.classList.contains('active')) {
-                    toggleSidebar();
-                }
-            }
-        });
-    });
-});
-
-// Reset sidebar on window resize
-window.addEventListener('resize', function() {
-    const sidebar = document.getElementById('sidebar');
-    const hamburger = document.getElementById('hamburger-btn');
-    
-    if (window.innerWidth > 768 && sidebar) {
-        sidebar.classList.remove('active');
-        if (hamburger) hamburger.style.display = '';
-        if (hamburger) hamburger.innerHTML = '<i class="fas fa-bars"></i>';
-        document.body.style.overflow = '';
-    }
-});
-</script>
-
 @endsection
+

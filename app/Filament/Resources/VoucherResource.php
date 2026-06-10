@@ -219,10 +219,18 @@ class VoucherResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->requiresConfirmation()
+                    ->modalHeading('Konfirmasi Hapus Voucher')
+                    ->modalSubheading('Anda yakin ingin menghapus data voucher ini? Tindakan ini tidak dapat dibatalkan.')
+                    ->successNotificationTitle('Data berhasil dihapus.'),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()
+                    ->requiresConfirmation()
+                    ->modalHeading('Konfirmasi Hapus Voucher Terpilih')
+                    ->modalSubheading('Semua data voucher yang dipilih akan dihapus permanen.')
+                    ->successNotificationTitle('Data berhasil dihapus.'),
             ])
             ->defaultSort('created_at', 'desc');
     }

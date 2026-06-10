@@ -26,6 +26,7 @@
     
     $isExclusiveClass = (bool) ($pkg->is_exclusive ?? false);
     $showClassDropdown = $isExclusiveClass && isset($classOptions) && !empty($classOptions);
+    $hasExclusiveScheduleData = !$isExclusiveClass || $showClassDropdown;
 @endphp
 
 <style>
@@ -113,6 +114,23 @@
         color: #1C1C1C;
         transition: border-color .15s ease, box-shadow .15s ease;
     }
+    .ftm-select {
+        appearance: none;
+        -webkit-appearance: none;
+        background-image:
+            linear-gradient(45deg, transparent 50%, #7A2B4A 50%),
+            linear-gradient(135deg, #7A2B4A 50%, transparent 50%);
+        background-position:
+            calc(100% - 22px) calc(50% - 2px),
+            calc(100% - 16px) calc(50% - 2px);
+        background-size: 6px 6px, 6px 6px;
+        background-repeat: no-repeat;
+        padding-right: 2.7rem;
+    }
+    .ftm-select option {
+        color: #1C1C1C;
+        background: #FFFFFF;
+    }
     .ftm-input:focus,
     .ftm-select:focus {
         outline: none;
@@ -196,26 +214,51 @@
     /* Tombol Bayar utama */
     .ftm-btn-pay {
         width: 100%;
-        background: #EE4E8B;
+        position: relative;
+        overflow: hidden;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        background: linear-gradient(135deg, #EE4E8B 0%, #7A2B4A 100%);
         color: #FFFFFF;
         font-family: 'Nord', 'Poppins', sans-serif;
-        font-weight: 700;
-        font-size: 0.95rem;
-        letter-spacing: 0.04em;
-        padding: 0.85rem 1.25rem;
-        border-radius: 0.85rem;
+        font-weight: 800;
+        font-size: 1rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 1rem 1.25rem;
+        border-radius: 1rem;
         border: none;
         cursor: pointer;
-        box-shadow: 0 8px 18px rgba(238, 78, 139, 0.28);
-        transition: background .15s ease, transform .1s ease, box-shadow .2s ease;
+        box-shadow: 0 14px 28px rgba(122, 43, 74, 0.25), 0 6px 14px rgba(238, 78, 139, 0.22);
+        transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+    }
+    .ftm-btn-pay::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+        transform: translateX(-120%);
+        transition: transform .55s ease;
+    }
+    .ftm-btn-pay span {
+        position: relative;
+        z-index: 1;
     }
     .ftm-btn-pay:hover:not(:disabled) {
-        background: #7A2B4A;
-        box-shadow: 0 10px 22px rgba(122, 43, 74, 0.35);
+        transform: translateY(-1px);
+        filter: saturate(1.05);
+        box-shadow: 0 18px 34px rgba(122, 43, 74, 0.32), 0 8px 18px rgba(238, 78, 139, 0.24);
+    }
+    .ftm-btn-pay:hover:not(:disabled)::before {
+        transform: translateX(120%);
     }
     .ftm-btn-pay:active:not(:disabled) { transform: scale(0.99); }
     .ftm-btn-pay:disabled {
-        opacity: 0.55;
+        background: linear-gradient(135deg, rgba(122, 43, 74, 0.35), rgba(122, 43, 74, 0.18));
+        color: rgba(122, 43, 74, 0.7);
+        opacity: 1;
         cursor: not-allowed;
         box-shadow: none;
     }
@@ -244,18 +287,44 @@
 
     /* Schedule list (dynamic) */
     .ftm-schedule-box {
-        background: rgba(197, 215, 155, 0.18);
-        border: 1px solid rgba(26, 122, 94, 0.25);
-        border-radius: 0.85rem;
-        padding: 0.85rem 1rem;
-        margin-top: 0.5rem;
+        background: linear-gradient(135deg, rgba(122, 43, 74, 0.08), rgba(238, 78, 139, 0.08));
+        border: 1px solid rgba(238, 78, 139, 0.28);
+        border-radius: 1rem;
+        padding: 0.95rem;
+        margin-top: 0.75rem;
+        box-shadow: 0 10px 24px rgba(122, 43, 74, 0.08);
+    }
+    .ftm-schedule-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
     }
     .ftm-schedule-box h4 {
         font-family: 'Nord', 'Poppins', sans-serif;
+        font-weight: 800;
+        color: #7A2B4A;
+        font-size: 0.95rem;
+        margin: 0;
+    }
+    .ftm-schedule-box p {
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.72rem;
+        color: rgba(28, 28, 28, 0.62);
+        line-height: 1.45;
+        margin: 0.15rem 0 0;
+    }
+    .ftm-schedule-badge {
+        flex-shrink: 0;
+        background: #7A2B4A;
+        color: #FFFFFF;
+        border-radius: 999px;
+        padding: 0.28rem 0.55rem;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.66rem;
         font-weight: 700;
-        color: #1A7A5E;
-        font-size: 0.825rem;
-        margin: 0 0 0.4rem 0;
+        white-space: nowrap;
     }
     .ftm-schedule-box ul {
         list-style: none;
@@ -263,19 +332,32 @@
         margin: 0;
         display: flex;
         flex-direction: column;
-        gap: 0.25rem;
+        gap: 0.45rem;
     }
     .ftm-schedule-box li {
         display: flex;
-        align-items: center;
-        gap: 0.4rem;
+        align-items: flex-start;
+        gap: 0.55rem;
+        background: rgba(255, 255, 255, 0.82);
+        border: 1px solid rgba(244, 201, 223, 0.65);
+        border-radius: 0.75rem;
+        padding: 0.6rem 0.7rem;
         font-family: 'Poppins', sans-serif;
-        font-size: 0.78rem;
-        color: #1D5A4B;
+        font-size: 0.8rem;
+        color: #1C1C1C;
     }
     .ftm-schedule-box li .check {
-        color: #1A7A5E;
+        color: #EE4E8B;
         font-weight: 700;
+        line-height: 1.35;
+    }
+    .ftm-schedule-box li strong {
+        display: block;
+        color: #7A2B4A;
+        font-weight: 700;
+    }
+    .ftm-schedule-box li span:last-child {
+        line-height: 1.35;
     }
 
     .ftm-professional-note {
@@ -494,6 +576,26 @@
                                     
                                 </div>
                             </div>
+                        @elseif($isExclusiveClass)
+                            <div>
+                                <label class="ftm-field-label">Program</label>
+                                <div class="ftm-field-static">
+                                    <span class="truncate">{{ $pkg->name }}</span>
+                                    <span class="quota">({{ $pkg->quota }}x)</span>
+                                </div>
+                            </div>
+
+                            <div class="ftm-info-box mt-3">
+                                <div class="flex items-start gap-2.5">
+                                    <svg class="w-4 h-4 mt-0.5 flex-shrink-0" fill="none" stroke="#EE4E8B" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+                                    </svg>
+                                    <div>
+                                        <h4>Jadwal belum tersedia</h4>
+                                        <p>Package ini belum memiliki jadwal aktif di admin Schedule. Silakan hubungi admin FTM agar jadwal untuk <strong style="color:#7A2B4A;">{{ $pkg->name }}</strong> diaktifkan sebelum checkout.</p>
+                                    </div>
+                                </div>
+                            </div>
                         @else
                             <div>
                                 <label class="ftm-field-label">Program</label>
@@ -552,11 +654,11 @@
                     </div>
 
                     {{-- ── Tombol Bayar ── --}}
-                    <button id="pay-button" type="button" class="ftm-btn-pay mt-2">
-                        <span>Bayar Sekarang</span>
+                    <button type="button" id="pay-button" class="ftm-btn-pay mt-1" @unless($hasExclusiveScheduleData) disabled @endunless>
+                        <span>{{ $hasExclusiveScheduleData ? 'Bayar Sekarang' : 'Jadwal Belum Tersedia' }}</span>
                     </button>
 
-                    <div id="statusText"></div>
+                    <div id="statusText">{{ $hasExclusiveScheduleData ? '' : 'Pembayaran dibuka kembali setelah admin menambahkan jadwal untuk program ini.' }}</div>
                 </div>
             </form>
         </div>
@@ -748,21 +850,48 @@ window.__PAYMENT_DONE__ = false;
                 return;
             }
 
-            const schedules = classOptions[key].schedules;
+            const selectedClass = classOptions[key];
+            const schedules = selectedClass.schedules || [];
             DOM.scheduleContainer.innerHTML = `
                 <div class="ftm-schedule-box">
-                    <h4>Jadwal Kelas Anda dari Admin Schedule</h4>
+                    <div class="ftm-schedule-head">
+                        <div>
+                            <h4>${escapeHtml(selectedClass.label)}</h4>
+                            
+                        </div>
+                        <span class="ftm-schedule-badge">${schedules.length} Jadwal</span>
+                    </div>
                     <ul>
-                        ${schedules.map(s => `
+                        ${schedules.map(s => {
+                            const parts = splitScheduleText(s);
+                            return `
                             <li>
                                 <span class="check">✓</span>
-                                <span>${s}</span>
+                                <span><strong>${escapeHtml(parts.main)}</strong>${parts.detail ? escapeHtml(parts.detail) : ''}</span>
                             </li>
-                        `).join('')}
+                        `}).join('')}
                     </ul>
                 </div>
             `;
         });
+    }
+
+    function escapeHtml(value) {
+        return String(value ?? '').replace(/[&<>'"]/g, function(char) {
+            return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;' })[char];
+        });
+    }
+
+    function splitScheduleText(value) {
+        const text = String(value ?? '');
+        const separator = text.includes(' - ') ? ' - ' : (text.includes(' – ') ? ' – ' : null);
+
+        if (!separator) {
+            return { main: text, detail: '' };
+        }
+
+        const [main, ...detail] = text.split(separator);
+        return { main: main.trim(), detail: ' - ' + detail.join(separator).trim() };
     }
 
     // ==================== PAYMENT HANDLING ====================

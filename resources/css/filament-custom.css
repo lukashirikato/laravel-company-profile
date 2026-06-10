@@ -1,4 +1,4 @@
-﻿/* ========================================
+/* ========================================
    FILAMENT THEME - FTM SOCIETY
    Brand Palette: Burnt Cherry, Power Pink,
    Soft Petals, Patina Green, Rising, Layl
@@ -72,6 +72,58 @@
 .fi-card:hover {
     border-color: #EE4E8B !important;
     box-shadow: 0 8px 16px rgba(122, 43, 74, 0.12) !important;
+}
+
+/* NOTIFICATIONS */
+.fi-no-notification,
+.fi-notification {
+    position: relative !important;
+    overflow: hidden !important;
+    background: rgba(255, 255, 255, 0.98) !important;
+    border: 1px solid rgba(197, 215, 155, 0.42) !important;
+    border-left: 3px solid rgba(26, 122, 94, 0.55) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 22px rgba(28, 28, 28, 0.10) !important;
+    color: #1C1C1C !important;
+}
+
+.fi-no-notification svg,
+.fi-notification svg {
+    color: #1A7A5E !important;
+    opacity: 0.8 !important;
+    filter: none !important;
+}
+
+.fi-no-notification-title,
+.fi-notification-title,
+.fi-no-notification-body,
+.fi-notification-body,
+.fi-notification p,
+.fi-notification span {
+    color: #1C1C1C !important;
+    opacity: 0.9 !important;
+    font-weight: 500 !important;
+    letter-spacing: 0 !important;
+    text-shadow: none !important;
+}
+
+.fi-no-notification-title,
+.fi-notification-title {
+    font-weight: 600 !important;
+}
+
+.fi-no-notification-close-btn,
+.fi-notification-close-btn,
+.fi-notification button {
+    color: rgba(28, 28, 28, 0.52) !important;
+    opacity: 0.9 !important;
+}
+
+.fi-no-notification-close-btn:hover,
+.fi-notification-close-btn:hover,
+.fi-notification button:hover {
+    background: rgba(244, 201, 223, 0.24) !important;
+    color: #7A2B4A !important;
 }
 
 /* STATS CARD */

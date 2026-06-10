@@ -384,8 +384,137 @@
         }
 
         @media (max-width: 640px) {
+            .main-content {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+
+            .main-content > .space-y-6 {
+                width: 100%;
+                max-width: 100%;
+                overflow: hidden;
+            }
+
+            .main-content > .space-y-6 > section {
+                padding: 0.85rem !important;
+                border-radius: 1.25rem !important;
+                overflow: hidden;
+            }
+
+            .main-content > .space-y-6 > section > .flex:first-child {
+                align-items: flex-start !important;
+                flex-wrap: wrap;
+                gap: 0.75rem !important;
+            }
+
+            .main-content > .space-y-6 > section > .flex:first-child > .flex {
+                min-width: 0;
+                flex: 1 1 auto;
+                flex-wrap: wrap;
+                row-gap: 0.45rem;
+            }
+
+            .main-content > .space-y-6 > section > .flex:first-child > span:last-child {
+                flex: 0 0 100%;
+                text-align: left;
+                letter-spacing: 0.12em;
+            }
+
             .schedule-card.is-booked .booking-card {
                 padding-top: 1rem;
+            }
+
+            .booking-card {
+                width: 100%;
+                max-width: 100%;
+                padding: 0.85rem;
+                border-radius: 1.1rem;
+                overflow: hidden;
+            }
+
+            .booking-card > .flex {
+                gap: 0.6rem;
+            }
+
+            .class-mark {
+                width: 2.55rem;
+                height: 2.55rem;
+                border-radius: 0.9rem;
+            }
+
+            .class-mark::before,
+            .class-mark::after {
+                width: 0.55rem;
+                height: 0.55rem;
+            }
+
+            .class-mark::before { left: 0.5rem; top: 0.5rem; }
+            .class-mark::after { right: 0.5rem; bottom: 0.5rem; }
+
+            .booking-card h3 {
+                display: -webkit-box;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: normal !important;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                max-width: 100%;
+                font-size: 0.98rem !important;
+                line-height: 1.15 !important;
+                letter-spacing: 0.02em !important;
+                overflow-wrap: anywhere;
+            }
+
+            .booking-card .min-w-0 {
+                min-width: 0;
+                max-width: 100%;
+            }
+
+            .booking-card > .flex > .min-w-0 {
+                width: calc(100% - 3.15rem);
+            }
+
+            .booking-card p.mt-1.flex > span:not(.text-\[\#F4C9DF\]) {
+                min-width: 0;
+                overflow-wrap: anywhere;
+            }
+
+            .booking-card .flex-wrap.items-start.justify-between {
+                display: block;
+            }
+
+            .schedule-card-status {
+                width: fit-content;
+                max-width: 100%;
+                margin-top: 0.65rem;
+                white-space: normal;
+            }
+
+            .booking-card p,
+            .booking-card span {
+                max-width: 100%;
+            }
+
+            .booking-card p.mt-1.flex {
+                align-items: flex-start;
+                gap: 0.35rem 0.5rem;
+                font-size: 0.8rem !important;
+                line-height: 1.35;
+            }
+
+            .booking-card .mt-4.flex {
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.45rem;
+                margin-top: 0.9rem;
+                letter-spacing: 0.11em;
+                line-height: 1.35;
+            }
+
+            .schedule-action {
+                flex: 1 1 9rem;
+                min-width: 0;
+                overflow-wrap: anywhere;
             }
 
             .schedule-card.is-booked .booked-ribbon {
@@ -403,7 +532,52 @@
             }
 
             .schedule-card-status {
-                margin-top: 0.25rem;
+                margin-top: 0.65rem;
+            }
+
+            .schedule-card-check {
+                right: 0.65rem !important;
+                top: 0.65rem !important;
+            }
+
+            .day-pill {
+                max-width: 100%;
+                overflow-wrap: anywhere;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .main-content {
+                padding-left: 0.55rem;
+                padding-right: 0.55rem;
+            }
+
+            .booking-card {
+                padding: 0.75rem;
+            }
+
+            .class-mark {
+                width: 2.25rem;
+                height: 2.25rem;
+                border-radius: 0.8rem;
+            }
+
+            .booking-card > .flex {
+                gap: 0.5rem;
+            }
+
+            .booking-card > .flex > .min-w-0 {
+                width: calc(100% - 2.75rem);
+            }
+
+            .booking-card h3 {
+                font-size: 0.92rem !important;
+                letter-spacing: 0 !important;
+            }
+
+            .booking-card p,
+            .booking-card span {
+                font-size: 0.76rem !important;
             }
         }
         

@@ -19,7 +19,8 @@ class EditCustomer extends EditRecord
             Actions\DeleteAction::make()
                 ->requiresConfirmation()
                 ->modalHeading('Konfirmasi Hapus Customer')
-                ->modalSubheading(fn() => "Anda yakin ingin menghapus data {$this->record->name}? Tindakan ini tidak dapat dibatalkan."),
+                ->modalSubheading(fn() => "Anda yakin ingin menghapus data {$this->record->name}? Tindakan ini tidak dapat dibatalkan.")
+                ->successNotificationTitle('Data berhasil dihapus.'),
         ];
     }
 

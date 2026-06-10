@@ -1093,14 +1093,11 @@ class CheckoutController extends Controller
      */
     private function getExclusiveClassOptions(?Package $package = null): array
     {
-        if ($package) {
-            $dynamicOptions = $this->buildExclusiveClassOptionsFromSchedules($package);
+        return $package ? $this->buildExclusiveClassOptionsFromSchedules($package) : [];
+    }
 
-            if (!empty($dynamicOptions)) {
-                return $dynamicOptions;
-            }
-        }
-
+    private function getPosterExclusiveClassOptions(): array
+    {
         return [
             'muaythai_intermediate' => [
                 'label' => 'Muaythai Intermediate',
@@ -1161,14 +1158,11 @@ class CheckoutController extends Controller
      */
     private function getExclusiveScheduleMap(?Package $package = null): array
     {
-        if ($package) {
-            $dynamicMap = $this->buildExclusiveScheduleMapFromSchedules($package);
+        return $package ? $this->buildExclusiveScheduleMapFromSchedules($package) : [];
+    }
 
-            if (!empty($dynamicMap)) {
-                return $dynamicMap;
-            }
-        }
-
+    private function getPosterExclusiveScheduleMap(): array
+    {
         return [
             'muaythai_intermediate' => [
                 ['class_id' => 17, 'day' => 'Monday', 'time' => '19:00:00'],
@@ -1206,11 +1200,13 @@ class CheckoutController extends Controller
      */
     private function buildExclusiveClassOptionsFromSchedules(Package $package): array
     {
-        return $this->getExclusiveScheduleGroups($package)
-            ->mapWithKeys(function ($schedules, string $label) {
+        $groups = $this->getExclusiveScheduleGroups($package);
+
+        return $groups
+            ->mapWithKeys(function ($adminSchedules, string $label) {
                 return [Str::slug($label, '_') => [
                     'label' => $label,
-                    'schedules' => $schedules->map(fn (Schedule $schedule) => $this->formatScheduleForCheckout($schedule))->values()->all(),
+                    'schedules' => $adminSchedules->map(fn (Schedule $schedule) => $this->formatScheduleForCheckout($schedule))->values()->all(),
                 ]];
             })
             ->all();
@@ -1221,9 +1217,11 @@ class CheckoutController extends Controller
      */
     private function buildExclusiveScheduleMapFromSchedules(Package $package): array
     {
-        return $this->getExclusiveScheduleGroups($package)
-            ->mapWithKeys(function ($schedules, string $label) {
-                return [Str::slug($label, '_') => $schedules->map(fn (Schedule $schedule) => [
+        $groups = $this->getExclusiveScheduleGroups($package);
+
+        return $groups
+            ->mapWithKeys(function ($adminSchedules, string $label) {
+                return [Str::slug($label, '_') => $adminSchedules->map(fn (Schedule $schedule) => [
                     'schedule_id' => $schedule->id,
                     'class_id' => $schedule->class_id,
                     'day' => $schedule->day,
@@ -1235,30 +1233,93 @@ class CheckoutController extends Controller
 
     private function getExclusiveScheduleGroups(Package $package)
     {
-        $today = Carbon::today()->toDateString();
+        $allowedLabels = collect($this->getPosterExclusiveClassOptions())
+            ->pluck('label')
+            ->all();
 
         return Schedule::query()
             ->with('classModel')
             ->whereHas('packages', fn ($q) => $q->where('packages.id', $package->id))
-            ->where(function ($q) use ($today) {
-                $q->whereNull('schedule_date')
-                    ->orWhereDate('schedule_date', '>=', $today);
-            })
-            ->orderByRaw('CASE WHEN schedule_date IS NULL THEN 1 ELSE 0 END')
-            ->orderBy('schedule_date')
-            ->orderBy('class_time')
+            ->latest('updated_at')
+            ->latest('id')
             ->get()
-            ->groupBy(fn (Schedule $schedule) => $schedule->schedule_label ?: ($schedule->classModel->class_name ?? 'Kelas Exclusive'));
+            ->map(function (Schedule $schedule) {
+                $schedule->normalized_checkout_label = $this->normalizeExclusiveScheduleLabel($schedule);
+
+                return $schedule;
+            })
+            ->filter(fn (Schedule $schedule) => in_array($schedule->normalized_checkout_label, $allowedLabels, true))
+            ->unique(fn (Schedule $schedule) => implode('|', [
+                $schedule->normalized_checkout_label,
+                strtolower((string) $schedule->day),
+                (string) $schedule->class_id,
+            ]))
+            ->sortBy(fn (Schedule $schedule) => sprintf(
+                '%02d-%s',
+                $this->checkoutDaySortOrder($schedule->day),
+                $schedule->class_time ?: '99:99:99'
+            ))
+            ->groupBy(fn (Schedule $schedule) => $schedule->normalized_checkout_label);
+    }
+
+    private function checkoutDaySortOrder(?string $day): int
+    {
+        $day = strtolower(trim((string) $day));
+
+        return [
+            'monday' => 1,
+            'tuesday' => 2,
+            'wednesday' => 3,
+            'thursday' => 4,
+            'friday' => 5,
+            'saturday' => 6,
+            'sunday' => 7,
+        ][$day] ?? 99;
+    }
+
+    private function normalizeExclusiveScheduleLabel(Schedule $schedule): ?string
+    {
+        $rawLabel = trim((string) ($schedule->schedule_label ?: ($schedule->classModel->class_name ?? '')));
+
+        if ($rawLabel === '') {
+            return null;
+        }
+
+        $normalized = Str::of($rawLabel)
+            ->lower()
+            ->replace(['-', '_'], ' ')
+            ->replaceMatches('/\s+/', ' ')
+            ->trim()
+            ->toString();
+
+        $legacyAliases = [
+            'muayhai intermediate' => 'Muaythai Intermediate',
+            'muaythai intermediate' => 'Muaythai Intermediate',
+            'mat pilates' => 'Mat Pilates',
+            'mix class 1' => 'Mix Class (1)',
+            'mix class (1)' => 'Mix Class (1)',
+            'mix class 2' => 'Mix Class (2)',
+            'mix class (2)' => 'Mix Class (2)',
+            'mix class 3' => 'Mix Class (3)',
+            'mix class (3)' => 'Mix Class (3)',
+            'mix class 4' => 'Mix Class (4)',
+            'mix class (4)' => 'Mix Class (4)',
+            'muayhai beginner' => 'Muaythai Beginner',
+            'muayhai beginner 1' => 'Muaythai Beginner',
+            'muayhai beginning 1' => 'Muaythai Beginner',
+            'muaythai beginner' => 'Muaythai Beginner',
+            'muaythai beginner 1' => 'Muaythai Beginner',
+        ];
+
+        return $legacyAliases[$normalized] ?? null;
     }
 
     private function formatScheduleForCheckout(Schedule $schedule): string
     {
-        $date = $schedule->schedule_date ? Carbon::parse($schedule->schedule_date)->format('d/M/Y') : null;
         $time = $schedule->class_time ? Carbon::parse($schedule->class_time)->format('H:i') : '-';
         $className = $schedule->classModel->class_name ?? null;
 
         return trim(implode(' ', array_filter([
-            $date,
             $schedule->day,
             $time,
             $className ? '- ' . $className : null,

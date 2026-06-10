@@ -658,6 +658,95 @@ aside::-webkit-scrollbar-thumb {
 }
 
 /* ================================================================
+   ADMIN TOAST NOTIFICATIONS - compact, calm default style
+   ================================================================ */
+.fi-no-notification,
+.fi-notification,
+.fi-notifications .fi-notification,
+.filament-notifications-notification,
+.filament-notifications-notification-container > div,
+[wire\:id] .fi-notification,
+[role="status"],
+[aria-live="polite"] > div {
+    position: relative !important;
+    overflow: hidden !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+    background-color: rgba(255, 255, 255, 0.96) !important;
+    border: 1px solid rgba(213, 197, 181, 0.72) !important;
+    border-left: 3px solid rgba(122, 43, 74, 0.28) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 22px rgba(28, 28, 28, 0.075) !important;
+    color: var(--ftm-layl) !important;
+    opacity: 1 !important;
+    max-width: 300px !important;
+    padding: 0.65rem 0.78rem !important;
+}
+
+.fi-no-notification *,
+.fi-notification *,
+.fi-notifications .fi-notification *,
+.filament-notifications-notification *,
+.filament-notifications-notification-container > div *,
+[wire\:id] .fi-notification *,
+[role="status"] *,
+[aria-live="polite"] > div * {
+    color: var(--ftm-layl) !important;
+    opacity: 0.88 !important;
+    text-shadow: none !important;
+}
+
+.fi-no-notification-title,
+.fi-notification-title,
+.filament-notifications-title,
+[role="status"] p,
+[aria-live="polite"] p,
+[role="status"] span,
+[aria-live="polite"] span {
+    color: rgba(28, 28, 28, 0.74) !important;
+    font-size: 0.8rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0 !important;
+    line-height: 1.45 !important;
+}
+
+.fi-no-notification-title,
+.fi-notification-title,
+.filament-notifications-title {
+    font-weight: 600 !important;
+}
+
+.fi-no-notification svg,
+.fi-notification svg,
+.filament-notifications-notification svg,
+[role="status"] svg,
+[aria-live="polite"] svg {
+    color: rgba(122, 43, 74, 0.58) !important;
+    stroke: rgba(122, 43, 74, 0.58) !important;
+    opacity: 0.56 !important;
+    filter: none !important;
+}
+
+.fi-no-notification button,
+.fi-notification button,
+.filament-notifications-notification button,
+[role="status"] button,
+[aria-live="polite"] button {
+    color: rgba(28, 28, 28, 0.52) !important;
+    background: transparent !important;
+    border-radius: 999px !important;
+    opacity: 0.9 !important;
+}
+
+.fi-no-notification button:hover,
+.fi-notification button:hover,
+.filament-notifications-notification button:hover,
+[role="status"] button:hover,
+[aria-live="polite"] button:hover {
+    background: rgba(244, 201, 223, 0.24) !important;
+    color: var(--ftm-cherry) !important;
+}
+
+/* ================================================================
    RESPONSIVE
    ================================================================ */
 @media (max-width: 1023px) {

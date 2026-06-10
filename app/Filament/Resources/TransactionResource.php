@@ -171,11 +171,16 @@ class TransactionResource extends Resource
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
                     ->requiresConfirmation()
-                    ->modalHeading('Confirm Delete')
-                    ->modalSubheading(fn($record) => "Delete transaction {$record->transaction_id} ? This action cannot be undone."),
+                    ->modalHeading('Konfirmasi Hapus Transaction')
+                    ->modalSubheading(fn($record) => "Anda yakin ingin menghapus transaction {$record->transaction_id}? Tindakan ini tidak dapat dibatalkan.")
+                    ->successNotificationTitle('Data berhasil dihapus.'),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()
+                    ->requiresConfirmation()
+                    ->modalHeading('Konfirmasi Hapus Transaction Terpilih')
+                    ->modalSubheading('Semua data transaction yang dipilih akan dihapus permanen.')
+                    ->successNotificationTitle('Data berhasil dihapus.'),
             ])
             ->defaultSort('created_at', 'desc');
     }

@@ -541,11 +541,16 @@ Selamat berlatih 💪"
                 Tables\Actions\DeleteAction::make()
                     ->requiresConfirmation()
                     ->modalHeading('Konfirmasi Hapus Customer')
-                    ->modalSubheading(fn($record) => "Anda yakin ingin menghapus data {$record->name}? Tindakan ini tidak dapat dibatalkan."),
+                    ->modalSubheading(fn($record) => "Anda yakin ingin menghapus data {$record->name}? Tindakan ini tidak dapat dibatalkan.")
+                    ->successNotificationTitle('Data berhasil dihapus.'),
             ])
 
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()
+                    ->requiresConfirmation()
+                    ->modalHeading('Konfirmasi Hapus Customer Terpilih')
+                    ->modalSubheading('Semua data customer yang dipilih akan dihapus permanen.')
+                    ->successNotificationTitle('Data berhasil dihapus.'),
             ]);
     }
 

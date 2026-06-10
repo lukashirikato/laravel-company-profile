@@ -81,4 +81,15 @@ class EditSchedule extends EditRecord
             ->body('Semua jadwal turunan sudah disinkronkan ulang.')
             ->send();
     }
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+    protected function getSavedNotification(): ?Notification
+    {
+        return Notification::make()
+            ->success()
+            ->title('Data Schedule berhasil diubah')
+            ->body('Perubahan data Schedule sudah disimpan.');
+    }
 }

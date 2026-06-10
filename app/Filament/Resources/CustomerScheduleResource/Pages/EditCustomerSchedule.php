@@ -85,4 +85,15 @@ class EditCustomerSchedule extends EditRecord
             return $record;
         });
     }
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+    protected function getSavedNotification(): ?Notification
+    {
+        return Notification::make()
+            ->success()
+            ->title('Data Customer Schedule berhasil diubah')
+            ->body('Perubahan data Customer Schedule sudah disimpan.');
+    }
 }

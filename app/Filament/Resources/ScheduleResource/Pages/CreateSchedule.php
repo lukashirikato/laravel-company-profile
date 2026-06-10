@@ -16,6 +16,25 @@ class CreateSchedule extends CreateRecord
 
     protected array $packageIds = [];
 
+    protected bool $expandedToMonth = false;
+
+    protected int $createdScheduleCount = 1;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
+    protected function getCreatedNotification(): ?Notification
+    {
+        return Notification::make()
+            ->success()
+            ->title('Jadwal berhasil dibuat')
+            ->body($this->expandedToMonth
+                ? "Jadwal berhasil ditambahkan dan diperluas menjadi {$this->createdScheduleCount} data."
+                : 'Jadwal baru berhasil ditambahkan ke daftar schedules.');
+    }
+
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         if (!empty($data['expand_to_month']) && (int) ($data['schedule_preview_confirmed'] ?? 0) !== 1) {
@@ -50,14 +69,14 @@ class CreateSchedule extends CreateRecord
         $dates = $service->expandToMonth((string) $record->day, $startDate);
 
         if ($dates->isEmpty()) {
-            Notification::make()
-                ->warning()
-                ->title('Preview kosong')
-                ->body('Tidak ada tanggal yang cocok untuk jadwal ini.')
-                ->send();
+            $this->expandedToMonth = false;
+            $this->createdScheduleCount = 1;
 
             return;
         }
+
+        $this->expandedToMonth = true;
+        $this->createdScheduleCount = $dates->count();
 
         DB::transaction(function () use ($record, $dates) {
             $seriesId = $record->id;
@@ -89,11 +108,5 @@ class CreateSchedule extends CreateRecord
                 }
             }
         });
-
-        Notification::make()
-            ->success()
-            ->title('Schedule berhasil dibuat')
-            ->body('Jadwal otomatis diperluas untuk 1 bulan penuh.')
-            ->send();
     }
 }

@@ -279,10 +279,18 @@ class OrderResource extends Resource
                     ->modalHeading('Adjust Classes & Quota')
                     ->modalSubheading('Perubahan ini akan langsung mempengaruhi kemampuan member untuk booking kelas dan check-in.'),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->requiresConfirmation()
+                    ->modalHeading('Konfirmasi Hapus Order')
+                    ->modalSubheading('Anda yakin ingin menghapus data order ini? Tindakan ini tidak dapat dibatalkan.')
+                    ->successNotificationTitle('Data berhasil dihapus.'),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()
+                    ->requiresConfirmation()
+                    ->modalHeading('Konfirmasi Hapus Order Terpilih')
+                    ->modalSubheading('Semua data order yang dipilih akan dihapus permanen.')
+                    ->successNotificationTitle('Data berhasil dihapus.'),
             ])
             ->defaultSort('created_at', 'desc');
     }

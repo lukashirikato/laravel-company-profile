@@ -25,6 +25,16 @@ class ScheduleResource extends Resource
     protected static ?string $navigationGroup = 'Management';
     protected static ?string $navigationLabel = 'Schedules';
 
+    private const POSTER_EXCLUSIVE_LABELS = [
+        'Muaythai Intermediate' => 'Muaythai Intermediate',
+        'Mat Pilates' => 'Mat Pilates',
+        'Mix Class (1)' => 'Mix Class (1)',
+        'Mix Class (2)' => 'Mix Class (2)',
+        'Mix Class (3)' => 'Mix Class (3)',
+        'Mix Class (4)' => 'Mix Class (4)',
+        'Muaythai Beginner' => 'Muaythai Beginner',
+    ];
+
     public static function form(Form $form): Form
     {
 
@@ -64,12 +74,14 @@ class ScheduleResource extends Resource
                         ->searchable()
                         ->nullable(),
 
-                    Forms\Components\TextInput::make('schedule_label')
+                    Forms\Components\Select::make('schedule_label')
                         ->label('Schedule Label')
-                        ->placeholder('e.g. Mix Class 1, Morning Batch, etc')
-                        ->helperText('Nama unik untuk jadwal ini (wajib diisi)')
+                        ->options(self::POSTER_EXCLUSIVE_LABELS)
+                        ->placeholder('Pilih label sesuai poster')
+                        ->helperText('Pakai label resmi poster agar dropdown checkout dan jadwal otomatis sinkron.')
+                        ->searchable()
                         ->required()
-                        ->maxLength(255),
+                        ->reactive(),
 
                     Forms\Components\TextInput::make('day')
                         ->label('Day(s)')
@@ -312,7 +324,10 @@ class ScheduleResource extends Resource
                     }),
 
                 Tables\Actions\DeleteAction::make()
-                    ->requiresConfirmation(),
+                    ->requiresConfirmation()
+                    ->modalHeading('Konfirmasi Hapus Schedule')
+                    ->modalSubheading('Anda yakin ingin menghapus data schedule ini? Tindakan ini tidak dapat dibatalkan.')
+                    ->successNotificationTitle('Data berhasil dihapus.'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkAction::make('bulk_edit')
@@ -356,7 +371,11 @@ class ScheduleResource extends Resource
                     ->action(fn($records) => $records->each->update(['show_on_landing' => false]))
                     ->deselectRecordsAfterCompletion(),
 
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()
+                    ->requiresConfirmation()
+                    ->modalHeading('Konfirmasi Hapus Schedule Terpilih')
+                    ->modalSubheading('Semua data schedule yang dipilih akan dihapus permanen.')
+                    ->successNotificationTitle('Data berhasil dihapus.'),
             ])
             ->defaultSort('day', 'asc');
     }

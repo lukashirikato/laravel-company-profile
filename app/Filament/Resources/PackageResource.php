@@ -292,11 +292,18 @@ class PackageResource extends Resource
             Tables\Actions\ViewAction::make(),
             Tables\Actions\EditAction::make(),
             Tables\Actions\DeleteAction::make()
-                ->requiresConfirmation(),
+                ->requiresConfirmation()
+                ->modalHeading('Konfirmasi Hapus Package')
+                ->modalSubheading('Anda yakin ingin menghapus data package ini? Tindakan ini tidak dapat dibatalkan.')
+                ->successNotificationTitle('Data berhasil dihapus.'),
         ])
 
         ->bulkActions([
-            Tables\Actions\DeleteBulkAction::make(),
+            Tables\Actions\DeleteBulkAction::make()
+                ->requiresConfirmation()
+                ->modalHeading('Konfirmasi Hapus Package Terpilih')
+                ->modalSubheading('Semua data package yang dipilih akan dihapus permanen.')
+                ->successNotificationTitle('Data berhasil dihapus.'),
         ])
 
         ->defaultSort('created_at', 'desc');
