@@ -34,6 +34,10 @@ class Package extends Model
         'slug',
         'price',
         'quota',
+        'type',
+        'package_group',
+        'variant_label',
+        'participant_count',
         'class_id',
         'is_exclusive',
         'requires_schedule',
@@ -50,7 +54,31 @@ class Package extends Model
         'is_exclusive' => 'boolean',
         'requires_schedule' => 'boolean',
         'auto_apply' => 'boolean',
+        'participant_count' => 'integer',
     ];
+
+    public function getDisplayVariantAttribute()
+    {
+        return $this->variant_label ?: (($this->participant_count ?: 1) . ' Pax');
+    }
+
+    public function getCapacityLabelAttribute()
+    {
+        $count = max(1, (int) ($this->participant_count ?: 1));
+
+        return $count . ' Pax';
+    }
+
+    public function getVariantSummaryAttribute()
+    {
+        $parts = array_filter([
+            $this->package_group,
+            $this->display_variant,
+            $this->capacity_label,
+        ]);
+
+        return implode(' - ', array_unique($parts));
+    }
 
     public function schedules()
     {

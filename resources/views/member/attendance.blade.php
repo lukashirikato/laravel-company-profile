@@ -27,11 +27,18 @@
     .qr-attendance-modal { position:fixed; inset:0; z-index:80; display:none; align-items:center; justify-content:center; padding:1rem; background:rgba(25,21,23,.72); backdrop-filter:blur(14px); }
     .qr-attendance-modal.open { display:flex; }
     .qr-attendance-card { width:min(92vw,25rem); background:#fffaf2; border-radius:2rem; padding:1.25rem; box-shadow:0 28px 90px rgba(25,21,23,.35); }
-    .qr-attendance-box { background:#fff; border:1px solid rgba(118,38,69,.12); border-radius:1.5rem; padding:1rem; }
-    .qr-attendance-box img { width:100%; max-width:260px; height:auto; margin:0 auto; display:block; }
+    .qr-attendance-box { position:relative; background:#fff; border:1px solid rgba(118,38,69,.12); border-radius:1.5rem; padding:1rem; overflow:hidden; }
+    .qr-attendance-box:before { content:''; position:absolute; inset:1rem; border-radius:1.15rem; background:linear-gradient(135deg, rgba(255,229,240,.65), rgba(255,248,238,.78)); }
+    .qr-attendance-placeholder { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:rgba(233,70,131,.35); }
+    .qr-attendance-placeholder svg { width:5rem; height:5rem; }
+    .qr-attendance-box img { position:relative; z-index:1; width:100%; max-width:260px; height:auto; margin:0 auto; display:block; border-radius:1rem; background:#fff; }
     .attendance-empty-icon { background:linear-gradient(135deg, #fff8ee 0%, #ffe5f0 100%); box-shadow:0 18px 42px rgba(233,70,131,.16); }
     .attendance-empty-icon i { display:block; color:#e94683; }
-    .qr-close-icon { color:#762645; }
+    .qr-close-button { border:1px solid rgba(118,38,69,.12); box-shadow:0 10px 24px rgba(118,38,69,.10); }
+    .qr-close-button:hover { background:#762645; color:#fff; transform:translateY(-1px); }
+    .qr-close-icon { color:currentColor; font-size:1.85rem; font-weight:900; line-height:1; }
+    .attendance-menu-lines { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; }
+    .attendance-menu-lines span { width:18px; height:3px; border-radius:999px; background:#fff; box-shadow:0 0 0 1px rgba(255,255,255,.08); }
     .attendance-timeline:before { content:''; position:absolute; left:1.15rem; top:3rem; bottom:-1.25rem; width:1px; background:linear-gradient(180deg, rgba(233,70,131,.36), rgba(233,70,131,0)); }
     .attendance-row:last-child .attendance-timeline:before { display:none; }
     @keyframes attendanceRise { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
@@ -43,7 +50,7 @@
     @include('partials.member-sidebar')
 
     <button id="hamburger-btn" class="hamburger-btn" onclick="toggleSidebar()" aria-label="Open menu">
-        <i class="fas fa-bars"></i>
+        <span class="attendance-menu-lines" aria-hidden="true"><span></span><span></span><span></span></span>
     </button>
 
     <main class="main-content flex-1 overflow-auto">
@@ -143,9 +150,15 @@
                 <p class="text-[10px] font-black uppercase tracking-[0.18em] text-secondary/70">Member QR Code</p>
                 <h3 class="mt-1 text-2xl font-black text-dark">Scan untuk check-in</h3>
             </div>
-            <button type="button" onclick="closeAttendanceQR()" class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-light-pink text-secondary" aria-label="Tutup QR"><i class="ri-close-line qr-close-icon text-xl"></i></button>
+            <button type="button" onclick="closeAttendanceQR()" class="qr-close-button flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-light-pink text-secondary transition" aria-label="Kembali ke halaman attendance"><span class="qr-close-icon" aria-hidden="true">&times;</span></button>
         </div>
         <div class="qr-attendance-box mt-5">
+            <div class="qr-attendance-placeholder" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z" />
+                    <path d="M14 14h2v2h-2zM18 14h2M14 18h2M18 18h2v2h-2z" />
+                </svg>
+            </div>
             <img src="https://api.qrserver.com/v1/create-qr-code/?size=280x280&data={{ urlencode($memberQrData) }}&bgcolor=ffffff&color=7A2B4A" alt="QR Code Member">
         </div>
         <p class="mt-4 text-sm text-dark/60">Tunjukkan QR ini ke staff atau trainer. Jangan bagikan QR ke orang lain.</p>

@@ -33,6 +33,8 @@ class PackageResource extends Resource
                         ->label('Package Name')
                         ->required()
                         ->maxLength(255)
+                        ->reactive()
+                        ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state)))
                         ->helperText('e.g., Paket 12x Muaythai'),
 
                     Forms\Components\TextInput::make('slug')
@@ -91,6 +93,31 @@ class PackageResource extends Resource
                 ])
                 ->columns(2),
 
+            Forms\Components\Section::make('Package Variant & Capacity')
+                ->description('Group packages by product family and define participant capacity')
+                ->schema([
+                    Forms\Components\TextInput::make('package_group')
+                        ->label('Package Group')
+                        ->maxLength(255)
+                        ->nullable()
+                        ->helperText('Example: Muaythai Regular, Private Training, Group Class'),
+
+                    Forms\Components\TextInput::make('variant_label')
+                        ->label('Variant Label')
+                        ->maxLength(255)
+                        ->nullable()
+                        ->helperText('Example: 1 Pax, 2 Pax, Couple, Small Group'),
+
+                    Forms\Components\TextInput::make('participant_count')
+                        ->label('Participant Capacity')
+                        ->numeric()
+                        ->minValue(1)
+                        ->default(1)
+                        ->required()
+                        ->helperText('Maximum participants covered by this package variant'),
+                ])
+                ->columns(3),
+
             Forms\Components\Section::make('Package Configuration')
                 ->description('Advanced settings and behavior')
                 ->schema([
@@ -136,6 +163,7 @@ class PackageResource extends Resource
                                 ))
                                 ->searchable()
                                 ->nullable()
+                                ->required(fn (callable $get) => $get('schedule_mode') === 'locked')
                                 ->helperText('Fixed schedule for locked mode')
                                 ->reactive()
                                 ->visible(fn (callable $get) => $get('schedule_mode') === 'locked'),
@@ -206,6 +234,24 @@ class PackageResource extends Resource
                 ->formatStateUsing(fn ($state) =>
                     ucfirst($state ?? 'N/A')
                 ),
+
+            Tables\Columns\TextColumn::make('package_group')
+                ->label('Group')
+                ->default('-')
+                ->searchable()
+                ->toggleable(),
+
+            Tables\Columns\TextColumn::make('variant_label')
+                ->label('Variant')
+                ->default('-')
+                ->searchable()
+                ->toggleable(),
+
+            Tables\Columns\TextColumn::make('participant_count')
+                ->label('Pax')
+                ->alignCenter()
+                ->sortable()
+                ->toggleable(),
 
             Tables\Columns\IconColumn::make('is_exclusive')
                 ->boolean()
@@ -284,6 +330,15 @@ class PackageResource extends Resource
 
             Tables\Filters\SelectFilter::make('class_id')
                 ->relationship('class', 'class_name')
+                ->searchable()
+                ->multiple(),
+
+            Tables\Filters\SelectFilter::make('package_group')
+                ->label('Package Group')
+                ->options(fn () => Package::query()
+                    ->whereNotNull('package_group')
+                    ->pluck('package_group', 'package_group')
+                    ->toArray())
                 ->searchable()
                 ->multiple(),
         ])
