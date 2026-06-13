@@ -23,7 +23,7 @@ class CustomerSignupController extends Controller
             'kondisi_khusus'        => 'nullable|string',
             'referensi'             => 'nullable|string',
             'pengalaman'            => 'nullable|string',
-            'is_muslim'             => 'required|string',
+            'is_muslim'             => 'required|in:ya,tidak',
             'voucher'               => 'nullable|string|max:50',
             'agree'                 => 'nullable',
         ], [
@@ -33,8 +33,7 @@ class CustomerSignupController extends Controller
             'password.confirmed'    => 'Konfirmasi password tidak cocok.',
         ]);
 
-        // Normalisasi
-        $validated['is_muslim']     = $validated['is_muslim'] === 'ya';
+        // Kolom is_muslim bertipe ENUM('ya','tidak') — simpan sebagai string apa adanya.
         $validated['phone_number']  = preg_replace('/\s+/', '', $validated['phone_number']);
 
         // Data customer

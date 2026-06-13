@@ -1158,8 +1158,8 @@
                     </section>
                 @endforeach
 
-                <div id="bulk-booking-bar" class="fixed inset-x-0 bottom-0 z-40 bg-[#2C2C2C] px-3 py-3 shadow-lg md:px-4">
-                    <div class="mx-auto flex w-full max-w-5xl items-center justify-between gap-4">
+                <div id="bulk-booking-bar" class="fixed bottom-4 left-1/2 z-50 transform -translate-x-1/2 px-3 md:px-4">
+                    <div class="ftm-selection-bar mx-auto flex w-full items-center justify-between gap-4" role="region" aria-label="Selected classes bar">
                         <div class="flex items-center gap-3">
                             <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#EE4E8B] text-white shadow-md">
                                 <span id="selected-class-count" class="text-lg font-bold">0</span>

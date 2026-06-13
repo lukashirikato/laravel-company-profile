@@ -193,6 +193,103 @@ class OtpVerificationController extends Controller
     }
 
     /**
+     * Ubah nomor WhatsApp saat proses verifikasi signup, lalu kirim OTP baru.
+     */
+    public function changePhone(Request $request): RedirectResponse
+    {
+        $customerId = $request->session()->get('otp_customer_id');
+        if (!$customerId) {
+            return redirect()->route('home')
+                ->with('error', 'Sesi verifikasi tidak ditemukan. Silakan daftar kembali.');
+        }
+
+        $customer = Customer::find($customerId);
+        if (!$customer) {
+            $request->session()->forget('otp_customer_id');
+            return redirect()->route('home')
+                ->with('error', 'Akun tidak ditemukan. Silakan daftar kembali.');
+        }
+
+        if ($customer->is_verified) {
+            $request->session()->forget('otp_customer_id');
+            return redirect()->route('member.login.form')
+                ->with('success', 'Akun Anda sudah aktif. Silakan login.');
+        }
+
+        $validated = $request->validate([
+            'phone_number' => [
+                'required',
+                'string',
+                'max:20',
+                'regex:/^[0-9+\-\s()]+$/',
+                'unique:customers,phone_number,' . $customer->id,
+            ],
+        ], [
+            'phone_number.required' => 'Nomor WhatsApp baru wajib diisi.',
+            'phone_number.max'      => 'Nomor WhatsApp maksimal 20 karakter.',
+            'phone_number.regex'    => 'Format nomor WhatsApp tidak valid.',
+            'phone_number.unique'   => 'Nomor WhatsApp ini sudah digunakan akun lain.',
+        ]);
+
+        $newPhone = preg_replace('/\s+/', '', $validated['phone_number']);
+        $oldPhone = $customer->phone_number;
+
+        if ($newPhone === $oldPhone) {
+            return back()->withErrors([
+                'phone_number' => 'Nomor baru sama dengan nomor sebelumnya.',
+            ])->withInput();
+        }
+
+        $customer->phone_number = $newPhone;
+        $customer->save();
+
+        $code = OtpVerification::generateCode();
+        $otp = OtpVerification::where('customer_id', $customer->id)
+            ->where('purpose', 'registration')
+            ->whereNull('verified_at')
+            ->latest()
+            ->first();
+
+        if ($otp) {
+            $otp->update([
+                'phone_number' => $newPhone,
+                'code'         => $code,
+                'attempts'     => 0,
+                'expires_at'   => now()->addMinutes(OtpVerification::VALIDITY_MINUTES),
+                'last_sent_at' => now(),
+                'resend_count' => 0,
+            ]);
+        } else {
+            OtpVerification::create([
+                'customer_id'  => $customer->id,
+                'phone_number' => $newPhone,
+                'code'         => $code,
+                'purpose'      => 'registration',
+                'expires_at'   => now()->addMinutes(OtpVerification::VALIDITY_MINUTES),
+                'last_sent_at' => now(),
+            ]);
+        }
+
+        $sent = $this->sendOtpViaWhatsApp($customer, $code);
+
+        Log::info('[OTP] Customer changed verification phone number', [
+            'customer_id' => $customer->id,
+            'old_phone'   => $oldPhone,
+            'new_phone'   => $newPhone,
+            'sent'        => $sent['success'] ?? false,
+        ]);
+
+        if (!$sent['success']) {
+            return back()->withErrors([
+                'phone_number' => 'Nomor berhasil diperbarui, tetapi OTP gagal dikirim. ' . ($sent['message'] ?? 'Silakan klik Kirim Ulang OTP.'),
+            ]);
+        }
+
+        return redirect()->route('member.otp.form')
+            ->with('success', 'Nomor WhatsApp berhasil diperbarui. OTP baru sudah dikirim.');
+    }
+
+    /**
      * Kirim OTP via WhatsApp (Fonnte).
      * Public supaya bisa dipanggil dari CustomerSignupController saat first signup.
      */

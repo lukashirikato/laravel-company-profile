@@ -44,7 +44,7 @@ h1, h2, h3, h4, h5, h6 {
    ================================================================ */
 
 .ftm-sidebar {
-    width: 16rem;
+    width: 13.5rem;
     flex-shrink: 0;
     background: var(--ftm-cherry);
     color: var(--ftm-rising);
@@ -156,8 +156,11 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Footer area (logout + copyright) */
 .ftm-sidebar-footer {
-    padding: 1rem;
+    margin-top: auto;
+    padding: 0.6rem 0.5rem 0.5rem 0.5rem;
     border-top: 1px solid rgba(244, 201, 223, 0.18);
+    font-size: 0.72rem;
+    opacity: 0.85;
 }
 
 .ftm-logout-btn {
@@ -165,19 +168,19 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    padding: 0.85rem 1rem;
+    gap: 0.4rem;
+    padding: 0.6rem 0.5rem;
     background: var(--ftm-pink);
     color: var(--ftm-rising);
     border: none;
-    border-radius: 10px;
+    border-radius: 8px;
     font-family: 'Nord', 'Poppins', sans-serif;
-    font-weight: 800;
-    font-size: 0.85rem;
-    letter-spacing: 0.08em;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
     cursor: pointer;
-    box-shadow: 0 3px 10px rgba(238, 78, 139, 0.3);
+    box-shadow: 0 2px 7px rgba(238, 78, 139, 0.18);
     transition: background 0.2s ease, transform 0.18s ease, box-shadow 0.2s ease;
 }
 .ftm-logout-btn:hover {
@@ -230,6 +233,9 @@ main.main-content,
     background: var(--ftm-rising) !important;
     flex: 1;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 /* Mobile hamburger */
@@ -507,6 +513,48 @@ main::-webkit-scrollbar-thumb:hover { background: var(--ftm-pink); }
 }
 
 /* ================================================================
+   BULK / SELECTION BAR (centered card on desktop, full-width on mobile)
+   ================================================================ */
+.ftm-selection-bar {
+    width: 100%;
+    max-width: 880px; /* visually comfortable on large screens */
+    background: rgba(28,28,28,0.94);
+    color: #fff;
+    padding: 12px 16px;
+    border-radius: 12px;
+    box-shadow: 0 18px 40px rgba(10,10,10,0.5);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    z-index: 9999;
+}
+
+.ftm-selection-bar .text-sm { color: rgba(255,255,255,0.95); }
+.ftm-selection-bar .text-xs { color: rgba(255,255,255,0.65); }
+.ftm-selection-bar .bg-white { background: #ffffff !important; color: #2C2C2C !important; }
+
+.ftm-selection-bar .h-11 { height: 44px !important; }
+.ftm-selection-bar .w-11 { width: 44px !important; }
+
+/* Button adjustments inside selection bar */
+.ftm-selection-bar button {
+    min-width: 140px;
+    border-radius: 10px;
+    padding: 10px 18px;
+}
+
+/* Mobile: make bar edge-to-edge and larger touch targets */
+@media (max-width: 767px) {
+    #bulk-booking-bar { left: 0 !important; transform: none !important; width: 100% !important; padding-left: 12px !important; padding-right: 12px !important; }
+    .ftm-selection-bar { max-width: none; border-radius: 0.5rem; padding: 14px; }
+}
+
+@media (min-width: 768px) {
+    /* Slightly elevated bottom position on desktop */
+    #bulk-booking-bar { bottom: 28px; }
+}
+
+/* ================================================================
    LOGOUT CONFIRMATION MODAL — Brand FTM Society
    Disediakan oleh partials/member-sidebar.blade.php
    Selectors:
@@ -641,6 +689,94 @@ main::-webkit-scrollbar-thumb:hover { background: var(--ftm-pink); }
     color: rgba(28, 28, 28, 0.5);
 }
 
+/* Global typography overrides (to match desain.md) */
+:root {
+    --ftm-h1: 30px;
+    --ftm-h2: 24px;
+    --ftm-h3: 20px;
+    --ftm-body: 16px;
+    --ftm-secondary: 15px;
+    --ftm-button: 14px;
+    --ftm-label: 14px;
+    --ftm-input: 16px;
+    --ftm-navbar-text: 15px;
+    --ftm-table-text: 14px;
+    --ftm-table-head: 14px;
+    --ftm-caption: 12px;
+}
+
+body { font-size: var(--ftm-body) !important; line-height: 1.55 !important; }
+h1 { font-size: var(--ftm-h1) !important; font-weight: 700 !important; }
+h2 { font-size: var(--ftm-h2) !important; font-weight: 600 !important; }
+h3 { font-size: var(--ftm-h3) !important; font-weight: 600 !important; }
+p, .body-text { font-size: var(--ftm-body) !important; font-weight: 400 !important; }
+.text-secondary, .desc { font-size: var(--ftm-secondary) !important; }
+button, .btn { font-size: var(--ftm-button) !important; font-weight: 500 !important; }
+label, .form-label { font-size: var(--ftm-label) !important; font-weight: 500 !important; }
+input, textarea, select { font-size: var(--ftm-input) !important; }
+.ftm-sidebar .ftm-nav-item { font-size: var(--ftm-navbar-text) !important; font-weight: 500 !important; }
+main table thead th { font-size: var(--ftm-table-head) !important; font-weight: 600 !important; }
+main table tbody td { font-size: var(--ftm-table-text) !important; }
+small, .caption { font-size: var(--ftm-caption) !important; }
+
+@media (min-width: 768px) {
+    h1 { font-size: calc(var(--ftm-h1) + 3px) !important; }
+    h2 { font-size: calc(var(--ftm-h2) + 3px) !important; }
+    h3 { font-size: calc(var(--ftm-h3) + 3px) !important; }
+}
+
+/* ======================================================================
+   MEMBER PORTAL — Typography enforcement
+   --------------------------------------------------
+   Apply the font-size tokens from desain.md consistently across all
+   member pages. These rules are intentionally specific and use
+   !important so they override inline styles and utility classes when
+   present in member Blade templates.
+   ======================================================================
+*/
+
+/* Core element sizes */
+main h1, .main-content h1 { font-size: var(--ftm-h1) !important; font-weight: 700 !important; line-height: 1.2 !important; }
+main h2, .main-content h2 { font-size: var(--ftm-h2) !important; font-weight: 600 !important; line-height: 1.25 !important; }
+main h3, .main-content h3 { font-size: var(--ftm-h3) !important; font-weight: 600 !important; line-height: 1.3 !important; }
+main p, .main-content p, .main-content .body-text { font-size: var(--ftm-body) !important; font-weight: 400 !important; line-height: 1.55 !important; }
+.main-content .text-secondary, .main-content .desc, .main-content .muted { font-size: var(--ftm-secondary) !important; }
+
+/* Form, buttons, inputs */
+main button, .main-content button, .btn, .ftm-selection-bar button { font-size: var(--ftm-button) !important; font-weight: 500 !important; }
+label, .form-label, .main-content label { font-size: var(--ftm-label) !important; font-weight: 500 !important; }
+input, textarea, select, .form-control, .main-content input, .main-content textarea, .main-content select { font-size: var(--ftm-input) !important; }
+
+/* Navbar / sidebar */
+.ftm-sidebar .ftm-nav-item, .ftm-sidebar .ftm-sidebar-tagline { font-size: var(--ftm-navbar-text) !important; font-weight: 500 !important; }
+
+/* Tables and captions */
+main table thead th, .main-content table thead th { font-size: var(--ftm-table-head) !important; font-weight: 600 !important; }
+main table tbody td, .main-content table tbody td { font-size: var(--ftm-table-text) !important; }
+small, .caption, .text-caption { font-size: var(--ftm-caption) !important; }
+
+/* Tailwind-like utility overrides inside member pages
+   Map common utility classes to the brand tokens so designers
+   can still use utilities while keeping consistent sizes. */
+.main-content .text-xs  { font-size: 12px !important; }
+.main-content .text-sm  { font-size: 15px !important; }
+.main-content .text-base { font-size: 16px !important; }
+.main-content .text-lg  { font-size: 18px !important; }
+.main-content .text-xl  { font-size: 20px !important; }
+.main-content .text-2xl { font-size: 24px !important; }
+.main-content .text-3xl { font-size: 30px !important; }
+.main-content .text-4xl { font-size: 34px !important; }
+.main-content .text-5xl { font-size: 40px !important; }
+.main-content .text-6xl { font-size: 48px !important; }
+
+/* Slight increases for larger viewports (tablet / desktop) */
+@media (min-width: 768px) {
+    .main-content .text-2xl { font-size: calc(24px + 2px) !important; }
+    .main-content .text-3xl { font-size: calc(30px + 3px) !important; }
+    .main-content .text-4xl { font-size: calc(34px + 4px) !important; }
+}
+
+
 /* Action buttons */
 .ftm-modal-actions {
     display: flex;
@@ -709,4 +845,10 @@ main::-webkit-scrollbar-thumb:hover { background: var(--ftm-pink); }
 .ftm-btn-cancel i,
 .ftm-btn-confirm i {
     font-size: 0.85rem;
+}
+
+/* Ensure attendance-page always full height and flex */
+.attendance-page {
+    min-height: 100vh;
+    display: flex;
 }

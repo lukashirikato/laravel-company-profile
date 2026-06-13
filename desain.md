@@ -325,3 +325,28 @@ Setiap kali menambah halaman, section, atau komponen baru:
 > Brand Guidelines ini disusun agar setiap elemen visual, tutur, dan karakter FTM Society tetap terjaga, **tanpa membatasi ruang eksplorasi**.
 >
 > © FTM Society — Fathima Society 2025
+
+
+
+Global Typography Rules
+
+Terapkan ukuran font berikut pada seluruh halaman Blade agar desain terlihat modern, profesional, dan mudah dibaca.
+
+H1 (Judul utama halaman): 30px, Font Weight 700
+H2 (Judul section): 24px, Font Weight 600
+H3 (Judul card): 20px, Font Weight 600
+Body text utama: 16px, Font Weight 400
+Deskripsi atau teks sekunder: 15px, Font Weight 400
+Text tombol: 14px, Font Weight 500
+Label form: 14px, Font Weight 500
+Isi input: 16px, Font Weight 400
+Text navbar: 15px, Font Weight 500
+Text tabel: 14px, Font Weight 400
+Header tabel: 14px, Font Weight 600
+Caption atau informasi kecil: 12px, Font Weight 400
+Responsive Rules
+Mobile: gunakan ukuran di atas sebagai default.
+Tablet dan Desktop: maksimal naik 2–4px untuk heading.
+Gunakan line-height 1.5–1.6 agar teks nyaman dibaca.
+Hindari ukuran di bawah 12px.
+Pertahankan hierarki ukuran yang konsisten di seluruh aplikasi.

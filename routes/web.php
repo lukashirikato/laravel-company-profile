@@ -88,6 +88,7 @@ use App\Http\Controllers\OtpVerificationController;
 Route::get('/verify-otp',  [OtpVerificationController::class, 'show'])->name('member.otp.form');
 Route::post('/verify-otp', [OtpVerificationController::class, 'verify'])->name('member.otp.verify');
 Route::post('/verify-otp/resend', [OtpVerificationController::class, 'resend'])->name('member.otp.resend');
+Route::post('/verify-otp/change-phone', [OtpVerificationController::class, 'changePhone'])->name('member.otp.change-phone');
 
 /*
 |--------------------------------------------------------------------------

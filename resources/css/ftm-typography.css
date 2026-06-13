@@ -215,3 +215,63 @@ i[class*=" ri-"] {
 .font-poppins    { font-family: 'Poppins', sans-serif !important; }
 .font-nord       { font-family: 'Nord', 'Poppins', sans-serif !important; }
 .font-instrument { font-family: 'Instrument Serif', Georgia, serif !important; }
+
+/* ---------------------------------------------------------------
+   Global typography sizes (from desain.md)
+   - Keep sizes focused on readability and consistent hierarchy
+   - Mobile-first, with modest increases for tablet/desktop
+--------------------------------------------------------------- */
+:root {
+    /* base sizing (px used for exact control per guideline) */
+    --ftm-h1: 30px;
+    --ftm-h2: 24px;
+    --ftm-h3: 20px;
+    --ftm-body: 16px;
+    --ftm-secondary: 15px;
+    --ftm-button: 14px;
+    --ftm-label: 14px;
+    --ftm-input: 16px;
+    --ftm-navbar-text: 15px;
+    --ftm-table-text: 14px;
+    --ftm-table-head: 14px;
+    --ftm-caption: 12px;
+}
+
+html, body {
+    font-size: var(--ftm-body);
+    line-height: 1.55; /* between 1.5-1.6 per guideline */
+}
+
+/* Headings (explicit sizes + weights as requested) */
+h1 { font-size: var(--ftm-h1); font-weight: 700; line-height: 1.2; }
+h2 { font-size: var(--ftm-h2); font-weight: 600; line-height: 1.25; }
+h3 { font-size: var(--ftm-h3); font-weight: 600; line-height: 1.3; }
+
+/* Body and secondary text */
+p, .body-text { font-size: var(--ftm-body); font-weight: 400; }
+.text-secondary, .desc, .muted { font-size: var(--ftm-secondary); font-weight: 400; }
+
+/* Buttons, labels, inputs */
+button, .btn, .text-button { font-size: var(--ftm-button); font-weight: 500; }
+label, .form-label { font-size: var(--ftm-label); font-weight: 500; }
+input, textarea, select, .form-control { font-size: var(--ftm-input); font-weight: 400; }
+
+/* Navbar / UI text */
+.navbar-text, .ftm-nav-text, .nav-item-text { font-size: var(--ftm-navbar-text); font-weight: 500; }
+
+/* Tables */
+table, .table { font-size: var(--ftm-table-text); }
+table td, table .td { font-size: var(--ftm-table-text); font-weight: 400; }
+table th, table thead th { font-size: var(--ftm-table-head); font-weight: 600; }
+
+/* Caption / small */
+small, .caption, .text-caption { font-size: var(--ftm-caption); font-weight: 400; }
+
+/* Responsive: increase headings modestly on tablet / desktop */
+@media (min-width: 768px) {
+    h1 { font-size: calc(var(--ftm-h1) + 3px); }
+    h2 { font-size: calc(var(--ftm-h2) + 3px); }
+    h3 { font-size: calc(var(--ftm-h3) + 3px); }
+}
+
+

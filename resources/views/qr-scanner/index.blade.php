@@ -256,7 +256,7 @@
             try {
                 showLoading('Memproses QR code...');
                 
-                const response = await fetch('{{ route("qr.scan") }}', {
+                const response = await fetch('{{ route("member.qr.scan") }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -405,7 +405,7 @@
             if (!activeAttendanceId) return;
             
             try {
-                const response = await fetch('{{ route("qr.checkout") }}', {
+                const response = await fetch('{{ route("member.qr.checkout") }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
