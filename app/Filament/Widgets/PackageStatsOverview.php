@@ -7,26 +7,29 @@ use App\Models\Order;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Card;
 use Illuminate\Support\Number;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class PackageStatsOverview extends BaseWidget
 {
     protected function getCards(): array
     {
-        $totalPackages = Package::count();
-        $activePackages = Package::has('orders')->count();
-        $totalRevenue = Order::whereNotNull('package_id')->sum('total_price');
-        $totalOrders = Order::whereNotNull('package_id')->count();
-        
-        // Calculate average package price
-        $avgPrice = Package::avg('price');
-        
-        // Get most popular package
-        $popularPackage = Package::withCount('orders')
-            ->orderBy('orders_count', 'desc')
-            ->first();
+        // Cache package metrics to reduce DB load. TTL = 180s
+        $stats = Cache::remember('filament.dashboard.package_stats', 180, function () {
+            $totalPackages = Package::count();
+            $activePackages = Package::has('orders')->count();
+            $totalRevenue = Order::whereNotNull('package_id')->sum('total_price');
+            $totalOrders = Order::whereNotNull('package_id')->count();
+            $avgPrice = Package::avg('price');
+            $popularPackage = Package::withCount('orders')
+                ->orderBy('orders_count', 'desc')
+                ->first();
+
+            return compact('totalPackages', 'activePackages', 'totalRevenue', 'totalOrders', 'avgPrice', 'popularPackage');
+        });
 
         return [
-            Card::make('Total Packages', $totalPackages)
+            Card::make('Total Packages', $stats['totalPackages'])
                 ->description('All packages in system')
                 ->descriptionIcon('heroicon-o-cube')
                 ->color('primary')
@@ -35,25 +38,25 @@ class PackageStatsOverview extends BaseWidget
                     'class' => 'cursor-pointer hover:shadow-lg transition',
                 ]),
 
-            Card::make('Active Packages', $activePackages)
+            Card::make('Active Packages', $stats['activePackages'])
                 ->description('Packages with orders')
                 ->descriptionIcon('heroicon-o-check-circle')
                 ->color('success')
                 ->chart($this->getActivePackagesTrend()),
 
-            Card::make('Total Revenue', 'Rp ' . number_format($totalRevenue, 0, ',', '.'))
-                ->description($totalOrders . ' orders from packages')
+            Card::make('Total Revenue', 'Rp ' . number_format($stats['totalRevenue'], 0, ',', '.'))
+                ->description($stats['totalOrders'] . ' orders from packages')
                 ->descriptionIcon('heroicon-o-currency-dollar')
                 ->color('success')
                 ->chart($this->getRevenueTrend()),
 
-            Card::make('Average Package Price', 'Rp ' . number_format($avgPrice, 0, ',', '.'))
+            Card::make('Average Package Price', 'Rp ' . number_format($stats['avgPrice'], 0, ',', '.'))
                 ->description('Mean price across all packages')
                 ->descriptionIcon('heroicon-o-chart-bar')
                 ->color('warning'),
 
-            Card::make('Most Popular Package', $popularPackage?->name ?? 'N/A')
-                ->description(($popularPackage?->orders_count ?? 0) . ' orders')
+            Card::make('Most Popular Package', $stats['popularPackage']?->name ?? 'N/A')
+                ->description(($stats['popularPackage']?->orders_count ?? 0) . ' orders')
                 ->descriptionIcon('heroicon-o-fire')
                 ->color('danger'),
 
@@ -66,41 +69,65 @@ class PackageStatsOverview extends BaseWidget
 
     protected function getPackagesTrend(): array
     {
-        // Get last 7 days of package creation
+        // Aggregate package creations in a single query for the last 7 days
+        $start = now()->startOfDay()->subDays(6);
+        $rows = Cache::remember('filament.trends.packages.created_last_7_days', 180, function () use ($start) {
+            return Package::where('created_at', '>=', $start)
+                ->select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as count'))
+                ->groupBy('date')
+                ->orderBy('date')
+                ->pluck('count', 'date')
+                ->toArray();
+        });
+
         $data = [];
         for ($i = 6; $i >= 0; $i--) {
-            $date = now()->subDays($i)->startOfDay();
-            $count = Package::whereDate('created_at', $date)->count();
-            $data[] = $count;
+            $date = now()->subDays($i)->format('Y-m-d');
+            $data[] = (int) ($rows[$date] ?? 0);
         }
+
         return $data;
     }
 
     protected function getActivePackagesTrend(): array
     {
-        // Get last 7 days of active packages (packages that got orders)
+        $start = now()->startOfDay()->subDays(6);
+        $rows = Cache::remember('filament.trends.packages.active_last_7_days', 180, function () use ($start) {
+            return Order::where('created_at', '>=', $start)
+                ->whereNotNull('package_id')
+                ->select(DB::raw('DATE(created_at) as date'), DB::raw('count(distinct package_id) as count'))
+                ->groupBy('date')
+                ->orderBy('date')
+                ->pluck('count', 'date')
+                ->toArray();
+        });
+
         $data = [];
         for ($i = 6; $i >= 0; $i--) {
-            $date = now()->subDays($i)->startOfDay();
-            $packageIds = Order::whereDate('created_at', $date)
-                ->whereNotNull('package_id')
-                ->distinct()
-                ->pluck('package_id');
-            $data[] = $packageIds->count();
+            $date = now()->subDays($i)->format('Y-m-d');
+            $data[] = (int) ($rows[$date] ?? 0);
         }
         return $data;
     }
 
     protected function getRevenueTrend(): array
     {
-        // Get last 7 days of revenue from packages
+        $start = now()->startOfDay()->subDays(6);
+        $rows = Cache::remember('filament.trends.packages.revenue_last_7_days', 180, function () use ($start) {
+            return Order::where('created_at', '>=', $start)
+                ->whereNotNull('package_id')
+                ->select(DB::raw('DATE(created_at) as date'), DB::raw('sum(total_price) as revenue'))
+                ->groupBy('date')
+                ->orderBy('date')
+                ->pluck('revenue', 'date')
+                ->toArray();
+        });
+
         $data = [];
         for ($i = 6; $i >= 0; $i--) {
-            $date = now()->subDays($i)->startOfDay();
-            $revenue = Order::whereDate('created_at', $date)
-                ->whereNotNull('package_id')
-                ->sum('total_price');
-            $data[] = $revenue / 1000000; // Convert to millions for better chart display
+            $date = now()->subDays($i)->format('Y-m-d');
+            $revenue = (float) ($rows[$date] ?? 0);
+            $data[] = $revenue / 1000000; // Convert to millions
         }
         return $data;
     }

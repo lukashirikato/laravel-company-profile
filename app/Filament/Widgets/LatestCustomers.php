@@ -13,9 +13,11 @@ class LatestCustomers extends BaseWidget
 
     protected function getTableQuery(): Builder
     {
+        // Limit and eager load minimal relations for faster widget rendering.
         return Customer::query()
             ->latest('created_at')
-            ->limit(5);
+            ->limit(5)
+            ->with('package:id,name');
     }
 
     protected function getTableColumns(): array

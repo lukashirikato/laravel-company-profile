@@ -377,7 +377,11 @@ class PackageResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->with(['defaultSchedule', 'defaultSchedule.classModel', 'class'])
+            ->with([
+                'defaultSchedule:id,class_id,schedule_label,day,class_time',
+                'defaultSchedule.classModel:id,class_name',
+                'class:id,class_name',
+            ])
             ->withCount('orders')
             ->latest('created_at');
     }

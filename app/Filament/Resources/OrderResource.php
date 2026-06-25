@@ -28,9 +28,12 @@ class OrderResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
+        // Eager load commonly-used relations and apply sensible default ordering.
+        // Keep the query lightweight and compatible with Filament's pagination.
         return parent::getEloquentQuery()
-            ->with(['customer', 'package'])
-            ->withCount('customer');
+            ->with(['customer:id,name', 'package:id,name'])
+            ->select('orders.*')
+            ->latest('created_at');
     }
 
     public static function form(Form $form): Form
@@ -60,10 +63,11 @@ class OrderResource extends Resource
                             ->label('Order Code')
                             ->disabled(fn ($record = null) => filled($record)),
                         
+                        // Avoid preloading all package options (can be large).
+                        // Relationship remains searchable so admin can type to find.
                         Forms\Components\Select::make('package_id')
                             ->relationship('package', 'name')
                             ->searchable()
-                            ->preload()
                             ->required()
                             ->label('Package'),
                         

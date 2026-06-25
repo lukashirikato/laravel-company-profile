@@ -6,6 +6,7 @@ use App\Models\Order;
 use Filament\Tables;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Cache;
 
 class LatestOrders extends BaseWidget
 {
@@ -13,8 +14,13 @@ class LatestOrders extends BaseWidget
 
     protected function getTableQuery(): Builder
     {
+        // Return the query builder instead of executing it here. Filament's
+        // TableWidget expects a Builder. Caching is handled at render level
+        // in other widgets; to avoid changing Filament expectations we keep
+        // this method returning a Builder with eager-loading and limit.
+        // Eager load only necessary columns to reduce memory and query size.
         return Order::query()
-            ->with('customer')
+            ->with(['customer:id,name', 'package:id,name'])
             ->latest()
             ->limit(5);
     }

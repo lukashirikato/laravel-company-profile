@@ -852,3 +852,25 @@ small, .caption, .text-caption { font-size: var(--ftm-caption) !important; }
     min-height: 100vh;
     display: flex;
 }
+
+/* ======================================================================
+   ATTENDANCE PAGE — keep sidebar fixed on desktop and reserve content space
+   This makes the attendance page sidebar visually identical to other
+   member pages and prevents it from moving or shifting when scrolling.
+   ====================================================================== */
+@media (min-width: 1024px) {
+    .attendance-page .ftm-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 30;
+        width: 13.5rem; /* match sidebar width token */
+    }
+
+    .attendance-page .main-content {
+        width: calc(100% - 13.5rem);
+        margin-left: 13.5rem;
+        overflow: visible;
+    }
+}

@@ -1,4 +1,4 @@
-ï»¿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('content')
 @php
@@ -15,10 +15,10 @@
 
 <style>
     /* =====================================================
-       ATTENDANCE PAGE â€” GLOBAL TYPOGRAPHY RULES (desain.md)
-       H1  : 30px / weight 700   â†’ desktop: 34px
-       H2  : 24px / weight 600   â†’ desktop: 28px
-       H3  : 20px / weight 600   â†’ desktop: 24px
+       ATTENDANCE PAGE — GLOBAL TYPOGRAPHY RULES (desain.md)
+       H1  : 30px / weight 700   ? desktop: 34px
+       H2  : 24px / weight 600   ? desktop: 28px
+       H3  : 20px / weight 600   ? desktop: 24px
        Body: 16px / weight 400
        Desc: 15px / weight 400
        Btn : 14px / weight 500
@@ -27,13 +27,13 @@
        Table text: 14px / weight 400
        Table header: 14px / weight 600
        Caption: 12px / weight 400
-       line-height: 1.5â€“1.6
+       line-height: 1.5–1.6
     ===================================================== */
 
     /* Base line-height for readability */
     .attendance-page { line-height: 1.55; }
 
-    /* H1 â€” Judul utama halaman */
+    /* H1 — Judul utama halaman */
     .att-h1 {
         font-size: 30px;
         font-weight: 700;
@@ -43,7 +43,7 @@
         .att-h1 { font-size: 34px; }
     }
 
-    /* H2 â€” Judul section */
+    /* H2 — Judul section */
     .att-h2 {
         font-size: 24px;
         font-weight: 600;
@@ -53,7 +53,7 @@
         .att-h2 { font-size: 28px; }
     }
 
-    /* H3 â€” Judul card / sub-section */
+    /* H3 — Judul card / sub-section */
     .att-h3 {
         font-size: 20px;
         font-weight: 600;
@@ -90,7 +90,7 @@
         font-weight: 500;
     }
 
-    /* Caption / info kecil â€” minimum 12px */
+    /* Caption / info kecil — minimum 12px */
     .att-caption {
         font-size: 12px;
         font-weight: 400;
@@ -152,8 +152,8 @@
     /* =====================================================
        LAYOUT & VISUAL STYLES (unchanged from original)
     ===================================================== */
-    .attendance-page { --att-plum:#762645; --att-rose:#e94683; background: radial-gradient(circle at 9% 6%, rgba(233,70,131,.18), transparent 18rem), radial-gradient(circle at 96% 1%, rgba(220,233,189,.58), transparent 22rem), linear-gradient(180deg, #fffaf7 0%, #fff6ef 46%, #ffffff 100%); }
-    .attendance-shell { width:100%; max-width: 1180px; margin: 0 auto; }
+    .attendance-page { --att-plum:#762645; --att-rose:#e94683; background: radial-gradient(circle at 9% 6%, rgba(233,70,131,.18), transparent 18rem), radial-gradient(circle at 96% 1%, rgba(220,233,189,.58), transparent 22rem), linear-gradient(180deg, #fffaf7 0%, #fff6ef 46%, #ffffff 100%); overflow-x:hidden; }
+    .attendance-shell { width:100%; max-width: 1180px; margin: 0 auto; box-sizing:border-box; }
     .attendance-hero { background: linear-gradient(135deg, rgba(118,38,69,.98) 0%, rgba(160,48,92,.98) 56%, rgba(233,70,131,.96) 100%); box-shadow: 0 24px 64px rgba(118,38,69,.22); }
     .attendance-hero:after { content:''; position:absolute; right:-5rem; bottom:-8rem; width:20rem; height:20rem; border-radius:999px; background:rgba(255,255,255,.12); }
     .attendance-panel { border:1px solid rgba(118,38,69,.11); background:rgba(255,255,255,.86); box-shadow:0 18px 58px rgba(118,38,69,.09); backdrop-filter:blur(18px); }
@@ -249,7 +249,7 @@
                             <i class="ri-calendar-check-line"></i> Attendance Center
                         </div>
 
-                        {{-- H1 â€” Judul utama halaman: 30px mobile, 34px desktop, weight 700 --}}
+                        {{-- H1 — Judul utama halaman: 30px mobile, 34px desktop, weight 700 --}}
                         <h1 class="att-h1 mt-3 max-w-2xl !text-white">Pusat kehadiran latihan member.</h1>
 
                         {{-- Deskripsi: 15px, weight 400 --}}
@@ -370,7 +370,7 @@
                         <div>
                             {{-- Caption label --}}
                             <p class="att-caption-upper text-secondary/70">Attendance Log</p>
-                            {{-- H2 â€” Judul section --}}
+                            {{-- H2 — Judul section --}}
                             <h2 class="att-h2 mt-1 text-dark">Riwayat Attendance</h2>
                             {{-- Deskripsi: 15px, weight 400 --}}
                             <p class="att-desc mt-1 text-dark/55">Filter kelas, tanggal, status, paket, atau metode scan.</p>
@@ -419,7 +419,7 @@
                                             <div class="min-w-0">
                                                 {{-- Tanggal: caption 12px --}}
                                                 <p class="att-caption-upper text-dark/42">{{ $date?->format('l, d M Y') ?? '-' }}</p>
-                                                {{-- H3 â€” Nama kelas: 20px mobile, 24px desktop --}}
+                                                {{-- H3 — Nama kelas: 20px mobile, 24px desktop --}}
                                                 <h3 class="att-h3 mt-1 truncate text-dark">{{ $program }}</h3>
                                                 {{-- Nama paket: desc 15px --}}
                                                 <p class="att-desc mt-1 truncate text-dark/50">{{ $package }}</p>

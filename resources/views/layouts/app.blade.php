@@ -21,6 +21,8 @@
     {{-- FTM Brand Typography & Member Portal Theme --}}
     <link rel="stylesheet" href="{{ asset('css/ftm-typography.css') }}">
     <link rel="stylesheet" href="{{ asset('css/ftm-member-portal.css') }}?v={{ filemtime(public_path('css/ftm-member-portal.css')) }}">
+    {{-- Font Awesome icons used across member pages (ensure icons render on pages that extend this layout) --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body class="bg-cream">

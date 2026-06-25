@@ -1,4 +1,4 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('content')
 
@@ -21,13 +21,14 @@
 
 <style>
     /* ============================================================
-       FTM SOCIETY — MY PROFILE PAGE
-       Brand: Burnt Cherry #7A2B4A · Power Pink #EE4E8B
-              Soft Petals #F4C9DF · Rising #FCF9F2 · Layl #1C1C1C
-              Patina Green #1A7A5E · Grounded #C5D79B
+       FTM SOCIETY � MY PROFILE PAGE
+       Brand: Burnt Cherry #7A2B4A � Power Pink #EE4E8B
+              Soft Petals #F4C9DF � Rising #FCF9F2 � Layl #1C1C1C
+              Patina Green #1A7A5E � Grounded #C5D79B
        ============================================================ */
 
-    .acct-main { background: #FCF9F2; min-height: 100vh; font-family: 'Poppins', system-ui, sans-serif; }
+    .acct-main { background: #FCF9F2; min-height: 100vh; font-family: 'Poppins', system-ui, sans-serif; overflow-x: hidden; box-sizing: border-box; }
+    @media (min-width: 769px) { .acct-main { margin-left: 13.5rem; width: calc(100% - 13.5rem); } }
     .acct-container { max-width: 1100px; margin: 0 auto; }
 
     .acct-header { margin-bottom: 1.5rem; }
@@ -40,7 +41,7 @@
     }
     .acct-header p { font-size: 0.85rem; color: rgba(28,28,28,0.6); margin-top: 4px; }
 
-    /* ── HERO (member card) — Brand Burnt Cherry ── */
+    /* -- HERO (member card) � Brand Burnt Cherry -- */
     .member-hero {
         background: linear-gradient(135deg, #7A2B4A 0%, #5A1F37 60%, #1C1C1C 100%);
         border-radius: 22px;
@@ -234,7 +235,7 @@
         50%      { opacity: 0.45; transform: scale(1.25); }
     }
 
-    /* ── Renewal banner ── */
+    /* -- Renewal banner -- */
     .renewal-banner {
         background: linear-gradient(90deg, #F4C9DF 0%, #FAE0EE 100%);
         border: 1px solid #EE4E8B;
@@ -268,7 +269,7 @@
     }
     .renewal-banner .rb-cta:hover { background: #7A2B4A; transform: translateY(-1px); color: #fff; }
 
-    /* ── Stats cards ── */
+    /* -- Stats cards -- */
     .stats-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -347,7 +348,7 @@
         transition: width .6s ease;
     }
 
-    /* ── Content cards ── */
+    /* -- Content cards -- */
     .content-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -427,7 +428,7 @@
         margin-top: 0.85rem;
     }
 
-    /* ── Quick links ── */
+    /* -- Quick links -- */
     .quick-links { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
     .quick-link {
         display: flex;
@@ -461,7 +462,7 @@
     }
     .quick-link .ql-arrow { margin-left: auto; color: rgba(28,28,28,0.4); }
 
-    /* ── Settings rows (toggles) ── */
+    /* -- Settings rows (toggles) -- */
     .setting-row {
         display: flex;
         align-items: center;
@@ -548,7 +549,7 @@
     }
     .btn-danger-outline:hover { background: #FFF0F2; }
 
-    /* ─── Modal generic ─── */
+    /* --- Modal generic --- */
     .ftm-modal-overlay {
         position: fixed; inset: 0;
         background: rgba(28, 28, 28, 0.55);
@@ -920,7 +921,7 @@
     }
 </style>
 
-<div style="display:flex; height:100vh;">
+<div style="display:flex; min-height:100vh; overflow-x:hidden;">
     @include('partials.member-sidebar')
 
     <!-- Sidebar overlay removed; hamburger toggle remains but will be hidden when sidebar open -->
@@ -928,16 +929,16 @@
         <i class="fas fa-bars text-lg"></i>
     </button>
 
-    <main class="acct-main" style="flex:1; overflow-y:auto; padding: 2rem 2.5rem;">
+    <main class="acct-main" style="flex:1; overflow-y:auto; overflow-x:hidden; padding: 2rem 2.5rem; min-width:0; box-sizing:border-box;">
         <div class="acct-container">
 
-            {{-- ── Page header ── --}}
+            {{-- -- Page header -- --}}
             <div class="acct-header">
                 <h1><i class="fas fa-user-circle" style="color:#EE4E8B; margin-right:8px;"></i>My Profile</h1>
                 <p>Kelola informasi akun, QR code, dan preferensi notifikasi</p>
             </div>
 
-            {{-- ── Renewal banner kalau paket mau expire dalam 7 hari ── --}}
+            {{-- -- Renewal banner kalau paket mau expire dalam 7 hari -- --}}
             @if($activeOrder && $activeOrder->expired_at && \Carbon\Carbon::parse($activeOrder->expired_at)->diffInDays(now(), false) >= -7 && \Carbon\Carbon::parse($activeOrder->expired_at)->isFuture())
                 @php $daysLeft = (int) now()->diffInDays(\Carbon\Carbon::parse($activeOrder->expired_at), false); @endphp
                 <div class="renewal-banner">
@@ -949,9 +950,9 @@
                 </div>
             @endif
 
-            {{-- ══════════════════════════════════════
+            {{-- --------------------------------------
                  HERO MEMBER CARD
-            ══════════════════════════════════════ --}}
+            -------------------------------------- --}}
             <div class="member-hero">
                 {{-- QR Card --}}
                 <div class="qr-card" onclick="openQRPreview()" title="Click to enlarge">
@@ -988,7 +989,7 @@
                     <div class="detail-grid">
                         <div class="detail-item">
                             <div class="dlabel"><i class="fas fa-phone"></i> Phone</div>
-                            <div class="dvalue" id="memberPhoneLabel">{{ $member->phone_number ?? '—' }}</div>
+                            <div class="dvalue" id="memberPhoneLabel">{{ $member->phone_number ?? '�' }}</div>
                         </div>
                         <div class="detail-item">
                             <div class="dlabel"><i class="fas fa-calendar"></i> Member Since</div>
@@ -1012,9 +1013,9 @@
                 </div>
             </div>
 
-            {{-- ══════════════════════════════════════
+            {{-- --------------------------------------
                  STATS
-            ══════════════════════════════════════ --}}
+            -------------------------------------- --}}
             <div class="stats-grid">
                 <div class="stat-card sc-pink">
                     <div class="sc-icon"><i class="fas fa-box-open"></i></div>
@@ -1045,9 +1046,9 @@
                 </div>
             </div>
 
-  {{-- ══════════════════════════════════════════════
+  {{-- ----------------------------------------------
        QR ACTIONS
-  ══════════════════════════════════════════════ --}}
+  ---------------------------------------------- --}}
             <div class="content-grid">
                 {{-- QR Actions --}}
                 <div class="content-card">
@@ -1079,9 +1080,9 @@
                 </div>
             </div>
 
-            {{-- ══════════════════════════════════════
+            {{-- --------------------------------------
                  ACCOUNT SETTINGS + EMERGENCY CONTACT
-            ══════════════════════════════════════ --}}
+            -------------------------------------- --}}
             <div class="content-grid">
                 {{-- Account Settings --}}
                 <div class="content-card">
@@ -1127,7 +1128,7 @@
 
                     <div class="setting-row">
                         <div class="setting-row-info">
-                            <div class="sr-title">WhatsApp — Booking</div>
+                            <div class="sr-title">WhatsApp � Booking</div>
                             <div class="sr-sub">Konfirmasi booking kelas via WhatsApp</div>
                         </div>
                         <label class="toggle">
@@ -1137,7 +1138,7 @@
                     </div>
                     <div class="setting-row">
                         <div class="setting-row-info">
-                            <div class="sr-title">WhatsApp — Pembayaran</div>
+                            <div class="sr-title">WhatsApp � Pembayaran</div>
                             <div class="sr-sub">Notifikasi pembayaran berhasil/gagal</div>
                         </div>
                         <label class="toggle">
@@ -1147,7 +1148,7 @@
                     </div>
                     <div class="setting-row">
                         <div class="setting-row-info">
-                            <div class="sr-title">Email — Promo & Newsletter</div>
+                            <div class="sr-title">Email � Promo & Newsletter</div>
                             <div class="sr-sub">Penawaran dan info terbaru via email</div>
                         </div>
                         <label class="toggle">
@@ -1177,14 +1178,14 @@
     </main>
 </div>
 
-{{-- ══════════════════════════════════════
+{{-- --------------------------------------
      MODALS
-══════════════════════════════════════ --}}
+-------------------------------------- --}}
 
 {{-- Edit Profile Modal --}}
 <div id="editProfileModal" class="ftm-modal-overlay">
     <div class="ftm-modal-box">
-        <button type="button" class="ftm-modal-close" onclick="closeModal('editProfileModal')">×</button>
+        <button type="button" class="ftm-modal-close" onclick="closeModal('editProfileModal')">�</button>
         <h3 class="ftm-modal-title">Edit Profil</h3>
         <p class="ftm-modal-sub">Email tidak dapat diubah. Hubungi support jika perlu mengganti email.</p>
         <form id="formEditProfile" onsubmit="saveProfile(event)">
@@ -1207,7 +1208,7 @@
 {{-- Change Password Modal --}}
 <div id="changePasswordModal" class="ftm-modal-overlay">
     <div class="ftm-modal-box">
-        <button type="button" class="ftm-modal-close" onclick="closeModal('changePasswordModal')">×</button>
+        <button type="button" class="ftm-modal-close" onclick="closeModal('changePasswordModal')">�</button>
         <h3 class="ftm-modal-title">Ubah Password</h3>
         <p class="ftm-modal-sub">Password minimal 8 karakter. Setelah berhasil, gunakan password baru di login berikutnya.</p>
         <form id="formChangePassword" onsubmit="savePassword(event)">
@@ -1234,7 +1235,7 @@
 {{-- QR Preview --}}
 <div id="qr-preview-overlay" class="qr-preview-overlay">
     <div class="qr-preview-card">
-        <button type="button" class="qp-close" onclick="closeQRPreview()">×</button>
+        <button type="button" class="qp-close" onclick="closeQRPreview()">�</button>
         <div class="qp-inner">
             <div class="qp-header">
                 <div class="qp-brand">FTM Society</div>
@@ -1250,7 +1251,7 @@
                 <div class="qp-id">Member ID: #{{ $memberId }}</div>
             </div>
             <div class="qp-status">
-                <span class="qp-status-badge"><span class="qp-dot"></span> QR Active — Ready to Scan</span>
+                <span class="qp-status-badge"><span class="qp-dot"></span> QR Active � Ready to Scan</span>
             </div>
         </div>
     </div>
@@ -1259,7 +1260,7 @@
 {{-- Print modal --}}
 <div id="print-modal" class="ftm-modal-overlay">
     <div class="ftm-modal-box">
-        <button type="button" class="ftm-modal-close" onclick="closeModal('print-modal')">×</button>
+        <button type="button" class="ftm-modal-close" onclick="closeModal('print-modal')">�</button>
         <h3 class="ftm-modal-title"><i class="fas fa-print" style="color:#EE4E8B; margin-right:6px;"></i>Print Member Card</h3>
         <div class="print-member-card">
             <div class="brand">FTM SOCIETY</div>
@@ -1294,7 +1295,7 @@ const ROUTES = {
     profileLogoutAll: '{{ route("member.api.profile.logout-all") }}',
 };
 
-/* ════════════ TOAST ════════════ */
+/* ------------ TOAST ------------ */
 function toast(title, message = '', type = 'info') {
     const stack = document.getElementById('toastStack');
     const el = document.createElement('div');
@@ -1312,7 +1313,7 @@ function toast(title, message = '', type = 'info') {
     }, 4000);
 }
 
-/* ════════════ MODAL HELPERS ════════════ */
+/* ------------ MODAL HELPERS ------------ */
 function openModal(id) {
     const el = document.getElementById(id);
     if (el) { el.classList.add('open'); document.body.style.overflow = 'hidden'; }
@@ -1340,7 +1341,7 @@ document.querySelectorAll('.ftm-modal-overlay, .qr-preview-overlay').forEach(o =
     });
 });
 
-/* ════════════ FETCH HELPER ════════════ */
+/* ------------ FETCH HELPER ------------ */
 async function postJSON(url, payload = null, isFormData = false) {
     const opts = {
         method: 'POST',
@@ -1363,7 +1364,7 @@ async function postJSON(url, payload = null, isFormData = false) {
     return { ok: res.ok, status: res.status, data };
 }
 
-/* ════════════ QR ACTIONS ════════════ */
+/* ------------ QR ACTIONS ------------ */
 async function generateQR(ev) {
     if (ev) setLoading(ev, 'Generating...');
     const r = await postJSON(ROUTES.qrGenerate);
@@ -1402,7 +1403,7 @@ function setLoading(ev, msg) {
     }
 }
 
-/* ════════════ PROFILE EDIT ════════════ */
+/* ------------ PROFILE EDIT ------------ */
 async function saveProfile(ev) {
     ev.preventDefault();
     const form = ev.target;
@@ -1419,7 +1420,7 @@ async function saveProfile(ev) {
     if (r.ok && r.data.success) {
         toast('Profil tersimpan', r.data.message, 'success');
         document.getElementById('memberNameLabel').textContent = payload.name;
-        document.getElementById('memberPhoneLabel').textContent = payload.phone_number || '—';
+        document.getElementById('memberPhoneLabel').textContent = payload.phone_number || '�';
         // Update inisial avatar kalau belum ada foto
         const letterEl = document.getElementById('memberAvatarLetter');
         if (letterEl) letterEl.textContent = payload.name.charAt(0).toUpperCase();
@@ -1457,7 +1458,7 @@ async function savePassword(ev) {
     }
 }
 
-/* ════════════ AVATAR ════════════ */
+/* ------------ AVATAR ------------ */
 async function uploadAvatar(input) {
     const file = input.files[0];
     if (!file) return;
@@ -1489,7 +1490,7 @@ async function removeAvatar() {
     }
 }
 
-/* ════════════ NOTIFICATIONS ════════════ */
+/* ------------ NOTIFICATIONS ------------ */
 let notifTimer = null;
 function saveNotifications() {
     clearTimeout(notifTimer);
@@ -1505,7 +1506,7 @@ function saveNotifications() {
     }, 400);
 }
 
-/* ════════════ LOGIN HISTORY ════════════ */
+/* ------------ LOGIN HISTORY ------------ */
 async function loadLoginHistory() {
     try {
         const res = await fetch(ROUTES.profileLoginHistory, {
@@ -1523,8 +1524,8 @@ async function loadLoginHistory() {
             <div class="lh-item">
                 <div class="lh-icon"><i class="fas ${deviceIcon((l.device || '').toLowerCase())}"></i></div>
                 <div class="lh-info">
-                    <div class="lh-title">${l.device || 'Unknown'} — ${l.user_agent || ''}</div>
-                    <div class="lh-sub">${l.ip || '—'} · ${l.logged_in_at || ''}</div>
+                    <div class="lh-title">${l.device || 'Unknown'} � ${l.user_agent || ''}</div>
+                    <div class="lh-sub">${l.ip || '�'} � ${l.logged_in_at || ''}</div>
                 </div>
                 <div class="lh-time">${l.ago || ''}</div>
             </div>
@@ -1546,7 +1547,7 @@ async function logoutAllDevices() {
     }
 }
 
-/* ════════════ SIDEBAR MOBILE ════════════ */
+/* ------------ SIDEBAR MOBILE ------------ */
 function toggleSidebar() {
     const sidebar  = document.getElementById('sidebar');
     const hamburger = document.getElementById('hamburger-btn');
@@ -1578,7 +1579,7 @@ window.addEventListener('resize', () => {
     }
 });
 
-/* ════════════ INIT ════════════ */
+/* ------------ INIT ------------ */
 document.addEventListener('DOMContentLoaded', () => {
     loadLoginHistory();
 });

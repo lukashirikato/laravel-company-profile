@@ -67,7 +67,9 @@ class CustomerResource extends Resource
                         ->afterStateUpdated(function ($state, callable $set) {
                             // Optional: Auto-fill quota dari package
                             if ($state) {
-                                $package = Package::find($state);
+                                // Use cached lookup to avoid repeated DB calls while
+                                // admin is interacting with the form.
+                                $package = \Illuminate\Support\Facades\Cache::remember("filament.package.{$state}", 300, fn() => Package::find($state));
                                 if ($package && $package->quota) {
                                     $set('quota', $package->quota);
                                 }
@@ -140,14 +142,7 @@ class CustomerResource extends Resource
                         ->label('Order Aktif Saat Ini')
                         ->content(function ($record) {
                             if (!$record) return 'Simpan customer terlebih dahulu.';
-                            $activeOrder = $record->orders()
-                                ->whereIn('status', ['active', 'completed', 'paid'])
-                                ->where(function ($q) {
-                                    $q->whereNull('expired_at')
-                                      ->orWhere('expired_at', '>', now());
-                                })
-                                ->latest()
-                                ->first();
+                            $activeOrder = static::findActiveOrder($record);
                             if (!$activeOrder) return 'Tidak ada order aktif.';
                             return "Order: {$activeOrder->order_code} | Package: " . ($activeOrder->package->name ?? '-') . " | Classes Remaining: {$activeOrder->remaining_classes} | Quota Remaining: {$activeOrder->remaining_quota}";
                         })
@@ -170,14 +165,7 @@ class CustomerResource extends Resource
                         ->helperText('Ubah nilai ini untuk update quota pada order aktif. Akan disinkronkan ke customers.quota juga.')
                         ->default(function ($record) {
                             if (!$record) return 0;
-                            $activeOrder = $record->orders()
-                                ->whereIn('status', ['active', 'completed', 'paid'])
-                                ->where(function ($q) {
-                                    $q->whereNull('expired_at')
-                                      ->orWhere('expired_at', '>', now());
-                                })
-                                ->latest()
-                                ->first();
+                            $activeOrder = static::findActiveOrder($record);
                             return $activeOrder ? $activeOrder->remaining_quota : 0;
                         })
                         ->dehydrated(false)
@@ -268,14 +256,7 @@ class CustomerResource extends Resource
                 Tables\Columns\BadgeColumn::make('active_remaining_classes')
                     ->label('Classes Remaining')
                     ->getStateUsing(function ($record) {
-                        $activeOrder = $record->orders()
-                            ->whereIn('status', ['active', 'completed', 'paid'])
-                            ->where(function ($q) {
-                                $q->whereNull('expired_at')
-                                  ->orWhere('expired_at', '>', now());
-                            })
-                            ->latest()
-                            ->first();
+                        $activeOrder = static::findActiveOrder($record);
                         return $activeOrder ? $activeOrder->remaining_classes : '-';
                     })
                     ->colors([
@@ -394,23 +375,9 @@ class CustomerResource extends Resource
                     ->label('Adjust Classes')
                     ->icon('heroicon-o-adjustments')
                     ->color('warning')
-                    ->visible(fn ($record) => $record->orders()
-                        ->whereIn('status', ['active', 'completed', 'paid'])
-                        ->where(function ($q) {
-                            $q->whereNull('expired_at')
-                              ->orWhere('expired_at', '>', now());
-                        })
-                        ->exists()
-                    )
+                    ->visible(fn ($record) => (bool) static::findActiveOrder($record))
                     ->form(function ($record) {
-                        $activeOrder = $record->orders()
-                            ->whereIn('status', ['active', 'completed', 'paid'])
-                            ->where(function ($q) {
-                                $q->whereNull('expired_at')
-                                  ->orWhere('expired_at', '>', now());
-                            })
-                            ->latest()
-                            ->first();
+                        $activeOrder = static::findActiveOrder($record);
 
                         return [
                             Forms\Components\Placeholder::make('info')
@@ -439,14 +406,7 @@ class CustomerResource extends Resource
                         ];
                     })
                     ->action(function ($record, array $data) {
-                        $activeOrder = $record->orders()
-                            ->whereIn('status', ['active', 'completed', 'paid'])
-                            ->where(function ($q) {
-                                $q->whereNull('expired_at')
-                                  ->orWhere('expired_at', '>', now());
-                            })
-                            ->latest()
-                            ->first();
+                        $activeOrder = static::findActiveOrder($record);
 
                         if ($activeOrder) {
                             $activeOrder->update([
@@ -572,9 +532,47 @@ Selamat berlatih 💪"
 
     public static function getEloquentQuery(): Builder
     {
+        // Eager load package and the most recent order relation to avoid N+1
+        // when rendering customer lists and placeholders. We intentionally
+        // do not load every order's heavy relations here to avoid large
+        // memory usage.
         return parent::getEloquentQuery()
-            ->with(['package', 'orders']) // Eager load package & orders untuk performa
+            ->with(['package', 'orders' => function ($q) {
+                $q->latest()->limit(3);
+            }])
             ->latest();
+    }
+
+    /**
+     * Helper: find the active order for a given customer record.
+     * Will use already-loaded relations when available to avoid extra queries.
+     */
+    protected static function findActiveOrder($record)
+    {
+        $statusList = ['active', 'completed', 'paid'];
+
+        // If orders relation is already loaded, search in-memory first.
+        if ($record && $record->relationLoaded('orders')) {
+            $orders = collect($record->orders)
+                ->filter(function ($o) use ($statusList) {
+                    $okStatus = in_array($o->status, $statusList, true);
+                    $notExpired = is_null($o->expired_at) || $o->expired_at > now();
+                    return $okStatus && $notExpired;
+                })
+                ->sortByDesc('created_at');
+
+            return $orders->first() ?? null;
+        }
+
+        // Fallback: perform a constrained query for the active order.
+        return $record->orders()
+            ->whereIn('status', $statusList)
+            ->where(function ($q) {
+                $q->whereNull('expired_at')
+                  ->orWhere('expired_at', '>', now());
+            })
+            ->latest()
+            ->first();
     }
 
     public static function getGlobalSearchResultTitle($record): string

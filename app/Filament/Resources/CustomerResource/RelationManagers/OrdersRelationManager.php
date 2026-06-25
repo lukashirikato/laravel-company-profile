@@ -186,7 +186,10 @@ class OrdersRelationManager extends RelationManager
                     ->sortable()
                     ->label('Created'),
             ])
+            // Filament relation managers use ->paginate() under the hood for large lists.
+            // To set pagination, we configure the table's default pagination per page.
             ->defaultSort('created_at', 'desc')
+            ->recordsPerPage(10)
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->options([

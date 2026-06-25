@@ -3,7 +3,6 @@
 namespace App\Filament\Pages;
 
 use Filament\Pages\Page;
-use Livewire\Attributes\Reactive;
 use App\Models\Order;
 use App\Models\Attendance;
 use App\Models\Customer;
@@ -18,6 +17,7 @@ class QrScanner extends Page
     protected static ?string $navigationIcon = 'heroicon-o-check-circle';
     protected static ?string $navigationLabel = 'QR Scanner';
     protected static ?string $title = 'Member Check-in Scanner';
+    protected static ?string $slug = 'member-check-in-scanner';
     protected static ?string $navigationGroup = 'Operations';
     protected static ?int $navigationSort = 1;
 
@@ -25,49 +25,34 @@ class QrScanner extends Page
 
     private WhatsAppService $whatsAppService;
 
-    #[Reactive]
     public ?string $qrToken = null;
     
-    #[Reactive]
     public ?string $selectedProgram = null;
     
-    #[Reactive]
     public ?string $selectedLocation = 'FTM SOCIETY';
     
-    #[Reactive]
     public array $scanResults = [];
     
-    #[Reactive]
     public array $todayStats = ['total' => 0, 'success' => 0, 'error' => 0];
     
-    #[Reactive]
     public array $recentScans = [];
     
-    #[Reactive]
     public ?string $errorMessage = null;
 
-    #[Reactive]
     public bool $isCheckOutMode = false;
     
-    #[Reactive]
     public array $checkOutResults = [];
 
-    #[Reactive]
     public array $todaySchedules = [];
 
-    #[Reactive]
     public ?int $selectedScheduleId = null;
 
-    #[Reactive]
     public bool $showScheduleSelector = false;
 
-    #[Reactive]
     public ?int $elapsedSeconds = null;
 
-    #[Reactive]
     public ?int $autoCheckoutInMinutes = null;
 
-    #[Reactive]
     public ?string $autoCheckoutMessage = null;
 
     public function __construct()
@@ -94,36 +79,13 @@ class QrScanner extends Page
         }
 
         try {
-            // ✅ ENHANCED: Parse QR token dengan multiple format support
             $token = trim($this->qrToken);
-            $customerId = null;
+            $customerId = $this->resolveCustomerIdFromToken($token);
 
-            // Format 1: Plain customer ID (e.g., "34")
-            if (is_numeric($token)) {
-                $customerId = (int) $token;
-            }
-            // Format 2: QR token format (e.g., "MEMBER_34_194w3H7jIcUOVCBm")
-            elseif (str_contains($token, 'MEMBER_')) {
-                // Extract customer ID dari format MEMBER_XX_...
-                preg_match('/MEMBER_(\d+)_/', $token, $matches);
-                if (!empty($matches[1])) {
-                    $customerId = (int) $matches[1];
-                }
-            }
-
-            // Format 3: Fallback - cari di database berdasarkan qr_token
-            if (!$customerId || $customerId <= 0) {
-                $customer = Customer::where('qr_token', $token)
-                    ->where('qr_active', true)
-                    ->first();
-                
-                if ($customer) {
-                    $customerId = $customer->id;
-                } else {
-                    $this->errorMessage = 'Member ID tidak valid atau QR belum diaktifkan';
-                    $this->qrToken = '';
-                    return;
-                }
+            if (!$customerId) {
+                $this->errorMessage = 'Member ID, QR, atau kode order tidak valid';
+                $this->qrToken = '';
+                return;
             }
 
             // Gunakan enhanced QRCheckInController
@@ -181,25 +143,28 @@ class QrScanner extends Page
                         ->success()
                         ->send();
 
-                } elseif ($result['type'] === 'already_checked_in') {
-                    // Member sudah check-in, belum 60 menit
-                    $this->scanResults = [
+
+                } elseif ($result['type'] === 'check_out_success') {
+                    $this->checkOutResults = [
                         'success' => true,
                         'member_name' => $data['member_name'] ?? '-',
                         'member_id' => $data['member_id'] ?? '-',
                         'class_name' => $data['class_name'] ?? '-',
+                        'package_name' => $data['package_name'] ?? '-',
+                        'program' => $data['program'] ?? '-',
                         'check_in_time' => $data['check_in_time'] ?? '-',
-                        'elapsed_minutes' => $data['elapsed_minutes'] ?? 0,
-                        'auto_checkout_in' => $data['auto_checkout_in'] ?? 0,
-                        'status' => 'already_active',
+                        'check_out_time' => $data['check_out_time'] ?? '-',
+                        'duration' => $data['duration'] ?? '-',
+                        'duration_minutes' => $data['duration_minutes'] ?? 0,
+                        'remaining_quota' => $data['remaining_quota'] ?? 0,
+                        'total_quota' => $data['total_quota'] ?? 0,
                     ];
-
-                    $this->autoCheckoutInMinutes = $data['auto_checkout_in'] ?? 0;
+                    $this->isCheckOutMode = true;
 
                     \Filament\Notifications\Notification::make()
-                        ->title('ℹ️ Member Sedang Latihan')
-                        ->body("{$data['member_name']} – Sudah check-in, auto-checkout dalam {$data['auto_checkout_in']} menit")
-                        ->info()
+                        ->title('✅ Check-out Berhasil!')
+                        ->body("{$data['member_name']} - Durasi: {$data['duration']}")
+                        ->success()
                         ->send();
 
                 } elseif ($result['type'] === 'auto_checkout_performed') {
@@ -211,13 +176,13 @@ class QrScanner extends Page
                         'class_name' => $data['class_name'] ?? '-',
                         'check_in_time' => $data['check_in_time'] ?? '-',
                         'auto_checkout_time' => $data['auto_checkout_time'] ?? '-',
-                        'duration' => '60 menit',
+                        'duration' => ($data['duration'] ?? 0) . ' menit',
                         'status' => 'auto_checkout',
                     ];
 
                     \Filament\Notifications\Notification::make()
                         ->title('⏱️ Auto-Checkout Selesai')
-                        ->body("{$data['member_name']} – Sesi berakhir setelah 60 menit")
+                        ->body("{$data['member_name']} – Sesi tercatat otomatis sampai {$data['auto_checkout_time']}")
                         ->success()
                         ->send();
                 }
@@ -258,35 +223,13 @@ class QrScanner extends Page
         $this->selectedScheduleId   = $scheduleId;
 
         try {
-            // ✅ ENHANCED: Parse QR token dengan multiple format support
             $token = trim($this->qrToken);
-            $customerId = null;
+            $customerId = $this->resolveCustomerIdFromToken($token);
 
-            // Format 1: Plain customer ID
-            if (is_numeric($token)) {
-                $customerId = (int) $token;
-            }
-            // Format 2: QR token dengan MEMBER_XX_...
-            elseif (str_contains($token, 'MEMBER_')) {
-                preg_match('/MEMBER_(\d+)_/', $token, $matches);
-                if (!empty($matches[1])) {
-                    $customerId = (int) $matches[1];
-                }
-            }
-
-            // Format 3: Database fallback
-            if (!$customerId || $customerId <= 0) {
-                $customer = Customer::where('qr_token', $token)
-                    ->where('qr_active', true)
-                    ->first();
-                
-                if ($customer) {
-                    $customerId = $customer->id;
-                } else {
-                    $this->errorMessage = 'Member ID tidak valid';
-                    $this->qrToken = '';
-                    return;
-                }
+            if (!$customerId) {
+                $this->errorMessage = 'Member ID, QR, atau kode order tidak valid';
+                $this->qrToken = '';
+                return;
             }
 
             $order = Order::where(function ($q) use ($customerId, $token) {
@@ -352,7 +295,7 @@ class QrScanner extends Page
                 try {
                     $classStart = Carbon::parse($schedule->schedule_date->format('Y-m-d') . ' ' . $schedule->class_time);
                     $windowStart = $classStart->copy()->subMinutes(60);
-                    $windowEnd   = $classStart->copy()->addMinutes(60);
+                    $windowEnd   = $classStart->copy()->addMinutes(30);
 
                     if (!now()->between($windowStart, $windowEnd)) {
                         $this->errorMessage = 'Di luar waktu check-in. ' .
@@ -512,35 +455,13 @@ class QrScanner extends Page
         }
 
         try {
-            // ✅ ENHANCED: Parse QR token dengan multiple format support
             $token = trim($this->qrToken);
-            $customerId = null;
+            $customerId = $this->resolveCustomerIdFromToken($token);
 
-            // Format 1: Plain customer ID
-            if (is_numeric($token)) {
-                $customerId = (int) $token;
-            }
-            // Format 2: QR token dengan MEMBER_XX_...
-            elseif (str_contains($token, 'MEMBER_')) {
-                preg_match('/MEMBER_(\d+)_/', $token, $matches);
-                if (!empty($matches[1])) {
-                    $customerId = (int) $matches[1];
-                }
-            }
-
-            // Format 3: Database fallback
-            if (!$customerId || $customerId <= 0) {
-                $customer = Customer::where('qr_token', $token)
-                    ->where('qr_active', true)
-                    ->first();
-                
-                if ($customer) {
-                    $customerId = $customer->id;
-                } else {
-                    $this->errorMessage = 'Member ID tidak valid atau QR belum diaktifkan';
-                    $this->qrToken = '';
-                    return;
-                }
+            if (!$customerId) {
+                $this->errorMessage = 'Member ID, QR, atau kode order tidak valid';
+                $this->qrToken = '';
+                return;
             }
 
             // Find active attendance
@@ -657,6 +578,38 @@ class QrScanner extends Page
                 'customer_id' => $order->customer_id ?? 'N/A',
             ]);
         }
+    }
+
+    private function resolveCustomerIdFromToken(string $token): ?int
+    {
+        $token = trim($token);
+
+        if ($token === '') {
+            return null;
+        }
+
+        if (is_numeric($token)) {
+            return (int) $token;
+        }
+
+        if (str_contains($token, 'MEMBER_') && preg_match('/MEMBER_(\d+)_?/', $token, $matches)) {
+            return (int) $matches[1];
+        }
+
+        $customer = Customer::where('qr_token', $token)
+            ->where('qr_active', true)
+            ->first();
+
+        if ($customer) {
+            return $customer->id;
+        }
+
+        $order = Order::where('order_code', $token)
+            ->whereIn('status', ['paid', 'active', 'settlement', 'success'])
+            ->latest()
+            ->first();
+
+        return $order?->customer_id;
     }
 
     /**

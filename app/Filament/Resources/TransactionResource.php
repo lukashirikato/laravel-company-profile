@@ -28,13 +28,17 @@ class TransactionResource extends Resource
                 ->schema([
                     Forms\Components\Select::make('customer_id')
                         ->label('Customer')
-                        ->options(Customer::query()->orderBy('name')->pluck('name', 'id'))
+                        ->options(fn () => \Illuminate\Support\Facades\Cache::remember('filament.select.customers', 3600, function () {
+                            return Customer::query()->orderBy('name')->pluck('name', 'id')->toArray();
+                        }))
                         ->searchable()
                         ->required(),
 
                     Forms\Components\Select::make('package_id')
                         ->label('Package')
-                        ->options(Package::query()->orderBy('name')->pluck('name', 'id'))
+                        ->options(fn () => \Illuminate\Support\Facades\Cache::remember('filament.select.packages', 3600, function () {
+                            return Package::query()->orderBy('name')->pluck('name', 'id')->toArray();
+                        }))
                         ->searchable()
                         ->nullable(),
 
@@ -158,9 +162,11 @@ class TransactionResource extends Resource
                         'cancelled' => 'cancelled',
                     ]),
 
-                Tables\Filters\SelectFilter::make('payment_type')
+                    Tables\Filters\SelectFilter::make('payment_type')
                     ->label('Payment Method')
-                    ->options(fn() => Transaction::query()->distinct()->pluck('payment_type', 'payment_type')->filter()->toArray()),
+                    ->options(fn() => \Illuminate\Support\Facades\Cache::remember('filament.filters.transaction.payment_types', 600, function () {
+                        return Transaction::query()->distinct()->pluck('payment_type', 'payment_type')->filter()->toArray();
+                    })),
             ])
             ->actions([
                 Tables\Actions\Action::make('view')
@@ -196,6 +202,9 @@ class TransactionResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with(['customer', 'package'])->latest();
+        return parent::getEloquentQuery()
+            ->with(['customer:id,name', 'package:id,name'])
+            ->select('transactions.*')
+            ->latest('created_at');
     }
 }

@@ -319,10 +319,22 @@ class Schedule extends Model
     }
 
     /**
-     * Check apakah jam sekarang dalam time window check-in
-     * Window: class_time sampai +30 menit (member boleh check-in mulai kelas dimulai)
-     * 
-     * Contoh: Class 10:00 → check-in valid 10:00 - 10:30
+     * Get automatic checkout time based on class end + 15 minutes buffer.
+     */
+    public function getAutoCheckoutTime(): ?Carbon
+    {
+        $classEnd = $this->getClassEndTime();
+
+        if (!$classEnd) {
+            return null;
+        }
+
+        return $classEnd->copy()->addMinutes(15);
+    }
+
+    /**
+     * Check apakah jam sekarang dalam time window check-in.
+     * Window: 60 menit sebelum kelas sampai 30 menit setelah kelas dimulai.
      * 
      * @return bool
      */
@@ -334,9 +346,10 @@ class Schedule extends Model
         }
 
         try {
+            $windowStart = $classStart->copy()->subMinutes(60);
             $windowEnd = $classStart->copy()->addMinutes(30);
 
-            return now()->between($classStart, $windowEnd);
+            return now()->between($windowStart, $windowEnd);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Error checking schedule time window: ' . $e->getMessage());
             return true; // Jika error, allow check-in
@@ -344,9 +357,9 @@ class Schedule extends Model
     }
 
     /**
-     * Get formatted time window untuk display
+     * Get formatted time window untuk display.
      * 
-     * @return string Contoh: "10:00 - 10:30"
+     * @return string Contoh: "09:00 - 10:30"
      */
     public function getTimeWindowFormatted(): string
     {
@@ -356,8 +369,9 @@ class Schedule extends Model
         }
 
         try {
+            $windowStart = $classStart->copy()->subMinutes(60);
             $windowEnd = $classStart->copy()->addMinutes(30);
-            return $classStart->format('H:i') . ' - ' . $windowEnd->format('H:i');
+            return $windowStart->format('H:i') . ' - ' . $windowEnd->format('H:i');
         } catch (\Exception $e) {
             return '-';
         }

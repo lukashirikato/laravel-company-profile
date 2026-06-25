@@ -240,9 +240,9 @@ class Attendance extends Model
     }
 
     /**
-     * Check apakah member check-in dalam time window yang valid
-     * Window: class_time sampai +30 menit (member boleh check-in mulai kelas dimulai)
-     * 
+     * Check apakah member check-in dalam time window yang valid.
+     * Window mengikuti rule schedule: -60 menit sampai +30 menit.
+     *
      * @return bool
      */
     public function isWithinTimeWindow(): bool
@@ -255,8 +255,8 @@ class Attendance extends Model
     }
 
     /**
-     * Perform auto-checkout ketika sudah 60 menit atau melewati auto_checkout_at
-     * 
+     * Perform auto-checkout ketika melewati auto_checkout_at.
+     *
      * @return bool True jika berhasil auto-checkout
      */
     public function performAutoCheckout(): bool
@@ -266,17 +266,23 @@ class Attendance extends Model
         }
 
         try {
+            $checkOutTime = $this->auto_checkout_at ?? now();
+            $durationMinutes = $this->check_in_at
+                ? (int) $checkOutTime->diffInMinutes($this->check_in_at)
+                : 0;
+
             $this->update([
-                'check_out_at' => $this->auto_checkout_at ?? now(),
+                'check_out_at' => $checkOutTime,
                 'checkout_type' => 'auto',
-                'duration_minutes' => 60,
+                'attendance_status' => 'present',
+                'duration_minutes' => $durationMinutes,
             ]);
 
             \Log::info('✅ Auto-checkout performed', [
                 'attendance_id' => $this->id,
                 'customer_id' => $this->customer_id,
-                'auto_checkout_at' => $this->auto_checkout_at,
-                'duration' => 60,
+                'auto_checkout_at' => $checkOutTime,
+                'duration' => $durationMinutes,
             ]);
 
             return true;
@@ -291,8 +297,8 @@ class Attendance extends Model
     }
 
     /**
-     * Perform manual checkout (staff/admin checkout sebelum 60 menit)
-     * 
+     * Perform manual checkout.
+     *
      * @return bool True jika berhasil checkout
      */
     public function performManualCheckout(): bool
@@ -308,6 +314,7 @@ class Attendance extends Model
             $this->update([
                 'check_out_at' => $checkOutTime,
                 'checkout_type' => 'manual',
+                'attendance_status' => 'present',
                 'duration_minutes' => $durationMinutes,
             ]);
 

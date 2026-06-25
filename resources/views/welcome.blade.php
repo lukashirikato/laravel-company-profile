@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -42,6 +42,8 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         text-rendering: optimizeLegibility;
+        margin: 0;
+        padding: 0;
       }
 
       body {
@@ -52,6 +54,36 @@
         color: #1C1C1C;                /* Layl — kontras kuat */
         scroll-behavior: smooth;
         overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      main {
+        flex: 1;
+      }
+
+      footer {
+        margin-top: auto;
+      }
+
+      .footer-link {
+        display: inline-block;
+        color: rgba(255, 255, 255, 0.82);
+        transition: all 0.25s ease;
+      }
+
+      .footer-link:hover {
+        color: #FFD6E7;
+        transform: translateX(4px);
+        text-shadow: 0 0 12px rgba(255, 214, 231, 0.4);
+      }
+
+      .footer-link:focus {
+        outline: none;
+        color: #FFF;
       }
 
       p {
@@ -144,19 +176,68 @@
       }
       .nav-link {
       position: relative;
+      text-decoration: none;
+      transition: color 0.25s ease;
+      font-weight: 500;
       }
+      /* Active underline — starts hidden, shows with animation */
       .nav-link::after {
       content: '';
       position: absolute;
       width: 0;
-      height: 2px;
-      bottom: -4px;
-      left: 0;
-      background-color: primary;
-      transition: width 0.3s;
+      height: 3px;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #EE4E8B;
+      border-radius: 999px;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
+      .nav-link.active::after {
+      width: calc(100% + 8px);
+      }
+      .nav-link.active {
+      color: #EE4E8B;
+      font-weight: 700;
+      }
+      /* Hover effect — slide from center to edges */
       .nav-link:hover::after {
-      width: 100%;
+      width: calc(100% + 8px);
+      }
+      .nav-link:hover {
+      color: #EE4E8B;
+      }
+      /* Mobile nav-link styles */
+      .nav-link-mobile {
+      position: relative;
+      text-decoration: none;
+      transition: color 0.25s ease;
+      display: inline-block;
+      }
+      .nav-link-mobile::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 3px;
+      bottom: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #EE4E8B;
+      border-radius: 999px;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .nav-link-mobile.active::after {
+      width: calc(100% + 8px);
+      }
+      .nav-link-mobile.active {
+      color: #EE4E8B;
+      font-weight: 700;
+      }
+      .nav-link-mobile:hover {
+      color: #EE4E8B;
+      }
+      .nav-link-mobile:hover::after {
+      width: calc(100% + 8px);
       }
       .class-card:hover {
       transform: translateY(-5px);
@@ -480,12 +561,13 @@
         </a>
 
         <!-- DESKTOP NAVIGATION (tengah) -->
-        <nav class="hidden md:flex items-center justify-center space-x-8">
-            <a href="#home" class="text-dark hover:text-primary transition">Home</a>
-            <a href="#Programs" class="text-dark hover:text-primary transition">Programs</a>
-            <a href="#about" class="text-dark hover:text-primary transition">About</a>
-            <a href="#Facility" class="text-dark hover:text-primary transition">Gallery</a>
-            <a href="#contact" class="text-dark hover:text-primary transition">Contact</a>
+        <nav class="hidden md:flex items-center justify-center space-x-8" id="desktop-nav">
+            <a href="#home" class="nav-link text-dark hover:text-primary transition" data-nav="home">Home</a>
+            <a href="#about" class="nav-link text-dark hover:text-primary transition" data-nav="about">About</a>
+            <a href="#our-programs" class="nav-link text-dark hover:text-primary transition" data-nav="programs">Programs</a>
+            <a href="#pricing" class="nav-link text-dark hover:text-primary transition" data-nav="package">Package</a>
+            <a href="#Facility" class="nav-link text-dark hover:text-primary transition" data-nav="gallery">Gallery</a>
+            <a href="#contact" class="nav-link text-dark hover:text-primary transition" data-nav="contact">Contact</a>
         </nav>
 
         <!-- LOGIN + HAMBURGER (kanan) -->
@@ -524,18 +606,14 @@
     </div>
 
     <nav class="flex flex-col space-y-6">
-        <a href="#home" class="text-dark hover:text-primary transition">Home</a>
-        <a href="#about" class="text-dark hover:text-primary transition">About</a>
-        <a href="#Programs" class="text-dark hover:text-primary transition">Programs</a>
-        <a href="#classes" class="text-dark hover:text-primary transition">Classes</a>
-        <a href="#schedule" class="text-dark hover:text-primary transition">Schedule</a>
-        <a href="#Facility" class="text-dark hover:text-primary transition">Gallery</a>
-        <a href="#contact" class="text-dark hover:text-primary transition">Contact</a>
+        <a href="#home" class="nav-link-mobile text-dark hover:text-primary transition" data-nav="home">Home</a>
+        <a href="#about" class="nav-link-mobile text-dark hover:text-primary transition" data-nav="about">About</a>
+        <a href="#our-programs" class="nav-link-mobile text-dark hover:text-primary transition" data-nav="programs">Programs</a>
+        <a href="#pricing" class="nav-link-mobile text-dark hover:text-primary transition" data-nav="package">Package</a>
+        <a href="#Facility" class="nav-link-mobile text-dark hover:text-primary transition" data-nav="gallery">Gallery</a>
+        <a href="#contact" class="nav-link-mobile text-dark hover:text-primary transition" data-nav="contact">Contact</a>
 
-        <a href="#join"
-            class="bg-primary text-white px-6 py-3 rounded-button text-center hover:bg-accent hover:scale-105 transition font-semibold">
-            Join Now
-        </a>
+
 
         <!-- LOGIN BUTTON (DITAMBAHKAN) -->
         <a href="{{ route('member.login') }}"
@@ -604,6 +682,7 @@
   })();
 </script>
 
+<main>
 
   <!-- ========================================= -->
 <!-- HERO SECTION - REFACTORED & PROFESSIONAL -->
@@ -686,7 +765,8 @@
                      class="flex flex-wrap gap-4 justify-center lg:justify-start pt-6">
                     @auth('customer')
                     @else
-                        <a href="#join" 
+                        <a href="https://wa.me/6287785767395?text=Halo%20FTM%20Society%2C%20saya%20tertarik%20untuk%20bergabung%20sebagai%20member." 
+                           target="_blank"
                            class="group relative inline-flex items-center justify-center gap-3 px-8 py-4 text-lg font-black text-white bg-gradient-to-r from-primary to-secondary rounded-full overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-300 ease-out hover:scale-105 hover:-translate-y-1">
                             <span class="relative z-10 tracking-wide">Join Now</span>
                             <i class="ri-arrow-right-line text-xl relative z-10 transition-all group-hover:translate-x-2 group-hover:scale-110"></i>
@@ -726,354 +806,1582 @@
 </section>
 
 <!-- ========================================= -->
-<!-- ABOUT SECTION - ULTIMATE PROFESSIONAL VERSION -->
-<!-- Perfectly Refined & Beautiful UI/UX -->
+<!-- TENTANG KAMI SECTION - Reference Image Design -->
 <!-- ========================================= -->
 
-<section id="about" class="relative py-20 md:py-28 lg:py-32 overflow-hidden">
+<!-- Brand fonts (Nord + Instrument Serif) already loaded via ftm-typography.css -->
+
+<style>
+    .tentang-kami-section {
+        background: linear-gradient(100deg, #fffcfd 20%, #fff2f6 60%, #ffe3ec 100%);
+        position: relative;
+        overflow: hidden;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Soft pink glow orbs */
+    .tentang-kami-section .glow-orb-1 {
+        position: absolute;
+        top: -80px;
+        left: -120px;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(255,107,154,0.10) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+    .tentang-kami-section .glow-orb-2 {
+        position: absolute;
+        bottom: -100px;
+        right: -100px;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(255,107,154,0.08) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+    .tentang-kami-section .glow-orb-3 {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 800px;
+        height: 800px;
+        background: radial-gradient(circle, rgba(255,182,206,0.06) 0%, transparent 60%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    /* Decorative curved lines (subtle) */
+    .tentang-kami-section .deco-lines {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 45%;
+        height: 100%;
+        pointer-events: none;
+        opacity: 0.06;
+    }
+    .tentang-kami-section .deco-lines svg {
+        width: 100%;
+        height: 100%;
+    }
+
+    /* Floating sparkle icons */
+    .tentang-kami-section .float-sparkle {
+        position: absolute;
+        color: #ff6b9a;
+        opacity: 0.25;
+        animation: floatSparkle 6s ease-in-out infinite;
+    }
+    .tentang-kami-section .float-sparkle-1 {
+        top: 15%;
+        right: 42%;
+        font-size: 18px;
+        animation-delay: 0s;
+    }
+    .tentang-kami-section .float-sparkle-2 {
+        bottom: 20%;
+        right: 8%;
+        font-size: 14px;
+        animation-delay: 2s;
+    }
+    .tentang-kami-section .float-heart {
+        position: absolute;
+        bottom: 22%;
+        right: 5%;
+        width: 36px;
+        height: 36px;
+        background: #ff6b9a;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 16px;
+        opacity: 0.7;
+        animation: floatSparkle 5s ease-in-out infinite;
+        animation-delay: 1s;
+    }
+
+    @keyframes floatSparkle {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-12px) rotate(5deg); }
+    }
+
+    /* Card styles */
+    .tentang-card {
+        background: white;
+        border-radius: 16px;
+        padding: 20px 24px;
+        box-shadow: 0 2px 16px rgba(255,107,154,0.08), 0 1px 4px rgba(0,0,0,0.04);
+        border: 1px solid rgba(255,107,154,0.12);
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        transition: all 0.3s ease;
+    }
+    .tentang-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(255,107,154,0.15), 0 2px 8px rgba(0,0,0,0.06);
+        border-color: rgba(255,107,154,0.25);
+    }
+    .tentang-card-icon {
+        flex-shrink: 0;
+        width: 52px;
+        height: 52px;
+        background: linear-gradient(135deg, #fff0f5 0%, #ffe0ec 100%);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ff6b9a;
+        font-size: 22px;
+        border: 1px solid rgba(255,107,154,0.15);
+    }
+    .tentang-card-title {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        font-size: 15px;
+        color: #222;
+        margin-bottom: 2px;
+    }
+    .tentang-card-desc {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 400;
+        font-size: 13px;
+        color: #777;
+        line-height: 1.5;
+    }
+
+    /* Image glow effect */
+    .tentang-image-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        width: 100%;
+    }
+    .tentang-image-wrapper img {
+        width: 100%;
+        max-width: 650px;
+        height: auto;
+        object-fit: contain;
+        filter: drop-shadow(0 20px 60px rgba(255,107,154,0.25)) drop-shadow(0 8px 24px rgba(255,107,154,0.15));
+        transition: transform 0.5s ease;
+    }
+    .tentang-image-wrapper:hover img {
+        transform: scale(1.02);
+    }
+
+    @media (min-width: 1024px) {
+        .tentang-image-wrapper {
+            justify-content: flex-end;
+            margin-right: -40px;
+            margin-bottom: -100px;
+            margin-top: 30px;
+        }
+        .tentang-image-wrapper img {
+            max-width: 800px;
+            width: 110%;
+        }
+    }
+
+    @media (min-width: 1280px) {
+        .tentang-image-wrapper {
+            margin-right: -80px;
+            margin-bottom: -110px;
+            margin-top: 40px;
+        }
+        .tentang-image-wrapper img {
+            max-width: 950px;
+            width: 115%;
+        }
+    }
+</style>
+
+<section id="about" class="tentang-kami-section relative" style="padding: 100px 0 110px;" data-aos="fade-up">
     
-    <!-- Multi-Layer Background -->
-    <div class="absolute inset-0 bg-gradient-to-br from-white via-cream/50 to-light-pink/30"></div>
-    
-    <!-- Animated Decorative Background Pattern -->
-    <div class="absolute inset-0 opacity-[0.03] pointer-events-none">
-        <div class="absolute inset-0" 
-             style="background-image: 
-                radial-gradient(circle at 20% 50%, transparent 0%, transparent 10%, primary 10%, primary 11%, transparent 11%),
-                radial-gradient(circle at 80% 80%, transparent 0%, transparent 10%, #7A2B4A 10%, #7A2B4A 11%, transparent 11%);
-                background-size: 100px 100px;">
-        </div>
+    <!-- Glow orbs -->
+    <div class="glow-orb-1"></div>
+    <div class="glow-orb-2"></div>
+    <div class="glow-orb-3"></div>
+
+    <!-- Decorative curved lines (right side) -->
+    <div class="deco-lines">
+        <svg viewBox="0 0 600 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="300" cy="400" rx="280" ry="350" stroke="#ff6b9a" stroke-width="1"/>
+            <ellipse cx="300" cy="400" rx="220" ry="280" stroke="#ff6b9a" stroke-width="0.8"/>
+            <ellipse cx="300" cy="400" rx="160" ry="210" stroke="#ff6b9a" stroke-width="0.5"/>
+        </svg>
     </div>
 
-    <!-- Floating Gradient Orbs -->
-    <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div class="absolute -top-48 -left-48 w-96 h-96 bg-gradient-to-br from-secondary/20 to-light-pink/20 rounded-full blur-3xl animate-pulse" style="animation-duration: 4s;"></div>
-        <div class="absolute top-1/3 -right-64 w-[500px] h-[500px] bg-gradient-to-tl from-primary/15 to-light-pink/15 rounded-full blur-3xl animate-pulse" style="animation-duration: 6s; animation-delay: 1s;"></div>
-        <div class="absolute -bottom-32 left-1/3 w-80 h-80 bg-gradient-to-tr from-primary/20 to-secondary/20 rounded-full blur-3xl animate-pulse" style="animation-duration: 5s; animation-delay: 2s;"></div>
-
-        <!-- Brand Ornaments -->
-        <div class="brand-flower brand-flower-pink brand-float absolute top-12 right-[10%]" style="width: 55px; height: 55px; opacity: 0.35;"></div>
-        <div class="brand-asterisk brand-float absolute bottom-24 left-[8%]" style="width: 38px; height: 38px; opacity: 0.4; animation-delay: 1.5s;"></div>
+    <!-- Floating decorations -->
+    <div class="float-sparkle float-sparkle-1">✦</div>
+    <div class="float-sparkle float-sparkle-2">✦</div>
+    <div class="float-heart">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
     </div>
 
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        <!-- Section Header - Premium Design -->
-        <div class="text-center mb-16 md:mb-24" data-aos="fade-up">
-            
-            <!-- Top Badge with Shimmer Effect -->
-            <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-secondary/10 via-light-pink/50 to-secondary/10 rounded-full border border-secondary/20 shadow-lg backdrop-blur-sm">
-                <span class="brand-flower brand-flower-cherry" style="width: 16px; height: 16px;"></span>
-                <div class="relative">
-                    <div class="w-2 h-2 bg-secondary rounded-full animate-ping absolute"></div>
-                    <div class="w-2 h-2 bg-secondary rounded-full relative"></div>
-                </div>
-                <span class="text-sm md:text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary">
-                    Tentang Kami
-                </span>
-            </div>
+    <div class="w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 xl:px-20 relative" style="z-index: 10;">
+        <div class="flex flex-col lg:flex-row items-center gap-10 lg:gap-12 xl:gap-16">
 
-            <!-- Main Title with Gradient -->
-            <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight">
-                <span class="text-primary">About</span>
-                <span class="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary animate-gradient-shift bg-[length:200%_auto]">
-                    FTM Society
-                </span>
-            </h2>
+            <!-- LEFT COLUMN: Text Content -->
+            <div class="w-full lg:w-[42%] xl:w-[40%] text-center lg:text-left order-1">
 
-            <!-- Decorative Divider -->
-            <div class="flex items-center justify-center gap-3 mb-6">
-                <div class="w-16 h-0.5 bg-gradient-to-r from-transparent to-secondary rounded-full"></div>
-                <div class="w-3 h-3 bg-secondary rounded-full animate-pulse"></div>
-                <div class="w-24 h-1 bg-gradient-to-r from-secondary via-primary to-secondary rounded-full"></div>
-                <div class="w-3 h-3 bg-primary rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
-                <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-primary rounded-full"></div>
-            </div>
+                <!-- Eyebrow label -->
+                <p style="
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 13px;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    letter-spacing: 0.25em;
+                    color: #ff6b9a;
+                    margin-bottom: 24px;
+                ">TENTANG KAMI</p>
 
-            <!-- Subtitle -->
-            <p class="text-lg md:text-xl text-dark max-w-3xl mx-auto leading-relaxed font-light">
-                Ruang bagi muslimah untuk hidup <span class="font-semibold text-primary">aktif</span>, <span class="font-semibold text-secondary">produktif</span>, dan sesuai <span class="font-semibold text-primary">syariat</span>
-            </p>
-        </div>
+                <!-- Main heading -->
+                <h2 style="
+                    font-family: 'Nord', 'Poppins', sans-serif;
+                    font-weight: 800;
+                    font-size: clamp(42px, 5.5vw, 72px);
+                    line-height: 1.05;
+                    color: #222;
+                    margin-bottom: 28px;
+                ">
+                    Memberdayakan<br>
+                    <span style="
+                        color: #ff6b9a;
+                        font-style: italic;
+                        font-weight: 700;
+                    ">Muslimah.</span>
+                </h2>
 
-        <!-- Main Content Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+                <!-- Description paragraph -->
+                <p style="
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 15px;
+                    font-weight: 400;
+                    line-height: 1.8;
+                    color: #555;
+                    max-width: 500px;
+                    margin-bottom: 36px;
+                " class="mx-auto lg:mx-0">
+                    FTM Society adalah ruang bagi muslimah untuk hidup
+                    <span style="color: #ff6b9a; font-weight: 600;">aktif</span>,
+                    <span style="color: #ff6b9a; font-weight: 600;">produktif</span>,
+                    dan sesuai <span style="color: #ff6b9a; font-weight: 600;">syariat</span>.
+                    Kami hadir untuk menemani perjalananmu menjadi versi terbaik diri, dunia, dan akhirat.
+                </p>
 
-            <!-- LEFT COLUMN - Image Gallery (5 cols) -->
-            <div class="lg:col-span-5 order-2 lg:order-1" data-aos="fade-right" data-aos-delay="100">
-                <div class="relative">
-
-                    <!-- Main Image Frame -->
-                    <div class="relative group">
-
-                        <!-- Decorative Border Frame -->
-                        <div class="absolute -inset-4 bg-gradient-to-r from-secondary via-primary to-primary rounded-[2rem] opacity-20 group-hover:opacity-30 blur-xl transition-all duration-500"></div>
-
-                        <!-- ════════════════════════════════════════════════════ -->
-                        <!-- MAIN: 4-Logo Motion Showcase                          -->
-                        <!-- 4 logogram bergantian dengan transisi smooth + ken-burns -->
-                        <!-- ════════════════════════════════════════════════════ -->
-                        <div class="ftm-logo-stage relative rounded-[2rem] overflow-hidden shadow-2xl ring-4 ring-white/50">
-
-                            {{-- Backdrop yang ikut bergerak per slide --}}
-                            <div class="ftm-logo-bg ftm-logo-bg-1"></div>
-                            <div class="ftm-logo-bg ftm-logo-bg-2"></div>
-                            <div class="ftm-logo-bg ftm-logo-bg-3"></div>
-                            <div class="ftm-logo-bg ftm-logo-bg-4"></div>
-
-                            {{-- Subtle dotted pattern overlay --}}
-                            <div class="ftm-logo-pattern"></div>
-
-                            {{-- Empat logo, masing-masing dengan animasi sendiri --}}
-                            <div class="ftm-logo-slide ftm-logo-slide-1">
-                                <img src="{{ asset('images/LOGOGRAM PINK.png') }}"
-                                     alt="FTM Society Logogram - Power Pink"
-                                     loading="eager">
-                            </div>
-                            <div class="ftm-logo-slide ftm-logo-slide-2">
-                                <img src="{{ asset('images/LOGOGRAM DARK.png') }}"
-                                     alt="FTM Society Logogram - Burnt Cherry"
-                                     loading="lazy">
-                            </div>
-                            <div class="ftm-logo-slide ftm-logo-slide-3">
-                                <img src="{{ asset('images/LOGOGRAM HIJAU.png') }}"
-                                     alt="FTM Society Logogram - Patina Green"
-                                     loading="lazy">
-                            </div>
-                            <div class="ftm-logo-slide ftm-logo-slide-4">
-                                <img src="{{ asset('images/LOGOGRAM LIGHT.png') }}"
-                                     alt="FTM Society Logogram - Soft Petals"
-                                     loading="lazy">
-                            </div>
-
-                            {{-- Caption strip di bawah --}}
-                            <div class="ftm-logo-caption">
-                                <span class="ftm-logo-caption-eyebrow">FTM Society</span>
-                                <span class="ftm-logo-caption-tag">Empowering Muslimah</span>
-                            </div>
-
-                            {{-- Indicator dots --}}
-                            <div class="ftm-logo-dots">
-                                <button type="button" class="ftm-logo-dot" data-slide="0" aria-label="Slide 1"></button>
-                                <button type="button" class="ftm-logo-dot" data-slide="1" aria-label="Slide 2"></button>
-                                <button type="button" class="ftm-logo-dot" data-slide="2" aria-label="Slide 3"></button>
-                                <button type="button" class="ftm-logo-dot" data-slide="3" aria-label="Slide 4"></button>
-                            </div>
+                <!-- Feature Cards -->
+                <div class="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-4 justify-center lg:justify-start">
+                    
+                    <!-- Card 1: Aktif & Produktif -->
+                    <div class="tentang-card" style="flex: 1; min-width: 200px; max-width: 280px;">
+                        <div class="tentang-card-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2l2.09 6.26L20.18 9l-5.09 4.09L16.18 20 12 16.54 7.82 20l1.09-6.91L3.82 9l6.09-.74z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="tentang-card-title">Aktif & Produktif</div>
+                            <div class="tentang-card-desc">Menginspirasi untuk terus bermanfaat setiap hari.</div>
                         </div>
                     </div>
 
-                    {{-- ════════════════════════════════════════════════════ --}}
-                    {{-- 4-Logo Slider Controller — pure JS (no animation lib) --}}
-                    {{-- ════════════════════════════════════════════════════ --}}
-                    <script>
-                    (function() {
-                        const stage = document.querySelector('.ftm-logo-stage');
-                        if (!stage) return;
-
-                        const slides = stage.querySelectorAll('.ftm-logo-slide');
-                        const bgs    = stage.querySelectorAll('.ftm-logo-bg');
-                        const dots   = stage.querySelectorAll('.ftm-logo-dot');
-                        const total  = slides.length;
-                        if (!total) return;
-
-                        let current  = 0;
-                        let timer    = null;
-                        const DURATION = 4500; // ms per slide
-
-                        function setActive(idx) {
-                            slides.forEach((el, i) => el.classList.toggle('is-active', i === idx));
-                            bgs.forEach((el, i)    => el.classList.toggle('is-active', i === idx));
-                            dots.forEach((el, i)   => el.classList.toggle('is-active', i === idx));
-                            current = idx;
-                        }
-
-                        function next() {
-                            setActive((current + 1) % total);
-                        }
-
-                        function startAuto() {
-                            stopAuto();
-                            timer = setInterval(next, DURATION);
-                        }
-                        function stopAuto() {
-                            if (timer) { clearInterval(timer); timer = null; }
-                        }
-
-                        // Click dot to jump
-                        dots.forEach((dot, i) => {
-                            dot.addEventListener('click', () => {
-                                setActive(i);
-                                startAuto(); // restart timer
-                            });
-                        });
-
-                        // Pause on hover, resume on leave
-                        stage.addEventListener('mouseenter', stopAuto);
-                        stage.addEventListener('mouseleave', startAuto);
-
-                        // Init
-                        setActive(0);
-                        startAuto();
-                    })();
-                    </script>
-
-                    
-
-                    <!-- Floating Trust Badge -->
-                    <div class="absolute -top-6 -left-6 bg-cream rounded-2xl shadow-xl p-4 border-2 border-secondary/20 backdrop-blur-sm hidden lg:block"
-                         data-aos="fade-down" data-aos-delay="300">
-                        <div class="flex items-center gap-2">
-                            <div class="w-3 h-3 bg-secondary rounded-full animate-pulse"></div>
-                            <span class="font-bold text-primary text-sm">Trusted Community</span>
+                    <!-- Card 2: Sesuai Syariat -->
+                    <div class="tentang-card" style="flex: 1; min-width: 200px; max-width: 280px;">
+                        <div class="tentang-card-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="tentang-card-title">Sesuai Syariat</div>
+                            <div class="tentang-card-desc">Berlandaskan nilai Islam dalam setiap langkah.</div>
                         </div>
                     </div>
 
-                    <!-- Signature Brand Flower Ornament -->
-                    <div class="brand-flower brand-flower-pink brand-float absolute -bottom-8 -right-8 hidden lg:block" style="width: 80px; height: 80px; z-index: 5;"></div>
-                    <div class="brand-asterisk brand-float absolute -top-10 right-10 hidden lg:block" style="width: 36px; height: 36px; animation-delay: 1s; z-index: 5;"></div>
+                </div>
 
-                    <!-- Decorative Blur Elements -->
-                    <div class="absolute -top-8 -left-8 w-32 h-32 bg-secondary/30 rounded-full blur-3xl -z-10"></div>
-                    <div class="absolute -bottom-8 -right-8 w-40 h-40 bg-primary/30 rounded-full blur-3xl -z-10"></div>
-                    
+            </div>
+
+            <!-- RIGHT COLUMN: Image -->
+            <div class="w-full lg:w-[58%] xl:w-[60%] order-2">
+                <div class="tentang-image-wrapper">
+                    <img src="{{ asset('images/logoftm2-removebg-preview.png') }}" alt="FTM Society Logo" loading="lazy">
                 </div>
             </div>
 
-            <!-- RIGHT COLUMN - Content (7 cols) -->
-            <div class="lg:col-span-7 order-1 lg:order-2 space-y-8" data-aos="fade-left" data-aos-delay="200">
+        </div>
+    </div>
+</section>
+
+<!-- ========================================= -->
+<!-- VISI & MISI SECTION -->
+<!-- ========================================= -->
+
+<style>
+    .visi-misi-section {
+        background-color: #FFF8FA;
+        position: relative;
+        overflow: hidden;
+        font-family: 'Poppins', sans-serif;
+        color: #2D2D2D;
+    }
+
+    /* Glow Orbs */
+    .visi-misi-section .glow-orb-tl {
+        position: absolute;
+        top: -150px;
+        left: -150px;
+        width: 450px;
+        height: 450px;
+        background: radial-gradient(circle, rgba(242,93,148,0.12) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+    .visi-misi-section .glow-orb-br {
+        position: absolute;
+        bottom: -200px;
+        right: -200px;
+        width: 550px;
+        height: 550px;
+        background: radial-gradient(circle, rgba(242,93,148,0.10) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    /* Stat icon box */
+    .visi-misi-stat-icon {
+        width: 52px;
+        height: 52px;
+        background-color: #FCE7EF;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #F25D94;
+        margin-bottom: 16px;
+        border: 1px solid rgba(242, 93, 148, 0.15);
+    }
+
+    /* Card styling */
+    .visi-misi-card {
+        background: white;
+        border-radius: 30px;
+        border: 1px solid rgba(242, 93, 148, 0.1);
+        padding: 36px;
+        box-shadow: 0 4px 20px rgba(242, 93, 148, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+        transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        position: relative;
+    }
+    .visi-misi-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(242, 93, 148, 0.08), 0 4px 12px rgba(0, 0, 0, 0.03);
+        border-color: rgba(242, 93, 148, 0.25);
+    }
+
+    .visi-misi-card-icon {
+        width: 52px;
+        height: 52px;
+        background-color: #FCE7EF;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #F25D94;
+        margin-bottom: 24px;
+        border: 1px solid rgba(242, 93, 148, 0.15);
+    }
+
+    .visi-misi-card-btn {
+        width: 44px;
+        height: 44px;
+        background-color: #F9FAFB;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #2D2D2D;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        margin-top: 24px;
+        align-self: flex-start;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+    .visi-misi-card:hover .visi-misi-card-btn {
+        background-color: #F25D94;
+        color: white;
+        border-color: #F25D94;
+        transform: scale(1.05);
+    }
+
+    /* Quote Card styling */
+    .visi-misi-quote-card {
+        background: white;
+        border-radius: 30px;
+        border: 1px solid rgba(242, 93, 148, 0.08);
+        padding: 24px 36px;
+        box-shadow: 0 4px 20px rgba(242, 93, 148, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02);
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        position: relative;
+        overflow: hidden;
+        min-height: 140px;
+        width: 100%;
+    }
+    
+    .visi-misi-quote-card .quote-icon-left {
+        color: #F25D94;
+        opacity: 0.8;
+        flex-shrink: 0;
+    }
+
+    .visi-misi-quote-card .quote-watermark-right {
+        position: absolute;
+        right: 24px;
+        bottom: -20px;
+        font-size: 150px;
+        line-height: 1;
+        font-family: 'Instrument Serif', Georgia, serif;
+        color: #FCE7EF;
+        opacity: 0.25;
+        user-select: none;
+        pointer-events: none;
+        font-weight: 900;
+    }
+</style>
+
+<section id="visi-misi" class="visi-misi-section relative" style="padding: 100px 0 110px;" data-aos="fade-up">
+    <!-- Glow orbs -->
+    <div class="glow-orb-tl"></div>
+    <div class="glow-orb-br"></div>
+
+    <div class="w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 xl:px-20 relative z-10">
+        <div class="flex flex-col lg:flex-row gap-12 lg:gap-[60px] items-center">
+
+            <!-- LEFT COLUMN: ~45% -->
+            <div class="w-full lg:w-[45%] text-center lg:text-left">
                 
-                <!-- Title with Icon -->
-                <div class="flex items-start gap-4">
-                    <div class="flex-shrink-0 w-1 h-16 bg-gradient-to-b from-primary via-secondary to-primary rounded-full"></div>
-                    <div>
-                        <h3 class="text-3xl md:text-4xl lg:text-5xl font-black text-primary mb-2">
-                            Vision & Mission
-                        </h3>
-                        <p class="text-sm text-dark/55 font-medium uppercase tracking-wider">Our Purpose & Goals</p>
-                    </div>
-                </div>
+                <!-- Badge -->
+                <p style="
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 13px;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    letter-spacing: 0.25em;
+                    color: #F25D94;
+                    margin-bottom: 20px;
+                ">VISI & MISI</p>
 
-                <!-- Description with Enhanced Typography -->
-                <div class="space-y-5 pl-5">
-                    <p class="text-dark leading-relaxed text-base md:text-lg relative">
-                        <span class="absolute -left-5 top-2 w-2 h-2 bg-secondary rounded-full"></span>
-                        <span class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">FTM Society</span> adalah memberikan ruang bagi para muslimah untuk memiliki gaya hidup <span class="font-semibold text-primary">aktif</span> dan <span class="font-semibold text-secondary">produktif</span> yang sesuai dengan syariat Islam.
-                    </p>
-                    <p class="text-dark leading-relaxed text-base md:text-lg relative">
-                        <span class="absolute -left-5 top-2 w-2 h-2 bg-primary rounded-full"></span>
-                        Oleh karena itu, FTM Society hadir menyelenggarakan kegiatan olahraga dan kegiatan aktif sosial lainnya, seperti <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-secondary/10 text-secondary font-semibold rounded-md text-sm"><i class="ri-presentation-line"></i>webinar</span> dan <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-primary/10 text-primary font-semibold rounded-md text-sm"><i class="ri-calendar-event-line"></i>event</span>.
-                    </p>
-                </div>
+                <!-- Heading -->
+                <h2 style="
+                    font-family: 'Nord', 'Poppins', sans-serif;
+                    font-weight: 800;
+                    font-size: clamp(42px, 5vw, 64px);
+                    line-height: 1.1;
+                    color: #2D2D2D;
+                    margin-bottom: 24px;
+                ">
+                    Visi & Misi <span style="color: #F25D94; font-style: italic; font-weight: 700;">Kami</span>
+                </h2>
 
-                <!-- Feature Cards Grid - Premium Design -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                <!-- Description -->
+                <p style="
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 15px;
+                    font-weight: 400;
+                    line-height: 1.8;
+                    color: #6B7280;
+                    max-width: 500px;
+                    margin-bottom: 48px;
+                " class="mx-auto lg:mx-0">
+                    Kami bergerak dengan visi yang jelas dan misi yang nyata untuk memberi dampak positif bagi muslimah.
+                </p>
+
+                <!-- Feature Cards Grid (Replaces Statistics Grid) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 text-left">
                     
-                    <!-- Feature Card 1 - Enhanced -->
-                    <div class="group relative bg-cream rounded-2xl p-5 shadow-lg hover:shadow-2xl border border-light-pink/60 hover:border-secondary/30 transition-all duration-300 overflow-hidden cursor-pointer"
-                         data-aos="fade-up" data-aos-delay="300">
-                        
+                    <!-- Feature Card 1 -->
+                    <div class="group relative bg-white rounded-2xl p-5 shadow-[0_4px_20px_rgba(242,93,148,0.04)] border border-[#F4C9DF]/30 hover:border-[#7A2B4A]/30 transition-all duration-300 overflow-hidden cursor-pointer">
                         <!-- Gradient Background on Hover -->
-                        <div class="absolute inset-0 bg-gradient-to-br from-light-pink to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div class="absolute inset-0 bg-gradient-to-br from-[#FCE7EF]/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         
-                        <div class="relative flex items-start gap-4">
+                        <div class="relative flex items-center gap-4">
                             <!-- Icon Container -->
                             <div class="relative flex-shrink-0">
-                                <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-gradient-to-br from-light-pink to-light-pink text-primary group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
-                                    <i class="ri-shield-check-line text-3xl"></i>
+                                <div class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#FCE7EF] text-[#EE4E8B] group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-sm border border-[#F25D94]/10">
+                                    <i class="ri-shield-check-line text-2xl"></i>
                                 </div>
-                                <div class="absolute -top-1 -right-1 w-4 h-4 bg-secondary rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             </div>
                             
                             <!-- Content -->
                             <div class="flex-1">
-                                <h4 class="font-black text-dark text-base mb-1 group-hover:text-primary transition-colors duration-300">
+                                <h4 style="font-family: 'Poppins', sans-serif;" class="font-bold text-[#1C1C1C] text-sm uppercase tracking-wider mb-0.5 group-hover:text-[#EE4E8B] transition-colors duration-300">
                                     Muslimah Only
                                 </h4>
-                                <p class="text-sm text-dark/70 leading-relaxed">
+                                <p style="font-family: 'Poppins', sans-serif;" class="text-xs text-[#6B7280] leading-normal font-medium">
                                     100% Private & Safe Environment
                                 </p>
-                                <!-- Decorative Line -->
-                                <div class="mt-2 h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-secondary to-transparent transition-all duration-500"></div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Feature Card 2 - Enhanced -->
-                    <div class="group relative bg-cream rounded-2xl p-5 shadow-lg hover:shadow-2xl border border-light-pink/60 hover:border-primary/30 transition-all duration-300 overflow-hidden cursor-pointer"
-                         data-aos="fade-up" data-aos-delay="400">
+                    <!-- Feature Card 2 -->
+                    <div class="group relative bg-white rounded-2xl p-5 shadow-[0_4px_20px_rgba(242,93,148,0.04)] border border-[#F4C9DF]/30 hover:border-[#EE4E8B]/30 transition-all duration-300 overflow-hidden cursor-pointer">
+                        <!-- Gradient Background on Hover -->
+                        <div class="absolute inset-0 bg-gradient-to-br from-[#FCE7EF]/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         
-                        <div class="absolute inset-0 bg-gradient-to-br from-light-pink to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        
-                        <div class="relative flex items-start gap-4">
+                        <div class="relative flex items-center gap-4">
+                            <!-- Icon Container -->
                             <div class="relative flex-shrink-0">
-                                <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-gradient-to-br from-light-pink to-light-pink text-primary group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
-                                    <i class="ri-heart-pulse-line text-3xl"></i>
+                                <div class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#FCE7EF] text-[#EE4E8B] group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-sm border border-[#F25D94]/10">
+                                    <i class="ri-heart-pulse-line text-2xl"></i>
                                 </div>
-                                <div class="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             </div>
                             
+                            <!-- Content -->
                             <div class="flex-1">
-                                <h4 class="font-black text-dark text-base mb-1 group-hover:text-primary transition-colors duration-300">
+                                <h4 style="font-family: 'Poppins', sans-serif;" class="font-bold text-[#1C1C1C] text-sm uppercase tracking-wider mb-0.5 group-hover:text-[#EE4E8B] transition-colors duration-300">
                                     Certified Trainers
                                 </h4>
-                                <p class="text-sm text-dark/70 leading-relaxed">
+                                <p style="font-family: 'Poppins', sans-serif;" class="text-xs text-[#6B7280] leading-normal font-medium">
                                     Professional Muslimah Coaches
                                 </p>
-                                <div class="mt-2 h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary to-transparent transition-all duration-500"></div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Feature Card 3 - Full Width Enhanced -->
-                    <div class="group relative bg-cream rounded-2xl p-5 shadow-lg hover:shadow-2xl border border-light-pink/60 hover:border-secondary/30 transition-all duration-300 overflow-hidden cursor-pointer sm:col-span-2"
-                         data-aos="fade-up" data-aos-delay="500">
+                    <!-- Feature Card 3 -->
+                    <div class="group relative bg-white rounded-2xl p-5 shadow-[0_4px_20px_rgba(242,93,148,0.04)] border border-[#F4C9DF]/30 hover:border-[#7A2B4A]/30 transition-all duration-300 overflow-hidden cursor-pointer sm:col-span-2">
+                        <!-- Gradient Background on Hover -->
+                        <div class="absolute inset-0 bg-gradient-to-br from-[#FCE7EF]/30 via-[#FCE7EF]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         
-                        <div class="absolute inset-0 bg-gradient-to-br from-light-pink via-light-pink to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        
-                        <div class="relative flex items-start gap-4">
+                        <div class="relative flex items-center gap-4">
+                            <!-- Icon Container -->
                             <div class="relative flex-shrink-0">
-                                <div class="w-16 h-16 flex items-center justify-center rounded-2xl bg-gradient-to-br from-grounded-green to-patina-green text-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
-                                    <i class="ri-pray-line text-3xl"></i>
+                                <div class="w-12 h-12 flex items-center justify-center rounded-2xl bg-[#FCE7EF] text-[#EE4E8B] group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-sm border border-[#F25D94]/10">
+                                    <div class="flex items-center justify-center gap-1">
+                                        <i class="ri-volume-mute-line text-lg"></i>
+                                        <i class="ri-camera-off-line text-lg"></i>
+                                    </div>
                                 </div>
-                                <div class="absolute -top-1 -right-1 w-4 h-4 bg-secondary rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             </div>
                             
+                            <!-- Content -->
                             <div class="flex-1">
-                                <h4 class="font-black text-dark text-base mb-1 group-hover:text-primary transition-colors duration-300">
+                                <h4 style="font-family: 'Poppins', sans-serif;" class="font-bold text-[#1C1C1C] text-sm uppercase tracking-wider mb-0.5 group-hover:text-[#EE4E8B] transition-colors duration-300">
                                     No Music & No Camera
                                 </h4>
-                                <p class="text-sm text-dark/70 leading-relaxed">
+                                <p style="font-family: 'Poppins', sans-serif;" class="text-xs text-[#6B7280] leading-normal font-medium">
                                     Fully Islamic-Compliant Environment for Your Comfort
                                 </p>
-                                <div class="mt-2 h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-transparent transition-all duration-500"></div>
                             </div>
                         </div>
                     </div>
 
                 </div>
 
-                <!-- CTA Section - Premium -->
-                <div class="flex flex-col sm:flex-row gap-4 pt-6" data-aos="fade-up" data-aos-delay="600">
-                    
-                   
-                    
-                </div>
-
             </div>
 
+            <!-- RIGHT COLUMN: ~55% -->
+            <div class="w-full lg:w-[55%] flex flex-col gap-6">
+                
+                <!-- Cards Row: Visi & Misi -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Card Visi -->
+                    <div class="visi-misi-card">
+                        <div class="visi-misi-card-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </div>
+                        <h3 style="font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 700; color: #2D2D2D; margin-bottom: 12px;">Visi</h3>
+                        <p style="font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 500; line-height: 1.6; color: #4B5563;">
+                            <span class="font-bold text-[#7A2B4A]">FTM Society</span> adalah memberikan ruang bagi para muslimah untuk memiliki gaya hidup <span class="font-semibold text-[#EE4E8B]">aktif</span> dan <span class="font-semibold text-[#7A2B4A]">produktif</span> yang sesuai dengan syariat Islam.
+                        </p>
+                        <a href="#" class="visi-misi-card-btn" aria-label="Detail Visi">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                <polyline points="12 5 19 12 12 19"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <!-- Card Misi -->
+                    <div class="visi-misi-card">
+                        <div class="visi-misi-card-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <circle cx="12" cy="12" r="6"/>
+                                <circle cx="12" cy="12" r="2"/>
+                            </svg>
+                        </div>
+                        <h3 style="font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 700; color: #2D2D2D; margin-bottom: 12px;">Misi</h3>
+                        <p style="font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 500; line-height: 1.6; color: #4B5563;">
+                            Oleh karena itu, <span class="font-bold text-[#7A2B4A]">FTM Society</span> hadir menyelenggarakan kegiatan olahraga dan kegiatan aktif sosial lainnya, seperti <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-[#7A2B4A]/10 text-[#7A2B4A] font-semibold rounded-md text-xs"><i class="ri-presentation-line"></i>webinar</span> dan <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-[#EE4E8B]/10 text-[#EE4E8B] font-semibold rounded-md text-xs"><i class="ri-calendar-event-line"></i>event</span>.
+                        </p>
+                        <a href="#" class="visi-misi-card-btn" aria-label="Detail Misi">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                <polyline points="12 5 19 12 12 19"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========================================= -->
+<!-- WHY CHOOSE US SECTION -->
+<!-- ========================================= -->
+<section id="why-choose-us" class="relative bg-white overflow-hidden" style="padding: 100px 0 110px;" data-aos="fade-up">
+    
+    <!-- Background Soft Blur Orbs (Right Side) -->
+    <div class="absolute -right-48 top-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle,_rgba(236,91,148,0.06)_0%,_transparent_70%)] pointer-events-none filter blur-2xl"></div>
+    <div class="absolute -right-24 top-[60%] -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle,_rgba(236,91,148,0.04)_0%,_transparent_70%)] pointer-events-none filter blur-xl"></div>
+
+    <div class="w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 xl:px-20 relative z-10 text-left">
+        
+        <!-- Eyebrow label -->
+        <span class="block text-xs md:text-sm font-semibold tracking-[0.25em] text-[#ec5b94] uppercase mb-4">
+            MENGAPA MEMILIH KAMI
+        </span>
+
+        <!-- Main Heading -->
+        <h2 class="font-instrument text-5xl md:text-[72px] leading-[1.05] text-[#1C1C1C] font-normal">
+            Komitmen Nyata untuk<br>
+            <span class="text-[#ec5b94] italic font-instrument">Perubahan Bermakna.</span>
+        </h2>
+
+        <!-- Decorative Line and Dot -->
+        <div class="flex items-center gap-2 mt-6 mb-8">
+            <span class="w-12 h-[3px] bg-[#ec5b94] rounded-full"></span>
+            <span class="w-2.5 h-2.5 bg-[#ec5b94] rounded-full"></span>
         </div>
 
+        <!-- Statistics Grid (4 columns) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+            <!-- Item 1 -->
+            <div class="flex flex-col text-left">
+                <div class="text-[#ec5b94] mb-4">
+                    <!-- Lucide Shield Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield"><path d="M20 13c0 5-3.5 7.5-7.66 9.7a1 1 0 0 1-.68 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 .76-.97l8-2a1 1 0 0 1 .48 0l8 2A1 1 0 0 1 20 6Z"/></svg>
+                </div>
+                <h4 class="text-[#1C1C1C] font-bold text-xl mb-3 leading-snug sm:min-h-[56px] flex items-start">
+                    Muslimah-Only Space
+                </h4>
+                <p class="text-gray-500 text-sm leading-relaxed sm:min-h-[96px] lg:min-h-[80px] flex items-start">
+                    Fasilitas kami hanya untuk wanita, dengan staf wanita saja. Nikmati privasi lengkap tanpa jendela yang menghadap area publik dan sistem masuk yang aman.
+                </p>
             </div>
+
+            <!-- Item 2 -->
+            <div class="flex flex-col text-left">
+                <div class="text-[#ec5b94] mb-4">
+                    <!-- Lucide Award Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-award"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89 7 23l5-3 5 3-1.21-9.12"/></svg>
+                </div>
+                <h4 class="text-[#1C1C1C] font-bold text-xl mb-3 leading-snug sm:min-h-[56px] flex items-start">
+                    Certified Muslimah Trainer
+                </h4>
+                <p class="text-gray-500 text-sm leading-relaxed sm:min-h-[96px] lg:min-h-[80px] flex items-start">
+                    Dibimbing langsung oleh coach tersertifikasi dengan pengalaman profesional dan pemahaman mendalam tentang kebutuhan muslimah.
+                </p>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="flex flex-col text-left">
+                <div class="text-[#ec5b94] mb-4">
+                    <!-- Lucide Eye Off Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-off"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
+                </div>
+                <h4 class="text-[#1C1C1C] font-bold text-xl mb-3 leading-snug sm:min-h-[56px] flex items-start">
+                    Privacy is Our Priority
+                </h4>
+                <p class="text-gray-500 text-sm leading-relaxed sm:min-h-[96px] lg:min-h-[80px] flex items-start">
+                    Ruang latihan khusus muslimah, tanpa kamera dan tanpa musik. Kami mengutamakan kenyamanan, keamanan, dan privasimu saat berolahraga.
+                </p>
+            </div>
+
+            <!-- Item 4 -->
+            <div class="flex flex-col text-left">
+                <div class="text-[#ec5b94] mb-4">
+                    <!-- Lucide Heart Icon Outline -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                </div>
+                <h4 class="text-[#1C1C1C] font-bold text-xl mb-3 leading-snug sm:min-h-[56px] flex items-start">
+                    Muslimah Friendly
+                </h4>
+                <p class="text-gray-500 text-sm leading-relaxed sm:min-h-[96px] lg:min-h-[80px] flex items-start">
+                    Dirancang khusus untuk muslimah: area khusus wanita, pelatih perempuan bersertifikat, dan suasana nyaman sesuai nilai-nilai islami.
+                </p>
+            </div>
+        </div>
+
+        <!-- CTA Banner Bottom -->
+        <div class="w-full bg-gradient-to-r from-[#6d1b45] via-[#b12768] to-[#ff5f98] rounded-3xl md:rounded-[32px] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 relative overflow-hidden shadow-[0_15px_45px_rgba(177,39,104,0.15)]">
+            
+            <!-- White circle decoration in CTA -->
+            <div class="absolute -right-16 -bottom-16 w-48 h-48 rounded-full bg-white/5 pointer-events-none"></div>
+            <div class="absolute left-1/3 -top-12 w-32 h-32 rounded-full bg-white/5 pointer-events-none"></div>
+
+            <!-- Left Info (Icon + Text) -->
+            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left max-w-3xl">
+                <!-- White Circle with Pink Star Sparkles -->
+                <div class="flex items-center justify-center w-16 h-16 bg-white rounded-full text-[#b12768] shrink-0 shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275Z"/><path d="m5 3 1 2.5L8.5 6 6 7 5 9.5 4 7 1.5 6 4 5Z"/><path d="m19 17 1 2.5 2.5.5-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1Z"/></svg>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="text-white font-bold text-2xl md:text-3xl tracking-tight leading-snug">
+                        Yuk, Jadi Bagian dari Perubahan!
+                    </h3>
+                    <p class="text-white/90 text-sm md:text-base font-medium leading-relaxed max-w-2xl">
+                        Bersama kita bisa memberi manfaat lebih luas dan menciptakan generasi muslimah yang berdaya dan berakhlak mulia.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right Button -->
+            <div class="shrink-0 w-full sm:w-auto flex justify-center md:justify-end">
+                <a href="https://wa.me/6287785767395?text=Halo%20FTM%20Society%2C%20saya%20tertarik%20untuk%20bergabung%20sebagai%20member." target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 bg-white/15 hover:bg-white/25 active:scale-95 border border-white/20 text-white font-bold rounded-full transition-all duration-300 backdrop-blur-sm group shadow-lg">
+                    <span>Gabung Sekarang</span>
+                    <div class="flex items-center justify-center w-8 h-8 bg-white rounded-full text-[#b12768] group-hover:translate-x-1 transition-transform duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </div>
+                </a>
+            </div>
+
         </div>
 
     </div>
 </section>
 
 <!-- ========================================= -->
+<!-- FEATURED PROGRAMS SECTION (OUR PROGRAM)   -->
+<!-- ========================================= -->
+<section id="our-programs" class="bg-white font-poppins relative overflow-hidden" style="padding: 100px 0 110px;" data-aos="fade-up">
+    <div class="w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 xl:px-20 relative z-10">
+        
+        <!-- Header Section -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
+            <!-- Left Side -->
+            <div>
+                <p class="text-[12px] uppercase tracking-[0.25em] text-[#FF4F8B] font-bold mb-3">
+                    PROGRAM UNGGULAN
+                </p>
+                <h2 class="text-[32px] sm:text-[40px] md:text-[48px] font-bold text-[#222222] leading-tight font-nord">
+                    Pilihan Program <span class="text-[#FF4F8B] italic font-semibold">Unggulan</span>
+                </h2>
+            </div>
+            <!-- Right Side -->
+            <div>
+                <a href="#classes" class="group inline-flex items-center gap-2 text-[#FF4F8B] font-semibold transition-all duration-300 hover:opacity-90">
+                    <span>Lihat Semua Program</span>
+                    <i class="ri-arrow-right-line transition-transform duration-300 group-hover:translate-x-1.5 text-[18px]"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Slider Container -->
+        <div class="overflow-hidden relative w-full px-2 py-4" id="programs-slider-container">
+            <div class="flex transition-transform duration-700 ease-in-out gap-8" id="programs-slider-track" style="will-change: transform;">
+                
+                <!-- Card 1: Private Group Class -->
+                <div class="w-full md:w-[calc((100%-32px)/2)] lg:w-[calc((100%-64px)/3)] flex-shrink-0 flex flex-col bg-white rounded-[28px] border border-gray-100 shadow-[0_8px_30px_rgba(0,0,0,0.02)] overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:border-[#FF4F8B]/30 hover:shadow-[0_15px_45px_rgba(255,79,139,0.06)] relative group">
+                    <!-- Image Area -->
+                    <div class="relative h-[240px] overflow-hidden">
+                        <img src="{{ asset('images/foto1.png') }}" alt="Private Group Class" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" draggable="false" />
+                        <!-- Badge -->
+                        <div class="absolute top-[16px] left-[16px] bg-gradient-to-r from-[#FF4F8B] to-[#ff7da6] text-white text-[12px] font-bold px-[14px] py-[6px] rounded-full shadow-md z-10">
+                            Unggulan
+                        </div>
+                    </div>
+
+                    <!-- Floating Icon Box -->
+                    <div class="absolute top-[212px] left-[28px] w-[56px] h-[56px] bg-white rounded-[18px] shadow-[0_8px_20px_rgba(0,0,0,0.08)] flex items-center justify-center z-20 transition-transform duration-300 group-hover:scale-110">
+                        <i class="ri-team-line text-[#FF4F8B] text-[24px]"></i>
+                    </div>
+
+                    <!-- Content Area -->
+                    <div class="p-[28px] pt-[40px] flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-[20px] font-bold text-[#222222] mb-3 leading-snug min-h-[56px] flex items-start">
+                                Private Group Class
+                            </h3>
+                            <p class="text-[14px] text-[#666666] leading-relaxed mb-6 min-h-[80px] flex items-start">
+                                Latihan kelompok privat dengan instruktur berpengalaman, cocok untuk komunitas atau teman-teman.
+                            </p>
+                            <!-- Meta Info -->
+                            <div class="flex flex-col gap-y-2.5 mb-6">
+                                <div class="flex items-center gap-2 text-[13px] text-[#666666]">
+                                    <i class="ri-team-line text-[#FF4F8B] text-[16px]"></i>
+                                    <span>Max 8-10 orang</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-[13px] text-[#666666]">
+                                    <i class="ri-calendar-todo-line text-[#FF4F8B] text-[16px]"></i>
+                                    <span>Jadwal fleksibel</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer Card -->
+                        <div class="border-t border-gray-100 pt-4 flex justify-between items-center mt-auto">
+                            <a href="https://wa.me/6287785767395?text=Halo%20FTM%20Society%2C%20saya%20tertarik%20booking%20Private%20Group%20Class." target="_blank" class="text-[#FF4F8B] font-semibold text-[14px] transition-opacity hover:opacity-80">
+                                Booking Sekarang
+                            </a>
+                            <a href="https://wa.me/6287785767395?text=Halo%20FTM%20Society%2C%20saya%20tertarik%20booking%20Private%20Group%20Class." target="_blank" class="w-[32px] h-[32px] rounded-full bg-[#FFF0F5] flex items-center justify-center transition-all duration-300 hover:bg-[#FF4F8B] hover:text-white text-[#FF4F8B]">
+                                <i class="ri-arrow-right-line text-[14px] transition-transform duration-300 group-hover:translate-x-0.5"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Private Training -->
+                <div class="w-full md:w-[calc((100%-32px)/2)] lg:w-[calc((100%-64px)/3)] flex-shrink-0 flex flex-col bg-white rounded-[28px] border border-gray-100 shadow-[0_8px_30px_rgba(0,0,0,0.02)] overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:border-[#FF4F8B]/30 hover:shadow-[0_15px_45px_rgba(255,79,139,0.06)] relative group">
+                    <!-- Image Area -->
+                    <div class="relative h-[240px] overflow-hidden">
+                        <img src="{{ asset('images/foto3.png') }}" alt="Private Training" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" draggable="false" />
+                        <!-- Badge -->
+                        <div class="absolute top-[16px] left-[16px] bg-gradient-to-r from-[#FF4F8B] to-[#ff7da6] text-white text-[12px] font-bold px-[14px] py-[6px] rounded-full shadow-md z-10">
+                            Unggulan
+                        </div>
+                    </div>
+
+                    <!-- Floating Icon Box -->
+                    <div class="absolute top-[212px] left-[28px] w-[56px] h-[56px] bg-white rounded-[18px] shadow-[0_8px_20px_rgba(0,0,0,0.08)] flex items-center justify-center z-20 transition-transform duration-300 group-hover:scale-110">
+                        <i class="ri-user-heart-line text-[#FF4F8B] text-[24px]"></i>
+                    </div>
+
+                    <!-- Content Area -->
+                    <div class="p-[28px] pt-[40px] flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-[20px] font-bold text-[#222222] mb-3 leading-snug min-h-[56px] flex items-start">
+                                Private Training
+                            </h3>
+                            <p class="text-[14px] text-[#666666] leading-relaxed mb-6 min-h-[80px] flex items-start">
+                                Sesi latihan personal sesuai kebutuhan Anda, didampingi pelatih profesional untuk hasil optimal.
+                            </p>
+                            <!-- Meta Info -->
+                            <div class="flex flex-col gap-y-2.5 mb-6">
+                                <div class="flex items-center gap-2 text-[13px] text-[#666666]">
+                                    <i class="ri-user-star-line text-[#FF4F8B] text-[16px]"></i>
+                                    <span>Personal attention</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-[13px] text-[#666666]">
+                                    <i class="ri-settings-4-line text-[#FF4F8B] text-[16px]"></i>
+                                    <span>Custom program</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer Card -->
+                        <div class="border-t border-gray-100 pt-4 flex justify-between items-center mt-auto">
+                            <a href="https://wa.me/6287785767395?text=Halo%20FTM%20Society%2C%20saya%20tertarik%20booking%20Private%20Training." target="_blank" class="text-[#FF4F8B] font-semibold text-[14px] transition-opacity hover:opacity-80">
+                                Booking Sekarang
+                            </a>
+                            <a href="https://wa.me/6287785767395?text=Halo%20FTM%20Society%2C%20saya%20tertarik%20booking%20Private%20Training." target="_blank" class="w-[32px] h-[32px] rounded-full bg-[#FFF0F5] flex items-center justify-center transition-all duration-300 hover:bg-[#FF4F8B] hover:text-white text-[#FF4F8B]">
+                                <i class="ri-arrow-right-line text-[14px] transition-transform duration-300 group-hover:translate-x-0.5"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Single Visit Class -->
+                <div class="w-full md:w-[calc((100%-32px)/2)] lg:w-[calc((100%-64px)/3)] flex-shrink-0 flex flex-col bg-white rounded-[28px] border border-gray-100 shadow-[0_8px_30px_rgba(0,0,0,0.02)] overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:border-[#FF4F8B]/30 hover:shadow-[0_15px_45px_rgba(255,79,139,0.06)] relative group">
+                    <!-- Image Area -->
+                    <div class="relative h-[240px] overflow-hidden">
+                        <img src="{{ asset('images/mat pilates.png') }}" alt="Single Visit Class" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" draggable="false" />
+                        <!-- Badge -->
+                        <div class="absolute top-[16px] left-[16px] bg-gradient-to-r from-[#FF4F8B] to-[#ff7da6] text-white text-[12px] font-bold px-[14px] py-[6px] rounded-full shadow-md z-10">
+                            Unggulan
+                        </div>
+                    </div>
+
+                    <!-- Floating Icon Box -->
+                    <div class="absolute top-[212px] left-[28px] w-[56px] h-[56px] bg-white rounded-[18px] shadow-[0_8px_20px_rgba(0,0,0,0.08)] flex items-center justify-center z-20 transition-transform duration-300 group-hover:scale-110">
+                        <i class="ri-calendar-check-line text-[#FF4F8B] text-[24px]"></i>
+                    </div>
+
+                    <!-- Content Area -->
+                    <div class="p-[28px] pt-[40px] flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-[20px] font-bold text-[#222222] mb-3 leading-snug min-h-[56px] flex items-start">
+                                Single Visit Class
+                            </h3>
+                            <p class="text-[14px] text-[#666666] leading-relaxed mb-6 min-h-[80px] flex items-start">
+                                Ikuti kelas tanpa harus menjadi member tetap. Fleksibel untuk Anda yang ingin mencoba atau punya jadwal padat.
+                            </p>
+                            <!-- Meta Info -->
+                            <div class="flex flex-col gap-y-2.5 mb-6">
+                                <div class="flex items-center gap-2 text-[13px] text-[#666666]">
+                                    <i class="ri-heart-3-line text-[#FF4F8B] text-[16px]"></i>
+                                    <span>No commitment</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-[13px] text-[#666666]">
+                                    <i class="ri-compass-3-line text-[#FF4F8B] text-[16px]"></i>
+                                    <span>Try first</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer Card -->
+                        <div class="border-t border-gray-100 pt-4 flex justify-between items-center mt-auto">
+                            <a href="https://wa.me/6287785767395?text=Halo%20FTM%20Society%2C%20saya%20tertarik%20booking%20Single%20Visit%20Class." target="_blank" class="text-[#FF4F8B] font-semibold text-[14px] transition-opacity hover:opacity-80">
+                                Booking Sekarang
+                            </a>
+                            <a href="https://wa.me/6287785767395?text=Halo%20FTM%20Society%2C%20saya%20tertarik%20booking%20Single%20Visit%20Class." target="_blank" class="w-[32px] h-[32px] rounded-full bg-[#FFF0F5] flex items-center justify-center transition-all duration-300 hover:bg-[#FF4F8B] hover:text-white text-[#FF4F8B]">
+                                <i class="ri-arrow-right-line text-[14px] transition-transform duration-300 group-hover:translate-x-0.5"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Reformer Pilates -->
+                <div class="w-full md:w-[calc((100%-32px)/2)] lg:w-[calc((100%-64px)/3)] flex-shrink-0 flex flex-col bg-white rounded-[28px] border border-gray-100 shadow-[0_8px_30px_rgba(0,0,0,0.02)] overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:border-[#FF4F8B]/30 hover:shadow-[0_15px_45px_rgba(255,79,139,0.06)] relative group">
+                    <!-- Image Area -->
+                    <div class="relative h-[240px] overflow-hidden">
+                        <img src="{{ asset('images/revormer pilates.png') }}" alt="Reformer Pilates" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" draggable="false" />
+                        <!-- Badge -->
+                        <div class="absolute top-[16px] left-[16px] bg-gradient-to-r from-[#FF4F8B] to-[#ff7da6] text-white text-[12px] font-bold px-[14px] py-[6px] rounded-full shadow-md z-10">
+                            Unggulan
+                        </div>
+                    </div>
+
+                    <!-- Floating Icon Box -->
+                    <div class="absolute top-[212px] left-[28px] w-[56px] h-[56px] bg-white rounded-[18px] shadow-[0_8px_20px_rgba(0,0,0,0.08)] flex items-center justify-center z-20 transition-transform duration-300 group-hover:scale-110">
+                        <i class="ri-focus-3-line text-[#FF4F8B] text-[24px]"></i>
+                    </div>
+
+                    <!-- Content Area -->
+                    <div class="p-[28px] pt-[40px] flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-[20px] font-bold text-[#222222] mb-3 leading-snug min-h-[56px] flex items-start">
+                                Reformer Pilates
+                            </h3>
+                            <p class="text-[14px] text-[#666666] leading-relaxed mb-6 min-h-[80px] flex items-start">
+                                Latihan pilates dengan alat reformer untuk kekuatan, fleksibilitas, dan postur tubuh yang lebih baik.
+                            </p>
+                            <!-- Meta Info -->
+                            <div class="flex flex-col gap-y-2.5 mb-6">
+                                <div class="flex items-center gap-2 text-[13px] text-[#666666]">
+                                    <i class="ri-tools-line text-[#FF4F8B] text-[16px]"></i>
+                                    <span>Alat reformer</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-[13px] text-[#666666]">
+                                    <i class="ri-body-scan-line text-[#FF4F8B] text-[16px]"></i>
+                                    <span>Improve posture</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer Card -->
+                        <div class="border-t border-gray-100 pt-4 flex justify-between items-center mt-auto">
+                            <a href="https://wa.me/6287785767395?text=Halo%20FTM%20Society%2C%20saya%20tertarik%20booking%20Reformer%20Pilates." target="_blank" class="text-[#FF4F8B] font-semibold text-[14px] transition-opacity hover:opacity-80">
+                                Booking Sekarang
+                            </a>
+                            <a href="https://wa.me/6287785767395?text=Halo%20FTM%20Society%2C%20saya%20tertarik%20booking%20Reformer%20Pilates." target="_blank" class="w-[32px] h-[32px] rounded-full bg-[#FFF0F5] flex items-center justify-center transition-all duration-300 hover:bg-[#FF4F8B] hover:text-white text-[#FF4F8B]">
+                                <i class="ri-arrow-right-line text-[14px] transition-transform duration-300 group-hover:translate-x-0.5"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 5: Exclusive Class Program -->
+                <div class="w-full md:w-[calc((100%-32px)/2)] lg:w-[calc((100%-64px)/3)] flex-shrink-0 flex flex-col bg-white rounded-[28px] border border-gray-100 shadow-[0_8px_30px_rgba(0,0,0,0.02)] overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:border-[#FF4F8B]/30 hover:shadow-[0_15px_45px_rgba(255,79,139,0.06)] relative group">
+                    <!-- Image Area -->
+                    <div class="relative h-[240px] overflow-hidden">
+                        <img src="{{ asset('images/foto5.png') }}" alt="Exclusive Class Program" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" draggable="false" />
+                        <!-- Badge -->
+                        <div class="absolute top-[16px] left-[16px] bg-gradient-to-r from-[#FF4F8B] to-[#ff7da6] text-white text-[12px] font-bold px-[14px] py-[6px] rounded-full shadow-md z-10">
+                            Unggulan
+                        </div>
+                    </div>
+
+                    <!-- Floating Icon Box -->
+                    <div class="absolute top-[212px] left-[28px] w-[56px] h-[56px] bg-white rounded-[18px] shadow-[0_8px_20px_rgba(0,0,0,0.08)] flex items-center justify-center z-20 transition-transform duration-300 group-hover:scale-110">
+                        <i class="ri-award-line text-[#FF4F8B] text-[24px]"></i>
+                    </div>
+
+                    <!-- Content Area -->
+                    <div class="p-[28px] pt-[40px] flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-[20px] font-bold text-[#222222] mb-3 leading-snug min-h-[56px] flex items-start">
+                                Exclusive Class Program
+                            </h3>
+                            <p class="text-[14px] text-[#666666] leading-relaxed mb-6 min-h-[80px] flex items-start">
+                                Program kelas eksklusif dengan materi pilihan, peserta terbatas, dan pendampingan intensif.
+                            </p>
+                            <!-- Meta Info -->
+                            <div class="flex flex-col gap-y-2.5 mb-6">
+                                <div class="flex items-center gap-2 text-[13px] text-[#666666]">
+                                    <i class="ri-lock-line text-[#FF4F8B] text-[16px]"></i>
+                                    <span>Limited seats</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-[13px] text-[#666666]">
+                                    <i class="ri-star-line text-[#FF4F8B] text-[16px]"></i>
+                                    <span>Intensive coaching</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer Card -->
+                        <div class="border-t border-gray-100 pt-4 flex justify-between items-center mt-auto">
+                            <a href="https://wa.me/6287785767395?text=Halo%20FTM%20Society%2C%20saya%20tertarik%20booking%20Exclusive%20Class%20Program." target="_blank" class="text-[#FF4F8B] font-semibold text-[14px] transition-opacity hover:opacity-80">
+                                Booking Sekarang
+                            </a>
+                            <a href="https://wa.me/6287785767395?text=Halo%20FTM%20Society%2C%20saya%20tertarik%20booking%20Exclusive%20Class%20Program." target="_blank" class="w-[32px] h-[32px] rounded-full bg-[#FFF0F5] flex items-center justify-center transition-all duration-300 hover:bg-[#FF4F8B] hover:text-white text-[#FF4F8B]">
+                                <i class="ri-arrow-right-line text-[14px] transition-transform duration-300 group-hover:translate-x-0.5"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Slider Pagination Indicators -->
+        <div id="programs-slider-dots" class="flex justify-center items-center gap-2 mt-12">
+            <span class="w-[24px] h-[6px] rounded-full bg-[#FF4F8B] transition-all duration-300"></span>
+            <span class="w-[6px] h-[6px] rounded-full bg-gray-200 transition-all duration-300"></span>
+            <span class="w-[6px] h-[6px] rounded-full bg-gray-200 transition-all duration-300"></span>
+            <span class="w-[6px] h-[6px] rounded-full bg-gray-200 transition-all duration-300"></span>
+            <span class="w-[6px] h-[6px] rounded-full bg-gray-200 transition-all duration-300"></span>
+        </div>
+
+    </div>
+</section>
+
+<!-- ========================================= -->
+<!-- CLASSES SECTION - PREMIUM REDESIGNED      -->
+<!-- Placed right below Program Unggulan       -->
+<!-- ========================================= -->
+<section id="classes" class="premium-classes-section relative animate-fade-in" style="padding: 100px 0 110px;">
+    
+    <!-- Glow Orbs -->
+    <div class="glow-orb-left"></div>
+    <div class="glow-orb-right"></div>
+
+    <!-- Decorative Ornaments -->
+    <div class="brand-flower brand-flower-pink brand-float absolute top-12 left-8 opacity-20" style="width: 54px; height: 54px;"></div>
+    <div class="brand-asterisk brand-float absolute bottom-16 right-12 opacity-15" style="width: 36px; height: 36px; animation-delay: 1.5s;"></div>
+    <div class="brand-cmark brand-float absolute top-1/4 right-[15%] opacity-10" style="width: 48px; height: 48px; animation-delay: 0.8s;"></div>
+
+    <div class="w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 xl:px-20 relative z-10">
+
+        <!-- Header Section -->
+        <div class="text-left mb-16 md:mb-20" data-aos="fade-up">
+            
+            <!-- Eyebrow badge -->
+            <div class="inline-flex items-center gap-2.5 px-5 py-2 mb-6 bg-primary/10 rounded-full border border-primary/20 shadow-md backdrop-blur-sm">
+                <span class="brand-flower brand-flower-pink" style="width: 16px; height: 16px;"></span>
+                <span class="text-xs md:text-sm font-semibold tracking-[0.2em] text-[#EE4E8B] uppercase">
+                    PILIHAN KELAS
+                </span>
+            </div>
+
+            <!-- Title -->
+            <h2 class="font-nord text-4xl sm:text-5xl md:text-[72px] font-black text-dark mb-6 leading-[1.05]">
+                Kelas Kebugaran <br/>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary animate-gradient-shift bg-[length:200%_auto] font-instrument italic font-normal tracking-tight">
+                    Terbaik Kami
+                </span>
+            </h2>
+
+            <!-- Decorative Divider (Left-Aligned like other sections) -->
+            <div class="flex items-center gap-2.5 mt-6 mb-8">
+                <span class="w-16 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></span>
+                <span class="w-3 h-3 bg-primary rounded-full animate-pulse"></span>
+                <span class="w-8 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></span>
+                <span class="w-2.5 h-2.5 bg-secondary rounded-full animate-pulse" style="animation-delay: 0.5s;"></span>
+            </div>
+
+            <p class="text-base md:text-lg text-dark/70 max-w-3xl leading-relaxed font-poppins">
+                Temukan program kebugaran yang dirancang khusus untuk kenyamanan dan kebutuhan fisik muslimah, dibimbing langsung oleh instruktur berpengalaman.
+            </p>
+        </div>
+
+        <!-- 4-Column Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+
+            <!-- Card 1: Muaythai -->
+            <div class="premium-class-card" data-aos="fade-up" data-aos-delay="0">
+                <!-- Image Wrapper -->
+                <div class="premium-class-img-container relative h-56 overflow-hidden flex-shrink-0">
+                    <img src="./images/muaythai.png" alt="Muaythai" class="w-full h-full object-cover" />
+                    <!-- Dark gradient overlay -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/50 via-transparent to-transparent"></div>
+                    <!-- Badges -->
+                    <div class="absolute top-4 left-4 bg-gradient-to-r from-[#EE4E8B] to-[#7A2B4A] text-white text-xs font-black px-3.5 py-1.5 rounded-full shadow-md tracking-wider uppercase">
+                        Populer
+                    </div>
+                    <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm text-primary text-xs font-black px-3 py-1 rounded-full shadow-sm">
+                        45 Min
+                    </div>
+                </div>
+
+                <!-- Card Content -->
+                <div class="p-6 flex-1 flex flex-col justify-between relative z-10">
+                    <div>
+                        <!-- Icon & Title Row -->
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="premium-class-icon-box w-12 h-12 flex items-center justify-center rounded-2xl bg-[#FFF2F6] text-[#EE4E8B] shadow-sm">
+                                <i class="ri-boxing-line text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-nord font-bold text-lg text-dark group-hover:text-primary transition-colors duration-300">
+                                    Muaythai
+                                </h3>
+                                <span class="text-xs text-dark/50 font-semibold font-poppins">Semua Level</span>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <p class="text-xs md:text-sm text-dark/70 leading-relaxed mb-6 font-poppins min-h-[72px]">
+                            Seni bela diri asal Thailand menggunakan delapan titik kontak tubuh: tangan, siku, lutut, dan kaki — melibatkan teknik serangan dan pertahanan.
+                        </p>
+                    </div>
+
+                    <div>
+                        <!-- Accent Line -->
+                        <div class="premium-card-accent-line mb-5"></div>
+
+                        <!-- CTA Button -->
+                        <button onclick="openModal('muaythai')"
+                                class="w-full relative overflow-hidden group/btn bg-gradient-to-r from-primary to-secondary text-white py-3.5 rounded-full hover:shadow-lg transition-all duration-300 text-xs md:text-sm font-bold flex items-center justify-center gap-2">
+                            <span class="relative z-10">Cek Jadwal & Program</span>
+                            <i class="ri-arrow-right-line text-sm relative z-10 transition-transform duration-300 group-hover/btn:translate-x-1"></i>
+                            <div class="absolute inset-0 bg-gradient-to-r from-secondary to-primary opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Body Shaping -->
+            <div class="premium-class-card" data-aos="fade-up" data-aos-delay="100">
+                <!-- Image Wrapper -->
+                <div class="premium-class-img-container relative h-56 overflow-hidden flex-shrink-0">
+                    <img src="./images/body shaping.png" alt="Body Shaping" class="w-full h-full object-cover" />
+                    <!-- Dark gradient overlay -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/50 via-transparent to-transparent"></div>
+                    <!-- Duration -->
+                    <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm text-primary text-xs font-black px-3 py-1 rounded-full shadow-sm">
+                        30 Min
+                    </div>
+                </div>
+
+                <!-- Card Content -->
+                <div class="p-6 flex-1 flex flex-col justify-between relative z-10">
+                    <div>
+                        <!-- Icon & Title Row -->
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="premium-class-icon-box w-12 h-12 flex items-center justify-center rounded-2xl bg-[#FFF2F6] text-[#EE4E8B] shadow-sm">
+                                <i class="ri-body-scan-line text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-nord font-bold text-lg text-dark group-hover:text-primary transition-colors duration-300">
+                                    Body Shaping
+                                </h3>
+                                <span class="text-xs text-dark/50 font-semibold font-poppins">Semua Level</span>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <p class="text-xs md:text-sm text-dark/70 leading-relaxed mb-6 font-poppins min-h-[72px]">
+                            Kelas strength training full body workout untuk toning dan shaping tubuh — dari calisthenics hingga gerakan dengan beban dan equipment pendukung.
+                        </p>
+                    </div>
+
+                    <div>
+                        <!-- Accent Line -->
+                        <div class="premium-card-accent-line mb-5"></div>
+
+                        <!-- CTA Button -->
+                        <button onclick="openModal('body-shaping')"
+                                class="w-full relative overflow-hidden group/btn bg-gradient-to-r from-primary to-secondary text-white py-3.5 rounded-full hover:shadow-lg transition-all duration-300 text-xs md:text-sm font-bold flex items-center justify-center gap-2">
+                            <span class="relative z-10">Cek Jadwal & Program</span>
+                            <i class="ri-arrow-right-line text-sm relative z-10 transition-transform duration-300 group-hover/btn:translate-x-1"></i>
+                            <div class="absolute inset-0 bg-gradient-to-r from-secondary to-primary opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Mat Pilates -->
+            <div class="premium-class-card" data-aos="fade-up" data-aos-delay="200">
+                <!-- Image Wrapper -->
+                <div class="premium-class-img-container relative h-56 overflow-hidden flex-shrink-0">
+                    <img src="./images/mat pilates.png" alt="Mat Pilates" class="w-full h-full object-cover" />
+                    <!-- Dark gradient overlay -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/50 via-transparent to-transparent"></div>
+                    <!-- Duration -->
+                    <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm text-primary text-xs font-black px-3 py-1 rounded-full shadow-sm">
+                        60 Min
+                    </div>
+                </div>
+
+                <!-- Card Content -->
+                <div class="p-6 flex-1 flex flex-col justify-between relative z-10">
+                    <div>
+                        <!-- Icon & Title Row -->
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="premium-class-icon-box w-12 h-12 flex items-center justify-center rounded-2xl bg-[#FFF2F6] text-[#EE4E8B] shadow-sm">
+                                <i class="ri-mental-health-line text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-nord font-bold text-lg text-dark group-hover:text-primary transition-colors duration-300">
+                                    Mat Pilates
+                                </h3>
+                                <span class="text-xs text-dark/50 font-semibold font-poppins">Semua Level</span>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <p class="text-xs md:text-sm text-dark/70 leading-relaxed mb-6 font-poppins min-h-[72px]">
+                            Latihan di atas matras fokus pada kekuatan inti (core), stabilitas, postur, pernapasan, dan fleksibilitas — dilakukan secara perlahan dan terkontrol.
+                        </p>
+                    </div>
+
+                    <div>
+                        <!-- Accent Line -->
+                        <div class="premium-card-accent-line mb-5"></div>
+
+                        <!-- CTA Button -->
+                        <button onclick="openModal('mat-pilates')"
+                                class="w-full relative overflow-hidden group/btn bg-gradient-to-r from-primary to-secondary text-white py-3.5 rounded-full hover:shadow-lg transition-all duration-300 text-xs md:text-sm font-bold flex items-center justify-center gap-2">
+                            <span class="relative z-10">Cek Jadwal & Program</span>
+                            <i class="ri-arrow-right-line text-sm relative z-10 transition-transform duration-300 group-hover/btn:translate-x-1"></i>
+                            <div class="absolute inset-0 bg-gradient-to-r from-secondary to-primary opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4: Reformer Pilates -->
+            <div class="premium-class-card" data-aos="fade-up" data-aos-delay="300">
+                <!-- Image Wrapper -->
+                <div class="premium-class-img-container relative h-56 overflow-hidden flex-shrink-0">
+                    <img src="./images/revormer pilates.png" alt="Reformer Pilates" class="w-full h-full object-cover" />
+                    <!-- Dark gradient overlay -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/50 via-transparent to-transparent"></div>
+                    <!-- Badges -->
+                    <div class="absolute top-4 left-4 bg-gradient-to-r from-[#EE4E8B] to-[#7A2B4A] text-white text-xs font-black px-3.5 py-1.5 rounded-full shadow-md tracking-wider uppercase">
+                        Populer
+                    </div>
+                    <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm text-primary text-xs font-black px-3 py-1 rounded-full shadow-sm">
+                        45 Min
+                    </div>
+                </div>
+
+                <!-- Card Content -->
+                <div class="p-6 flex-1 flex flex-col justify-between relative z-10">
+                    <div>
+                        <!-- Icon & Title Row -->
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="premium-class-icon-box w-12 h-12 flex items-center justify-center rounded-2xl bg-[#FFF2F6] text-[#EE4E8B] shadow-sm">
+                                <i class="ri-focus-3-line text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-nord font-bold text-lg text-dark group-hover:text-primary transition-colors duration-300">
+                                    Reformer Pilates
+                                </h3>
+                                <span class="text-xs text-dark/50 font-semibold font-poppins">Semua Level</span>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <p class="text-xs md:text-sm text-dark/70 leading-relaxed mb-6 font-poppins min-h-[72px]">
+                            Menggunakan alat reformer dengan pegas dan tali untuk resistensi tambahan — variasi Mat Pilates yang dibantu alat untuk hasil lebih optimal.
+                        </p>
+                    </div>
+
+                    <div>
+                        <!-- Accent Line -->
+                        <div class="premium-card-accent-line mb-5"></div>
+
+                        <!-- CTA Button -->
+                        <button onclick="openModal('reformer-pilates')"
+                                class="w-full relative overflow-hidden group/btn bg-gradient-to-r from-primary to-secondary text-white py-3.5 rounded-full hover:shadow-lg transition-all duration-300 text-xs md:text-sm font-bold flex items-center justify-center gap-2">
+                            <span class="relative z-10">Cek Jadwal & Program</span>
+                            <i class="ri-arrow-right-line text-sm relative z-10 transition-transform duration-300 group-hover/btn:translate-x-1"></i>
+                            <div class="absolute inset-0 bg-gradient-to-r from-secondary to-primary opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+
+<!-- Auto Slide Javascript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const track = document.getElementById('programs-slider-track');
+    const container = document.getElementById('programs-slider-container');
+    const dots = document.querySelectorAll('#programs-slider-dots span');
+    let currentIndex = 0;
+    const totalSlides = 5;
+    let autoSlideInterval;
+
+    function getVisibleCardsCount() {
+        if (window.innerWidth >= 1024) return 3; // lg (Desktop)
+        if (window.innerWidth >= 768) return 2;  // md (Tablet)
+        return 1;                                // sm (Mobile)
+    }
+
+    function getMaxIndex() {
+        return totalSlides - getVisibleCardsCount();
+    }
+
+    function updateSlider() {
+        const visibleCards = getVisibleCardsCount();
+        const maxIndex = getMaxIndex();
+        
+        // Cap index
+        if (currentIndex > maxIndex) {
+            currentIndex = 0; 
+        }
+        if (currentIndex < 0) {
+            currentIndex = maxIndex;
+        }
+
+        const card = track.firstElementChild;
+        if (!card) return;
+
+        const cardWidth = card.getBoundingClientRect().width;
+        // Gap is 32px
+        const gap = 32;
+        const amount = currentIndex * (cardWidth + gap);
+        
+        track.style.transform = `translateX(-${amount}px)`;
+
+        // Update dots
+        dots.forEach((dot, index) => {
+            if (index <= maxIndex) {
+                dot.style.display = 'inline-block';
+                if (index === currentIndex) {
+                    dot.className = 'w-[24px] h-[6px] rounded-full bg-[#FF4F8B] transition-all duration-300';
+                } else {
+                    dot.className = 'w-[6px] h-[6px] rounded-full bg-gray-200 transition-all duration-300';
+                }
+            } else {
+                dot.style.display = 'none';
+            }
+        });
+    }
+
+    function nextSlide() {
+        const maxIndex = getMaxIndex();
+        if (currentIndex >= maxIndex) {
+            currentIndex = 0;
+        } else {
+            currentIndex++;
+        }
+        updateSlider();
+    }
+
+    function startAutoSlide() {
+        stopAutoSlide();
+        autoSlideInterval = setInterval(nextSlide, 4000); 
+    }
+
+    function stopAutoSlide() {
+        if (autoSlideInterval) {
+            clearInterval(autoSlideInterval);
+        }
+    }
+
+    // Manual dot click handlers
+    dots.forEach((dot, index) => {
+        dot.style.cursor = 'pointer';
+        dot.addEventListener('click', () => {
+            const maxIndex = getMaxIndex();
+            if (index <= maxIndex) {
+                currentIndex = index;
+            } else {
+                currentIndex = maxIndex;
+            }
+            updateSlider();
+            startAutoSlide();
+        });
+    });
+
+    // Pause on hover
+    container.addEventListener('mouseenter', stopAutoSlide);
+    container.addEventListener('mouseleave', startAutoSlide);
+
+    // Handle window resize
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            updateSlider();
+        }, 100);
+    });
+
+    // Grabbing and Dragging Support (Mouse + Touch)
+    let isDragging = false;
+    let hasDragged = false; // true only if pointer moved beyond click threshold
+    let startX = 0;
+    let startY = 0;
+    let currentTranslate = 0;
+    let prevTranslate = 0;
+    let dragTarget = null; // store the original event target
+
+    const CLICK_THRESHOLD = 8; // px — movement below this counts as a click
+
+    container.style.cursor = 'grab';
+    container.style.userSelect = 'none'; // Prevent text selection during drag
+
+    container.addEventListener('pointerdown', dragStart);
+    container.addEventListener('pointerup', dragEnd);
+    container.addEventListener('pointercancel', dragEnd);
+    container.addEventListener('pointerleave', dragEnd);
+    container.addEventListener('pointermove', dragAction);
+
+    // Prevent default drag behaviors on images only (not links)
+    container.addEventListener('dragstart', (e) => e.preventDefault());
+
+    // Block clicks ONLY when a real drag occurred (prevents link navigation mid-swipe)
+    container.addEventListener('click', (e) => {
+        if (hasDragged) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    }, true);
+
+    function dragStart(e) {
+        // Only trigger on left mouse button, or touch pointers
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+
+        isDragging = true;
+        hasDragged = false;
+        startX = e.clientX;
+        startY = e.clientY;
+        dragTarget = e.target;
+        stopAutoSlide();
+
+        const card = track.firstElementChild;
+        if (card) {
+            const cardWidth = card.getBoundingClientRect().width;
+            const gap = 32;
+            prevTranslate = -currentIndex * (cardWidth + gap);
+        } else {
+            prevTranslate = 0;
+        }
+        currentTranslate = prevTranslate;
+    }
+
+    function dragAction(e) {
+        if (!isDragging) return;
+        const currentX = e.clientX;
+        const diffX = currentX - startX;
+
+        // Only start visual dragging once we exceed click threshold
+        if (!hasDragged && Math.abs(diffX) > CLICK_THRESHOLD) {
+            hasDragged = true;
+            container.style.cursor = 'grabbing';
+            // Disable CSS transition only once real drag begins
+            track.style.transition = 'none';
+            // Capture pointer so drag continues outside container
+            container.setPointerCapture(e.pointerId);
+        }
+
+        if (!hasDragged) return; // still within click threshold, don't move track
+
+        currentTranslate = prevTranslate + diffX;
+
+        // Boundary resistance calculations
+        const maxIndex = getMaxIndex();
+        const card = track.firstElementChild;
+        if (card) {
+            const cardWidth = card.getBoundingClientRect().width;
+            const gap = 32;
+            const maxTranslate = -maxIndex * (cardWidth + gap);
+
+            if (currentTranslate > 0) {
+                currentTranslate = currentTranslate * 0.3; // resistance when dragging past start
+            } else if (currentTranslate < maxTranslate) {
+                currentTranslate = maxTranslate + (currentTranslate - maxTranslate) * 0.3; // resistance when dragging past end
+            }
+        }
+
+        track.style.transform = `translateX(${currentTranslate}px)`;
+    }
+
+    function dragEnd(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        container.style.cursor = 'grab';
+
+        // Release pointer capture if we had it
+        try { container.releasePointerCapture(e.pointerId); } catch(_) {}
+
+        // Re-enable smooth CSS transition
+        track.style.transition = 'transform 0.7s ease-in-out';
+
+        if (!hasDragged) {
+            // It was a simple click, not a drag — let the browser handle it naturally.
+            // The click event will fire on the original target (link, button, etc.)
+            startAutoSlide();
+            return;
+        }
+
+        // It was a real drag — decide whether to switch slides
+        const diffX = e.clientX - startX;
+        const threshold = 60; // drag threshold to switch slides (in pixels)
+
+        if (Math.abs(diffX) > threshold) {
+            if (diffX < 0) {
+                // Dragged left -> next slide
+                const maxIndex = getMaxIndex();
+                if (currentIndex < maxIndex) {
+                    currentIndex++;
+                }
+            } else {
+                // Dragged right -> prev slide
+                if (currentIndex > 0) {
+                    currentIndex--;
+                }
+            }
+        }
+
+        updateSlider();
+        startAutoSlide();
+
+        // Reset hasDragged after a microtask so the click handler above can still catch it
+        setTimeout(() => { hasDragged = false; }, 0);
+    }
+
+    // Initialize
+    updateSlider();
+    startAutoSlide();
+});
+</script>
+
+<!-- ========================================= -->
 <!-- ENHANCED CSS - Tambahkan/Update di <style> -->
 <!-- ========================================= -->
 
 <style>
+    /* Nord font helper (replaced Playfair Display per brand guidelines) */
+    .font-playfair {
+        font-family: 'Nord', 'Poppins', sans-serif !important;
+    }
+
     /* Gradient Shift Animation */
     @keyframes gradient-shift {
         0% { background-position: 0% 50%; }
@@ -1157,6 +2465,456 @@
     #scroll-indicator {
         transition: opacity 0.3s ease-in-out;
     }
+
+    /* Premium Redesigned Classes Section Styling */
+    .premium-classes-section {
+        background: linear-gradient(135deg, #FCF9F2 0%, #FFF2F6 40%, #FFF9FA 70%, #FCEAF2 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .premium-classes-section .glow-orb-left {
+        position: absolute;
+        top: -10%;
+        left: -15%;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(238,78,139,0.08) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .premium-classes-section .glow-orb-right {
+        position: absolute;
+        bottom: -15%;
+        right: -10%;
+        width: 700px;
+        height: 700px;
+        background: radial-gradient(circle, rgba(26,122,94,0.05) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    /* Floating sparkle icons for Classes */
+    .premium-classes-section .float-sparkle {
+        position: absolute;
+        color: #EE4E8B;
+        opacity: 0.25;
+        animation: floatSparkleClasses 6s ease-in-out infinite;
+    }
+    
+    @keyframes floatSparkleClasses {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-15px) rotate(8deg); }
+    }
+
+    /* Glassmorphism premium card */
+    .premium-class-card {
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 32px;
+        transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 30px rgba(122, 43, 74, 0.03), 0 1px 3px rgba(0, 0, 0, 0.01);
+    }
+
+    .premium-class-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 32px;
+        padding: 1.5px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(238, 78, 139, 0), rgba(122, 43, 74, 0.15));
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+        transition: all 0.5s ease;
+    }
+
+    .premium-class-card:hover {
+        transform: translateY(-8px);
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 20px 40px rgba(122, 43, 74, 0.1), 0 8px 16px rgba(122, 43, 74, 0.05);
+        border-color: rgba(238, 78, 139, 0.25);
+    }
+
+    .premium-class-card:hover::before {
+        background: linear-gradient(135deg, #EE4E8B, rgba(238, 78, 139, 0.2), #7A2B4A);
+    }
+
+    /* Icon Box styling */
+    .premium-class-icon-box {
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    
+    .premium-class-card:hover .premium-class-icon-box {
+        transform: scale(1.12) rotate(6deg);
+        background: linear-gradient(135deg, #EE4E8B 0%, #7A2B4A 100%);
+        color: white;
+        box-shadow: 0 8px 20px rgba(238, 78, 139, 0.25);
+    }
+
+    /* Accent bottom line */
+    .premium-card-accent-line {
+        height: 2px;
+        width: 0;
+        background: linear-gradient(90deg, #EE4E8B, #7A2B4A, #EE4E8B);
+        border-radius: 99px;
+        transition: width 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .premium-class-card:hover .premium-card-accent-line {
+        width: 100%;
+    }
+
+    /* Image zoom scaling */
+    .premium-class-img-container img {
+        transition: transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .premium-class-card:hover .premium-class-img-container img {
+        transform: scale(1.08);
+    }
+
+    /* Premium Pricing Section Styling */
+    /* ═══════════════════════════════════════════ */
+    /* PREMIUM PRICING SECTION — Ultra Premium     */
+    /* ═══════════════════════════════════════════ */
+    .premium-pricing-section {
+        background: linear-gradient(165deg, #1C1C1C 0%, #2A1520 25%, #1C1C1C 50%, #1A2328 75%, #1C1C1C 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Animated mesh gradient overlay */
+    .premium-pricing-section::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(ellipse 800px 600px at 15% 20%, rgba(238,78,139,0.08) 0%, transparent 60%),
+            radial-gradient(ellipse 600px 800px at 85% 80%, rgba(122,43,74,0.06) 0%, transparent 60%),
+            radial-gradient(ellipse 400px 400px at 50% 50%, rgba(26,122,94,0.04) 0%, transparent 60%);
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    /* Premium glow orbs */
+    .pricing-glow-orb {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        filter: blur(80px);
+        z-index: 1;
+    }
+    .pricing-glow-orb-1 {
+        top: -100px;
+        left: -50px;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(238,78,139,0.12) 0%, transparent 70%);
+        animation: pricing-float-orb 8s ease-in-out infinite;
+    }
+    .pricing-glow-orb-2 {
+        bottom: -150px;
+        right: -100px;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(122,43,74,0.10) 0%, transparent 70%);
+        animation: pricing-float-orb 10s ease-in-out infinite reverse;
+    }
+    .pricing-glow-orb-3 {
+        top: 50%;
+        left: 40%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(26,122,94,0.06) 0%, transparent 70%);
+        animation: pricing-float-orb 12s ease-in-out infinite 2s;
+    }
+
+    @keyframes pricing-float-orb {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(30px, -20px) scale(1.05); }
+        66% { transform: translate(-20px, 15px) scale(0.95); }
+    }
+
+    /* Subtle grid pattern */
+    .pricing-grid-pattern {
+        position: absolute;
+        inset: 0;
+        background-image:
+            linear-gradient(rgba(238,78,139,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(238,78,139,0.03) 1px, transparent 1px);
+        background-size: 60px 60px;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    /* Premium pricing card — glassmorphism dark */
+    .premium-pricing-card {
+        background: rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 28px;
+        transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        box-shadow:
+            0 4px 30px rgba(0, 0, 0, 0.2),
+            0 1px 3px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    /* Shimmer border effect */
+    .premium-pricing-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 28px;
+        padding: 1.5px;
+        background: linear-gradient(
+            135deg,
+            rgba(238,78,139,0.3) 0%,
+            rgba(255,255,255,0.05) 25%,
+            rgba(122,43,74,0.2) 50%,
+            rgba(255,255,255,0.05) 75%,
+            rgba(238,78,139,0.3) 100%
+        );
+        background-size: 300% 300%;
+        animation: pricing-shimmer 6s ease infinite;
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+    }
+
+    @keyframes pricing-shimmer {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Inner card glow on hover */
+    .premium-pricing-card::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle at 30% 30%, rgba(238,78,139,0.08), transparent 50%);
+        opacity: 0;
+        transition: opacity 0.6s ease;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .premium-pricing-card:hover {
+        transform: translateY(-5px) scale(1.015);
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow:
+            0 20px 40px rgba(238,78,139,0.15),
+            0 10px 20px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        border-color: rgba(238,78,139,0.25);
+    }
+
+    .premium-pricing-card:hover::after {
+        opacity: 1;
+    }
+
+    .premium-pricing-card:hover::before {
+        background: linear-gradient(135deg, #EE4E8B, rgba(238,78,139,0.5), #7A2B4A, rgba(238,78,139,0.5), #EE4E8B);
+        background-size: 300% 300%;
+        animation: pricing-shimmer 3s ease infinite;
+    }
+
+    /* Premium card price tag */
+    .pricing-price-tag {
+        background: linear-gradient(135deg, rgba(238,78,139,0.15), rgba(122,43,74,0.1));
+        border: 1px solid rgba(238,78,139,0.2);
+        border-radius: 16px;
+        padding: 14px 18px;
+        position: relative;
+        overflow: hidden;
+        min-height: 82px;
+        display: flex;
+        align-items: center;
+    }
+
+    .pricing-price-tag::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, rgba(238,78,139,0.1) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+    /* Feature list item */
+    .pricing-feature-item {
+        display: flex;
+        gap: 12px;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.04);
+        transition: all 0.3s ease;
+    }
+
+    .pricing-feature-item:last-child {
+        border-bottom: none;
+    }
+
+    .pricing-feature-item:hover {
+        padding-left: 8px;
+    }
+
+    .pricing-feature-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, rgba(238,78,139,0.2), rgba(122,43,74,0.15));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        color: #EE4E8B;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    .pricing-feature-item:hover .pricing-feature-icon {
+        background: linear-gradient(135deg, #EE4E8B, #7A2B4A);
+        color: white;
+        transform: scale(1.1);
+    }
+
+    /* CTA button premium */
+    .pricing-cta-btn {
+        display: block;
+        width: 100%;
+        padding: 13px 24px;
+        text-align: center;
+        font-family: 'Nord', 'Poppins', sans-serif;
+        font-weight: 700;
+        font-size: 13px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        border-radius: 14px;
+        transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
+
+    .pricing-cta-btn-primary {
+        background: linear-gradient(135deg, #EE4E8B, #C2185B, #7A2B4A);
+        color: white;
+        border: none;
+        box-shadow: 0 8px 25px rgba(238,78,139,0.3);
+    }
+
+    .pricing-cta-btn-primary:hover {
+        box-shadow: 0 12px 35px rgba(238,78,139,0.5);
+        transform: translateY(-3px);
+    }
+
+    .pricing-cta-btn-primary::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, #7A2B4A, #EE4E8B, #C2185B);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        z-index: -1;
+    }
+
+    .pricing-cta-btn-primary:hover::before {
+        opacity: 1;
+    }
+
+    /* Exclusive badge */
+    .pricing-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 30px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        background: linear-gradient(135deg, rgba(238,78,139,0.2), rgba(122,43,74,0.15));
+        color: #EE4E8B;
+        border: 1px solid rgba(238,78,139,0.2);
+    }
+
+    /* Decorative floating elements */
+    .pricing-float-deco {
+        position: absolute;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0.4;
+    }
+
+    @keyframes pricing-float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-15px) rotate(5deg); }
+    }
+
+    /* Decorative line */
+    .pricing-accent-divider {
+        width: 100%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(238,78,139,0.3), rgba(122,43,74,0.2), transparent);
+        margin: 16px 0;
+    }
+
+    /* Left column header decoratives */
+    .pricing-header-deco-line {
+        width: 80px;
+        height: 3px;
+        background: linear-gradient(90deg, #EE4E8B, #7A2B4A);
+        border-radius: 3px;
+        position: relative;
+    }
+
+    .pricing-header-deco-line::after {
+        content: '';
+        position: absolute;
+        right: -16px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 8px;
+        height: 8px;
+        background: #EE4E8B;
+        border-radius: 50%;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* Sparkle decoration */
+    .pricing-sparkle {
+        position: absolute;
+        color: rgba(238,78,139,0.3);
+        font-size: 18px;
+        pointer-events: none;
+        z-index: 2;
+    }
+    .pricing-sparkle-1 { top: 12%; right: 8%; animation: pricing-float 6s ease infinite; }
+    .pricing-sparkle-2 { bottom: 15%; left: 5%; animation: pricing-float 8s ease infinite 1s; }
+    .pricing-sparkle-3 { top: 45%; right: 3%; animation: pricing-float 7s ease infinite 2s; }
 </style>
 
 <!-- ========================================= -->
@@ -1164,7 +2922,150 @@
 <!-- ========================================= -->
 
 <script>
-    // Enhanced AOS Implementation
+    // ─── SCROLL SPY using Intersection Observer ───
+    function initScrollSpy() {
+        const sections = document.querySelectorAll('section[id]');
+        const desktopLinks = document.querySelectorAll('#desktop-nav .nav-link');
+        const mobileLinks = document.querySelectorAll('.nav-link-mobile');
+        const allLinks = [...desktopLinks, ...mobileLinks];
+        
+        if (!sections.length) return;
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    // Map section id to data-nav value
+                    const navMap = {
+                        'home': 'home',
+                        'our-programs': 'programs',
+                        'about': 'about',
+                        'pricing': 'package',
+                        'Facility': 'gallery',
+                        'contact': 'contact'
+                    };
+                    const navValue = navMap[id] || id;
+                    
+                    // Update all nav links
+                    allLinks.forEach(link => {
+                        const linkNav = link.getAttribute('data-nav');
+                        const isActive = linkNav === navValue;
+                        
+                        // Desktop or mobile class handling
+                        if (link.classList.contains('nav-link')) {
+                            link.classList.toggle('active', isActive);
+                        } else if (link.classList.contains('nav-link-mobile')) {
+                            link.classList.toggle('active', isActive);
+                        }
+                        
+                        // Accessibility: aria-current
+                        if (isActive) {
+                            link.setAttribute('aria-current', 'page');
+                        } else {
+                            link.removeAttribute('aria-current');
+                        }
+                    });
+                }
+            });
+        }, {
+            rootMargin: '-80px 0px -40% 0px',
+            threshold: 0
+        });
+
+        sections.forEach(section => observer.observe(section));
+    }
+
+    // ─── SMOOTH SCROLL with navbar offset ───
+    function initSmoothScroll() {
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#' && document.querySelector(href)) {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    const header = document.querySelector('header');
+                    const headerHeight = header ? header.offsetHeight : 80;
+                    const offsetTop = target.offsetTop - headerHeight;
+                    
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Update URL hash without scroll jump
+                    history.pushState(null, null, href);
+                    
+                    // Update active state immediately on click (for non-landing page routing)
+                    const navMap = {
+                        '#home': 'home',
+                        '#our-programs': 'programs',
+                        '#about': 'about',
+                        '#pricing': 'package',
+                        '#Facility': 'gallery',
+                        '#contact': 'contact'
+                    };
+                    const navValue = navMap[href];
+                    if (navValue) {
+                        const allLinks = document.querySelectorAll('.nav-link, .nav-link-mobile');
+                        allLinks.forEach(link => {
+                            const linkNav = link.getAttribute('data-nav');
+                            const isActive = linkNav === navValue;
+                            if (link.classList.contains('nav-link')) {
+                                link.classList.toggle('active', isActive);
+                            } else if (link.classList.contains('nav-link-mobile')) {
+                                link.classList.toggle('active', isActive);
+                            }
+                            if (isActive) {
+                                link.setAttribute('aria-current', 'page');
+                            } else {
+                                link.removeAttribute('aria-current');
+                            }
+                        });
+                    }
+                }
+            });
+        });
+    }
+
+    // ─── HASH CHANGE SUPPORT ───
+    function initHashSync() {
+        function syncFromHash() {
+            const hash = window.location.hash || '#home';
+            const navMap = {
+                '#home': 'home',
+                '#our-programs': 'programs',
+                '#about': 'about',
+                '#pricing': 'package',
+                '#Facility': 'gallery',
+                '#contact': 'contact'
+            };
+            const navValue = navMap[hash];
+            if (navValue) {
+                const allLinks = document.querySelectorAll('.nav-link, .nav-link-mobile');
+                allLinks.forEach(link => {
+                    const linkNav = link.getAttribute('data-nav');
+                    const isActive = linkNav === navValue;
+                    if (link.classList.contains('nav-link')) {
+                        link.classList.toggle('active', isActive);
+                    } else if (link.classList.contains('nav-link-mobile')) {
+                        link.classList.toggle('active', isActive);
+                    }
+                    if (isActive) {
+                        link.setAttribute('aria-current', 'page');
+                    } else {
+                        link.removeAttribute('aria-current');
+                    }
+                });
+            }
+        }
+
+        // Sync on page load / refresh
+        window.addEventListener('DOMContentLoaded', syncFromHash);
+        // Sync on hash change
+        window.addEventListener('hashchange', syncFromHash);
+    }
+
+    // ─── Enhanced AOS Implementation ───
     function initEnhancedAOS() {
         const elements = document.querySelectorAll('[data-aos]');
         
@@ -1185,29 +3086,34 @@
         elements.forEach(el => observer.observe(el));
     }
 
-    // Smooth Scroll Enhancement
-    function initEnhancedSmoothScroll() {
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const href = this.getAttribute('href');
-                if (href !== '#' && document.querySelector(href)) {
-                    e.preventDefault();
-                    const target = document.querySelector(href);
-                    const offsetTop = target.offsetTop - 80; // Account for fixed header
-                    
-                    window.scrollTo({
-                        top: offsetTop,
-                        behavior: 'smooth'
-                    });
-                }
-            });
+    // ─── Scroll Indicator Auto Hide ───
+    function initScrollIndicator() {
+        const scrollIndicator = document.getElementById('scroll-indicator');
+        const heroSection = document.getElementById('home');
+        
+        if (!scrollIndicator || !heroSection) return;
+        
+        window.addEventListener('scroll', function() {
+            const heroBottom = heroSection.offsetHeight;
+            const scrollPosition = window.scrollY;
+            
+            if (scrollPosition > heroBottom - 100) {
+                scrollIndicator.style.opacity = '0';
+                scrollIndicator.style.pointerEvents = 'none';
+            } else {
+                scrollIndicator.style.opacity = '1';
+                scrollIndicator.style.pointerEvents = 'auto';
+            }
         });
     }
 
-    // Initialize on Load
+    // ─── Initialize Everything on DOM Ready ───
     document.addEventListener('DOMContentLoaded', function() {
+        initScrollSpy();
+        initSmoothScroll();
+        initHashSync();
         initEnhancedAOS();
-        initEnhancedSmoothScroll();
+        initScrollIndicator();
         
         // Trigger immediate animations for visible elements
         setTimeout(() => {
@@ -1219,1151 +3125,183 @@
                 }
             });
         }, 100);
-
-        // Initialize Scroll Indicator Auto-Hide
-        initScrollIndicator();
     });
-
-    // Scroll Indicator Auto Hide Function
-    function initScrollIndicator() {
-        const scrollIndicator = document.getElementById('scroll-indicator');
-        const heroSection = document.getElementById('home');
-        
-        if (!scrollIndicator || !heroSection) return;
-        
-        window.addEventListener('scroll', function() {
-            const heroBottom = heroSection.offsetHeight;
-            const scrollPosition = window.scrollY;
-            
-            // Hide indicator when scrolled past hero section
-            if (scrollPosition > heroBottom - 100) {
-                scrollIndicator.style.opacity = '0';
-                scrollIndicator.style.pointerEvents = 'none';
-            } else {
-                scrollIndicator.style.opacity = '1';
-                scrollIndicator.style.pointerEvents = 'auto';
-            }
-        });
-    }
 </script>
 
 
-  <!-- ========================================= -->
-<!-- WHY CHOOSE FTM SECTION - ULTIMATE PROFESSIONAL -->
-<!-- Enhanced Slider with Premium UI/UX -->
+<!-- ========================================= -->
+<!-- ========================================= -->
+<!-- PACKAGES & PRICING SECTION — ULTRA PREMIUM -->
+<!-- Header top left, cards horizontal slider    -->
 <!-- ========================================= -->
 
-<section id="packages" class="relative py-20 md:py-28 lg:py-32 overflow-hidden">
+<section id="pricing" class="premium-pricing-section relative" style="padding: 100px 0 110px;" data-aos="fade-up">
     
-    <!-- Multi-Layer Background -->
-    <div class="absolute inset-0 bg-gradient-to-br from-cream via-light-pink/30 to-white"></div>
-    
-    <!-- Animated Background Pattern -->
-    <div class="absolute inset-0 opacity-[0.02] pointer-events-none">
-        <div class="absolute inset-0" 
-             style="background-image: 
-                repeating-linear-gradient(45deg, transparent, transparent 15px, primary 15px, primary 16px),
-                repeating-linear-gradient(-45deg, transparent, transparent 15px, #7A2B4A 15px, #7A2B4A 16px);
-                background-size: 80px 80px;">
-        </div>
-    </div>
+    <!-- Premium Background Effects -->
+    <div class="pricing-glow-orb pricing-glow-orb-1"></div>
+    <div class="pricing-glow-orb pricing-glow-orb-2"></div>
+    <div class="pricing-glow-orb pricing-glow-orb-3"></div>
+    <div class="pricing-grid-pattern"></div>
 
-    <!-- Floating Gradient Orbs -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute -top-32 -left-32 w-80 h-80 bg-gradient-to-br from-secondary/20 to-primary/20 rounded-full blur-3xl animate-pulse" style="animation-duration: 5s;"></div>
-        <div class="absolute top-1/2 -right-48 w-96 h-96 bg-gradient-to-tl from-primary/15 to-light-pink/15 rounded-full blur-3xl animate-pulse" style="animation-duration: 7s; animation-delay: 1.5s;"></div>
-        <div class="absolute -bottom-24 left-1/4 w-72 h-72 bg-gradient-to-tr from-light-pink/20 to-secondary/20 rounded-full blur-3xl animate-pulse" style="animation-duration: 6s; animation-delay: 0.5s;"></div>
-    </div>
+    <!-- Floating Sparkles -->
+    <div class="pricing-sparkle pricing-sparkle-1">✦</div>
+    <div class="pricing-sparkle pricing-sparkle-2">✦</div>
+    <div class="pricing-sparkle pricing-sparkle-3">✦</div>
 
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        <!-- Section Header - Premium Design -->
-        <div class="text-center mb-16 md:mb-20" data-aos="fade-up">
-            
-            <!-- Top Badge -->
-            <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 rounded-full border border-primary/20 shadow-lg backdrop-blur-sm">
-                <span class="brand-flower brand-flower-pink" style="width: 16px; height: 16px;"></span>
+    <div class="w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 xl:px-20 relative" style="z-index: 10;">
+
+        <!-- TOP: Section Header (left-aligned, like Tentang Kami) -->
+        <div class="text-center lg:text-left mb-14 md:mb-16 max-w-2xl">
+
+            <!-- Eyebrow label -->
+            <div class="inline-flex items-center gap-2.5 px-5 py-2.5 mb-8 rounded-full border border-[rgba(238,78,139,0.25)] backdrop-blur-md" style="background: rgba(238,78,139,0.08);">
                 <div class="relative">
-                    <div class="w-2 h-2 bg-primary rounded-full animate-ping absolute"></div>
-                    <div class="w-2 h-2 bg-primary rounded-full relative"></div>
+                    <div class="w-2.5 h-2.5 bg-primary rounded-full animate-ping absolute"></div>
+                    <div class="w-2.5 h-2.5 bg-primary rounded-full relative"></div>
                 </div>
-                <span class="text-sm md:text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary">
-                    Our Advantages
-                </span>
-            </div>
-
-            <!-- Main Title -->
-            <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight">
-                <span class="text-primary">Why Choose</span>
-                <span class="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-secondary via-primary to-secondary animate-gradient-shift bg-[length:200%_auto]">
-                    FTM Society
-                </span>
-            </h2>
-
-            <!-- Decorative Divider -->
-            <div class="flex items-center justify-center gap-3 mb-6">
-                <div class="w-16 h-0.5 bg-gradient-to-r from-transparent to-primary rounded-full"></div>
-                <div class="w-3 h-3 bg-primary rounded-full animate-pulse"></div>
-                <div class="w-24 h-1 bg-gradient-to-r from-primary via-secondary to-primary rounded-full"></div>
-                <div class="w-3 h-3 bg-secondary rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
-                <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-secondary rounded-full"></div>
-            </div>
-
-            <!-- Subtitle -->
-            <p class="text-lg md:text-xl text-dark/70 max-w-3xl mx-auto leading-relaxed">
-                Temukan keunggulan yang membuat FTM Society menjadi pilihan terbaik untuk muslimah aktif
-            </p>
-        </div>
-
-        <!-- Slider Container -->
-        <div class="relative max-w-7xl mx-auto">
-            
-            <!-- Navigation Button Left -->
-            <button
-                type="button"
-                onclick="slideFeature(-1)"
-                class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 items-center justify-center w-14 h-14 bg-cream text-primary rounded-full shadow-xl hover:shadow-2xl hover:bg-gradient-to-br hover:from-primary hover:to-secondary hover:text-white transition-all duration-300 z-20 group"
-                aria-label="Scroll Left"
-                id="featureScrollLeft"
-                style="display:none"
-            >
-                <i class="ri-arrow-left-s-line text-3xl group-hover:scale-110 transition-transform"></i>
-            </button>
-
-            <!-- Slider Track -->
-            <div
-                id="feature-slider"
-                class="flex overflow-x-auto gap-6 md:gap-8 scroll-smooth pb-6 px-2"
-                style="scrollbar-width: none; -ms-overflow-style: none;"
-                onscroll="toggleFeatureScroll()"
-            >
-                <!-- Feature Card 1 - Enhanced -->
-                <div class="min-w-[300px] sm:min-w-[340px] max-w-[360px] flex-shrink-0" data-aos="fade-up" data-aos-delay="100">
-                    <div class="group relative bg-cream rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-light-pink/60 hover:border-secondary/30 overflow-hidden h-full flex flex-col">
-                        
-                        <!-- Gradient Background on Hover -->
-                        <div class="absolute inset-0 bg-gradient-to-br from-light-pink/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        
-                        <!-- Content -->
-                        <div class="relative z-10 flex flex-col items-center text-center flex-1">
-                            
-                            <!-- Icon Container -->
-                            <div class="relative mb-6">
-                                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-light-pink to-light-pink text-primary group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
-                                    <i class="ri-women-line text-4xl"></i>
-                                </div>
-                                <!-- Decorative Ring -->
-                                <div class="absolute -inset-2 rounded-2xl border-2 border-secondary/20 group-hover:border-secondary/40 group-hover:scale-110 transition-all duration-500"></div>
-                                <!-- Floating Dot -->
-                                <div class="absolute -top-1 -right-1 w-5 h-5 bg-secondary rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
-                            </div>
-
-                            <!-- Title -->
-                            <h3 class="text-xl md:text-2xl font-black text-primary mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all duration-300">
-                                Muslimah-Only Space
-                            </h3>
-
-                            <!-- Description -->
-                            <p class="text-dark/70 text-sm md:text-base leading-relaxed flex-1">
-                                Fasilitas kami hanya untuk wanita, dengan staf wanita saja. Nikmati privasi lengkap tanpa jendela yang menghadap area publik dan sistem masuk yang aman.
-                            </p>
-
-                            <!-- Bottom Accent Line -->
-                            <div class="mt-6 h-1 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-secondary rounded-full transition-all duration-500"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Feature Card 2 - Enhanced -->
-                <div class="min-w-[300px] sm:min-w-[340px] max-w-[360px] flex-shrink-0" data-aos="fade-up" data-aos-delay="200">
-                    <div class="group relative bg-cream rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-light-pink/60 hover:border-primary/30 overflow-hidden h-full flex flex-col">
-                        
-                        <div class="absolute inset-0 bg-gradient-to-br from-light-pink/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        
-                        <div class="relative z-10 flex flex-col items-center text-center flex-1">
-                            
-                            <div class="relative mb-6">
-                                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-light-pink to-light-pink text-primary group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
-                                    <i class="ri-user-star-line text-4xl"></i>
-                                </div>
-                                <div class="absolute -inset-2 rounded-2xl border-2 border-primary/20 group-hover:border-primary/40 group-hover:scale-110 transition-all duration-500"></div>
-                                <div class="absolute -top-1 -right-1 w-5 h-5 bg-primary rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
-                            </div>
-
-                            <h3 class="text-xl md:text-2xl font-black text-primary mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all duration-300">
-                                Certified Muslimah Trainer
-                            </h3>
-
-                            <p class="text-dark/70 text-sm md:text-base leading-relaxed flex-1">
-                                Dibimbing langsung oleh coach tersertifikasi dengan pengalaman profesional dan pemahaman mendalam tentang kebutuhan muslimah.
-                            </p>
-
-                            <div class="mt-6 h-1 w-0 group-hover:w-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full transition-all duration-500"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Feature Card 3 - Enhanced -->
-                <div class="min-w-[300px] sm:min-w-[340px] max-w-[360px] flex-shrink-0" data-aos="fade-up" data-aos-delay="300">
-                    <div class="group relative bg-cream rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-light-pink/60 hover:border-secondary/30 overflow-hidden h-full flex flex-col">
-                        
-                        <div class="absolute inset-0 bg-gradient-to-br from-light-pink/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        
-                        <div class="relative z-10 flex flex-col items-center text-center flex-1">
-                            
-                            <div class="relative mb-6">
-                                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-grounded-green to-patina-green text-white group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
-                                    <i class="ri-shield-user-line text-4xl"></i>
-                                </div>
-                                <div class="absolute -inset-2 rounded-2xl border-2 border-secondary/20 group-hover:border-secondary/40 group-hover:scale-110 transition-all duration-500"></div>
-                                <div class="absolute -top-1 -right-1 w-5 h-5 bg-secondary rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
-                            </div>
-
-                            <h3 class="text-xl md:text-2xl font-black text-primary mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all duration-300">
-                                Privacy is Our Priority
-                            </h3>
-
-                            <p class="text-dark/70 text-sm md:text-base leading-relaxed flex-1">
-                                Ruang latihan khusus muslimah, tanpa kamera dan tanpa musik. Kami mengutamakan kenyamanan, keamanan, dan privasimu saat berolahraga.
-                            </p>
-
-                            <div class="mt-6 h-1 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-secondary rounded-full transition-all duration-500"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Feature Card 4 - Enhanced -->
-                <div class="min-w-[300px] sm:min-w-[340px] max-w-[360px] flex-shrink-0" data-aos="fade-up" data-aos-delay="400">
-                    <div class="group relative bg-cream rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-light-pink/60 hover:border-primary/30 overflow-hidden h-full flex flex-col">
-                        
-                        <div class="absolute inset-0 bg-gradient-to-br from-light-pink/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        
-                        <div class="relative z-10 flex flex-col items-center text-center flex-1">
-                            
-                            <div class="relative mb-6">
-                                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-soft-petals to-power-pink text-white group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg">
-                                    <i class="ri-user-heart-line text-4xl"></i>
-                                </div>
-                                <div class="absolute -inset-2 rounded-2xl border-2 border-primary/20 group-hover:border-primary/40 group-hover:scale-110 transition-all duration-500"></div>
-                                <div class="absolute -top-1 -right-1 w-5 h-5 bg-primary rounded-full border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
-                            </div>
-
-                            <h3 class="text-xl md:text-2xl font-black text-primary mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all duration-300">
-                                Muslimah Friendly
-                            </h3>
-
-                            <p class="text-dark/70 text-sm md:text-base leading-relaxed flex-1">
-                                Dirancang khusus untuk muslimah: area khusus wanita, pelatih perempuan bersertifikat, dan suasana nyaman sesuai nilai-nilai islami.
-                            </p>
-
-                            <div class="mt-6 h-1 w-0 group-hover:w-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full transition-all duration-500"></div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Navigation Button Right -->
-            <button
-                type="button"
-                onclick="slideFeature(1)"
-                class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 items-center justify-center w-14 h-14 bg-cream text-primary rounded-full shadow-xl hover:shadow-2xl hover:bg-gradient-to-br hover:from-primary hover:to-secondary hover:text-white transition-all duration-300 z-20 group"
-                aria-label="Scroll Right"
-                id="featureScrollRight"
-            >
-                <i class="ri-arrow-right-s-line text-3xl group-hover:scale-110 transition-transform"></i>
-            </button>
-
-        </div>
-
-        <!-- Slider Indicators (Optional) -->
-        <div class="flex justify-center gap-2 mt-12" data-aos="fade-up" data-aos-delay="500">
-            <div class="w-2 h-2 bg-primary rounded-full"></div>
-            <div class="w-8 h-2 bg-secondary rounded-full"></div>
-            <div class="w-2 h-2 bg-primary/40 rounded-full"></div>
-            <div class="w-2 h-2 bg-primary/40 rounded-full"></div>
-        </div>
-
-        <!-- Bottom CTA (Optional) -->
-        <div class="text-center mt-16" data-aos="fade-up" data-aos-delay="600">
-            <a href="#join" 
-               class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_auto] text-white font-bold rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 group">
-                <span>Bergabung Sekarang</span>
-                <i class="ri-arrow-right-line text-xl group-hover:translate-x-1 transition-transform"></i>
-            </a>
-        </div>
-
-    </div>
-</section>
-
-<!-- ========================================= -->
-<!-- ENHANCED JAVASCRIPT FOR SLIDER -->
-<!-- ========================================= -->
-
-<script>
-  function slideFeature(direction) {
-    const slider = document.getElementById('feature-slider');
-    const scrollAmount = 360; // card width + gap
-    slider.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
-    setTimeout(toggleFeatureScroll, 300);
-  }
-
-  function toggleFeatureScroll() {
-    const slider = document.getElementById('feature-slider');
-    const leftBtn = document.getElementById('featureScrollLeft');
-    const rightBtn = document.getElementById('featureScrollRight');
-    
-    if (leftBtn && rightBtn) {
-      // Show/hide left button
-      if (slider.scrollLeft > 20) {
-        leftBtn.style.display = 'flex';
-      } else {
-        leftBtn.style.display = 'none';
-      }
-      
-      // Show/hide right button
-      const isAtEnd = (slider.scrollLeft + slider.clientWidth) >= (slider.scrollWidth - 20);
-      if (isAtEnd) {
-        rightBtn.style.display = 'none';
-      } else {
-        rightBtn.style.display = 'flex';
-      }
-    }
-  }
-
-  // Initialize on page load
-  window.addEventListener('DOMContentLoaded', toggleFeatureScroll);
-  window.addEventListener('resize', toggleFeatureScroll);
-
-  // Auto-hide scrollbar
-  const featureSlider = document.getElementById('feature-slider');
-  if (featureSlider) {
-    featureSlider.style.scrollbarWidth = 'none';
-    featureSlider.style.msOverflowStyle = 'none';
-  }
-</script>
-
-<!-- ========================================= -->
-<!-- ADDITIONAL CSS -->
-<!-- ========================================= -->
-
-<style>
-  /* Hide scrollbar for slider */
-  #feature-slider::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Gradient Animation */
-  @keyframes gradient-shift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-
-  .animate-gradient-shift {
-        /* DISABLED FOR PERFORMANCE: animation: gradient-shift 4s ease infinite; */
-  }
-
-  /* Enhanced Hover Effects */
-  .feature-card {
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* Smooth Card Entrance */
-  [data-aos="fade-up"] {
-    opacity: 0;
-    transform: translateY(60px);
-    transition: opacity 0.8s, transform 0.8s;
-  }
-
-  [data-aos="fade-up"].aos-animate {
-    opacity: 1;
-    transform: translateY(0);
-  }
-</style>
-
-<script>
-  function slideFeature(direction) {
-    const slider = document.getElementById('feature-slider');
-    const scrollAmount = 360; // card width + gap
-    slider.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
-    setTimeout(toggleFeatureScroll, 300);
-  }
-  function toggleFeatureScroll() {
-    const slider = document.getElementById('feature-slider');
-    const leftBtn = document.getElementById('featureScrollLeft');
-    const rightBtn = document.getElementById('featureScrollRight');
-    leftBtn.style.display = slider.scrollLeft > 0 ? 'block' : 'none';
-    rightBtn.style.display = (slider.scrollLeft + slider.clientWidth) < slider.scrollWidth ? 'block' : 'none';
-  }
-  window.addEventListener('DOMContentLoaded', toggleFeatureScroll);
-</script>
-
-<<!-- ========================================= -->
-<!-- PROGRAMS SECTION - FIXED & STABLE        -->
-<!-- Cards tidak bergoyang, slider smooth      -->
-<!-- ========================================= -->
-
-<section id="Programs" class="relative py-20 md:py-28 lg:py-32 overflow-hidden">
-    
-    <!-- Multi-Layer Background -->
-    <div class="absolute inset-0 bg-gradient-to-b from-white via-cream/50 to-light-pink/30"></div>
-    
-    <!-- Animated Background Pattern -->
-    <div class="absolute inset-0 opacity-[0.02] pointer-events-none">
-        <div class="absolute inset-0" 
-             style="background-image: 
-                radial-gradient(circle at 25% 25%, transparent 0%, transparent 12%, primary 12%, primary 13%, transparent 13%),
-                radial-gradient(circle at 75% 75%, transparent 0%, transparent 12%, #7A2B4A 12%, #7A2B4A 13%, transparent 13%);
-                background-size: 120px 120px;">
-        </div>
-    </div>
-
-    <!-- Floating Gradient Orbs -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute top-20 -left-40 w-96 h-96 bg-gradient-to-br from-secondary/15 to-light-pink/15 rounded-full blur-3xl animate-pulse" style="animation-duration: 6s;"></div>
-        <div class="absolute -top-20 right-1/4 w-80 h-80 bg-gradient-to-tl from-primary/10 to-light-pink/10 rounded-full blur-3xl animate-pulse" style="animation-duration: 8s; animation-delay: 2s;"></div>
-        <div class="absolute bottom-0 left-1/3 w-72 h-72 bg-gradient-to-tr from-primary/15 to-secondary/15 rounded-full blur-3xl animate-pulse" style="animation-duration: 7s; animation-delay: 1s;"></div>
-    </div>
-
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        <!-- Section Header -->
-        <div class="text-center mb-16 md:mb-20">
-            
-            <!-- Top Badge -->
-            <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-secondary/10 via-light-pink/50 to-secondary/10 rounded-full border border-secondary/20 shadow-lg backdrop-blur-sm">
-                <span class="brand-flower brand-flower-cherry" style="width: 16px; height: 16px;"></span>
-                <div class="relative">
-                    <div class="w-2 h-2 bg-secondary rounded-full animate-ping absolute"></div>
-                    <div class="w-2 h-2 bg-secondary rounded-full relative"></div>
-                </div>
-                <span class="text-sm md:text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary">
-                    Our Program 
-                </span>
-            </div>
-
-            <!-- Main Title -->
-            <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight">
-                <span class="block text-transparent bg-clip-text bg-gradient-to-r from-secondary via-primary to-secondary animate-gradient-shift bg-[length:200%_auto]">
-                    Programs
-                </span>
-            </h2>
-
-            <!-- Decorative Divider -->
-            <div class="flex items-center justify-center gap-3 mb-6">
-                <div class="w-16 h-0.5 bg-gradient-to-r from-transparent to-secondary rounded-full"></div>
-                <div class="w-3 h-3 bg-secondary rounded-full animate-pulse"></div>
-                <div class="w-24 h-1 bg-gradient-to-r from-secondary via-primary to-secondary rounded-full"></div>
-                <div class="w-3 h-3 bg-primary rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
-                <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-primary rounded-full"></div>
-            </div>
-
-            <!-- Subtitle -->
-            <p class="text-lg md:text-xl text-dark/70 max-w-3xl mx-auto leading-relaxed">
-                Temukan program yang sesuai dengan kebutuhan dan gaya hidup Anda
-            </p>
-        </div>
-
-        <!-- Slider Container -->
-        <div class="relative max-w-7xl mx-auto">
-            
-            <!-- Navigation Button Left -->
-            <button
-                type="button"
-                onclick="slideService(-1)"
-                class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 items-center justify-center w-14 h-14 bg-cream text-primary rounded-full shadow-xl hover:shadow-2xl hover:bg-gradient-to-br hover:from-primary hover:to-secondary hover:text-white transition-all duration-300 z-20 group"
-                aria-label="Scroll Left"
-                id="serviceScrollLeft"
-                style="display:none"
-            >
-                <i class="ri-arrow-left-s-line text-3xl group-hover:scale-110 transition-transform"></i>
-            </button>
-
-            <!-- Slider Track -->
-            <div
-                id="service-slider"
-                class="flex items-stretch overflow-x-auto gap-6 md:gap-8 scroll-smooth pb-6 px-2"
-                style="scrollbar-width: none; -ms-overflow-style: none;"
-                onscroll="toggleServiceScroll()"
-            >
-                <!-- ================================ -->
-                <!-- Card 1: Private Group Class      -->
-                <!-- FIX: Hapus data-aos dari wrapper -->
-                <!-- ================================ -->
-                <div class="min-w-[85vw] sm:min-w-[300px] max-w-[320px] flex-shrink-0 flex">
-                    <div class="group relative bg-cream rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-light-pink/60 hover:border-secondary/30 overflow-hidden w-full flex flex-col">
-                        
-                        <div class="absolute inset-0 bg-gradient-to-br from-light-pink/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-                        
-                        <div class="relative z-10 flex flex-col items-center flex-1">
-                            
-                            <div class="relative mb-6">
-                                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-light-pink to-light-pink text-primary shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
-                                    <i class="ri-team-line text-4xl"></i>
-                                </div>
-                                <div class="absolute -inset-2 rounded-2xl border-2 border-secondary/20 group-hover:border-secondary/40 transition-colors duration-300"></div>
-                                <div class="absolute -top-2 -right-2 bg-gradient-to-r from-secondary to-primary text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    Popular
-                                </div>
-                            </div>
-
-                            <h4 class="text-xl font-black text-primary mb-3 text-center group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all duration-300">
-                                Private Group Class
-                            </h4>
-
-                            <p class="text-dark/70 text-sm leading-relaxed text-center mb-6 flex-1">
-                                Latihan kelompok privat dengan instruktur berpengalaman, cocok untuk komunitas atau teman-teman.
-                            </p>
-
-                            <div class="w-full mb-6 space-y-2 text-xs text-dark/55">
-                                <div class="flex items-center gap-2">
-                                    <i class="ri-check-line text-secondary"></i>
-                                    <span>Max 8-10 orang</span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <i class="ri-check-line text-secondary"></i>
-                                    <span>Jadwal fleksibel</span>
-                                </div>
-                            </div>
-
-                            <!-- Bottom Accent -->
-                            <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-secondary rounded-full transition-all duration-300 mb-3"></div>
-
-                            <!-- FIX: Hapus hover:scale-105 dari button -->
-                            <a href="https://wa.me/6287785767395" target="_blank" 
-                               class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-full hover:shadow-xl transition-shadow duration-300 text-sm font-bold text-center flex items-center justify-center gap-2 mt-auto">
-                                <i class="ri-whatsapp-line text-lg"></i>
-                                <span>Booking Sekarang</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ================================ -->
-                <!-- Card 2: Private Training         -->
-                <!-- ================================ -->
-                <div class="min-w-[85vw] sm:min-w-[300px] max-w-[320px] flex-shrink-0 flex">
-                    <div class="group relative bg-cream rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-light-pink/60 hover:border-primary/30 overflow-hidden w-full flex flex-col">
-                        
-                        <div class="absolute inset-0 bg-gradient-to-br from-light-pink/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-                        
-                        <div class="relative z-10 flex flex-col items-center flex-1">
-                            
-                            <div class="relative mb-6">
-                                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-light-pink to-light-pink text-primary shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
-                                    <i class="ri-user-heart-line text-4xl"></i>
-                                </div>
-                                <div class="absolute -inset-2 rounded-2xl border-2 border-primary/20 group-hover:border-primary/40 transition-colors duration-300"></div>
-                                <div class="absolute -top-2 -right-2 bg-gradient-to-r from-primary to-primary text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    1-on-1
-                                </div>
-                            </div>
-
-                            <h4 class="text-xl font-black text-primary mb-3 text-center group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all duration-300">
-                                Private Training
-                            </h4>
-
-                            <p class="text-dark/70 text-sm leading-relaxed text-center mb-6 flex-1">
-                                Sesi latihan personal sesuai kebutuhan Anda, didampingi pelatih profesional untuk hasil optimal.
-                            </p>
-
-                            <div class="w-full mb-6 space-y-2 text-xs text-dark/55">
-                                <div class="flex items-center gap-2">
-                                    <i class="ri-check-line text-primary"></i>
-                                    <span>Personal attention</span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <i class="ri-check-line text-primary"></i>
-                                    <span>Custom program</span>
-                                </div>
-                            </div>
-
-                            <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full transition-all duration-300 mb-3"></div>
-
-                            <a href="https://wa.me/6287785767395" target="_blank" 
-                               class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-full hover:shadow-xl transition-shadow duration-300 text-sm font-bold text-center flex items-center justify-center gap-2 mt-auto">
-                                <i class="ri-whatsapp-line text-lg"></i>
-                                <span>Booking Sekarang</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ================================ -->
-                <!-- Card 3: Single Visit Class       -->
-                <!-- ================================ -->
-                <div class="min-w-[85vw] sm:min-w-[300px] max-w-[320px] flex-shrink-0 flex">
-                    <div class="group relative bg-cream rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-light-pink/60 hover:border-secondary/30 overflow-hidden w-full flex flex-col">
-                        
-                        <div class="absolute inset-0 bg-gradient-to-br from-light-pink/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-                        
-                        <div class="relative z-10 flex flex-col items-center flex-1">
-                            
-                            <div class="relative mb-6">
-                                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-soft-petals to-power-pink text-white shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
-                                    <i class="ri-calendar-check-line text-4xl"></i>
-                                </div>
-                                <div class="absolute -inset-2 rounded-2xl border-2 border-secondary/20 group-hover:border-secondary/40 transition-colors duration-300"></div>
-                                <div class="absolute -top-2 -right-2 bg-gradient-to-r from-secondary to-primary text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    Flexible
-                                </div>
-                            </div>
-
-                            <h4 class="text-xl font-black text-primary mb-3 text-center group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all duration-300">
-                                Single Visit Class
-                            </h4>
-
-                            <p class="text-dark/70 text-sm leading-relaxed text-center mb-6 flex-1">
-                                Ikuti kelas tanpa harus menjadi member tetap. Fleksibel untuk Anda yang ingin mencoba atau punya jadwal padat.
-                            </p>
-
-                            <div class="w-full mb-6 space-y-2 text-xs text-dark/55">
-                                <div class="flex items-center gap-2">
-                                    <i class="ri-check-line text-secondary"></i>
-                                    <span>No commitment</span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <i class="ri-check-line text-secondary"></i>
-                                    <span>Try first</span>
-                                </div>
-                            </div>
-
-                            <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-secondary rounded-full transition-all duration-300 mb-3"></div>
-
-                            <a href="https://wa.me/6287785767395" target="_blank" 
-                               class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-full hover:shadow-xl transition-shadow duration-300 text-sm font-bold text-center flex items-center justify-center gap-2 mt-auto">
-                                <i class="ri-whatsapp-line text-lg"></i>
-                                <span>Booking Sekarang</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ================================ -->
-                <!-- Card 4: Reformer Pilates         -->
-                <!-- ================================ -->
-                <div class="min-w-[85vw] sm:min-w-[300px] max-w-[320px] flex-shrink-0 flex">
-                    <div class="group relative bg-cream rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-light-pink/60 hover:border-primary/30 overflow-hidden w-full flex flex-col">
-                        
-                        <div class="absolute inset-0 bg-gradient-to-br from-grounded-green/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-                        
-                        <div class="relative z-10 flex flex-col items-center flex-1">
-                            
-                            <div class="relative mb-6">
-                                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-grounded-green to-patina-green text-white shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
-                                    <i class="ri-group-line text-4xl"></i>
-                                </div>
-                                <div class="absolute -inset-2 rounded-2xl border-2 border-primary/20 group-hover:border-primary/40 transition-colors duration-300"></div>
-                                <div class="absolute -top-2 -right-2 bg-gradient-to-r from-primary to-patina-green text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    Trending
-                                </div>
-                            </div>
-
-                            <h4 class="text-xl font-black text-primary mb-3 text-center group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all duration-300">
-                                Reformer Pilates
-                            </h4>
-
-                            <p class="text-dark/70 text-sm leading-relaxed text-center mb-6 flex-1">
-                                Latihan pilates dengan alat reformer untuk kekuatan, fleksibilitas, dan postur tubuh yang lebih baik.
-                            </p>
-
-                            <div class="w-full mb-6 space-y-2 text-xs text-dark/55">
-                                <div class="flex items-center gap-2">
-                                    <i class="ri-check-line text-primary"></i>
-                                    <span>Alat reformer</span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <i class="ri-check-line text-primary"></i>
-                                    <span>Improve posture</span>
-                                </div>
-                            </div>
-
-                            <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full transition-all duration-300 mb-3"></div>
-
-                            <a href="https://wa.me/6287785767395" target="_blank" 
-                               class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-full hover:shadow-xl transition-shadow duration-300 text-sm font-bold text-center flex items-center justify-center gap-2 mt-auto">
-                                <i class="ri-whatsapp-line text-lg"></i>
-                                <span>Booking Sekarang</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ================================ -->
-                <!-- Card 5: Exclusive Class Program  -->
-                <!-- FIX: Hapus hover:scale-105 btn  -->
-                <!-- ================================ -->
-                <div class="min-w-[85vw] sm:min-w-[300px] max-w-[320px] flex-shrink-0 flex">
-                    <div class="group relative bg-cream rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border-2 border-light-pink/60 hover:border-secondary/30 overflow-hidden w-full flex flex-col">
-                        
-                        <div class="absolute inset-0 bg-gradient-to-br from-light-pink/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-                        
-                        <div class="relative z-10 flex flex-col items-center flex-1">
-                            
-                            <div class="relative mb-6">
-                                <div class="w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-br from-burnt-cherry to-power-pink text-white shadow-lg transition-transform duration-300 group-hover:scale-110" style="will-change:transform;">
-                                    <i class="ri-award-line text-4xl"></i>
-                                </div>
-                                <div class="absolute -inset-2 rounded-2xl border-2 border-secondary/20 group-hover:border-secondary/40 transition-colors duration-300"></div>
-                                <div class="absolute -top-2 -right-2 bg-gradient-to-r from-secondary to-primary text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    Premium
-                                </div>
-                            </div>
-
-                            <h4 class="text-xl font-black text-primary mb-3 text-center group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all duration-300">
-                                Exclusive Class Program
-                            </h4>
-
-                            <p class="text-dark/70 text-sm leading-relaxed text-center mb-6 flex-1">
-                                Program kelas eksklusif dengan materi pilihan, peserta terbatas, dan pendampingan intensif.
-                            </p>
-
-                            <div class="w-full mb-6 space-y-2 text-xs text-dark/55">
-                                <div class="flex items-center gap-2">
-                                    <i class="ri-check-line text-secondary"></i>
-                                    <span>Limited seats</span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <i class="ri-check-line text-secondary"></i>
-                                    <span>Intensive coaching</span>
-                                </div>
-                            </div>
-
-                            <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-secondary rounded-full transition-all duration-300 mb-3"></div>
-
-                            <!-- FIX: hover:scale-105 dihapus -->
-                            <a href="https://wa.me/6287785767395" target="_blank" 
-                               class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-full hover:shadow-xl transition-shadow duration-300 text-sm font-bold text-center flex items-center justify-center gap-2 mt-auto">
-                                <i class="ri-whatsapp-line text-lg"></i>
-                                <span>Booking Sekarang</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Navigation Button Right -->
-            <button
-                type="button"
-                onclick="slideService(1)"
-                class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 items-center justify-center w-14 h-14 bg-cream text-primary rounded-full shadow-xl hover:shadow-2xl hover:bg-gradient-to-br hover:from-primary hover:to-secondary hover:text-white transition-all duration-300 z-20 group"
-                aria-label="Scroll Right"
-                id="serviceScrollRight"
-            >
-                <i class="ri-arrow-right-s-line text-3xl group-hover:scale-110 transition-transform"></i>
-            </button>
-
-        </div>
-
-        <!-- Bottom CTA -->
-        <div class="mt-16 text-center">
-            <p class="text-dark/70 mb-6">
-                Tidak yakin program mana yang cocok? <span class="font-semibold text-primary">Konsultasi gratis</span> dengan tim kami
-            </p>
-            <!-- FIX: hover:scale-105 dihapus dari CTA ini juga -->
-            <a href="https://wa.me/6287785767395" 
-               target="_blank"
-               class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_auto] text-white font-bold rounded-full shadow-xl hover:shadow-2xl transition-shadow duration-300 group">
-                <i class="ri-customer-service-2-line text-xl"></i>
-                <span>Hubungi Kami</span>
-                <i class="ri-arrow-right-line text-xl group-hover:translate-x-1 transition-transform"></i>
-            </a>
-        </div>
-
-    </div>
-</section>
-
-<!-- ================================ -->
-<!-- ================================ -->
-<style>
-    /* Hide scrollbar */
-    #service-slider::-webkit-scrollbar { display: none; }
-
-    /* Gradient animation */
-    @keyframes gradient-shift {
-        0%   { background-position: 0% 50%; }
-        50%  { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
-    .animate-gradient-shift { animation: gradient-shift 4s ease infinite; }
-</style>
-
-<!-- ================================ -->
-<!-- ================================ -->
-<script>
-    function slideService(direction) {
-        const slider = document.getElementById('service-slider');
-        const isMobile = window.innerWidth < 768;
-        const scrollAmount = isMobile ? (window.innerWidth * 0.85 + 24) : 330;
-        slider.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
-        setTimeout(toggleServiceScroll, 350);
-    }
-
-    function toggleServiceScroll() {
-        const slider   = document.getElementById('service-slider');
-        const leftBtn  = document.getElementById('serviceScrollLeft');
-        const rightBtn = document.getElementById('serviceScrollRight');
-        if (!leftBtn || !rightBtn) return;
-
-        leftBtn.style.display  = slider.scrollLeft > 10 ? 'flex' : 'none';
-        const atEnd = slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 10;
-        rightBtn.style.display = atEnd ? 'none' : 'flex';
-    }
-
-    document.addEventListener('DOMContentLoaded', toggleServiceScroll);
-    window.addEventListener('resize', toggleServiceScroll);
-</script>
-<!-- ========================================= -->
-<!-- ENHANCED JAVASCRIPT FOR SLIDER -->
-<!-- ========================================= -->
-
-<script>
-  function slideService(direction) {
-    const slider = document.getElementById('service-slider');
-    const isMobile = window.innerWidth < 768;
-    const scrollAmount = isMobile ? (window.innerWidth * 0.85 + 24) : 340;
-    slider.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
-    setTimeout(toggleServiceScroll, 300);
-  }
-
-  function toggleServiceScroll() {
-    const slider = document.getElementById('service-slider');
-    const leftBtn = document.getElementById('serviceScrollLeft');
-    const rightBtn = document.getElementById('serviceScrollRight');
-    
-    if (leftBtn && rightBtn) {
-      // Show/hide left button
-      if (slider.scrollLeft > 20) {
-        leftBtn.style.display = 'flex';
-      } else {
-        leftBtn.style.display = 'none';
-      }
-      
-      // Show/hide right button
-      const isAtEnd = (slider.scrollLeft + slider.clientWidth) >= (slider.scrollWidth - 20);
-      if (isAtEnd) {
-        rightBtn.style.display = 'none';
-      } else {
-        rightBtn.style.display = 'flex';
-      }
-    }
-  }
-
-  // Initialize on page load
-  window.addEventListener('DOMContentLoaded', toggleServiceScroll);
-  window.addEventListener('resize', toggleServiceScroll);
-
-  // Auto-hide scrollbar
-  const serviceSlider = document.getElementById('service-slider');
-  if (serviceSlider) {
-    serviceSlider.style.scrollbarWidth = 'none';
-    serviceSlider.style.msOverflowStyle = 'none';
-  }
-</script>
-
-<!-- ========================================= -->
-<!-- ADDITIONAL CSS -->
-<!-- ========================================= -->
-
-<style>
-  /* Hide scrollbar for slider */
-  #service-slider::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Gradient Animation */
-  @keyframes gradient-shift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-
-  .animate-gradient-shift {
-    animation: gradient-shift 4s ease infinite;
-  }
-</style>
-
-<script>
-  function slideService(direction) {
-    const slider = document.getElementById('service-slider');
-    const isMobile = window.innerWidth < 768;
-    const scrollAmount = isMobile ? (window.innerWidth * 0.9 + 24) : 260;
-    slider.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
-    setTimeout(toggleServiceScroll, 300);
-  }
-
-  function toggleServiceScroll() {
-    const slider = document.getElementById('service-slider');
-    const leftBtn = document.getElementById('serviceScrollLeft');
-    const rightBtn = document.getElementById('serviceScrollRight');
-    leftBtn.style.display = slider.scrollLeft > 0 ? 'block' : 'none';
-    rightBtn.style.display = (slider.scrollLeft + slider.clientWidth) < slider.scrollWidth ? 'block' : 'none';
-  }
-
-  window.addEventListener('DOMContentLoaded', toggleServiceScroll);
-  window.addEventListener('resize', toggleServiceScroll);
-</script>
-
-
-<!-- Modal Detail Service -->
-<div 
-  id="service-detail-modal"
-  class="fixed inset-0 hidden z-50 bg-dark bg-opacity-60 items-center justify-center transition-opacity duration-200"
->
-  <div 
-    id="service-detail-box"
-    class="bg-cream rounded-lg shadow-xl max-w-md w-full p-8 relative transform transition-all duration-200 scale-95 opacity-0"
-  >
-    <button 
-      onclick="closeServiceDetail()" 
-      class="absolute top-2 right-2 text-dark/55 hover:text-primary text-2xl"
-      aria-label="Close Modal"
-    >
-      &times;
-    </button>
-
-    <h3 id="service-detail-title" class="text-xl font-bold text-primary mb-4"></h3>
-    <div id="service-detail-content" class="text-dark text-sm leading-relaxed"></div>
-  </div>
-</div>
-
-<script>
-  const serviceDetails = {
-    'private-group': {
-      title: 'Private Group Class',
-      content: `
-        <ul class="mb-3 list-disc pl-5">
-          <li>Latihan kelompok privat dengan instruktur profesional</li>
-          <li>Cocok untuk komunitas, keluarga, atau teman</li>
-          <li>Jadwal fleksibel & suasana eksklusif</li>
-        </ul>
-        <p class="mb-2 font-semibold">Fasilitas:</p>
-        <ul class="mb-3 list-disc pl-5">
-          <li>Ruang latihan khusus</li>
-          <li>Peralatan lengkap</li>
-          <li>Free konsultasi awal</li>
-        </ul>
-      `
-    },
-    'private-training': {
-      title: 'Private Training',
-      content: `
-        <ul class="mb-3 list-disc pl-5">
-          <li>Latihan 1-on-1 dengan trainer profesional</li>
-          <li>Program disesuaikan dengan kebutuhan Anda</li>
-        </ul>
-      `
-    },
-    'single-visit': {
-      title: 'Single Visit Class',
-      content: `
-        <ul class="mb-3 list-disc pl-5">
-          <li>Semi privat max 6–7 orang</li>
-          <li>Coach perempuan tersertifikasi</li>
-        </ul>
-      `
-    },
-    'reformer-pilates': {
-      title: 'Reformer Pilates',
-      content: `
-        <ul class="mb-3 list-disc pl-5">
-          <li>Group Class: semi private max 3 orang</li>
-          <li>Private Class untuk special case</li>
-        </ul>
-      `
-    },
-    'exclusive-program': {
-      title: 'Exclusive Class Program',
-      content: `
-        <ul class="mb-3 list-disc pl-5">
-          <li>8 sesi per bulan (2x/minggu)</li>
-          <li>Dilatih oleh pelatih perempuan muslim tersertifikasi</li>
-          <li>Semi private max 6–7 orang</li>
-        </ul>
-      `
-    },
-  };
-
-  function showServiceDetail(key) {
-    const modal = document.getElementById('service-detail-modal');
-    const box = document.getElementById('service-detail-box');
-
-    document.getElementById('service-detail-title').textContent = serviceDetails[key].title;
-    document.getElementById('service-detail-content').innerHTML = serviceDetails[key].content;
-
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-
-    // animasi masuk
-    setTimeout(() => {
-      box.classList.remove('opacity-0', 'scale-95');
-      box.classList.add('opacity-100', 'scale-100');
-    }, 10);
-  }
-
-  function closeServiceDetail() {
-    const modal = document.getElementById('service-detail-modal');
-    const box = document.getElementById('service-detail-box');
-
-    // animasi keluar
-    box.classList.add('opacity-0', 'scale-95');
-    box.classList.remove('opacity-100', 'scale-100');
-
-    setTimeout(() => {
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    }, 200);
-  }
-</script>
-
-<!-- ========================================= -->
-<!-- PACKAGES & PRICING SECTION - STABLE FIXED -->
-<!-- Cards tidak bergoyang sama sekali          -->
-<!-- ========================================= -->
-
-<section class="relative py-20 md:py-28 lg:py-32 overflow-hidden">
-    
-    <!-- Multi-Layer Background -->
-    <div class="absolute inset-0 bg-gradient-to-br from-cream via-light-pink/40 to-white"></div>
-    
-    <!-- Animated Background Pattern -->
-    <div class="absolute inset-0 opacity-[0.015] pointer-events-none">
-        <div class="absolute inset-0" 
-             style="background-image: 
-                repeating-linear-gradient(0deg, transparent, transparent 50px, primary 50px, primary 51px),
-                repeating-linear-gradient(90deg, transparent, transparent 50px, #7A2B4A 50px, #7A2B4A 51px);
-                background-size: 100px 100px;">
-        </div>
-    </div>
-
-    <!-- Floating Gradient Orbs -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute -top-48 left-0 w-96 h-96 bg-gradient-to-br from-secondary/15 to-primary/15 rounded-full blur-3xl animate-pulse" style="animation-duration: 7s;"></div>
-        <div class="absolute top-1/3 -right-32 w-[500px] h-[500px] bg-gradient-to-tl from-primary/10 to-light-pink/10 rounded-full blur-3xl animate-pulse" style="animation-duration: 9s; animation-delay: 2s;"></div>
-        <div class="absolute -bottom-32 left-1/4 w-80 h-80 bg-gradient-to-tr from-light-pink/15 to-secondary/15 rounded-full blur-3xl animate-pulse" style="animation-duration: 8s; animation-delay: 1s;"></div>
-    </div>
-
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        <!-- Section Header -->
-        <div class="text-center mb-16 md:mb-24">
-            <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 rounded-full border border-primary/20 shadow-lg backdrop-blur-sm">
-                <span class="brand-flower brand-flower-pink" style="width: 16px; height: 16px;"></span>
-                <div class="relative">
-                    <div class="w-2 h-2 bg-primary rounded-full animate-ping absolute"></div>
-                    <div class="w-2 h-2 bg-primary rounded-full relative"></div>
-                </div>
-                <span class="text-sm md:text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary">
+                <span class="text-xs md:text-sm font-semibold tracking-[0.2em] text-[#EE4E8B] uppercase font-poppins">
                     The Best Investment for Your Health
                 </span>
             </div>
 
-            <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight">
-                <span class="text-primary">Packages &</span>
-                <span class="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-secondary via-primary to-secondary animate-gradient-shift bg-[length:200%_auto]">
-                    Pricing
-                </span>
+            <!-- Main Heading -->
+            <h2 style="
+                font-family: 'Nord', 'Poppins', sans-serif;
+                font-weight: 900;
+                font-size: clamp(42px, 5.5vw, 72px);
+                line-height: 1.05;
+                color: #ffffff;
+                margin-bottom: 24px;
+            ">
+                Packages &<br>
+                <span style="
+                    background: linear-gradient(135deg, #EE4E8B, #F472B6, #EE4E8B);
+                    background-size: 200% auto;
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                    font-family: 'Instrument Serif', Georgia, serif;
+                    font-style: italic;
+                    font-weight: 400;
+                    animation: gradient-shift 4s ease infinite;
+                ">Pricing</span>
             </h2>
 
-            <div class="flex items-center justify-center gap-3 mb-6">
-                <div class="w-16 h-0.5 bg-gradient-to-r from-transparent to-primary rounded-full"></div>
-                <div class="w-3 h-3 bg-primary rounded-full animate-pulse"></div>
-                <div class="w-24 h-1 bg-gradient-to-r from-primary via-secondary to-primary rounded-full"></div>
-                <div class="w-3 h-3 bg-secondary rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
-                <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-secondary rounded-full"></div>
+            <!-- Decorative divider -->
+            <div class="flex items-center gap-2.5 mt-4 mb-6 justify-center lg:justify-start">
+                <span class="w-16 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></span>
+                <span class="w-3 h-3 bg-primary rounded-full animate-pulse"></span>
+                <span class="w-8 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></span>
+                <span class="w-2.5 h-2.5 bg-secondary rounded-full animate-pulse" style="animation-delay: 0.5s;"></span>
             </div>
 
-            <p class="text-lg md:text-xl text-dark/70 max-w-3xl mx-auto leading-relaxed">
-                Pilih rencana yang sempurna yang sesuai dengan perjalanan kebugaran dan gaya hidup Anda
+            <!-- Description -->
+            <p style="
+                font-family: 'Poppins', sans-serif;
+                font-size: 15px;
+                font-weight: 400;
+                line-height: 1.8;
+                color: rgba(255,255,255,0.55);
+            " class="mx-auto lg:mx-0">
+                Pilih rencana yang sempurna yang sesuai dengan perjalanan kebugaran dan gaya hidup Anda.
             </p>
         </div>
 
-        <!-- Slider Container -->
-        <div class="relative max-w-7xl mx-auto">
+        <!-- BOTTOM: Pricing Cards Horizontal Slider -->
+        <div class="relative">
             
             <!-- Nav Left -->
-            <button type="button" onclick="slideMembership(-1)"
-                class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 items-center justify-center w-14 h-14 bg-cream text-primary rounded-full shadow-xl hover:shadow-2xl hover:bg-gradient-to-br hover:from-primary hover:to-secondary hover:text-white transition-all duration-300 z-20 group"
-                aria-label="Scroll Left" id="membershipScrollLeft" style="display:none">
-                <i class="ri-arrow-left-s-line text-3xl group-hover:scale-110 transition-transform"></i>
+            <button type="button" id="pricingScrollLeft"
+                class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 items-center justify-center w-12 h-12 rounded-full shadow-2xl transition-all duration-300 z-20 group hover:scale-110"
+                style="background: rgba(238,78,139,0.2); border: 1px solid rgba(238,78,139,0.3); backdrop-filter: blur(12px); display:none;"
+                aria-label="Scroll Left"
+                onclick="pricingSlide(-1)">
+                <i class="ri-arrow-left-s-line text-2xl text-primary group-hover:text-white transition-colors"></i>
             </button>
 
-            <div id="membershipList"
-                 class="flex items-stretch overflow-x-auto gap-6 md:gap-8 scroll-smooth pb-6 px-2"
-                 style="scrollbar-width:none; -ms-overflow-style:none;"
-                 onscroll="toggleMembershipScroll()">
+            <!-- Cards Container -->
+            <div id="pricingSlider"
+                 class="flex items-stretch gap-5 md:gap-6 overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory pt-3 pb-5"
+                 style="scrollbar-width: none; -ms-overflow-style: none;"
+                 onscroll="pricingToggleNav()">
 
                 {{-- Dynamic Packages from Admin Panel --}}
                 @if(isset($packages) && $packages->count() > 0)
-                    @foreach($packages as $package)
-                    <div class="min-w-[90vw] sm:min-w-[340px] max-w-[360px] flex-shrink-0 flex">
-                        <div class="group relative bg-cream rounded-3xl p-8 shadow-lg
-                                    hover:shadow-2xl transition-shadow duration-300
-                                    border-2 border-light-pink/40 hover:border-primary/30
-                                    overflow-hidden w-full flex flex-col">
+                    @foreach($packages as $index => $package)
+                    <div class="min-w-[280px] max-w-[300px] flex-shrink-0 flex snap-start" data-aos="fade-up" data-aos-delay="{{ min($index * 100, 500) }}">
+                        <div class="premium-pricing-card group p-5 md:p-6 w-full flex flex-col">
 
-                            {{-- Hover gradient overlay --}}
-                            <div class="absolute inset-0 bg-gradient-to-br from-light-pink/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"></div>
+                             <div class="relative z-10 flex flex-col h-full">
 
-                            {{-- Content --}}
-                            <div class="relative z-10 flex flex-col h-full">
-
-                                {{-- Badge: Dynamic Package --}}
-                                <div class="mb-4">
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-primary to-secondary text-white text-xs font-bold rounded-full shadow-md">
-                                        <i class="ri-heart-pulse-fill"></i>
+                                {{-- Badge --}}
+                                <div class="mb-3">
+                                    <span class="pricing-badge">
+                                        <i class="ri-vip-crown-2-fill text-xs"></i>
                                         <span>EKSKLUSIF</span>
                                     </span>
                                 </div>
 
                                 {{-- Package Name --}}
-                                <h3 class="text-2xl font-black text-primary mb-3 leading-tight group-hover:text-secondary transition-colors">
+                                <h3 class="font-nord font-bold text-base md:text-lg text-white mb-3 leading-snug group-hover:text-primary transition-colors duration-500" style="min-height: 72px;">
                                     {{ $package->name }}
                                 </h3>
 
-                                {{-- Price --}}
-                                <div class="mb-6">
-                                    <div class="flex items-baseline gap-2">
-                                        <span class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary">
+                                {{-- Price Tag --}}
+                                <div class="pricing-price-tag mb-3">
+                                    <div class="relative z-10 w-full">
+                                        <span class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary via-[#F472B6] to-primary" style="background-size: 200% auto; animation: gradient-shift 4s ease infinite;">
                                             Rp {{ number_format($package->price, 0, ',', '.') }}
                                         </span>
+                                        @if($package->duration_days)
+                                            <p class="text-white/40 text-xs mt-1 font-poppins">Valid {{ $package->duration_days }} hari</p>
+                                        @endif
                                     </div>
-                                    @if($package->duration_days)
-                                        <p class="text-dark/60 text-sm mt-1">Valid {{ $package->duration_days }} hari</p>
-                                    @endif
                                 </div>
 
                                 {{-- Features --}}
-                                <ul class="w-full space-y-3 mb-6 flex-1">
+                                <div class="w-full mb-3 flex-1">
                                     @if($package->quota)
-                                    <li class="flex items-center gap-3 text-sm text-dark">
-                                        <i class="ri-checkbox-circle-fill text-xl text-secondary flex-shrink-0"></i>
-                                        <span>{{ $package->quota }} Sessions</span>
-                                    </li>
+                                    <div class="pricing-feature-item min-h-[40px] flex items-center">
+                                        <div class="pricing-feature-icon">
+                                            <i class="ri-checkbox-circle-fill"></i>
+                                        </div>
+                                        <span class="text-white/70 text-xs font-poppins">{{ $package->quota }} Sessions</span>
+                                    </div>
+                                    @else
+                                    <div class="pricing-feature-item min-h-[40px] flex items-center">
+                                        <div class="pricing-feature-icon">
+                                            <i class="ri-checkbox-circle-fill"></i>
+                                        </div>
+                                        <span class="text-white/70 text-xs font-poppins">Unlimited Sessions</span>
+                                    </div>
                                     @endif
-                                    @if($package->description)
-                                    <li class="flex items-start gap-3 text-sm text-dark/80">
-                                        <i class="ri-information-fill text-xl text-primary flex-shrink-0 mt-0.5"></i>
-                                        <span>{{ Str::limit($package->description, 80) }}</span>
-                                    </li>
-                                    @endif
-                                </ul>
 
-                                <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full transition-all duration-500 mb-4"></div>
+                                    @if($package->description)
+                                    <div class="pricing-feature-item min-h-[56px] flex items-start pt-1">
+                                        <div class="pricing-feature-icon mt-0.5">
+                                            <i class="ri-information-fill"></i>
+                                        </div>
+                                        <span class="text-white/60 text-xs font-poppins leading-normal pl-1">{{ Str::limit($package->description, 60) }}</span>
+                                    </div>
+                                    @endif
+                                </div>
+
+                                {{-- Divider --}}
+                                <div class="pricing-accent-divider mb-3"></div>
 
                                 {{-- CTA Button --}}
                                 <div class="w-full mt-auto">
                                     @auth('customer')
-                                        <a href="#signup"
-                                           class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 rounded-full hover:shadow-xl hover:brightness-110 transition-all font-bold text-center block">
-                                            Daftar Sekarang
+                                        <a href="https://wa.me/6287785767395?text=Halo%20FTM%20Society%2C%20saya%20tertarik%20untuk%20daftar%20paket%20{{ urlencode($package->name) }}."
+                                             target="_blank"
+                                             class="pricing-cta-btn pricing-cta-btn-primary">
+                                             <i class="ri-whatsapp-fill mr-1.5"></i> Daftar Sekarang
                                         </a>
                                     @else
-                                        <a href="#signup"
-                                           class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 rounded-full hover:shadow-xl hover:brightness-110 transition-all font-bold text-center block">
-                                            Sign Up Now
+                                        <a href="https://wa.me/6287785767395?text=Halo%20FTM%20Society%2C%20saya%20tertarik%20untuk%20daftar%20paket%20{{ urlencode($package->name) }}."
+                                             target="_blank"
+                                             class="pricing-cta-btn pricing-cta-btn-primary">
+                                             <i class="ri-whatsapp-fill mr-1.5"></i> Sign Up Now
                                         </a>
                                     @endauth
                                 </div>
@@ -2374,30 +3312,32 @@
                     @endforeach
                 @endif
 
-            </div><!-- end #membershipList -->
+            </div>
 
             <!-- Nav Right -->
-            <button type="button" onclick="slideMembership(1)"
-                class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 items-center justify-center w-14 h-14 bg-cream text-primary rounded-full shadow-xl hover:shadow-2xl hover:bg-gradient-to-br hover:from-primary hover:to-secondary hover:text-white transition-all duration-300 z-20 group"
-                aria-label="Scroll Right" id="membershipScrollRight">
-                <i class="ri-arrow-right-s-line text-3xl group-hover:scale-110 transition-transform"></i>
+            <button type="button" id="pricingScrollRight"
+                class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 items-center justify-center w-12 h-12 rounded-full shadow-2xl transition-all duration-300 z-20 group hover:scale-110"
+                style="background: rgba(238,78,139,0.2); border: 1px solid rgba(238,78,139,0.3); backdrop-filter: blur(12px);"
+                aria-label="Scroll Right"
+                onclick="pricingSlide(1)">
+                <i class="ri-arrow-right-s-line text-2xl text-primary group-hover:text-white transition-colors"></i>
             </button>
 
-        </div>
-
-        <!-- Bottom Notes -->
-        <div class="mt-16 text-center">
-            <p class="text-dark/70 text-sm max-w-2xl mx-auto">
-                All packages include Schedule will continue to be updated
-            </p>
         </div>
 
     </div>
 </section>
 
 <style>
-    #membershipList::-webkit-scrollbar { display: none; }
-
+    #pricingSlider {
+        cursor: grab;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+    #pricingSlider:active {
+        cursor: grabbing;
+    }
+    #pricingSlider::-webkit-scrollbar { display: none; }
     @keyframes gradient-shift {
         0%   { background-position: 0% 50%; }
         50%  { background-position: 100% 50%; }
@@ -2407,111 +3347,155 @@
 </style>
 
 <script>
-    function slideMembership(direction) {
-        const slider = document.getElementById('membershipList');
-        slider.scrollBy({ left: direction * 370, behavior: 'smooth' });
-        setTimeout(toggleMembershipScroll, 350);
+(function() {
+    var slider = document.getElementById('pricingSlider');
+
+    // Smooth scroll with requestAnimationFrame and custom easing
+    function smoothScrollTo(element, target, duration) {
+        if (!element) return;
+        const start = element.scrollLeft;
+        const change = target - start;
+        let startTime = null;
+
+        function animateScroll(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+            
+            // Cubic ease-in-out curve
+            const t = Math.min(elapsed / duration, 1);
+            const ease = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            
+            element.scrollLeft = start + change * ease;
+
+            if (elapsed < duration) {
+                requestAnimationFrame(animateScroll);
+            } else {
+                element.scrollLeft = target;
+                pricingToggleNav();
+            }
+        }
+        requestAnimationFrame(animateScroll);
     }
 
-    function toggleMembershipScroll() {
-        const slider   = document.getElementById('membershipList');
-        const leftBtn  = document.getElementById('membershipScrollLeft');
-        const rightBtn = document.getElementById('membershipScrollRight');
-        if (!leftBtn || !rightBtn) return;
-        leftBtn.style.display  = slider.scrollLeft > 10 ? 'flex' : 'none';
-        const atEnd = slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 10;
-        rightBtn.style.display = atEnd ? 'none' : 'flex';
+    // Get the scroll position of the nearest card
+    function getNearestSnapTarget() {
+        if (!slider) return 0;
+        const children = slider.children;
+        let nearestTarget = 0;
+        let minDiff = Infinity;
+        const currentScroll = slider.scrollLeft;
+
+        for (let i = 0; i < children.length; i++) {
+            const child = children[i];
+            if (child.nodeType !== 1) continue; 
+            const childLeft = child.offsetLeft - slider.offsetLeft;
+            const diff = Math.abs(childLeft - currentScroll);
+            if (diff < minDiff) {
+                minDiff = diff;
+                nearestTarget = childLeft;
+            }
+        }
+        
+        const maxScroll = slider.scrollWidth - slider.clientWidth;
+        return Math.max(0, Math.min(nearestTarget, maxScroll));
     }
 
-    document.addEventListener('DOMContentLoaded', toggleMembershipScroll);
-    window.addEventListener('resize', toggleMembershipScroll);
-</script>
+    function pricingSlide(dir) {
+        if (!slider) return;
+        
+        slider.style.scrollSnapType = 'none';
+        
+        const children = slider.children;
+        let nextIndex = 0;
+        
+        for (let i = 0; i < children.length; i++) {
+            if (children[i].nodeType !== 1) continue;
+            const childLeft = children[i].offsetLeft - slider.offsetLeft;
+            if (Math.abs(childLeft - slider.scrollLeft) < 15) {
+                nextIndex = i;
+                break;
+            }
+        }
+        
+        nextIndex = Math.max(0, Math.min(nextIndex + dir, children.length - 1));
+        const targetScroll = children[nextIndex].offsetLeft - slider.offsetLeft;
+        const maxScroll = slider.scrollWidth - slider.clientWidth;
+        const safeTarget = Math.max(0, Math.min(targetScroll, maxScroll));
 
-<!-- ========================================= -->
-<!-- ENHANCED JAVASCRIPT FOR SLIDER -->
-<!-- ========================================= -->
+        smoothScrollTo(slider, safeTarget, 400);
 
-<script>
-  function slideMembership(direction) {
-    const slider = document.getElementById('membershipList');
-    const scrollAmount = 380;
-    slider.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
-    setTimeout(toggleMembershipScroll, 300);
-  }
-
-  function toggleMembershipScroll() {
-    const slider = document.getElementById('membershipList');
-    const leftBtn = document.getElementById('membershipScrollLeft');
-    const rightBtn = document.getElementById('membershipScrollRight');
-    
-    if (leftBtn && rightBtn) {
-      if (slider.scrollLeft > 20) {
-        leftBtn.style.display = 'flex';
-      } else {
-        leftBtn.style.display = 'none';
-      }
-      
-      const isAtEnd = (slider.scrollLeft + slider.clientWidth) >= (slider.scrollWidth - 20);
-      if (isAtEnd) {
-        rightBtn.style.display = 'none';
-      } else {
-        rightBtn.style.display = 'flex';
-      }
+        setTimeout(function() {
+            slider.style.scrollSnapType = 'x mandatory';
+        }, 450);
     }
-  }
 
-  window.addEventListener('DOMContentLoaded', toggleMembershipScroll);
-  window.addEventListener('resize', toggleMembershipScroll);
+    function pricingToggleNav() {
+        var l = document.getElementById('pricingScrollLeft');
+        var r = document.getElementById('pricingScrollRight');
+        if (!slider || !l || !r) return;
+        l.style.display = slider.scrollLeft > 10 ? 'flex' : 'none';
+        r.style.display = (slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 10) ? 'none' : 'flex';
+    }
 
-  const membershipSlider = document.getElementById('membershipList');
-  if (membershipSlider) {
-    membershipSlider.style.scrollbarWidth = 'none';
-    membershipSlider.style.msOverflowStyle = 'none';
-  }
-</script>
+    if (slider) {
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+        let hasMoved = false;
 
-<!-- ========================================= -->
-<!-- ADDITIONAL CSS -->
-<!-- ========================================= -->
+        slider.addEventListener('mousedown', (e) => {
+            if (e.button !== 0) return; // Only left click drag
+            isDown = true;
+            hasMoved = false;
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+            
+            slider.style.scrollSnapType = 'none';
+            slider.style.scrollBehavior = 'auto';
+            slider.style.cursor = 'grabbing';
+        });
 
-<style>
-  #membershipList::-webkit-scrollbar {
-    display: none;
-  }
+        function handleDragEnd() {
+            if (!isDown) return;
+            isDown = false;
+            slider.style.cursor = 'grab';
+            
+            const target = getNearestSnapTarget();
+            smoothScrollTo(slider, target, 300);
 
-  @keyframes gradient-shift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
+            setTimeout(function() {
+                slider.style.scrollSnapType = 'x mandatory';
+            }, 350);
+        }
 
-  .animate-gradient-shift {
-    animation: gradient-shift 4s ease infinite;
-  }
-</style>
+        slider.addEventListener('mouseleave', handleDragEnd);
+        slider.addEventListener('mouseup', handleDragEnd);
 
+        slider.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 1.5;
+            if (Math.abs(walk) > 5) {
+                hasMoved = true;
+            }
+            slider.scrollLeft = scrollLeft - walk;
+            pricingToggleNav();
+        });
 
-<!-- Tambahkan link Remix Icon di <head> jika belum -->
-<!-- <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet"> -->
+        slider.addEventListener('click', (e) => {
+            if (hasMoved) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        }, true);
+    }
 
-<script>
-  function slideMembership(direction) {
-    const slider = document.getElementById('membershipList');
-    const scrollAmount = 350;
-    slider.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
-    setTimeout(toggleMembershipScroll, 300);
-  }
-
-  function toggleMembershipScroll() {
-    const slider = document.getElementById('membershipList');
-    const leftBtn = document.getElementById('membershipScrollLeft');
-    const rightBtn = document.getElementById('membershipScrollRight');
-    leftBtn.style.display = slider.scrollLeft > 0 ? 'block' : 'none';
-    rightBtn.style.display = (slider.scrollLeft + slider.clientWidth) < slider.scrollWidth ? 'block' : 'none';
-  }
-
-  window.addEventListener('DOMContentLoaded', toggleMembershipScroll);
-  window.addEventListener('resize', toggleMembershipScroll);
+    window.pricingSlide = pricingSlide;
+    window.pricingToggleNav = pricingToggleNav;
+    document.addEventListener('DOMContentLoaded', pricingToggleNav);
+    window.addEventListener('resize', pricingToggleNav);
+})();
 </script>
 
 
@@ -2521,295 +3505,7 @@
 <!-- Cards TIDAK bergoyang                     -->
 <!-- ========================================= -->
 
-<section id="classes" class="relative py-20 md:py-28 lg:py-32 overflow-hidden">
 
-    <!-- Multi-Layer Background -->
-    <div class="absolute inset-0 bg-gradient-to-b from-white via-light-pink/30 to-cream"></div>
-
-    <!-- Subtle Grid Pattern -->
-    <div class="absolute inset-0 opacity-[0.02] pointer-events-none"
-         style="background-image:
-            repeating-linear-gradient(0deg, transparent, transparent 50px, primary 50px, primary 51px),
-            repeating-linear-gradient(90deg, transparent, transparent 50px, #7A2B4A 50px, #7A2B4A 51px);
-            background-size: 100px 100px;">
-    </div>
-
-    <!-- Floating Gradient Orbs -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute -top-32 -left-32 w-96 h-96 bg-gradient-to-br from-secondary/15 to-primary/15 rounded-full blur-3xl animate-pulse" style="animation-duration:7s;"></div>
-        <div class="absolute top-1/2 -right-40 w-[500px] h-[500px] bg-gradient-to-tl from-primary/10 to-light-pink/10 rounded-full blur-3xl animate-pulse" style="animation-duration:9s; animation-delay:2s;"></div>
-        <div class="absolute -bottom-20 left-1/3 w-80 h-80 bg-gradient-to-tr from-light-pink/15 to-secondary/15 rounded-full blur-3xl animate-pulse" style="animation-duration:8s; animation-delay:1s;"></div>
-    </div>
-
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-
-        <div class="text-center mb-16 md:mb-20">
-
-            <!-- Badge -->
-            <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 rounded-full border border-primary/20 shadow-lg backdrop-blur-sm">
-                <span class="brand-flower brand-flower-pink" style="width: 16px; height: 16px;"></span>
-                <span class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
-                </span>
-                <span class="text-sm md:text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary">
-                   Our Class Program
-                </span>
-            </div>
-
-            <!-- Title -->
-            <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight">
-                
-                <span class="block mt-1 text-transparent bg-clip-text bg-gradient-to-r from-secondary via-primary to-secondary animate-gradient-shift bg-[length:200%_auto]">
-                    Classes
-                </span>
-            </h2>
-
-            <!-- Decorative Divider -->
-            <div class="flex items-center justify-center gap-3 mb-6">
-                <div class="w-16 h-0.5 bg-gradient-to-r from-transparent to-primary rounded-full"></div>
-                <div class="w-3 h-3 bg-primary rounded-full animate-pulse"></div>
-                <div class="w-24 h-1 bg-gradient-to-r from-primary via-secondary to-primary rounded-full"></div>
-                <div class="w-3 h-3 bg-secondary rounded-full animate-pulse" style="animation-delay:0.5s;"></div>
-                <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-secondary rounded-full"></div>
-            </div>
-
-            <p class="text-lg md:text-xl text-dark/70 max-w-2xl mx-auto leading-relaxed">
-                Temukan berbagai program kebugaran yang dirancang khusus untuk kebutuhan Anda.
-            </p>
-        </div>
-
-        <!-- KEY: grid layout, tidak pakai slider -> tidak perlu hover:scale pada card -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-
-            <!-- CARD 1 : Muaythai         -->
-            <div class="group relative bg-cream rounded-3xl overflow-hidden
-                        shadow-lg hover:shadow-2xl transition-shadow duration-300
-                        border-2 border-light-pink/60 hover:border-secondary/30 flex flex-col">
-
-                <!-- Hover tint -->
-                <div class="absolute inset-0 bg-gradient-to-br from-light-pink/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"></div>
-
-                <!-- Image -->
-                <div class="relative h-52 overflow-hidden flex-shrink-0">
-                    <img src="./images/muaythai.png" alt="Muaythai"
-                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                    <!-- Gradient overlay -->
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-                    <!-- Badge -->
-                    <div class="absolute top-3 left-3 bg-gradient-to-r from-secondary to-primary text-white text-xs font-black px-3 py-1 rounded-full shadow-lg">
-                        Popular
-                    </div>
-                    <!-- Duration chip -->
-                    <div class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-primary text-xs font-bold px-2.5 py-1 rounded-full shadow">
-                        45 min
-                    </div>
-                </div>
-
-                <!-- Content -->
-                <div class="relative z-10 p-6 flex-1 flex flex-col">
-
-                    <!-- Icon + Title Row -->
-                    <div class="flex items-center gap-3 mb-3">
-                        <!-- Icon: HANYA icon yang scale pada hover -->
-                        <div class="w-10 h-10 flex items-center justify-center rounded-xl
-                                    bg-gradient-to-br from-light-pink to-light-pink text-primary
-                                    shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
-                             style="will-change:transform; flex-shrink:0;">
-                            <i class="ri-boxing-line text-lg"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-black text-primary leading-tight
-                                       group-hover:text-transparent group-hover:bg-clip-text
-                                       group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary
-                                       transition-all duration-300">
-                                Muaythai
-                            </h3>
-                            <span class="text-xs text-dark/40 font-medium">All Levels</span>
-                        </div>
-                    </div>
-
-                    <p class="text-sm text-dark/70 leading-relaxed flex-1 mb-5">
-                        Seni bela diri asal Thailand menggunakan delapan titik kontak tubuh: tangan, siku, lutut, dan kaki — melibatkan teknik serangan dan pertahanan.
-                    </p>
-
-                    <!-- Bottom accent line -->
-                    <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-secondary rounded-full transition-all duration-500 mb-4"></div>
-
-                    <button onclick="openModal('muaythai')"
-                            class="w-full bg-gradient-to-r from-primary to-secondary text-white px-4 py-3 rounded-full
-                                   hover:shadow-xl hover:brightness-110 transition-all text-sm font-bold
-                                   flex items-center justify-center gap-2 mt-auto">
-                        <i class="ri-eye-line text-base"></i>
-                        Cek Sekarang
-                    </button>
-                </div>
-            </div>
-
-            <!-- CARD 2 : Body Shaping     -->
-            <div class="group relative bg-cream rounded-3xl overflow-hidden
-                        shadow-lg hover:shadow-2xl transition-shadow duration-300
-                        border-2 border-light-pink/60 hover:border-primary/30 flex flex-col">
-
-                <div class="absolute inset-0 bg-gradient-to-br from-light-pink/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"></div>
-
-                <div class="relative h-52 overflow-hidden flex-shrink-0">
-                    <img src="./images/body shaping.png" alt="Body Shaping"
-                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-                    <div class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-primary text-xs font-bold px-2.5 py-1 rounded-full shadow">
-                        30 min
-                    </div>
-                </div>
-
-                <div class="relative z-10 p-6 flex-1 flex flex-col">
-
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="w-10 h-10 flex items-center justify-center rounded-xl
-                                    bg-gradient-to-br from-light-pink to-light-pink text-primary
-                                    shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
-                             style="will-change:transform; flex-shrink:0;">
-                            <i class="ri-body-scan-line text-lg"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-black text-primary leading-tight
-                                       group-hover:text-transparent group-hover:bg-clip-text
-                                       group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary
-                                       transition-all duration-300">
-                                Body Shaping
-                            </h3>
-                            <span class="text-xs text-dark/40 font-medium">All Levels</span>
-                        </div>
-                    </div>
-
-                    <p class="text-sm text-dark/70 leading-relaxed flex-1 mb-5">
-                        Kelas strength training full body workout untuk toning dan shaping tubuh — dari calisthenics hingga gerakan dengan beban dan equipment pendukung.
-                    </p>
-
-                    <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full transition-all duration-500 mb-4"></div>
-
-                    <button onclick="openModal('body-shaping')"
-                            class="w-full bg-gradient-to-r from-primary to-secondary text-white px-4 py-3 rounded-full
-                                   hover:shadow-xl hover:brightness-110 transition-all text-sm font-bold
-                                   flex items-center justify-center gap-2 mt-auto">
-                        <i class="ri-eye-line text-base"></i>
-                        Cek Sekarang
-                    </button>
-                </div>
-            </div>
-
-            <!-- CARD 3 : Mat Pilates      -->
-            <div class="group relative bg-cream rounded-3xl overflow-hidden
-                        shadow-lg hover:shadow-2xl transition-shadow duration-300
-                        border-2 border-light-pink/60 hover:border-secondary/30 flex flex-col">
-
-                <div class="absolute inset-0 bg-gradient-to-br from-light-pink/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"></div>
-
-                <div class="relative h-52 overflow-hidden flex-shrink-0">
-                    <img src="./images/mat pilates.png" alt="Mat Pilates"
-                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-                    <div class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-primary text-xs font-bold px-2.5 py-1 rounded-full shadow">
-                        60 min
-                    </div>
-                </div>
-
-                <div class="relative z-10 p-6 flex-1 flex flex-col">
-
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="w-10 h-10 flex items-center justify-center rounded-xl
-                                    bg-gradient-to-br from-soft-petals to-power-pink text-white
-                                    shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
-                             style="will-change:transform; flex-shrink:0;">
-                            <i class="ri-mental-health-line text-lg"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-black text-primary leading-tight
-                                       group-hover:text-transparent group-hover:bg-clip-text
-                                       group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary
-                                       transition-all duration-300">
-                                Mat Pilates
-                            </h3>
-                            <span class="text-xs text-dark/40 font-medium">All Levels</span>
-                        </div>
-                    </div>
-
-                    <p class="text-sm text-dark/70 leading-relaxed flex-1 mb-5">
-                        Latihan di atas matras fokus pada kekuatan inti (core), stabilitas, postur, pernapasan, dan fleksibilitas — dilakukan secara perlahan dan terkontrol.
-                    </p>
-
-                    <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-secondary via-primary to-secondary rounded-full transition-all duration-500 mb-4"></div>
-
-                    <button onclick="openModal('mat-pilates')"
-                            class="w-full bg-gradient-to-r from-primary to-secondary text-white px-4 py-3 rounded-full
-                                   hover:shadow-xl hover:brightness-110 transition-all text-sm font-bold
-                                   flex items-center justify-center gap-2 mt-auto">
-                        <i class="ri-eye-line text-base"></i>
-                        Cek Sekarang
-                    </button>
-                </div>
-            </div>
-
-            <!-- CARD 4 : Reformer Pilates      -->
-            <div class="group relative bg-cream rounded-3xl overflow-hidden
-                        shadow-lg hover:shadow-2xl transition-shadow duration-300
-                        border-2 border-light-pink/60 hover:border-primary/30 flex flex-col">
-
-                <div class="absolute inset-0 bg-gradient-to-br from-grounded-green/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"></div>
-
-                <div class="relative h-52 overflow-hidden flex-shrink-0">
-                    <img src="./images/revormer pilates.png" alt="Reformer Pilates"
-                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-                    <!-- Badge -->
-                    <div class="absolute top-3 left-3 bg-gradient-to-r from-primary to-secondary text-white text-xs font-black px-3 py-1 rounded-full shadow-lg">
-                        Popular
-                    </div>
-                    <div class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-primary text-xs font-bold px-2.5 py-1 rounded-full shadow">
-                        45 min
-                    </div>
-                </div>
-
-                <div class="relative z-10 p-6 flex-1 flex flex-col">
-
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="w-10 h-10 flex items-center justify-center rounded-xl
-                                    bg-gradient-to-br from-grounded-green to-patina-green text-white
-                                    shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
-                             style="will-change:transform; flex-shrink:0;">
-                            <i class="ri-focus-3-line text-lg"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-black text-primary leading-tight
-                                       group-hover:text-transparent group-hover:bg-clip-text
-                                       group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary
-                                       transition-all duration-300">
-                                Reformer Pilates
-                            </h3>
-                            <span class="text-xs text-dark/40 font-medium">All Levels</span>
-                        </div>
-                    </div>
-
-                    <p class="text-sm text-dark/70 leading-relaxed flex-1 mb-5">
-                        Menggunakan alat reformer dengan pegas dan tali untuk resistensi tambahan — variasi Mat Pilates yang dibantu alat untuk hasil lebih optimal.
-                    </p>
-
-                    <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary via-secondary to-primary rounded-full transition-all duration-500 mb-4"></div>
-
-                    <button onclick="openModal('reformer-pilates')"
-                            class="w-full bg-gradient-to-r from-primary to-secondary text-white px-4 py-3 rounded-full
-                                   hover:shadow-xl hover:brightness-110 transition-all text-sm font-bold
-                                   flex items-center justify-center gap-2 mt-auto">
-                        <i class="ri-eye-line text-base"></i>
-                        Cek Sekarang
-                    </button>
-                </div>
-            </div>
-
-        </div><!-- end grid -->
-
-    </div>
-</section>
 
 <div id="class-modal"
      class="fixed inset-0 bg-dark/60 backdrop-blur-sm hidden justify-center items-center z-50 px-4">
@@ -2844,17 +3540,7 @@
     </div>
 </div>
 
-<style>
-    @keyframes gradient-shift {
-        0%   { background-position: 0% 50%; }
-        50%  { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
-    .animate-gradient-shift { animation: gradient-shift 4s ease infinite; }
 
-    /* Pastikan image zoom tidak keluar card -->
-    #classes .group { isolation: isolate; }
-</style>
 
 @php
     use Illuminate\Support\Str;
@@ -2975,14 +3661,6 @@ const classSchedules = {
 
 
 
-        <!-- Notes -->
-        <div class="mt-12 text-center">
-          <p class="text-dark/70 text-sm">
-            All packages including Schedule will continue to be updated
-          </p>
-          <div class="mt-8">
-          </div>
-        </div>
       </div>
     </section>
   <!-- Modal Service Detail -->
@@ -3008,66 +3686,126 @@ const classSchedules = {
   </div>
 </div>
 
-   <!-- Jadwal Kelas Simpel & Modern -->
-<section id="schedule" class="py-10 px-4 bg-cream">
-  <div class="max-w-3xl mx-auto text-center">
-    <h2 class="text-2xl md:text-3xl font-semibold text-dark mb-6 uppercase tracking-wide">
-      Jadwal Kelas Exclusive Program
-    </h2>
-
-    <!-- WRAPPER supaya tabel bisa discroll jika layar kecil -->
-    <div class="overflow-x-auto rounded-xl shadow-md bg-cream border border-light-pink/60">
-      <table class="min-w-[600px] w-full border-collapse text-sm md:text-base text-dark">
-        <thead class="bg-dark text-white">
-          <tr>
-            <th class="py-3 px-4 text-center uppercase text-xs font-semibold">Class</th>
-            <th class="py-3 px-4 text-center uppercase text-xs font-semibold">Day</th>
-            <th class="py-3 px-4 text-center uppercase text-xs font-semibold">Date</th>
-            <th class="py-3 px-4 text-center uppercase text-xs font-semibold">Time</th>
-            <th class="py-3 px-4 text-center uppercase text-xs font-semibold">Coach</th>
-          </tr>
-        </thead>
-        <tbody>
-@foreach($schedules as $day => $items)
-
+   <!-- Jadwal Kelas Exclusive Program - Premium & Elegant -->
+<section id="schedule" class="relative overflow-hidden bg-[#FCF9F2]" style="padding: 100px 0 110px;">
     
-
-    {{-- DATA JADWAL --}}
-    @foreach($items->take(50) as $schedule)
-        <tr class="border-t hover:bg-cream transition">
-            <td class="py-3 px-4 text-center font-medium">
-                {{ $schedule->classModel->class_name ?? '-' }}
-            </td>
-
-            <td class="py-3 px-4 text-center">
-                {{ $schedule->day }}
-            </td>
-
-            <td class="py-3 px-4 text-center">
-                {{ $schedule->schedule_date }}
-            </td>
-
-            <td class="py-3 px-4 text-center">
-                {{ \Carbon\Carbon::parse($schedule->class_time)->format('H:i') }}
-            </td>
-
-            <td class="py-3 px-4 text-center">
-                {{ $schedule->instructor ?? '-' }}
-            </td>
-        </tr>
-    @endforeach
-
-@endforeach
-</tbody>
-      </table>
+    {{-- Glow boundary effects --}}
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-1/4 -right-48 w-96 h-96 bg-[#F4C9DF]/10 rounded-full blur-3xl opacity-60"></div>
+        <div class="absolute bottom-1/4 -left-48 w-96 h-96 bg-[#C5D79B]/8 rounded-full blur-3xl opacity-50"></div>
+        
+        {{-- Brand Ornament Signatures --}}
+        <div class="brand-flower brand-flower-pink opacity-[0.06] absolute top-12 left-[10%] w-10 h-10 animate-pulse"></div>
+        <div class="brand-asterisk opacity-[0.08] absolute bottom-16 right-[8%] w-8 h-8 animate-pulse" style="animation-delay: 1.5s;"></div>
     </div>
-  </div>
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 max-w-5xl">
+        
+        <!-- Section Header -->
+        <div class="text-center mb-12">
+            <!-- Eyebrow label -->
+            <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 rounded-full border border-primary/20 shadow-md backdrop-blur-sm">
+                <span class="brand-flower brand-flower-pink" style="width: 16px; height: 16px;"></span>
+                <span class="text-xs md:text-sm font-semibold tracking-[0.2em] text-[#EE4E8B] uppercase font-poppins">
+                    WAKTU TERBAIK UNTUK SEHAT
+                </span>
+            </div>
+
+            <!-- Main Heading -->
+            <h2 class="text-4xl sm:text-5xl font-black mb-6 leading-tight text-dark font-nord">
+                Jadwal Kelas<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-[#F472B6] to-primary font-instrument italic font-normal animate-gradient-shift" style="background-size: 200% auto; font-size: clamp(38px, 5.5vw, 64px);">Exclusive Program</span>
+            </h2>
+
+            <!-- Decorative Divider -->
+            <div class="flex items-center justify-center gap-2.5 mt-4">
+                <span class="w-16 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></span>
+                <span class="w-3 h-3 bg-primary rounded-full animate-pulse"></span>
+                <span class="w-8 h-1 bg-gradient-to-r from-primary to-secondary rounded-full"></span>
+            </div>
+        </div>
+
+        <!-- Table Container with Premium Glass Effect -->
+        <div class="overflow-hidden rounded-3xl border border-white/60 bg-white/40 backdrop-blur-md shadow-[0_20px_50px_rgba(122,43,74,0.05)] p-2 md:p-4" data-aos="fade-up">
+            <div class="overflow-x-auto rounded-2xl">
+                <table class="min-w-[700px] w-full border-collapse text-left">
+                    <thead>
+                        <tr class="bg-gradient-to-r from-secondary to-primary text-white">
+                            <th class="py-4 px-6 font-nord text-xs font-bold tracking-wider uppercase rounded-l-2xl">Class</th>
+                            <th class="py-4 px-6 font-nord text-xs font-bold tracking-wider uppercase">Day</th>
+                            <th class="py-4 px-6 font-nord text-xs font-bold tracking-wider uppercase">Date</th>
+                            <th class="py-4 px-6 font-nord text-xs font-bold tracking-wider uppercase">Time</th>
+                            <th class="py-4 px-6 font-nord text-xs font-bold tracking-wider uppercase rounded-r-2xl">Coach</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-light-pink/20">
+                        @foreach($schedules as $day => $items)
+                            @foreach($items->take(50) as $schedule)
+                                <tr class="hover:bg-white/65 hover:shadow-[0_8px_30px_rgba(122,43,74,0.02)] transition-all duration-300 group">
+                                    {{-- Class Name with pulse icon --}}
+                                    <td class="py-4 px-6 font-medium text-dark">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                                                <i class="ri-heart-pulse-fill text-base"></i>
+                                            </div>
+                                            <span class="font-bold font-poppins text-sm md:text-base tracking-tight">{{ $schedule->classModel->class_name ?? '-' }}</span>
+                                        </div>
+                                    </td>
+
+                                    {{-- Day --}}
+                                    <td class="py-4 px-6 text-dark/70 font-poppins text-sm md:text-base">
+                                        <div class="flex items-center gap-2">
+                                            <i class="ri-calendar-line text-primary/80"></i>
+                                            <span>{{ $schedule->day }}</span>
+                                        </div>
+                                    </td>
+
+                                    {{-- Date or Routine Badge --}}
+                                    <td class="py-4 px-6 font-poppins text-sm md:text-base">
+                                        <div class="flex items-center gap-2">
+                                            <i class="ri-calendar-event-line text-secondary/80"></i>
+                                            <span>
+                                                @if($schedule->schedule_date)
+                                                    {{ \Carbon\Carbon::parse($schedule->schedule_date)->format('d M Y') }}
+                                                @else
+                                                    <span class="text-[10px] uppercase tracking-wider text-secondary bg-secondary/10 px-2 py-0.5 rounded-md font-bold">Weekly Routine</span>
+                                                @endif
+                                            </span>
+                                        </div>
+                                    </td>
+
+                                    {{-- Time --}}
+                                    <td class="py-4 px-6 font-poppins text-sm">
+                                        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#7A2B4A]/5 border border-[#7A2B4A]/10 text-secondary font-semibold text-xs md:text-sm">
+                                            <i class="ri-time-line"></i>
+                                            <span>{{ \Carbon\Carbon::parse($schedule->class_time)->format('H:i') }} WIB</span>
+                                        </div>
+                                    </td>
+
+                                    {{-- Coach --}}
+                                    <td class="py-4 px-6 text-dark/80 font-poppins text-sm md:text-base">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-6 h-6 rounded-full bg-light-pink/40 flex items-center justify-center text-secondary text-xs">
+                                                <i class="ri-user-smile-fill"></i>
+                                            </div>
+                                            <span class="font-medium">{{ $schedule->instructor ?? '-' }}</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+    </div>
 </section>
 {{-- ========================================= --}}
 {{-- GALLERY SECTION - Selaras dengan Classes --}}
 {{-- ========================================= --}}
 
-<section id="Facility" class="relative py-20 md:py-28 lg:py-32 overflow-hidden">
+<section id="Facility" class="relative overflow-hidden" style="padding: 100px 0 110px;">
 
     {{-- Multi-Layer Background --}}
     <div class="absolute inset-0 bg-gradient-to-b from-white via-light-pink/30 to-cream"></div>
@@ -3250,7 +3988,7 @@ const classSchedules = {
 {{-- PARTNER SECTION - Selaras dengan Classes  --}}
 {{-- ========================================= --}}
 
-<section class="relative py-20 md:py-28 overflow-hidden">
+<section class="relative overflow-hidden" style="padding: 100px 0 110px;">
 
     <div class="absolute inset-0 bg-gradient-to-b from-cream via-light-pink/20 to-cream"></div>
 
@@ -3478,306 +4216,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-    <!-- Join Now Section -->
-    <section id="join" class="py-20 bg-cream">
-      <div class="container mx-auto px-4">
-        <div class="relative bg-gradient-to-br from-burnt-cherry via-primary to-burnt-cherry rounded-lg overflow-hidden shadow-2xl">
 
-          <!-- Decorative ornaments -->
-          <div class="absolute inset-0 pointer-events-none overflow-hidden">
-            <div class="brand-flower brand-flower-ivory absolute -top-8 -right-8 opacity-15" style="width: 180px; height: 180px;"></div>
-            <div class="brand-asterisk brand-asterisk-ivory absolute bottom-10 left-10 opacity-15 brand-float" style="width: 60px; height: 60px;"></div>
-            <div class="brand-flower brand-flower-ivory absolute top-1/3 left-[45%] opacity-10 brand-float" style="width: 90px; height: 90px; animation-delay: 2s;"></div>
-          </div>
-
-          <div class="flex flex-col md:flex-row relative z-10">
-            <div class="md:w-1/2 p-10 md:p-16 flex flex-col justify-center">
-              <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
-                Start Your Journey Today
-              </h2>
-              <p class="text-white text-opacity-90 mb-8">
-                Join our community of strong, motivated Muslimah women. Take the
-                first step toward a healthier, more balanced life in a space
-                designed just for you.
-              </p>
-              <div class="space-y-6">
-                <div class="flex items-start space-x-4">
-                  <div
-                    class="w-10 h-10 flex items-center justify-center rounded-full bg-cream text-primary flex-shrink-0 mt-1"
-                  >
-                    <i class="ri-check-line ri-lg"></i>
-                  </div>
-                  <div>
-                    <h3 class="text-white font-semibold text-lg">
-                      Exclusive Access to Members-Only Class
-                    </h3>
-                    <p class="text-white text-opacity-80">
-                      Step into a private, peaceful training space — thoughtfully designed for Muslimah who value comfort, privacy, and premium quality.
-                    </p>
-                  </div>
-                </div>
-                <div class="flex items-start space-x-4">
-                  <div
-                    class="w-10 h-10 flex items-center justify-center rounded-full bg-cream text-primary flex-shrink-0 mt-1"
-                  >
-                    <i class="ri-check-line ri-lg"></i>
-                  </div>
-                  <div>
-                    <h3 class="text-white font-semibold text-lg">
-                      Personal Guidance from Muslimah Trainers
-                    </h3>
-                    <p class="text-white text-opacity-80">
-                      Train with experienced female instructors who understand your values and ensure a safe, modest, and effective workout experience.
-                    </p>
-                  </div>
-                </div>
-                <div class="flex items-start space-x-4">
-                  <div
-                    class="w-10 h-10 flex items-center justify-center rounded-full bg-cream text-primary flex-shrink-0 mt-1"
-                  >
-                    <i class="ri-check-line ri-lg"></i>
-                  </div>
-                  <div>
-                    <h3 class="text-white font-semibold text-lg">
-                      Flexible Membership Options
-                    </h3>
-                    <p class="text-white text-opacity-80">
-                      Choose the plan that works best for your schedule and
-                      budget.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-           <div id="signup" class="md:w-1/2 bg-cream p-10 md:p-16">
-    <h3 class="text-2xl font-semibold text-primary mb-6">
-    Sign Up Now
-</h3>
-
-{{-- Error Validasi --}}
-@if ($errors->any())
-  <div id="error-popup" class="fixed inset-0 flex items-center justify-center z-50 bg-dark bg-opacity-40">
-    <div class="bg-cream rounded-xl shadow-2xl px-8 py-8 max-w-md w-full text-center border-t-4 border-primary animate-fadeIn">
-      <div class="flex justify-center mb-4">
-        <div class="bg-primary bg-opacity-15 rounded-full p-4">
-          <i class="ri-error-warning-line text-4xl text-primary"></i>
-        </div>
-      </div>
-      <h4 class="text-xl font-bold text-primary mb-2">Pendaftaran gagal</h4>
-      <div class="text-dark mb-6 text-sm text-left space-y-2">
-        @foreach ($errors->all() as $error)
-          <div>{{ $error }}</div>
-        @endforeach
-      </div>
-      <button onclick="document.getElementById('error-popup').remove()" class="bg-primary text-white px-6 py-2 rounded hover:bg-opacity-90 transition font-semibold">
-        Tutup
-      </button>
-    </div>
-    </div>
-@endif
-
-{{-- Popup Sukses --}}
-@if(session('success'))
-    <div id="success-popup" class="fixed inset-0 flex items-center justify-center z-50 bg-dark bg-opacity-40">
-        <div class="bg-cream rounded-xl shadow-2xl px-8 py-8 max-w-sm w-full text-center border-t-4 border-secondary animate-fadeIn">
-            <div class="flex justify-center mb-4">
-                <div class="bg-secondary bg-opacity-20 rounded-full p-4">
-                    <i class="ri-checkbox-circle-line text-4xl text-secondary"></i>
-                </div>
-            </div>
-            <h4 class="text-xl font-bold text-primary mb-2">Berhasil!</h4>
-            <p class="text-dark mb-6">{{ session('success') }}</p>
-            <button onclick="document.getElementById('success-popup').remove()" class="bg-secondary text-white px-6 py-2 rounded hover:bg-opacity-90 transition font-semibold">
-                Tutup
-            </button>
-        </div>
-    </div>
-@endif
-
-<form name="Data-Member" method="POST" action="{{ route('signup.store') }}" class="space-y-6">
-    @csrf
-    <div>
-        <label for="name" class="block text-dark mb-2">Full Name</label>
-        <input type="text" id="name" name="name" placeholder="Nama lengkap" value="{{ old('name') }}" required
-            class="w-full px-4 py-3 rounded border border-light-pink focus:border-secondary" />
-    </div>
-
-    <div>
-        <label for="phone_number" class="block text-dark mb-2">Phone Number</label>
-        <input type="tel" id="phone_number" name="phone_number" placeholder="08xxx" value="{{ old('phone_number') }}" required
-            class="w-full px-4 py-3 rounded border border-light-pink focus:border-secondary" />
-    </div>
-
-    <div>
-        <label for="email" class="block text-dark mb-2">Email</label>
-        <input type="email" id="email" name="email" placeholder="you@example.com" value="{{ old('email') }}" required
-            class="w-full px-4 py-3 rounded border border-light-pink focus:border-secondary" />
-    </div>
-
-    {{-- Password Fields - untuk login member sendiri --}}
-    <div>
-        <label for="signup_password" class="block text-dark mb-2">
-            Password
-            <span class="text-xs text-dark/55 font-normal">(minimal 8 karakter)</span>
-        </label>
-        <div class="relative">
-            <input type="password" id="signup_password" name="password" placeholder="Buat password Anda" required minlength="8"
-                class="w-full px-4 py-3 pr-12 rounded border border-light-pink focus:border-secondary" />
-            <button type="button" data-toggle-target="signup_password"
-                    class="toggle-password absolute right-3 top-1/2 -translate-y-1/2 text-dark/40 hover:text-secondary transition">
-                <i class="ri-eye-line text-lg"></i>
-            </button>
-        </div>
-    </div>
-
-    <div>
-        <label for="signup_password_confirmation" class="block text-dark mb-2">Konfirmasi Password</label>
-        <div class="relative">
-            <input type="password" id="signup_password_confirmation" name="password_confirmation" placeholder="Ulangi password Anda" required minlength="8"
-                class="w-full px-4 py-3 pr-12 rounded border border-light-pink focus:border-secondary" />
-            <button type="button" data-toggle-target="signup_password_confirmation"
-                    class="toggle-password absolute right-3 top-1/2 -translate-y-1/2 text-dark/40 hover:text-secondary transition">
-                <i class="ri-eye-line text-lg"></i>
-            </button>
-        </div>
-        <p id="password-match-status" class="text-xs mt-1 hidden"></p>
-    </div>
-
-    {{-- Info OTP --}}
-    <div class="bg-light-pink/40 border-l-4 border-primary px-4 py-3 rounded text-xs text-dark">
-        <div class="flex items-start gap-2">
-            <i class="ri-shield-check-line text-primary text-base mt-0.5"></i>
-            <div>
-                <strong class="text-secondary">Verifikasi WhatsApp:</strong>
-                Setelah daftar, Anda akan menerima kode OTP via WhatsApp ke nomor di atas. Pastikan nomor aktif.
-            </div>
-        </div>
-    </div>
-
-    <div>
-        <label for="birth_date" class="block text-dark mb-2">Tanggal Lahir</label>
-<input type="date" id="birth_date" name="birth_date" value="{{ old('birth_date') }}" required
-    class="w-full px-4 py-3 rounded border border-light-pink focus:border-secondary" />
-    </div>
-
-    <div>
-        <label for="goals" class="block text-dark mb-2">Goals</label>
-        <textarea id="goals" name="goals" rows="3" placeholder="Contoh: Ingin menurunkan berat badan" class="w-full px-4 py-3 rounded border border-light-pink focus:border-secondary">{{ old('goals') }}</textarea>
-    </div>
-
-    <div>
-        <label for="kondisi_khusus" class="block text-dark mb-2">Kondisi Khusus</label>
-        <textarea id="kondisi_khusus" name="kondisi_khusus" rows="3" placeholder="Contoh: Riwayat asma, cedera lutut" class="w-full px-4 py-3 rounded border border-light-pink focus:border-secondary">{{ old('kondisi_khusus') }}</textarea>
-    </div>
-
-    <div>
-        <label for="referensi" class="block text-dark mb-2">Mengenal FTM dari</label>
-        <input type="text" id="referensi" name="referensi" placeholder="Contoh: Instagram, teman, Google" value="{{ old('referensi') }}"
-            class="w-full px-4 py-3 rounded border border-light-pink focus:border-secondary" />
-    </div>
-
-    <div>
-        <label for="pengalaman" class="block text-dark mb-2">Pengalaman ikut olahraga?</label>
-        <input type="text" id="pengalaman" name="pengalaman" placeholder="Contoh: Pernah ikut yoga, gym, dll" value="{{ old('pengalaman') }}"
-            class="w-full px-4 py-3 rounded border border-light-pink focus:border-secondary" />
-    </div>
-
-    <div>
-    <label for="is_muslim" class="block text-dark mb-2">Apakah Anda Muslimah?</label>
-    <div class="mb-2 text-xs text-dark bg-[#C5D79B] rounded px-3 py-2">
-        <strong>P.S:</strong> Kolom Agama Islam diperlukan karena adanya perbedaan pendapat di kalangan para ulama tentang batasan aurat perempuan muslim di hadapan perempuan non-muslim. Karenanya, kami mengambil pendapat yang paling hati-hati dalam perkara ini. Kami tidak meminta bukti KTP Anda, oleh karena itu, kami mohon kerjasamanya agar mengisi form dengan jujur sebagai bentuk toleransi terhadap apa yang kami yakini. Semoga ridho dan berkenan.
-    </div>
-    <select id="is_muslim" name="is_muslim" required class="w-full px-4 py-3 rounded border border-light-pink focus:border-secondary">
-        <option value="">-- Pilih --</option>
-        <option value="ya" {{ old('is_muslim') == 'ya' ? 'selected' : '' }}>Ya</option>
-        <option value="tidak" {{ old('is_muslim') == 'tidak' ? 'selected' : '' }}>Tidak</option>
-    </select>
-</div>
-
-    <div>
-        <label class="flex items-start">
-            <input type="checkbox" name="agree" class="custom-checkbox mr-3 mt-1" {{ old('agree') ? 'checked' : '' }} />
-            <span class="text-sm text-dark/70">
-                Saya bersedia menerima informasi promo, kelas baru, dan event komunitas melalui email.
-            </span>
-        </label>
-    </div>
-
-    <button type="submit"
-        class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-secondary hover:scale-105 hover:shadow-lg transition-all text-sm font-semibold text-center mx-auto block flex items-center justify-center gap-2">
-        <i class="ri-shield-check-line"></i>
-        Daftar &amp; Verifikasi via WhatsApp
-    </button>
-</form>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    /* ====== Auto scroll ke #signup kalau ada popup atau hash ====== */
-    const signupSection = document.getElementById('join');
-    const successPopup  = document.getElementById('success-popup');
-    const errorPopup    = document.getElementById('error-popup');
-
-    if (signupSection && (successPopup || errorPopup || window.location.hash === '#signup')) {
-        signupSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    /* ====== Toggle visibility untuk semua field password ====== */
-    document.querySelectorAll('.toggle-password').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            const targetId = this.getAttribute('data-toggle-target');
-            const input    = document.getElementById(targetId);
-            const icon     = this.querySelector('i');
-
-            if (!input) return;
-
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('ri-eye-line');
-                icon.classList.add('ri-eye-off-line');
-            } else {
-                input.type = 'password';
-                icon.classList.remove('ri-eye-off-line');
-                icon.classList.add('ri-eye-line');
-            }
-        });
-    });
-
-    /* ====== Realtime password match indicator ====== */
-    const pw1    = document.getElementById('signup_password');
-    const pw2    = document.getElementById('signup_password_confirmation');
-    const status = document.getElementById('password-match-status');
-
-    function checkMatch() {
-        if (!pw1 || !pw2 || !status) return;
-        if (!pw2.value) {
-            status.classList.add('hidden');
-            return;
-        }
-        status.classList.remove('hidden');
-        if (pw1.value === pw2.value) {
-            status.textContent = '✓ Password cocok';
-            status.className   = 'text-xs mt-1 text-secondary font-semibold';
-        } else {
-            status.textContent = '✗ Password belum cocok';
-            status.className   = 'text-xs mt-1 text-primary font-semibold';
-        }
-    }
-
-    if (pw1 && pw2) {
-        pw1.addEventListener('input', checkMatch);
-        pw2.addEventListener('input', checkMatch);
-    }
-});
-</script>
-
-</div>
-          </div>
-        </div>
-      </div>
-    </section>
     <!-- Contact Section -->
-    <section id="contact" class="py-20 bg-cream">
+    <section id="contact" class="bg-cream" style="padding: 100px 0 110px;">
       <div class="container mx-auto px-4">
         <div class="text-center mb-16">
           <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4">
@@ -3974,6 +4415,9 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>
   </div>
 </section>
+
+</main>
+
    <!-- Footer -->
 <footer class="relative bg-gradient-to-br from-burnt-cherry via-secondary to-burnt-cherry text-white pt-16 pb-8 overflow-hidden">
 
@@ -3989,7 +4433,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       <!-- Column 1: Tentang Brand -->
       <div>
-        <h4 class="text-lg font-semibold mb-6">Tentang FTM Society</h4>
+        <h4 class="text-lg font-semibold mb-6 text-white">Tentang FTM Society</h4>
         <p class="text-white text-opacity-80 text-sm leading-relaxed">
           FTM Society adalah pusat kebugaran eksklusif untuk muslimah yang mengedepankan kenyamanan, privasi, dan pendekatan islami. Bergabunglah dengan komunitas wanita kuat dan sehat yang saling mendukung dalam perjalanan hidup sehat dan seimbang.
         </p>
@@ -3997,33 +4441,33 @@ document.addEventListener('DOMContentLoaded', function () {
 
       <!-- Column 2: Link Navigasi -->
       <div>
-        <h4 class="text-lg font-semibold mb-6">Navigasi Cepat</h4>
+        <h4 class="text-lg font-semibold mb-6 text-white">Navigasi Cepat</h4>
         <ul class="space-y-3">
-          <li><a href="#home" class="text-white text-opacity-80 hover:text-secondary transition-colors">Beranda</a></li>
-          <li><a href="#about" class="text-white text-opacity-80 hover:text-secondary transition-colors">Tentang Kami</a></li>
-          <li><a href="#classes" class="text-white text-opacity-80 hover:text-secondary transition-colors">Kelas</a></li>
-          <li><a href="#Programs" class="text-white text-opacity-80 hover:text-secondary transition-colors">Program</a></li>
-          <li><a href="#schedule" class="text-white text-opacity-80 hover:text-secondary transition-colors">Jadwal</a></li>
-          <li><a href="#Facility" class="text-white text-opacity-80 hover:text-secondary transition-colors">Fasilitas</a></li>
-          <li><a href="#contact" class="text-white text-opacity-80 hover:text-secondary transition-colors">Hubungi Kami</a></li>
+          <li><a href="#home" class="footer-link">Beranda</a></li>
+          <li><a href="#about" class="footer-link">Tentang Kami</a></li>
+          <li><a href="#classes" class="footer-link">Kelas</a></li>
+          <li><a href="#Programs" class="footer-link">Program</a></li>
+          <li><a href="#schedule" class="footer-link">Jadwal</a></li>
+          <li><a href="#Facility" class="footer-link">Fasilitas</a></li>
+          <li><a href="#contact" class="footer-link">Hubungi Kami</a></li>
         </ul>
       </div>
 
       <!-- Column 3: Program Unggulan -->
       <div>
-        <h4 class="text-lg font-semibold mb-6">Program Unggulan</h4>
+        <h4 class="text-lg font-semibold mb-6 text-white">Program Unggulan</h4>
         <ul class="space-y-3">
-          <li><a href="#Programs" class="text-white text-opacity-80 hover:text-secondary transition-colors">Private Group Class</a></li>
-          <li><a href="#Programs" class="text-white text-opacity-80 hover:text-secondary transition-colors">Private Training</a></li>
-          <li><a href="#Programs" class="text-white text-opacity-80 hover:text-secondary transition-colors">Single Visit Class</a></li>
-          <li><a href="#Programs" class="text-white text-opacity-80 hover:text-secondary transition-colors">Reformer Pilates</a></li>
-          <li><a href="#Programs" class="text-white text-opacity-80 hover:text-secondary transition-colors">Exclusive Class Program</a></li>
+          <li><a href="#Programs" class="footer-link">Private Group Class</a></li>
+          <li><a href="#Programs" class="footer-link">Private Training</a></li>
+          <li><a href="#Programs" class="footer-link">Single Visit Class</a></li>
+          <li><a href="#Programs" class="footer-link">Reformer Pilates</a></li>
+          <li><a href="#Programs" class="footer-link">Exclusive Class Program</a></li>
         </ul>
       </div>
 
       <!-- Column 4: Newsletter & Komunitas -->
       <div>
-        <h4 class="text-lg font-semibold mb-6">Gabung Komunitas Kami</h4>
+        <h4 class="text-lg font-semibold mb-6 text-white">Gabung Komunitas Kami</h4>
         <p class="text-white text-opacity-80 mb-4">
           Dapatkan update eksklusif, promo menarik, dan tips kebugaran langsung ke email Anda.
         </p>
@@ -4054,9 +4498,9 @@ document.addEventListener('DOMContentLoaded', function () {
           &copy; 2025 FTM Society. Empowering Muslimah. Elevating Wellness.
         </p>
         <div class="flex space-x-6">
-          <a href="#" class="text-white text-opacity-60 text-sm hover:text-secondary transition-colors">Kebijakan Privasi</a>
-          <a href="#" class="text-white text-opacity-60 text-sm hover:text-secondary transition-colors">Syarat & Ketentuan</a>
-          <a href="#" class="text-white text-opacity-60 text-sm hover:text-secondary transition-colors">Kontak Bantuan</a>
+          <a href="#" class="footer-link text-sm">Kebijakan Privasi</a>
+          <a href="#" class="footer-link text-sm">Syarat & Ketentuan</a>
+          <a href="#" class="footer-link text-sm">Kontak Bantuan</a>
         </div>
       </div>
     </div>

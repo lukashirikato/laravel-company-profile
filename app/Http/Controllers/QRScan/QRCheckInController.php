@@ -15,10 +15,10 @@ use Illuminate\Support\Facades\Log;
  * Enhanced QR Check-In/Check-Out Controller
  * 
  * Features:
- * - Time window validation (class_time sampai +30 menit)
+ * - Time window validation (-60 menit sampai +30 menit)
  * - Auto-detect booking berdasarkan time window
- * - Auto-checkout setelah 60 menit
- * - Manual checkout sebelum 60 menit
+ * - Auto-checkout mengikuti jam selesai kelas + 15 menit
+ * - Manual checkout via scan ulang / tombol checkout
  * - Double check-in prevention per schedule per hari
  * - Quota management (dikurangi untuk semua packages)
  * - Transaction safety (DB rollback on error)
@@ -32,7 +32,7 @@ class QRCheckInController extends Controller
      * 1. Validate member & order
      * 2. Check paket aktif & quota tersedia
      * 3. Find bookings hari ini
-     * 4. Auto-detect booking based on time window (class_time sampai +30 menit)
+     * 4. Auto-detect booking based on time window (-60 menit sampai +30 menit)
      * 5. Check time window validity
      * 6. Prevent double check-in per schedule
      * 7. Create attendance & deduct quota
@@ -85,7 +85,9 @@ class QRCheckInController extends Controller
             }
 
             // ── STEP 3: Validate Quota ─────────────────────────────────
-            if ((int) $order->remaining_quota <= 0) {
+            $isExclusive = (bool) ($order->package->is_exclusive ?? false);
+
+            if (!$isExclusive && (int) $order->remaining_quota <= 0) {
                 DB::rollBack();
                 return [
                     'success' => false,
@@ -109,7 +111,7 @@ class QRCheckInController extends Controller
                 ];
             }
 
-            // ── STEP 5: Check for Multiple Bookings - Let Admin Choose ────────
+            // ── STEP 5: Auto-detect booking in the current time window ────────
             if ($todayBookings->count() > 1) {
                 // Filter out already checked-in schedules today
                 $availableBookings = [];
@@ -143,22 +145,30 @@ class QRCheckInController extends Controller
                     ];
                 }
 
-                if (count($availableBookings) > 1) {
+                $bookingsInWindow = collect($availableBookings)
+                    ->where('is_within_window', true)
+                    ->values();
+
+                if ($bookingsInWindow->count() === 1) {
+                    $validBooking = $todayBookings->firstWhere('schedule_id', $bookingsInWindow->first()['schedule_id']);
+                } elseif (count($availableBookings) > 1) {
                     DB::rollBack();
                     return [
                         'success' => true,
                         'type' => 'multiple_bookings_found',
-                        'message' => 'Member memiliki ' . count($availableBookings) . ' kelas hari ini. Pilih kelas untuk check-in.',
+                        'message' => $bookingsInWindow->count() > 1
+                            ? 'Member memiliki beberapa kelas yang sedang dalam time window. Pilih kelas untuk check-in.'
+                            : 'Member memiliki ' . count($availableBookings) . ' kelas hari ini. Pilih kelas untuk check-in.',
                         'data' => [
                             'member_id' => $customer->id,
                             'member_name' => $customer->name,
                             'bookings' => $availableBookings,
                         ],
                     ];
+                } else {
+                    // Only 1 available booking left
+                    $validBooking = $todayBookings->firstWhere('schedule_id', $availableBookings[0]['schedule_id']);
                 }
-
-                // Only 1 available booking left
-                $validBooking = $todayBookings->firstWhere('schedule_id', $availableBookings[0]['schedule_id']);
             } else {
                 // Single booking - proceed directly
                 $validBooking = $todayBookings->first();
@@ -185,11 +195,11 @@ class QRCheckInController extends Controller
                 ->first();
 
             if ($existingAttendance && $existingAttendance->check_out_at === null) {
-                // Sudah check-in, belum checkout
-                $elapsedMinutes = (int) Carbon::now()->diffInMinutes($existingAttendance->check_in_at);
+                $autoCheckoutAt = $existingAttendance->auto_checkout_at
+                    ?? $schedule->getAutoCheckoutTime()
+                    ?? $existingAttendance->check_in_at->copy()->addMinutes(75);
 
-                if ($elapsedMinutes >= 60) {
-                    // Sudah lewat 60 menit, lakukan auto-checkout
+                if (Carbon::now()->greaterThanOrEqualTo($autoCheckoutAt)) {
                     $existingAttendance->performAutoCheckout();
                     $existingAttendance->refresh();
 
@@ -198,33 +208,41 @@ class QRCheckInController extends Controller
                     return [
                         'success' => true,
                         'type' => 'auto_checkout_performed',
-                        'message' => 'Auto-checkout selesai karena sudah 60 menit latihan.',
+                        'message' => 'Auto-checkout selesai karena sesi sudah melewati batas checkout otomatis.',
                         'data' => [
-                            'member_id' => $customer->id,
+                            'member_id' => str_pad($customer->id, 4, '0', STR_PAD_LEFT),
                             'member_name' => $customer->name,
                             'class_name' => $schedule->classModel->name ?? 'Kelas',
                             'check_in_time' => $existingAttendance->check_in_at->format('H:i'),
-                            'auto_checkout_time' => $existingAttendance->auto_checkout_at->format('H:i'),
-                            'duration' => 60,
+                            'auto_checkout_time' => ($existingAttendance->check_out_at ?? $autoCheckoutAt)->format('H:i'),
+                            'duration' => $existingAttendance->duration_minutes,
                             'status' => 'auto_checkout',
                         ],
                     ];
                 } else {
-                    // Masih dalam 60 menit, tampilkan info sudah check-in
+                    $existingAttendance->performManualCheckout();
+                    $existingAttendance->refresh();
+
                     DB::commit();
 
                     return [
                         'success' => true,
-                        'type' => 'already_checked_in',
-                        'message' => 'Member sudah check-in, belum check-out.',
+                        'type' => 'check_out_success',
+                        'message' => 'Scan ulang terdeteksi sebagai check-out.',
                         'data' => [
-                            'member_id' => $customer->id,
+                            'member_id' => str_pad($customer->id, 4, '0', STR_PAD_LEFT),
                             'member_name' => $customer->name,
                             'class_name' => $schedule->classModel->name ?? 'Kelas',
+                            'package_name' => $order->package->name ?? '-',
+                            'program' => $existingAttendance->program ?? ($schedule->classModel->name ?? 'Kelas'),
+                            'location' => $existingAttendance->location ?? '-',
                             'check_in_time' => $existingAttendance->check_in_at->format('H:i'),
-                            'elapsed_minutes' => $elapsedMinutes,
-                            'auto_checkout_in' => (60 - $elapsedMinutes),
-                            'status' => 'active',
+                            'check_out_time' => $existingAttendance->check_out_at->format('H:i'),
+                            'duration' => $existingAttendance->getFormattedDuration(),
+                            'duration_minutes' => $existingAttendance->duration_minutes,
+                            'remaining_quota' => $order->remaining_quota,
+                            'total_quota' => $order->package->quota ?? 0,
+                            'status' => 'checked_out',
                         ],
                     ];
                 }
@@ -236,10 +254,9 @@ class QRCheckInController extends Controller
                 ?? $order->package->name 
                 ?? 'General Fitness';
 
-            $autoCheckoutAt = Carbon::now()->addMinutes(60);
+            $autoCheckoutAt = $schedule->getAutoCheckoutTime() ?? Carbon::now()->addMinutes(75);
 
             // ── Check if package is exclusive ────────────────────────────
-            $isExclusive = (bool) ($order->package->is_exclusive ?? false);
             $quotaDeducted = !$isExclusive;
 
             $attendance = Attendance::create([
@@ -320,7 +337,7 @@ class QRCheckInController extends Controller
     }
 
     /**
-     * Process Manual Check-Out sebelum 60 menit
+     * Process manual check-out.
      * 
      * @param int $attendanceId
      * @return array
@@ -427,15 +444,17 @@ class QRCheckInController extends Controller
                 ];
             }
 
-            $elapsedMinutes = (int) Carbon::now()->diffInMinutes($attendance->check_in_at);
+            $autoCheckoutIn = $attendance->auto_checkout_at
+                ? max(0, Carbon::now()->diffInMinutes($attendance->auto_checkout_at, false) * -1)
+                : 0;
 
             return [
                 'success' => true,
                 'data' => [
                     'attendance_id' => $attendance->id,
                     'check_in_time' => $attendance->check_in_at->format('H:i'),
-                    'elapsed_minutes' => $elapsedMinutes,
-                    'auto_checkout_in' => max(0, 60 - $elapsedMinutes),
+                    'elapsed_minutes' => (int) Carbon::now()->diffInMinutes($attendance->check_in_at),
+                    'auto_checkout_in' => $autoCheckoutIn,
                     'class_name' => $attendance->schedule->classModel->name ?? 'Kelas',
                 ],
             ];
