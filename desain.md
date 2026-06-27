@@ -46,12 +46,12 @@ Setiap Muslimah berhak atas ruang bergerak yang aman, terjaga, dan selaras denga
 
 FTM Society berkomunikasi dengan **sederhana namun terarah**: tutur yang ramah, mengalir seperti percakapan antar sesama teman, namun tetap mengajak kesungguhan. Kami berbicara dengan **menuntun, bukan menekan**; **menguatkan, bukan menghakimi**.
 
-| Karakter        | Deskripsi                                       |
-| --------------- | ----------------------------------------------- |
-| Modest          | Tutur yang sopan dan terjaga                    |
-| Guiding         | Menuntun, bukan menggurui                       |
-| Passionate      | Penuh semangat dan keyakinan                    |
-| Conversational  | Hangat seperti percakapan antar teman           |
+| Karakter       | Deskripsi                             |
+| -------------- | ------------------------------------- |
+| Modest         | Tutur yang sopan dan terjaga          |
+| Guiding        | Menuntun, bukan menggurui             |
+| Passionate     | Penuh semangat dan keyakinan          |
+| Conversational | Hangat seperti percakapan antar teman |
 
 ---
 
@@ -102,69 +102,7 @@ Gunakan logomark saat:
 
 ---
 
-## 3. Color Selection
-
-Palet warna FTM Society bukan hanya soal estetika, tetapi tentang pesan yang ingin dijaga: **ketenangan yang tetap berpendirian, semangat dalam bergerak, dan feminitas yang tetap terarah**.
-
-Setiap warna dipilih untuk membantu FTM Society tampil konsisten — baik di studio, digital, maupun dalam percakapan dengan komunitas.
-
-### Primary Colors
-
-| Nama Warna     | Peran                                       | Hex       |
-| -------------- | ------------------------------------------- | --------- |
-| Power Pink     | Warna utama brand, energi & feminitas       | `#EE4E8B` |
-| Burnt Cherry   | Teks utama, kedalaman, keanggunan           | `#7A2B4A` |
-| Soft Petals    | Background alternatif, kelembutan           | `#F4C9DF` |
-
-### Secondary Colors
-
-| Nama Warna       | Peran                                          | Hex       |
-| ---------------- | ---------------------------------------------- | --------- |
-| Patina Green     | Keseimbangan, alam, ketenangan                 | `#1A7A5E` |
-| Springs Ivy      | Aksen hijau lebih gelap, ketegasan             | `#1D5A4B` |
-| Grounded Green   | Sage muda, natural & segar                     | `#C5D79B` |
-| Layl             | Hampir hitam, untuk teks & kontras kuat        | `#1C1C1C` |
-| Rising           | Krem hangat, background utama                  | `#FCF9F2` |
-
-### Color Interactions
-
-Warna-warna FTM Society bekerja seperti sebuah kesatuan yang saling memantulkan karakter satu sama lain. Ketika digabungkan, mereka menghasilkan kesan yang **rapi, vibrant, namun nyaman di mata**. Interaksinya membantu setiap desain tetap terjaga, modern, dan clean.
-
-**Kombinasi yang direkomendasikan:**
-
-- Power Pink + Power Pink (light element on dark bg) → energetik
-- Soft Petals + Power Pink → feminin & lembut
-- Burnt Cherry + Rising → elegan & warm
-- Patina Green + Grounded Green → natural & seimbang
-- Patina Green + Grounded Green (elemen) → fresh contrast
-- Grounded Green + Power Pink → vibrant, muda & berani
-
-### Tailwind Token Mapping (untuk acuan di kode)
-
-Token Tailwind config yang ada di project (`welcome.blade.php`, `member.css`):
-
-```js
-colors: {
-  primary:        "#EE4E8B",   // Power Pink
-  secondary:      "#7A2B4A",   // Burnt Cherry
-  accent:         "#1A7A5E",   // Patina Green
-  "light-pink":   "#F4C9DF",   // Soft Petals
-  cream:          "#FCF9F2",   // Rising
-  dark:           "#1C1C1C",   // Layl
-  "springs-ivy":  "#1D5A4B",
-  "grounded-green":"#C5D79B",
-
-  // Aliases bermakna brand
-  "power-pink":   "#EE4E8B",
-  "burnt-cherry": "#7A2B4A",
-  "soft-petals":  "#F4C9DF",
-  "patina-green": "#1A7A5E",
-  "layl":         "#1C1C1C",
-  "rising":       "#FCF9F2"
-}
-```
-
-> ⚠️ **Catatan migrasi nilai warna:** versi awal project sempat memakai approximation seperti `#E8618C`, `#6B2D4E`, `#1A7A6E`, dll. Untuk konsistensi brand 2025, gunakan **nilai resmi di tabel di atas** (`#EE4E8B`, `#7A2B4A`, `#1A7A5E`, dst.). Saat memperbarui komponen lama, ganti ke nilai resmi.
+##
 
 ---
 
@@ -174,14 +112,14 @@ FTM Society menggunakan elemen grafis yang dirancang khusus, dengan akar pada ni
 
 ### Graphic Elements
 
-| Nama Elemen        | Bentuk                                | Makna                       |
-| ------------------ | ------------------------------------- | --------------------------- |
-| Two Half-Moons     | Dua bulan setengah berhadapan         | **BALANCE** — Keseimbangan  |
-| Circles Cluster    | Tiga lingkaran saling bertumpuk       | **SISTERHOOD** — Persaudaraan |
-| Four-Part Fold     | Empat bagian geometris                | **INTENTION** — Niat & Tujuan |
-| Five Petal Bloom   | Bunga dengan lima kelopak bulat       | **GROWTH** — Pertumbuhan    |
-| Radiant Asterisk   | Bintang/asterisk bersudut rounded     | **STRENGTH** — Kekuatan     |
-| Four Leaf Form     | Empat daun/kelopak simetris           | **SAFETY** — Keamanan       |
+| Nama Elemen      | Bentuk                            | Makna                         |
+| ---------------- | --------------------------------- | ----------------------------- |
+| Two Half-Moons   | Dua bulan setengah berhadapan     | **BALANCE** — Keseimbangan    |
+| Circles Cluster  | Tiga lingkaran saling bertumpuk   | **SISTERHOOD** — Persaudaraan |
+| Four-Part Fold   | Empat bagian geometris            | **INTENTION** — Niat & Tujuan |
+| Five Petal Bloom | Bunga dengan lima kelopak bulat   | **GROWTH** — Pertumbuhan      |
+| Radiant Asterisk | Bintang/asterisk bersudut rounded | **STRENGTH** — Kekuatan       |
+| Four Leaf Form   | Empat daun/kelopak simetris       | **SAFETY** — Keamanan         |
 
 **Supergraphic dapat diaplikasikan sebagai:**
 
@@ -222,13 +160,13 @@ Instrument Serif hadir sebagai pendamping yang lebih **feminim dan airy**. Ia me
 
 ### Hierarki Tipografi
 
-| Level                | Font              | Gaya     | Penggunaan                     |
-| -------------------- | ----------------- | -------- | ------------------------------ |
-| Display / Hero       | NORD              | Bold     | Headline utama, tagline besar  |
-| Heading              | NORD              | Book     | Judul section, sub-headline    |
-| Subheading           | Instrument Serif  | Italic   | Pull quote, caption judul      |
-| Body                 | Instrument Serif  | Regular  | Paragraf, deskripsi panjang    |
-| Caption              | NORD              | Book     | Label, keterangan gambar       |
+| Level          | Font             | Gaya    | Penggunaan                    |
+| -------------- | ---------------- | ------- | ----------------------------- |
+| Display / Hero | NORD             | Bold    | Headline utama, tagline besar |
+| Heading        | NORD             | Book    | Judul section, sub-headline   |
+| Subheading     | Instrument Serif | Italic  | Pull quote, caption judul     |
+| Body           | Instrument Serif | Regular | Paragraf, deskripsi panjang   |
+| Caption        | NORD             | Book    | Label, keterangan gambar      |
 
 ### Implementasi di Project
 
@@ -244,15 +182,18 @@ Deklarasi `@font-face` ada di `resources/css/ftm-typography.css` (di-mirror ke `
 **Cara pakai di Blade:**
 
 ```html
-<link rel="stylesheet" href="{{ asset('css/ftm-typography.css') }}">
+<link rel="stylesheet" href="{{ asset('css/ftm-typography.css') }}" />
 ```
 
 **Tailwind utility classes:**
 
 ```html
-<span class="font-nord font-black">FTM</span>            <!-- Wordmark -->
-<span class="font-instrument italic">Society</span>       <!-- Aksen feminin -->
-<p class="font-poppins">Body fallback</p>                 <!-- Untuk web body  -->
+<span class="font-nord font-black">FTM</span>
+<!-- Wordmark -->
+<span class="font-instrument italic">Society</span>
+<!-- Aksen feminin -->
+<p class="font-poppins">Body fallback</p>
+<!-- Untuk web body  -->
 ```
 
 > **Aturan penting:** JANGAN inline `@font-face` di Blade — itu menyebabkan PHP timeout di Blade compiler. Selalu pakai link reference ke `ftm-typography.css`.
@@ -284,15 +225,15 @@ Brand FTM Society diaplikasikan secara konsisten di berbagai medium.
 
 ## Panduan Ringkas
 
-| Elemen           | Ketentuan                                                             |
-| ---------------- | --------------------------------------------------------------------- |
-| Logo             | Logomark bisa standalone; logotype wajib didampingi logomark          |
-| Warna primer     | Power Pink, Burnt Cherry, Soft Petals                                 |
-| Warna sekunder   | Patina Green, Springs Ivy, Grounded Green, Layl, Rising               |
-| Font headline    | NORD (Bold/Book)                                                      |
-| Font body        | Instrument Serif (Regular/Italic)                                     |
-| Tone             | Modest · Guiding · Passionate · Conversational                        |
-| Tagline          | "the space muslimah deserves."                                        |
+| Elemen         | Ketentuan                                                    |
+| -------------- | ------------------------------------------------------------ |
+| Logo           | Logomark bisa standalone; logotype wajib didampingi logomark |
+| Warna primer   | Power Pink, Burnt Cherry, Soft Petals                        |
+| Warna sekunder | Patina Green, Springs Ivy, Grounded Green, Layl, Rising      |
+| Font headline  | NORD (Bold/Book)                                             |
+| Font body      | Instrument Serif (Regular/Italic)                            |
+| Tone           | Modest · Guiding · Passionate · Conversational               |
+| Tagline        | "the space muslimah deserves."                               |
 
 ---
 
@@ -325,8 +266,6 @@ Setiap kali menambah halaman, section, atau komponen baru:
 > Brand Guidelines ini disusun agar setiap elemen visual, tutur, dan karakter FTM Society tetap terjaga, **tanpa membatasi ruang eksplorasi**.
 >
 > © FTM Society — Fathima Society 2025
-
-
 
 Global Typography Rules
 

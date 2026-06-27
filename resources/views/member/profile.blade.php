@@ -1,4 +1,4 @@
-﻿
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -910,8 +910,15 @@
         <div data-aos="fade-right" data-aos-delay="300" 
            class="flex flex-wrap gap-4 justify-center lg:justify-start pt-6">
           @auth('customer')
+            <a href="{{ route('member.packages.index') }}" 
+               class="group relative inline-flex items-center justify-center gap-3 px-8 py-4 text-lg font-black text-white bg-gradient-to-r from-[#EE4E8B] to-[#7A2B4A] rounded-full overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-300 ease-out hover:scale-105 hover:-translate-y-1">
+              <span class="relative z-10 tracking-wide">My Packages</span>
+              <i class="ri-shopping-bag-line text-xl relative z-10 transition-all group-hover:translate-x-2 group-hover:scale-110"></i>
+              <div class="absolute inset-0 bg-gradient-to-r from-[#7A2B4A] to-[#EE4E8B] opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+              <div class="absolute inset-0 rounded-full opacity-0 group-hover:opacity-20 bg-white group-hover:scale-150 transition-all duration-500"></div>
+            </a>
           @else
-            <a href="#join" 
+            <a href="{{ route('member.register') }}" 
                class="group relative inline-flex items-center justify-center gap-3 px-8 py-4 text-lg font-black text-white bg-gradient-to-r from-[#EE4E8B] to-[#7A2B4A] rounded-full overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-300 ease-out hover:scale-105 hover:-translate-y-1">
               <span class="relative z-10 tracking-wide">Join Now</span>
               <i class="ri-arrow-right-line text-xl relative z-10 transition-all group-hover:translate-x-2 group-hover:scale-110"></i>
@@ -1873,35 +1880,20 @@
 
 
 <!-- ========================================= -->
-<!-- PACKAGES & PRICING SECTION - STABLE FIXED -->
-<!-- Cards tidak bergoyang sama sekali          -->
+<!-- PACKAGES CTA - REDIRECT TO MY PACKAGES   -->
+<!-- Pricing dipindahkan ke halaman My Packages -->
 <!-- ========================================= -->
 
 <section id="Packages" class="relative py-20 md:py-28 lg:py-32 overflow-hidden">
-    <!-- Multi-Layer Background -->
     <div class="absolute inset-0 bg-gradient-to-br from-[#FCF9F2] via-[#F4C9DF]/40 to-white"></div>
 
-    <!-- Animated Background Pattern -->
-    <div class="absolute inset-0 opacity-[0.015] pointer-events-none">
-        <div class="absolute inset-0"
-             style="background-image:
-                repeating-linear-gradient(0deg, transparent, transparent 50px, #EE4E8B 50px, #EE4E8B 51px),
-                repeating-linear-gradient(90deg, transparent, transparent 50px, #7A2B4A 50px, #7A2B4A 51px);
-                background-size: 100px 100px;">
-        </div>
-    </div>
-
-    <!-- Floating Gradient Orbs -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
         <div class="absolute -top-48 left-0 w-96 h-96 bg-gradient-to-br from-[#7A2B4A]/15 to-[#EE4E8B]/15 rounded-full blur-3xl animate-pulse" style="animation-duration: 7s;"></div>
         <div class="absolute top-1/3 -right-32 w-[500px] h-[500px] bg-gradient-to-tl from-[#EE4E8B]/10 to-[#EE4E8B]/10 rounded-full blur-3xl animate-pulse" style="animation-duration: 9s; animation-delay: 2s;"></div>
-        <div class="absolute -bottom-32 left-1/4 w-80 h-80 bg-gradient-to-tr from-[#F4C9DF]/15 to-[#7A2B4A]/15 rounded-full blur-3xl animate-pulse" style="animation-duration: 8s; animation-delay: 1s;"></div>
     </div>
 
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-
-        <!-- Section Header -->
-        <div class="text-center mb-16 md:mb-24">
+        <div class="text-center mb-12">
             <div class="inline-flex items-center gap-2 px-5 py-2.5 mb-6 bg-gradient-to-r from-[#EE4E8B]/10 via-[#7A2B4A]/10 to-[#EE4E8B]/10 rounded-full border border-[#EE4E8B]/20 shadow-lg backdrop-blur-sm">
                 <div class="relative">
                     <div class="w-2 h-2 bg-[#EE4E8B] rounded-full animate-ping absolute"></div>
@@ -1927,138 +1919,30 @@
                 <div class="w-16 h-0.5 bg-gradient-to-l from-transparent to-[#7A2B4A] rounded-full"></div>
             </div>
 
-            <p class="text-lg md:text-xl text-[#1C1C1C]/70 max-w-3xl mx-auto leading-relaxed">
+            <p class="text-lg md:text-xl text-[#1C1C1C]/70 max-w-3xl mx-auto leading-relaxed mb-10">
                 Pilih rencana yang sempurna yang sesuai dengan perjalanan kebugaran dan gaya hidup Anda
             </p>
-        </div>
 
-        <!-- Slider Container -->
-        <div class="relative max-w-7xl mx-auto">
-
-            <!-- Nav Left -->
-            <button type="button" onclick="slideMembership(-1)"
-                class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 items-center justify-center w-14 h-14 bg-[#FCF9F2] text-[#EE4E8B] rounded-full shadow-xl hover:shadow-2xl hover:bg-gradient-to-br hover:from-[#EE4E8B] hover:to-[#7A2B4A] hover:text-white transition-all duration-300 z-20 group"
-                aria-label="Scroll Left" id="membershipScrollLeft" style="display:none">
-                <i class="ri-arrow-left-s-line text-3xl group-hover:scale-110 transition-transform"></i>
-            </button>
-
-            <!-- Slider Track -->
-            <div id="membershipList"
-                 class="flex items-stretch overflow-x-auto gap-6 md:gap-8 scroll-smooth pb-6 px-2"
-                 style="scrollbar-width:none; -ms-overflow-style:none;"
-                 onscroll="toggleMembershipScroll()">
-
-                {{-- Dynamic Packages from Admin Panel --}}
-                @if(isset($packages) && $packages->count() > 0)
-                    @foreach($packages as $package)
-                    <div class="min-w-[90vw] sm:min-w-[340px] max-w-[360px] flex-shrink-0 flex">
-                        <div class="group relative bg-[#FCF9F2] rounded-3xl p-8 shadow-lg
-                                    hover:shadow-2xl transition-shadow duration-300
-                                    border-2 border-[#F4C9DF]/40 hover:border-[#EE4E8B]/30
-                                    overflow-hidden w-full flex flex-col">
-
-                            {{-- Hover gradient overlay --}}
-                            <div class="absolute inset-0 bg-gradient-to-br from-[#F4C9DF]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0"></div>
-
-                            {{-- Content --}}
-                            <div class="relative z-10 flex flex-col h-full">
-
-                                {{-- Badge: Dynamic Package --}}
-                                <div class="mb-4">
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-[#EE4E8B] to-[#7A2B4A] text-white text-xs font-bold rounded-full shadow-md">
-                                        <i class="ri-heart-pulse-fill"></i>
-                                        <span>EKSKLUSIF</span>
-                                    </span>
-                                </div>
-
-                                {{-- Package Name --}}
-                                <h3 class="text-2xl font-black text-[#EE4E8B] mb-3 leading-tight group-hover:text-[#7A2B4A] transition-colors">
-                                    {{ $package->name }}
-                                </h3>
-
-                                {{-- Price --}}
-                                <div class="mb-6">
-                                    <div class="flex items-baseline gap-2">
-                                        <span class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#EE4E8B] via-[#7A2B4A] to-[#EE4E8B]">
-                                            Rp {{ number_format($package->price, 0, ',', '.') }}
-                                        </span>
-                                    </div>
-                                    @if($package->duration_days)
-                                        <p class="text-[#1C1C1C]/60 text-sm mt-1">Valid {{ $package->duration_days }} hari</p>
-                                    @endif
-                                </div>
-
-                                {{-- Features --}}
-                                <ul class="w-full space-y-3 mb-6 flex-1">
-                                    @if($package->quota)
-                                    <li class="flex items-center gap-3 text-sm text-[#1C1C1C]/80">
-                                        <i class="ri-checkbox-circle-fill text-xl text-[#7A2B4A] flex-shrink-0"></i>
-                                        <span>{{ $package->quota }} Sessions</span>
-                                    </li>
-                                    @endif
-                                    @if($package->description)
-                                    <li class="flex items-start gap-3 text-sm text-[#1C1C1C]/80">
-                                        <i class="ri-information-fill text-xl text-[#EE4E8B] flex-shrink-0 mt-0.5"></i>
-                                        <span class="break-words">{{ $package->description }}</span>
-                                    </li>
-                                    @endif
-                                </ul>
-
-                                <div class="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-[#EE4E8B] via-[#7A2B4A] to-[#EE4E8B] rounded-full transition-all duration-500 mb-4"></div>
-
-                                {{-- CTA Button --}}
-                                <div class="w-full mt-auto">
-                                    @auth('customer')
-                                        <a href="{{ route('join.package', ['package' => $package->slug ?? $package->id]) }}"
-                                           class="w-full bg-gradient-to-r from-[#EE4E8B] to-[#7A2B4A] text-white px-6 py-4 rounded-full hover:shadow-xl hover:brightness-110 transition-all font-bold text-center block">
-                                            Daftar Sekarang
-                                        </a>
-                                    @else
-                                        <a href="{{ route('member.login') }}"
-                                           class="w-full bg-gradient-to-r from-[#EE4E8B] to-[#7A2B4A] text-white px-6 py-4 rounded-full hover:shadow-xl hover:brightness-110 transition-all font-bold text-center block">
-                                            Login untuk Membeli
-                                        </a>
-                                    @endauth
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    @endforeach
-                @endif
-
-            </div>
-
-            <!-- Nav Right -->
-            <button type="button" onclick="slideMembership(1)"
-                class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 items-center justify-center w-14 h-14 bg-[#FCF9F2] text-[#EE4E8B] rounded-full shadow-xl hover:shadow-2xl hover:bg-gradient-to-br hover:from-[#EE4E8B] hover:to-[#7A2B4A] hover:text-white transition-all duration-300 z-20 group"
-                aria-label="Scroll Right" id="membershipScrollRight">
-                <i class="ri-arrow-right-s-line text-3xl group-hover:scale-110 transition-transform"></i>
-            </button>
-        </div>
-
-        <!-- Bottom Notes -->
-        <div class="mt-16 text-center">
-            <p class="text-[#1C1C1C]/70 text-sm max-w-2xl mx-auto">
-                All packages include Schedule will continue to be updated
-            </p>
+            @auth('customer')
+                <a href="{{ route('member.packages.index') }}"
+                   class="inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-[#EE4E8B] to-[#7A2B4A] text-white font-bold text-lg rounded-full shadow-xl hover:shadow-2xl hover:brightness-110 transition-all duration-300 group">
+                    <i class="ri-shopping-bag-line text-xl"></i>
+                    <span>Lihat Paket</span>
+                    <i class="ri-arrow-right-line text-xl group-hover:translate-x-2 transition-transform"></i>
+                </a>
+            @else
+                <a href="{{ route('login') }}"
+                   class="inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-[#EE4E8B] to-[#7A2B4A] text-white font-bold text-lg rounded-full shadow-xl hover:shadow-2xl hover:brightness-110 transition-all duration-300 group">
+                    <i class="ri-shopping-bag-line text-xl"></i>
+                    <span>Lihat Paket</span>
+                    <i class="ri-arrow-right-line text-xl group-hover:translate-x-2 transition-transform"></i>
+                </a>
+            @endauth
         </div>
     </div>
 </section>
 
-<!-- Package Variant Modal -->
-<div id="package-variant-modal" class="fixed inset-0 bg-[#1C1C1C] bg-opacity-60 hidden items-center justify-center z-50">
-  <div class="bg-[#FCF9F2] rounded-lg shadow-xl max-w-md w-full p-6 mx-4">
-    <div class="flex items-center justify-between mb-4">
-      <h3 class="text-lg font-bold text-[#EE4E8B]">Pilih Paket</h3>
-      <button type="button" onclick="closeVariantModal()" class="text-[#1C1C1C]/70 text-2xl">&times;</button>
-    </div>
-    <div id="package-variant-list" class="flex flex-col gap-3"></div>
-    <div class="mt-4 text-right">
-      <button type="button" onclick="closeVariantModal()" class="px-4 py-2 rounded-button border border-[#F4C9DF]">Batal</button>
-    </div>
-  </div>
-</div>
+
 
 <!-- ========================================= -->
 <!-- CLASSES SECTION - ULTIMATE PROFESSIONAL  -->

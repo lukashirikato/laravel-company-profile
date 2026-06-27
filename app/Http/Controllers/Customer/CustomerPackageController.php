@@ -58,16 +58,21 @@ class CustomerPackageController extends Controller
             ->limit(10)
             ->get();
 
+        // ✅ AVAILABLE PACKAGES - Untuk section pembelian paket baru
+        $availablePackages = Package::active()->latest()->get();
+
         Log::info('📦 Packages Found', [
             'active_count' => $activePackages->count(),
             'past_count' => $pastPackages->count(),
+            'available_count' => $availablePackages->count(),
             'active_packages' => $activePackages->pluck('id')->toArray(),
             'past_packages' => $pastPackages->pluck('id')->toArray(),
         ]);
 
         return view('member.packages.index', [
             'activePackages' => $activePackages,
-            'pastPackages' => $pastPackages
+            'pastPackages' => $pastPackages,
+            'availablePackages' => $availablePackages,
         ]);
     }
 

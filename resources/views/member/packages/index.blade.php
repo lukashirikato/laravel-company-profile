@@ -8,8 +8,223 @@
 
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
+        /* ===============================================================
+           FTM SOCIETY — FINAL MEMBERSHIP CARD PICKER
+           =============================================================== */
+        #availablePackagesModal { z-index: 9999 !important; }
+        #availablePackagesModal .apm-backdrop {
+            display: flex; align-items: center; justify-content: center;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0);
+            transition: opacity 0.3s ease; z-index: 9999;
+            padding: 1.5rem; opacity: 0; pointer-events: none;
+        }
+        #availablePackagesModal.open-modal .apm-backdrop {
+            opacity: 1; pointer-events: auto;
+            background: rgba(28,28,28,0.6);
+        }
+        #availablePackagesModal .apm-container {
+            width: 100%; max-width: 1100px; max-height: 90vh;
+            border-radius: 24px;
+            background-image: linear-gradient(145deg, #1C1C1C, #7A2B4A);
+            filter: drop-shadow(0 30px 60px rgba(0,0,0,0.5));
+            overflow: hidden; display: flex; flex-direction: column;
+            margin: auto;
+            transform: translateY(30px) scale(0.97);
+            transition: transform 0.35s ease, opacity 0.35s ease;
+            opacity: 0; position: relative; contain: layout style;
+        }
+        #availablePackagesModal.open-modal .apm-container {
+            transform: translateY(0) scale(1); opacity: 1;
+        }
+        @media (max-width: 768px) {
+            #availablePackagesModal .apm-container {
+                max-width: 100%; max-height: 95vh;
+                border-radius: 20px 20px 0 0;
+                margin-bottom: 0; margin-top: auto;
+            }
+            #availablePackagesModal .apm-backdrop { padding: 0; align-items: flex-end; }
+        }
+        #availablePackagesModal .apm-header {
+            background-image: linear-gradient(135deg, #EE4E8B, #7A2B4A);
+            padding: 1.5rem 2rem; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        #availablePackagesModal .apm-header-left { display: flex; align-items: center; gap: 1rem; }
+        #availablePackagesModal .apm-header-icon {
+            width: 40px; height: 40px; border-radius: 12px;
+            background: rgba(255,255,255,0.18);
+            display: flex; align-items: center; justify-content: center;
+            color: #FFF; font-size: 1.1rem; flex-shrink: 0;
+        }
+        #availablePackagesModal .apm-header-title {
+            color: #FFF; font-family: 'Inter','Poppins',sans-serif;
+            font-weight: 800; font-size: 1.25rem; letter-spacing: -0.02em;
+        }
+        #availablePackagesModal .apm-header-sub {
+            color: rgba(255,255,255,0.65); font-family: 'Inter',sans-serif;
+            font-size: 0.75rem; margin-top: 2px;
+        }
+        #availablePackagesModal .apm-close-btn {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: rgba(255,255,255,0.15); border: none; color: #FFF;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: background 0.25s ease; font-size: 0.8rem;
+        }
+        #availablePackagesModal .apm-close-btn:hover { background: rgba(255,255,255,0.28); }
+        #availablePackagesModal .apm-body {
+            flex: 1; overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain; contain: layout style;
+            background: #FCF9F2; padding: 24px;
+        }
+        #availablePackagesModal .apm-body::-webkit-scrollbar { width: 5px; }
+        #availablePackagesModal .apm-body::-webkit-scrollbar-track { background: #FCF9F2; }
+        #availablePackagesModal .apm-body::-webkit-scrollbar-thumb { background: #F4C9DF; border-radius: 10px; }
+        #availablePackagesModal .apm-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 24px; background: #FCF9F2;
+        }
+        @media (max-width: 1024px) { #availablePackagesModal .apm-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 640px) {
+            #availablePackagesModal .apm-grid { grid-template-columns: 1fr; gap: 16px; }
+            #availablePackagesModal .apm-body { padding: 16px; }
+            #availablePackagesModal .apm-header { padding: 1rem 1.25rem; }
+            #availablePackagesModal .apm-header-icon { display: none; }
+        }
+        #availablePackagesModal .apm-card {
+            background: #FCF9F2;
+            border: 1.5px solid rgba(238,78,139,0.15);
+            border-radius: 16px;
+            filter: drop-shadow(0 4px 12px rgba(122,43,74,0.08));
+            padding: 24px; display: flex; flex-direction: column;
+            height: 100%; transition: transform 0.3s ease;
+            position: relative; overflow: visible;
+            will-change: transform; transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+        #availablePackagesModal .apm-card:hover {
+            transform: translateY(-4px) translateZ(0);
+        }
+        #availablePackagesModal .apm-card.is-exclusive { border: 2px solid #EE4E8B; }
+        #availablePackagesModal .apm-card.is-exclusive::after {
+            content: ''; position: absolute; inset: -2px; border-radius: 17px;
+            background-image: linear-gradient(135deg, rgba(238,78,139,0.08) 0%, transparent 60%);
+            pointer-events: none; z-index: 0;
+        }
+        #availablePackagesModal .apm-card.is-exclusive > * { position: relative; z-index: 1; }
+        #availablePackagesModal .apm-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 5px 14px; border-radius: 999px;
+            font-family: 'Inter',sans-serif; font-size: 11px;
+            font-weight: 700; letter-spacing: 0.08em;
+            text-transform: uppercase; border: none; outline: none;
+            min-height: 32px;
+        }
+        #availablePackagesModal .apm-badge-exclusive {
+            background-image: linear-gradient(135deg, #EE4E8B, #7A2B4A); color: #FFF;
+        }
+        #availablePackagesModal .apm-badge-regular { background: #F4C9DF; color: #7A2B4A; }
+        #availablePackagesModal .apm-card-name {
+            font-family: 'Inter','Poppins',sans-serif;
+            font-size: 20px; font-weight: 700; color: #1C1C1C;
+            line-height: 1.3; margin: 8px 0;
+            min-height: 64px; display: flex; align-items: flex-start;
+            border: none !important; outline: none !important;
+            background: transparent !important; box-shadow: none !important; padding: 0 !important;
+        }
+        .apm-card-price,
+        #availablePackagesModal .apm-card-price,
+        .apm-card [class*="price"],
+        .apm-card [class*="harga"],
+        .apm-card [class*="Price"],
+        .apm-card [class*="Harga"] {
+            display: flex; align-items: center; gap: 2px;
+            padding: 0 !important; min-height: 56px;
+            border: none !important; outline: none !important;
+            background: transparent !important; box-shadow: none !important;
+            border-radius: 0 !important;
+        }
+        #availablePackagesModal .apm-card-price-currency {
+            font-family: 'Inter',sans-serif; font-size: 13px;
+            font-weight: 600; color: #EE4E8B; vertical-align: super; line-height: 1;
+            border: none; outline: none; background: transparent; box-shadow: none;
+        }
+        #availablePackagesModal .apm-card-price-amount {
+            font-family: 'Inter',sans-serif; font-weight: 800;
+            font-size: 38px; letter-spacing: -0.035em; line-height: 1; color: #EE4E8B;
+            border: none; outline: none; background: transparent; box-shadow: none;
+        }
+        #availablePackagesModal .apm-stats {
+            display: flex; gap: 10px; margin: 12px 0;
+            min-height: 68px; align-items: center;
+        }
+        #availablePackagesModal .apm-stat-item {
+            flex: 1; background: #F4C9DF; border-radius: 10px;
+            padding: 8px 16px; display: flex;
+            flex-direction: column; align-items: center;
+        }
+        #availablePackagesModal .apm-stat-label {
+            font-family: 'Inter',sans-serif; font-size: 10px;
+            font-weight: 600; letter-spacing: 0.06em;
+            text-transform: uppercase; color: #7A2B4A; display: block;
+        }
+        #availablePackagesModal .apm-stat-value {
+            font-family: 'Inter',sans-serif; font-size: 14px;
+            font-weight: 700; color: #1C1C1C; display: block;
+        }
+        #availablePackagesModal .apm-desc {
+            border-left: 3px solid #EE4E8B;
+            background-image: linear-gradient(to right, rgba(244,201,223,0.35), transparent);
+            padding: 10px 14px; border-radius: 0 8px 8px 0;
+            margin: 12px 0; min-height: 72px;
+            display: flex; align-items: flex-start;
+        }
+        #availablePackagesModal .apm-desc-text {
+            font-family: 'Inter',sans-serif; font-size: 14px;
+            font-weight: 400; font-style: italic; color: #7A2B4A; line-height: 1.5;
+        }
+        #availablePackagesModal .apm-features { flex: 1; margin-bottom: 14px; }
+        #availablePackagesModal .apm-feature-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        #availablePackagesModal .apm-feature-icon {
+            width: 18px; height: 18px; background: #1A7A5E;
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; flex-shrink: 0; color: #FFF; font-size: 11px;
+        }
+        #availablePackagesModal .apm-feature-icon i { color: #FFF; font-size: 11px; }
+        #availablePackagesModal .apm-feature-text {
+            font-family: 'Inter',sans-serif; font-size: 14px;
+            font-weight: 400; color: #1C1C1C;
+        }
+        #availablePackagesModal .apm-cta {
+            display: flex; align-items: center; justify-content: center;
+            gap: 0.5rem; width: 100%; padding: 14px 24px;
+            border-radius: 12px; border: none; cursor: pointer;
+            font-family: 'Inter',sans-serif; font-size: 15px;
+            font-weight: 700; letter-spacing: 0.05em; text-decoration: none;
+            background-image: linear-gradient(135deg, #EE4E8B, #7A2B4A);
+            color: #FFF; margin-top: auto;
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+        #availablePackagesModal .apm-cta:hover {
+            transform: scale(1.02) translateZ(0); filter: brightness(1.08);
+        }
+        #availablePackagesModal .apm-cta:active { transform: scale(0.98); }
+        #availablePackagesModal .apm-cta i { transition: transform 0.3s ease; }
+        #availablePackagesModal .apm-cta:hover i.fa-arrow-right { transform: translateX(4px); }
+        @media (prefers-reduced-motion: reduce) {
+            #availablePackagesModal *,
+            #availablePackagesModal *::before,
+            #availablePackagesModal *::after {
+                transition: none !important; will-change: auto !important;
+            }
+        }
+
         .progress-ring {
             transform: rotate(-90deg);
         }
@@ -59,6 +274,18 @@
             -webkit-mask-composite: xor;
             mask-composite: exclude;
             pointer-events: none;
+        }
+
+        .btn-ftm-pink {
+            background: #EE4E8B !important; color: #FFFFFF !important;
+            border: none !important; border-radius: 12px !important;
+            font-family: 'Poppins', sans-serif !important; font-weight: 600 !important;
+            box-shadow: 0 4px 14px rgba(238, 78, 139, 0.3) !important;
+            transition: all 0.3s ease !important; cursor: pointer;
+        }
+        .btn-ftm-pink:hover {
+            background: #7A2B4A !important; transform: translateY(-2px) !important;
+            box-shadow: 0 6px 20px rgba(122, 43, 74, 0.4) !important;
         }
 
         /* ===== MODAL STYLES ===== */
@@ -198,13 +425,6 @@
 
 <body class="bg-cream h-screen overflow-hidden">
 
- <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('css/ftm-member-portal.css') }}?v={{ filemtime(public_path('css/ftm-member-portal.css')) }}">
-</head>
-
-<body class="bg-cream h-screen overflow-hidden">
-
 <div class="flex h-screen">
 
     @include('partials.member-sidebar')
@@ -232,12 +452,12 @@
             <p class="text-cream0 ml-[52px]">Kelola dan pantau paket membership Anda</p>
         </div>
         
-        {{-- ✅ TOMBOL REDIRECT KE PRICING --}}
-        <a href="{{ route('member.profile') }}#Packages" class="text-sm md:text-base" 
-           class="bg-gradient-to-r from-primary-dark to-primary hover:from-[#5A1F3A] hover:to-[#B83863] text-white px-6 py-3 rounded-xl font-semibold transition-all inline-flex items-center shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+        {{-- ✅ TOMBOL BUKA MODAL AVAILABLE PACKAGES --}}
+        <button type="button" onclick="openAvailablePackagesModal()"
+           class="btn-ftm-pink text-white px-6 py-3.5 rounded-xl font-bold inline-flex items-center text-sm md:text-base">
             <i class="fas fa-plus-circle mr-2"></i>
-            Beli Paket Lagi
-        </a>
+            Beli Paket Baru
+        </button>
     </div>
 </div>
 
@@ -445,11 +665,11 @@
         Mulai perjalanan fitness Anda dengan membeli paket pertama
     </p>
     
-    <a href="{{ route('member.book') }}"
-       class="bg-gradient-to-r from-primary-dark to-primary hover:from-[#5A1F3A] hover:to-[#B83863] text-white px-8 py-3 rounded-lg font-medium transition-all inline-flex items-center shadow-md hover:shadow-lg">
+    <button type="button" onclick="openAvailablePackagesModal()"
+       class="btn-ftm-pink text-white px-8 py-3.5 rounded-xl font-bold inline-flex items-center">
         <i class="fas fa-plus-circle mr-2"></i>
         Lihat Paket Tersedia
-    </a>
+    </button>
 </div>
 
 @endif
@@ -656,6 +876,88 @@
 </main>
 </div>
 
+@if(isset($availablePackages) && $availablePackages->count() > 0)
+<div id="availablePackagesModal" class="fixed inset-0 z-[9999] hidden">
+    <div class="apm-backdrop" onclick="closeAvailablePackagesModal(event)">
+        <div class="apm-container" onclick="event.stopPropagation()">
+            <div class="apm-header">
+                <div class="apm-header-left">
+                    <div class="apm-header-icon"><i class="fas fa-crown"></i></div>
+                    <div>
+                        <h2 class="apm-header-title">Pilih Paket Membership</h2>
+                        <p class="apm-header-sub">Mulai perjalanan sehatmu bersama FTM Society</p>
+                    </div>
+                </div>
+                <button onclick="closeAvailablePackagesModal()" class="apm-close-btn" title="Tutup">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="apm-body">
+                <div class="apm-grid">
+                    @foreach($availablePackages as $package)
+                    <div class="apm-card {{ $package->is_exclusive ? 'is-exclusive' : '' }}">
+                        @if($package->is_exclusive)
+                        <span class="apm-badge apm-badge-exclusive"><i class="fas fa-crown" style="font-size:0.5rem"></i> Eksklusif</span>
+                        @else
+                        <span class="apm-badge apm-badge-regular"><i class="fas fa-heart" style="font-size:0.5rem"></i> Reguler</span>
+                        @endif
+                        <h3 class="apm-card-name">{{ $package->name }}</h3>
+                        <div class="apm-card-price">
+                            <span class="apm-card-price-currency">Rp</span>
+                            <span class="apm-card-price-amount">{{ number_format($package->price, 0, ',', '.') }}</span>
+                        </div>
+                        @if($package->duration_days || $package->quota)
+                        <div class="apm-stats">
+                            @if($package->duration_days)
+                            <div class="apm-stat-item">
+                                <span class="apm-stat-label">Durasi</span>
+                                <span class="apm-stat-value">{{ $package->duration_days }} hari</span>
+                            </div>
+                            @endif
+                            @if($package->quota)
+                            <div class="apm-stat-item">
+                                <span class="apm-stat-label">Sesi</span>
+                                <span class="apm-stat-value">{{ $package->quota }} kelas</span>
+                            </div>
+                            @endif
+                        </div>
+                        @endif
+                        @if($package->description)
+                        <div class="apm-desc">
+                            <span class="apm-desc-text">{{ $package->description }}</span>
+                        </div>
+                        @endif
+                        <div class="apm-features">
+                            @if($package->quota)
+                            <div class="apm-feature-item">
+                                <div class="apm-feature-icon"><i class="fas fa-check"></i></div>
+                                <span class="apm-feature-text">{{ $package->quota }} sessions tersedia</span>
+                            </div>
+                            @endif
+                            @if($package->duration_days)
+                            <div class="apm-feature-item">
+                                <div class="apm-feature-icon"><i class="fas fa-check"></i></div>
+                                <span class="apm-feature-text">Valid {{ $package->duration_days }} hari</span>
+                            </div>
+                            @endif
+                            <div class="apm-feature-item">
+                                <div class="apm-feature-icon"><i class="fas fa-check"></i></div>
+                                <span class="apm-feature-text">Akses ke semua fasilitas</span>
+                            </div>
+                        </div>
+                        <a href="{{ route('join.package', ['package' => $package->slug ?? $package->id]) }}" class="apm-cta">
+                            <span>Beli Sekarang</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
 <!-- ========================================
      PACKAGE DETAIL MODAL - PROFESSIONAL DESIGN
 ======================================== -->
@@ -804,6 +1106,24 @@
 </div>
 
 <script>
+// ===== AVAILABLE PACKAGES MODAL =====
+function openAvailablePackagesModal() {
+    const modal = document.getElementById('availablePackagesModal');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    document.body.classList.add('modal-open');
+    requestAnimationFrame(() => { modal.classList.add('open-modal'); });
+}
+function closeAvailablePackagesModal(event) {
+    if (event && event.target !== event.currentTarget) return;
+    const modal = document.getElementById('availablePackagesModal');
+    if (!modal) return;
+    modal.classList.remove('open-modal');
+    document.body.classList.remove('modal-open');
+    setTimeout(() => { modal.classList.add('hidden'); document.body.style.overflow = ''; }, 350);
+}
+
 // ===== MODAL LOGIC =====
 let currentOrderId = null;
 
@@ -847,7 +1167,10 @@ function closePackageModal(event) {
 
 // Close on Escape
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closePackageModal();
+    if (e.key === 'Escape') {
+        closePackageModal();
+        closeAvailablePackagesModal();
+    }
 });
 
 function switchTab(tabName) {
