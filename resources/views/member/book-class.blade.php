@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -792,7 +792,7 @@
             }
         }
 
-        /* ═══════════════════════════════════════════ RESPONSIVE SIDEBAR ═══════════════════════════════════════════ */
+        /* ------------------------------------------- RESPONSIVE SIDEBAR ------------------------------------------- */
         .sidebar {
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         }
@@ -864,405 +864,275 @@
         <i class="fas fa-bars text-lg"></i>
     </button>
 
-    <main class="flex-1 overflow-y-auto">
+    <main class="flex-1 p-6 md:p-10 overflow-y-auto bg-cream">
         
-        <div class="main-content">
-        
-            {{-- ============================================
-                 HEADER WITH USER INFO
-                 ============================================ --}}
-            <div class="mb-8">
-                <h1 class="text-2xl font-bold text-dark">
-                    Book Your Class
-                </h1>
-                <p class="text-sm text-cream0">
-                    Welcome back, {{ $customer->name ?? 'Member' }}
-                </p>
-            </div>
+        {{-- MOBILE HAMBURGER --}}
+        <button id="hamburger-btn" class="hamburger-btn" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
 
-        {{-- ============================================
-             FLASH MESSAGES
-             ============================================ --}}
+        {{-- HEADER --}}
+        <div class="bg-white rounded-2xl shadow-[0_2px_12px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] p-5 md:p-7 mb-8 mt-14 md:mt-0">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="font-nord font-bold text-[30px] md:text-[32px] text-dark leading-tight">Book Your Class</h1>
+                    <div class="flex items-baseline gap-1.5 mt-1.5">
+                        <span class="font-poppins text-dark/45 text-[15px]">Assalamu'alaikum,</span>
+                        <span class="font-poppins text-dark font-semibold text-[15px]">{{ $customer->name ?? 'Member' }}</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="w-11 h-11 rounded-full bg-white flex items-center justify-center shadow-sm border border-[rgba(238,78,139,0.2)] text-secondary relative transition-all duration-200 hover:border-primary/40 hover:shadow-md cursor-pointer">
+                        <i class="fas fa-bell text-sm"></i>
+                        <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-primary rounded-full border-2 border-white"></span>
+                    </div>
+                    @php $initial = strtoupper(substr($customer->name ?? 'M', 0, 1)); @endphp
+                    <div class="w-11 h-11 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-nord font-bold text-sm shadow-md border-2 border-white flex-shrink-0">
+                        {{ $initial }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- FLASH MESSAGES --}}
         @if(session('success'))
-            <div class="alert alert-success">
-                <span class="alert-icon">✓</span>
+            <div class="bg-[rgba(26,122,94,0.08)] border border-[rgba(26,122,94,0.15)] rounded-xl p-4 mb-6 flex items-center gap-3 font-poppins text-[14px] text-accent font-medium">
+                <i class="fas fa-check-circle text-accent"></i>
                 <span>{{ session('success') }}</span>
             </div>
         @endif
-
         @if(session('error'))
-            <div class="alert alert-error">
-                <span class="alert-icon">⚠</span>
+            <div class="bg-[rgba(238,78,139,0.06)] border border-[rgba(238,78,139,0.15)] rounded-xl p-4 mb-6 flex items-center gap-3 font-poppins text-[14px] text-secondary font-medium">
+                <i class="fas fa-exclamation-circle text-secondary"></i>
                 <span>{{ session('error') }}</span>
             </div>
         @endif
 
-        <div id="credit-limit-alert" class="alert alert-warning" style="display:none;">
-            <span class="alert-icon">ⓘ</span>
-            <span id="credit-limit-message">Credit kamu tidak cukup untuk memilih kelas tambahan.</span>
-        </div>
-
-        {{-- ============================================
-             PACKAGE STATUS CARD
-             ============================================ --}}
-        @if(isset($selectedPackage))
-            <div class="status-card">
-                <div class="status-grid">
-                    <div class="status-item">
-                        <div class="status-icon">
-                            @if($selectedPackage->is_exclusive)
-                                ⭐
-                            @else
-                                📦
-                            @endif
-                        </div>
-                        <div class="status-info">
-                            <div class="status-label">Active Package</div>
-                            <div class="status-value">{{ $selectedPackage->name }}</div>
-                            <div class="status-meta">
-                                @if($selectedPackage->is_exclusive)
-                                    Exclusive Package
-                                @else
-                                    Regular Package
-                                @endif
-                            </div>
-                        </div>
+        {{-- CREDIT STATUS BAR --}}
+        <div class="bg-white rounded-2xl shadow-[0_2px_12px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] p-4 md:p-5 mb-8">
+            <div class="flex flex-wrap items-center gap-4 md:gap-8">
+                @if($selectedPackage)
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-[rgba(238,78,139,0.1)] flex items-center justify-center text-primary">
+                        <i class="fas fa-box text-sm"></i>
                     </div>
-                    
-                    <div class="status-item">
-                        <div class="status-icon">🎫</div>
-                        <div class="status-info">
-                            <div class="status-label">Credit</div>
-                            <div class="status-value">
-                                @if($selectedPackage->is_exclusive)
-                                    0
-                                    <div class="status-meta">Jadwal sudah di-assign otomatis</div>
-                                @else
-                                    {{ $remainingClasses ?? $customer->quota }}
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                    
-                    @if($customer->quota_expired_at)
-                        <div class="status-item">
-                            <div class="status-icon">📅</div>
-                            <div class="status-info">
-                                <div class="status-label">Valid Until</div>
-                                <div class="status-value">{{ \Carbon\Carbon::parse($customer->quota_expired_at)->format('d M Y') }}</div>
-                            </div>
-                        </div>
-                    @elseif(isset($selectedPackage) && $selectedPackage->duration_days)
-                        <div class="status-item">
-                            <div class="status-icon">📅</div>
-                            <div class="status-info">
-                                <div class="status-label">Valid Until</div>
-                                <div class="status-value" style="font-size: 1rem; color: #7A2B4A;">Belum dimulai</div>
-                                <div class="status-meta">Aktif {{ $selectedPackage->duration_days }} hari saat booking pertama</div>
-                            </div>
-                        </div>
-                    @endif
-                </div>
-            </div>
-        @endif
-
-        {{-- ============================================
-             PACKAGE SELECTOR (Multiple Packages)
-             ============================================ --}}
-        @php
-            $bookableOrders = isset($activeOrders) ? $activeOrders->filter(fn($order) => $order->package) : collect();
-            $packageGroups = $bookableOrders
-                ->groupBy('package_id')
-                ->map(function ($orders) use ($selectedOrderId) {
-                    $firstOrder = $orders->first();
-                    $selectedOrder = $orders->firstWhere('id', $selectedOrderId) ?? $firstOrder;
-
-                    return (object) [
-                        'package' => $firstOrder->package,
-                        'orders' => $orders,
-                        'selected_order' => $selectedOrder,
-                        'total_credits' => (int) $orders->sum('remaining_classes'),
-                        'purchase_count' => $orders->count(),
-                        'is_selected' => $orders->contains('id', $selectedOrderId),
-                    ];
-                })
-                ->values();
-            $uniquePackageCount = $packageGroups->count();
-        @endphp
-
-        @if($packageGroups->count() > 0)
-            <div class="package-selector" style="border:1px solid rgba(244,201,223,0.9);">
-                <div style="display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; gap:0.75rem; margin-bottom:1rem;">
                     <div>
-                        <label style="margin-bottom:0.25rem;">Your Active Packages</label>
-                        <div style="font-size:0.82rem; color:#7A2B4A;">
-                            @if($uniquePackageCount > 1)
-                                You have {{ $uniquePackageCount }} active package types. Choose which package you want to use for booking.
-                            @else
-                                Package purchases are combined into one balance so booking stays simple.
-                            @endif
-                        </div>
-                    </div>
-                    <div style="background:#FCF9F2; border:1px solid #F4C9DF; border-radius:999px; padding:0.55rem 0.9rem; color:#7A2B4A; font-weight:700; font-size:0.9rem; white-space:nowrap;">
-                        {{ (int) $packageGroups->sum('total_credits') }} total credits
+                        <p class="font-poppins text-[11px] text-dark/40 uppercase tracking-wider font-medium">Package</p>
+                        <p class="font-poppins text-[14px] text-dark font-semibold">{{ $selectedPackage->name ?? '-' }}</p>
                     </div>
                 </div>
-
-                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:0.9rem;">
-                    @foreach($packageGroups as $group)
-                        <div style="border:1.5px solid {{ $group->is_selected ? '#EE4E8B' : '#F4C9DF' }}; background:{{ $group->is_selected ? '#FFF7FB' : '#FFFFFF' }}; border-radius:16px; padding:1rem; box-shadow:0 10px 26px rgba(122,43,74,0.06);">
-                            <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:0.75rem;">
-                                <div style="min-width:0;">
-                                    <div style="font-size:1rem; color:#1C1C1C; font-weight:700; line-height:1.25;">
-                                        {{ $group->package->name ?? 'Active Package' }}
-                                    </div>
-                                    <div style="font-size:0.78rem; color:#7A2B4A; margin-top:0.35rem;">
-                                        {{ $group->purchase_count }} {{ $group->purchase_count > 1 ? 'purchases' : 'purchase' }}
-                                        @if($group->package && $group->package->is_exclusive)
-                                            • Exclusive
-                                        @else
-                                            • Regular
-                                        @endif
-                                    </div>
-                                </div>
-                                <div style="background:#FCF9F2; border:1px solid #F4C9DF; border-radius:999px; padding:0.45rem 0.75rem; color:#7A2B4A; font-weight:800; font-size:0.82rem; white-space:nowrap;">
-                                    {{ $group->total_credits }} credit{{ $group->total_credits === 1 ? '' : 's' }}
-                                </div>
-                            </div>
-
-                            <div style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; margin-top:1rem;">
-                                @if($group->is_selected || $uniquePackageCount === 1)
-                                    <span style="display:inline-flex; align-items:center; gap:0.4rem; border-radius:999px; background:#EAF5DF; color:#1A7A5E; padding:0.45rem 0.75rem; font-size:0.74rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em;">
-                                        <i class="fas fa-check-circle"></i> Active for booking
-                                    </span>
-                                @else
-                                    <a href="{{ route('member.book', ['order_id' => $group->selected_order->id]) }}" style="display:inline-flex; align-items:center; justify-content:center; gap:0.45rem; border-radius:999px; background:#7A2B4A; color:white; padding:0.5rem 0.85rem; font-size:0.78rem; font-weight:800; text-decoration:none; text-transform:uppercase; letter-spacing:0.08em;">
-                                        <i class="fas fa-arrow-right"></i> Use This Package
-                                    </a>
-                                @endif
-
-                                @if($group->selected_order && $group->selected_order->created_at)
-                                    <span style="font-size:0.72rem; color:#94a3b8; white-space:nowrap;">
-                                        Latest {{ $group->selected_order->created_at->format('d M Y') }}
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        @endif
-
-        {{-- ============================================
-             SCHEDULE SECTIONS - GROUPED BY DAY
-             ============================================ --}}
-        @if(isset($schedules) && $schedules->isNotEmpty())
-            <div class="space-y-6 pb-32">
-                @foreach($schedules as $day => $items)
-                    <section class="rounded-3xl border border-[#F4C9DF] bg-white/80 p-4 shadow-sm backdrop-blur-sm md:p-5">
-                        <div class="flex items-center justify-between gap-3 border-b border-[#F4C9DF] pb-4">
-                            <div class="flex items-center gap-3">
-                                <span class="rounded-full bg-[#7A2B4A] px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-white">{{ $day }}</span>
-                                <span class="text-sm font-medium text-[#7A2B4A]/70">{{ $items->count() }} classes available</span>
-                            </div>
-                            <span class="text-xs font-semibold uppercase tracking-[0.14em] text-[#7A2B4A]/45">Tap cards to select</span>
-                        </div>
-
-                        <div class="mt-4 grid gap-4">
-                            @foreach($items as $s)
-                                @php
-                                    $isBooked = isset($bookedScheduleIds) && in_array($s->id, $bookedScheduleIds);
-                                    $isDisabled = $customer->quota <= 0;
-                                    $classIcon = match($s->classModel->class_name ?? '') {
-                                        'Reformer Pilates' => '🧘‍♀️',
-                                        'Mat Pilates' => '🧘',
-                                        'Muaythai Beginner', 'Muaythai Intermediate' => '🥊',
-                                        'Body Shaping' => '💪',
-                                        default => '🎯',
-                                    };
-                                @endphp
-
-                                {{-- Hidden form for single class booking --}}
-                                <form id="book-form-{{ $s->id }}" action="{{ route('member.book.store') }}" method="POST" style="display: none;">
-                                    @csrf
-                                    <input type="hidden" name="schedule_id" value="{{ $s->id }}">
-                                </form>
-                                
-                                <label class="schedule-card group block cursor-pointer select-none {{ $isBooked ? 'is-booked' : '' }} {{ $isDisabled ? 'is-disabled' : '' }}" onclick="handleCardClick(event, this)">
-                                    <input
-                                        type="checkbox"
-                                        class="peer sr-only schedule-checkbox"
-                                        value="{{ $s->id }}"
-                                        data-schedule-id="{{ $s->id }}"
-                                        data-class-name="{{ e($s->classModel->class_name ?? 'Class') }}"
-                                        data-day="{{ e($day) }}"
-                                        data-date="{{ e($s->schedule_date_formatted) }}"
-                                        data-time="{{ e(\Carbon\Carbon::parse($s->class_time)->format('H:i')) }}"
-                                        data-instructor="{{ e($s->instructor ?? '-') }}"
-                                        {{ $isBooked || $isDisabled ? 'disabled' : '' }}
-                                    >
-
-                                    <div class="booking-card {{ $isDisabled ? 'opacity-60' : '' }}">
-                                        <div class="schedule-card-check absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full border border-[#EE4E8B] bg-white text-[0.75rem] text-[#EE4E8B] opacity-0 transition-all duration-200 peer-checked:opacity-100">
-                                            <i class="fas fa-check"></i>
-                                        </div>
-
-                                        @if($isBooked)
-                                            <div class="booked-ribbon absolute right-3 top-3 hidden items-center gap-1.5 rounded-full bg-[#1A7A5E] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.12em] text-white shadow-sm">
-                                                <i class="fas fa-shield-heart"></i>
-                                                Your Class
-                                            </div>
-                                        @endif
-
-                                        <div class="flex items-start gap-3">
-                                            <div class="schedule-card-accent class-mark shrink-0 transition-colors duration-200">
-                                                @if($isBooked)
-                                                    <i class="fas fa-circle-check"></i>
-                                                @else
-                                                    <i class="fas fa-spa"></i>
-                                                @endif
-                                            </div>
-
-                                            <div class="min-w-0 flex-1">
-                                                <div class="flex flex-wrap items-start justify-between gap-2">
-                                                    <div class="min-w-0">
-                                                        <h3 class="truncate text-base font-extrabold leading-tight text-[#7A2B4A]">{{ $s->classModel->class_name ?? 'Class' }}</h3>
-                                                        <p class="mt-1 text-sm font-medium text-[#1C1C1C]">Coach {{ $s->instructor ?? '-' }}</p>
-                                                        <p class="mt-1 flex flex-wrap items-center gap-2 text-sm text-[#7A2B4A]/80">
-                                                            <span><i class="far fa-calendar mr-1 text-[#EE4E8B]"></i>{{ \Carbon\Carbon::parse($s->schedule_date)->format('M d, Y') }}</span>
-                                                            <span class="text-[#F4C9DF]">•</span>
-                                                            <span><i class="far fa-clock mr-1 text-[#1A7A5E]"></i>{{ \Carbon\Carbon::parse($s->class_time)->format('h:i A') }}</span>
-                                                        </p>
-                                                    </div>
-
-                                                    @if($isBooked)
-                                                        <span class="schedule-card-status inline-flex items-center gap-2 rounded-full border border-[#1A7A5E]/20 bg-[#EAF5DF] px-3 py-1 text-xs font-semibold text-[#1A7A5E]"><i class="fas fa-circle-check"></i>Booked</span>
-                                                    @elseif($isDisabled)
-                                                        <span class="schedule-card-status inline-flex items-center gap-2 rounded-full border border-transparent bg-[#F4C9DF]/50 px-3 py-1 text-xs font-semibold text-[#7A2B4A]">Quota empty</span>
-                                                    @else
-                                                        <span class="schedule-card-status inline-flex items-center gap-2 rounded-full border border-transparent bg-[#F0FDF4] px-3 py-1 text-xs font-semibold text-[#1A7A5E]"><span class="h-2 w-2 rounded-full bg-[#1A7A5E]"></span>Available</span>
-                                                    @endif
-                                                </div>
-
-                                                <div class="mt-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#7A2B4A]/55">
-                                                    <span class="day-pill rounded-full bg-[#7A2B4A] px-2.5 py-1 text-white">{{ $day }}</span>
-                                                    <span class="text-[#7A2B4A]/45">•</span>
-                                                    <span class="schedule-action">{{ $isBooked ? 'Already booked by you' : 'Select this class' }}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </label>
-                            @endforeach
-                        </div>
-                    </section>
-                @endforeach
-
-                <div id="bulk-booking-bar" class="fixed bottom-4 left-1/2 z-50 transform -translate-x-1/2 px-3 md:px-4">
-                    <div class="ftm-selection-bar mx-auto flex w-full items-center justify-between gap-4" role="region" aria-label="Selected classes bar">
-                        <div class="flex items-center gap-3">
-                            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#EE4E8B] text-white shadow-md">
-                                <span id="selected-class-count" class="text-lg font-bold">0</span>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="text-sm font-bold text-white leading-tight">Selected</span>
-                                <span class="text-xs text-gray-400 leading-tight">Tap book to confirm</span>
-                            </div>
-                        </div>
-
-                        <button type="button" id="book-selected-btn" onclick="bookSelectedClasses()" class="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg bg-white px-5 text-sm font-bold text-[#2C2C2C] shadow-md transition-all hover:bg-gray-100 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50">
-                            <i class="fas fa-calendar-check"></i>
-                            <span>Book Now</span>
-                        </button>
+                @endif
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-[rgba(26,122,94,0.1)] flex items-center justify-center text-accent">
+                        <i class="fas fa-coins text-sm"></i>
+                    </div>
+                    <div>
+                        <p class="font-poppins text-[11px] text-dark/40 uppercase tracking-wider font-medium">Credit</p>
+                        <p class="font-poppins text-[14px] text-dark font-semibold" id="credit-value-top">{{ $remainingClasses ?? 0 }}</p>
                     </div>
                 </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-[rgba(122,43,74,0.1)] flex items-center justify-center text-secondary">
+                        <i class="fas fa-calendar text-sm"></i>
+                    </div>
+                    <div>
+                        <p class="font-poppins text-[11px] text-dark/40 uppercase tracking-wider font-medium">Valid Until</p>
+                        <p class="font-poppins text-[14px] text-dark font-semibold">{{ $activeOrders?->first()?->expired_at ? \Carbon\Carbon::parse($activeOrders->first()->expired_at)->format('d M Y') : ($selectedPackage?->duration_days ? 'After 1st booking' : 'Unlimited') }}</p>
+                    </div>
+                </div>
+                @if($activeOrders && $activeOrders->count() > 1)
+                <div class="ml-auto">
+                    <select id="package-select" onchange="switchPackage(this.value)" class="font-poppins text-[13px] bg-cream border border-[rgba(238,78,139,0.15)] rounded-xl px-4 py-2.5 text-dark font-medium focus:outline-none focus:border-primary focus:ring-2 focus:ring-[rgba(238,78,139,0.1)]">
+                        @foreach($activeOrders as $ord)
+                            <option value="{{ $ord->id }}" {{ $ord->id == $selectedOrderId ? 'selected' : '' }}>
+                                {{ $ord->package?->name ?? 'Package' }} ({{ $ord->remaining_classes ?? 0 }} credits)
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                @endif
             </div>
-        @else
-            {{-- ============================================
-                 EMPTY STATE
-                 ============================================ --}}
-            <div class="empty-state">
-                <div class="empty-state-icon">📭</div>
-                <h3>No Schedules Available</h3>
-                <p>There are no classes available for your package at the moment. Please contact admin for assistance.</p>
-            </div>
-        @endif
-
         </div>
-        {{-- End of main-content --}}
-        
+
+        {{-- DATE SELECTOR --}}
+        @php
+            $today = \Carbon\Carbon::today();
+            $weekStart = $today->copy()->startOfWeek();
+            $weekDates = [];
+            for ($i = 0; $i < 7; $i++) {
+                $weekDates[] = $weekStart->copy()->addDays($i);
+            }
+            $selectedDate = request('date', $today->format('Y-m-d'));
+        @endphp
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="font-nord font-semibold text-[17px] text-dark">SELECT DATE <span class="font-poppins font-normal text-dark/40 text-[15px]">� {{ $today->isoFormat('MMMM YYYY') }}</span></h2>
+                <div class="flex items-center gap-2">
+                    <button onclick="changeWeek(-1)" class="w-8 h-8 rounded-lg bg-white border border-[rgba(238,78,139,0.15)] flex items-center justify-center text-dark/50 hover:text-primary hover:border-primary transition-all">
+                        <i class="fas fa-chevron-left text-xs"></i>
+                    </button>
+                    <button onclick="changeWeek(1)" class="w-8 h-8 rounded-lg bg-white border border-[rgba(238,78,139,0.15)] flex items-center justify-center text-dark/50 hover:text-primary hover:border-primary transition-all">
+                        <i class="fas fa-chevron-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="week-dates" class="grid grid-cols-7 gap-2">
+                @foreach($weekDates as $date)
+                    @php
+                        $isSelected = $date->format('Y-m-d') === $selectedDate;
+                        $isToday = $date->isToday();
+                    @endphp
+                    <button onclick="selectDate('{{ $date->format('Y-m-d') }}')"
+                        class="rounded-xl p-3 text-center transition-all duration-200 {{ $isSelected ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-white border border-[rgba(238,78,139,0.1)] text-dark hover:border-primary/30 hover:shadow-sm' }}">
+                        <p class="font-poppins text-[10px] font-semibold uppercase tracking-wider {{ $isSelected ? 'text-white/70' : 'text-dark/40' }}">{{ $date->isoFormat('dd') }}</p>
+                        <p class="font-nord font-bold text-lg leading-tight mt-0.5">{{ $date->format('d') }}</p>
+                        @if($isToday)
+                            <p class="font-poppins text-[9px] mt-0.5 font-semibold {{ $isSelected ? 'text-white/70' : 'text-primary' }}">TODAY</p>
+                        @endif
+                    </button>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- FILTER BAR --}}
+        <div class="flex flex-wrap items-center gap-3 mb-8">
+            <button class="px-4 py-2 rounded-xl bg-primary text-white font-poppins font-medium text-[12px] shadow-sm hover:shadow-md transition-all">Class Type: ALL</button>
+            <button class="px-4 py-2 rounded-xl bg-white border border-[rgba(238,78,139,0.15)] text-dark/60 font-poppins font-medium text-[12px] hover:border-primary/30 hover:text-dark transition-all">Instructor</button>
+            <button class="px-4 py-2 rounded-xl bg-white border border-[rgba(238,78,139,0.15)] text-dark/60 font-poppins font-medium text-[12px] hover:border-primary/30 hover:text-dark transition-all">Time</button>
+            <a href="{{ route('member.book') }}" class="ml-auto font-poppins text-[12px] text-primary hover:text-secondary font-medium transition-colors">RESET</a>
+        </div>
+
+        {{-- SCHEDULE GRID --}}
+        @if($schedules && $schedules->count() > 0)
+            @foreach($schedules as $day => $daySchedules)
+                <div class="mb-10">
+                    <div class="flex items-center gap-3 mb-5">
+                        <h3 class="font-nord font-bold text-[18px] text-dark">{{ $day }}</h3>
+                        <span class="font-poppins text-[12px] text-dark/35 bg-white px-3 py-1 rounded-full border border-[rgba(238,78,139,0.08)]">{{ $daySchedules->count() }} classes</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        @foreach($daySchedules as $schedule)
+                            @php
+                                $isBooked = in_array($schedule->id, $bookedScheduleIds ?? []);
+                                $capacity = $schedule->capacity ?? null;
+                                $bookedCount = $schedule->booked_count ?? null;
+                                $hasCapacity = !is_null($capacity) && !is_null($bookedCount);
+                                $remaining = $hasCapacity ? $capacity - $bookedCount : null;
+                                $isFull = $hasCapacity ? $remaining <= 0 : false;
+                                $classIcon = 'fa-dumbbell';
+                                $iconBg = 'from-primary to-secondary';
+                                if ($schedule->classModel) {
+                                    $name = strtolower($schedule->classModel->class_name ?? '');
+                                    if (strpos($name, 'pilates') !== false) { $classIcon = 'fa-spa'; $iconBg = 'from-accent to-springs-ivy'; }
+                                    elseif (strpos($name, 'muaythai') !== false || strpos($name, 'boxing') !== false) { $classIcon = 'fa-fist-raised'; $iconBg = 'from-secondary to-primary'; }
+                                    elseif (strpos($name, 'yoga') !== false) { $classIcon = 'fa-peace'; $iconBg = 'from-accent to-patina-green'; }
+                                }
+                            @endphp
+
+                            <div class="bg-white rounded-2xl shadow-[0_2px_12px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 schedule-card {{ $isBooked ? 'is-booked opacity-60' : '' }} {{ $isFull ? 'opacity-50' : '' }} {{ (!$isBooked && !$isFull) ? 'cursor-pointer' : 'cursor-default' }}"
+                                 data-schedule-id="{{ $schedule->id }}"
+                                 data-class-name="{{ $schedule->className ?? 'Class' }}"
+                                 data-day="{{ $day }}"
+                                 data-date="{{ $schedule->schedule_date ?? '' }}"
+                                 data-time="{{ $schedule->class_time ?? '' }}"
+                                 data-instructor="{{ $schedule->instructor ?? 'Instructor' }}"
+                                 onclick="{{ $isBooked || $isFull ? '' : "toggleCard(this)" }}">
+                                <div class="p-4 pb-3">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="w-11 h-11 rounded-xl bg-gradient-to-br {{ $iconBg }} flex items-center justify-center text-white shadow-sm">
+                                            <i class="fas {{ $classIcon }} text-sm"></i>
+                                        </div>
+                                        <span class="font-poppins text-[10px] font-semibold uppercase tracking-wider {{ $isFull ? 'text-secondary' : 'text-accent' }} bg-[rgba(26,122,94,0.06)] px-2.5 py-1 rounded-full border border-[rgba(26,122,94,0.1)]">
+                                            CAPACITY {{ $hasCapacity ? "$bookedCount/$capacity" : '-/-' }}
+                                        </span>
+                                    </div>
+                                    <h4 class="font-nord font-bold text-[16px] text-dark leading-tight mb-0.5">{{ $schedule->className ?? 'Class' }}</h4>
+                                    <p class="font-poppins text-[13px] text-dark/50 flex items-center gap-1.5">
+                                        <i class="fas fa-user text-[10px]"></i>
+                                        {{ $schedule->instructor ?? 'Instructor' }}
+                                    </p>
+                                </div>
+                                <div class="border-t border-[rgba(238,78,139,0.06)] px-4 py-3 flex items-center justify-between">
+                                    <div class="flex items-center gap-1.5 font-poppins text-[12px] text-dark/50">
+                                        <i class="fas fa-clock text-primary text-[10px]"></i>
+                                        <span>{{ $schedule->class_time ? \Carbon\Carbon::parse($schedule->class_time)->format('H:i') : '--:--' }}</span>
+                                    </div>
+                                    @if($isBooked)
+                                        <span class="font-poppins text-[11px] font-semibold text-accent bg-[rgba(26,122,94,0.08)] px-3 py-1.5 rounded-full">
+                                            <i class="fas fa-check mr-1"></i>Booked
+                                        </span>
+                                    @elseif($isFull)
+                                        <span class="font-poppins text-[11px] font-semibold text-dark/30 bg-[rgba(28,28,28,0.05)] px-3 py-1.5 rounded-full">
+                                            Full
+                                        </span>
+                                    @else
+                                        <span class="font-poppins text-[11px] font-semibold text-primary bg-[rgba(238,78,139,0.08)] px-3 py-1.5 rounded-full schedule-card-accent">
+                                            <i class="fas fa-plus-circle mr-1"></i>Select
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endforeach
+        @else
+            <div class="bg-white rounded-2xl shadow-[0_2px_12px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] p-10 text-center">
+                <div class="w-16 h-16 rounded-full bg-[rgba(238,78,139,0.08)] flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-calendar-times text-2xl text-secondary"></i>
+                </div>
+                <h3 class="font-nord font-bold text-[20px] text-dark mb-1">No Classes Available</h3>
+                <p class="font-poppins text-dark/45 text-[14px]">There are no classes scheduled for this period. Check back later.</p>
+            </div>
+        @endif
+
+        {{-- PROMO BANNER --}}
+        <div class="mt-10 rounded-2xl overflow-hidden relative shadow-[0_4px_20px_rgba(122,43,74,0.08)]"
+             style="background: linear-gradient(135deg, #1C1C1C 0%, #7A2B4A 100%); min-height: 180px;">
+            <div class="absolute inset-0 opacity-20"
+                 style="background-image: url('https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=800&q=80'); background-size: cover; background-position: center;"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-[#1C1C1C]/90 via-[#1C1C1C]/60 to-transparent"></div>
+            <div class="relative z-10 p-6 md:p-8 flex items-center h-full">
+                <div class="max-w-md">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-white/80 text-[10px] font-bold uppercase tracking-[0.2em] mb-3 border border-white/20">
+                        MEMBER EXCLUSIVE
+                    </span>
+                    <h3 class="font-nord font-bold text-[22px] text-white leading-tight mb-2">Elevate your wellness journey.</h3>
+                    <p class="font-poppins text-white/70 text-[13px] leading-relaxed">Unlock premium classes, priority booking, and exclusive perks with our Diamond membership.</p>
+                    <a href="{{ route('member.packages.index') }}" class="inline-flex items-center gap-2 mt-4 px-5 py-2.5 rounded-xl bg-white text-secondary font-poppins font-semibold text-[13px] hover:bg-white/90 transition-all shadow-lg">
+                        Learn More <i class="fas fa-arrow-right text-[11px]"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="h-8"></div>
+
     </main>
     {{-- End of main --}}
 
-</div>
-{{-- End of flex wrapper --}}
-
-{{-- ============================================
-     BOOKING CONFIRMATION MODAL
-     ============================================ --}}
-<div id="book-confirm-modal" style="display:none; position:fixed; inset:0; z-index:100; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:1rem;">
-    <div style="background:white; border-radius:16px; max-width:440px; width:100%; box-shadow:0 25px 60px rgba(0,0,0,0.2); animation:modalIn 0.25s ease-out; overflow:hidden;">
-        
-        {{-- Header --}}
-        <div style="background: linear-gradient(135deg, rgba(241,204,227,0.30) 0%, rgba(244,238,230,1) 100%); padding:1.5rem 2rem; border-bottom:1px solid rgba(238, 78, 139,0.20); text-align:center;">
-            <div style="width:56px; height:56px; background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem; font-size:1.5rem; color:white;">
+    {{-- FLOATING BOOKING BAR --}}
+    <div id="bulk-booking-bar">
+        <div class="bulk-bar-inner">
+            <button onclick="clearAllSelections()" class="bulk-bar-close" aria-label="Clear selection">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="bulk-bar-info">
+                <span class="bulk-bar-label">Selected: <span id="selected-class-count" class="bulk-bar-count">0</span></span>
+                <span class="bulk-bar-sep">|</span>
+                <span class="bulk-bar-credits"><span id="credit-display">{{ $remainingClasses ?? 0 }}</span> credits</span>
+            </div>
+            <button id="book-selected-btn" class="bulk-bar-book-btn" onclick="bookSelectedClasses()">
                 <i class="fas fa-calendar-check"></i>
-            </div>
-            <h3 style="font-size:1.15rem; font-weight:700; color:#7A2B4A; margin:0;">Konfirmasi Booking</h3>
-            <p style="font-size:0.825rem; color:#64748b; margin-top:4px;">Apakah Anda yakin ingin booking jadwal ini?</p>
-        </div>
-
-        {{-- Class Details --}}
-        <div style="padding:1.5rem 2rem;">
-            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:1.25rem; margin-bottom:1.25rem;">
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                    <div>
-                        <div style="font-size:0.65rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">Class</div>
-                        <div id="confirm-class" style="font-size:0.95rem; font-weight:700; color:#7A2B4A;">—</div>
-                    </div>
-                    <div>
-                        <div style="font-size:0.65rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">Day</div>
-                        <div id="confirm-day" style="font-size:0.95rem; font-weight:700; color:#7A2B4A;">—</div>
-                    </div>
-                    <div>
-                        <div style="font-size:0.65rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">Date</div>
-                        <div id="confirm-date" style="font-size:0.95rem; font-weight:700; color:#7A2B4A;">—</div>
-                    </div>
-                    <div>
-                        <div style="font-size:0.65rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">Time</div>
-                        <div id="confirm-time" style="font-size:0.95rem; font-weight:700; color:#7A2B4A;">—</div>
-                    </div>
-                    <div>
-                        <div style="font-size:0.65rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">Coach</div>
-                        <div id="confirm-coach" style="font-size:0.95rem; font-weight:700; color:#7A2B4A;">—</div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Warning --}}
-            <div style="background:#fef3c7; border-left:3px solid #f59e0b; border-radius:0 8px 8px 0; padding:0.75rem 1rem; font-size:0.8rem; color:#92400e; display:flex; gap:8px; align-items:flex-start; margin-bottom:1.25rem;">
-                <i class="fas fa-exclamation-triangle" style="margin-top:2px; flex-shrink:0;"></i>
-                <span>Booking ini akan mengurangi 1 kuota kelas Anda. Pastikan jadwal yang dipilih sudah benar.</span>
-            </div>
-
-            {{-- Buttons --}}
-            <div style="display:flex; gap:0.75rem;">
-                <button onclick="closeBookConfirm()" 
-                    style="flex:1; padding:0.8rem; border:2px solid #e2e8f0; background:white; color:#64748b; border-radius:10px; font-weight:600; font-size:0.875rem; cursor:pointer; transition:all 0.2s; font-family:inherit;"
-                    onmouseover="this.style.background='#f8fafc'; this.style.borderColor='#cbd5e1'" 
-                    onmouseout="this.style.background='white'; this.style.borderColor='#e2e8f0'">
-                    <i class="fas fa-times" style="margin-right:6px;"></i>Batal
-                </button>
-                <button id="confirm-book-btn" onclick="confirmBook()" 
-                    style="flex:1; padding:0.8rem; border:none; background:linear-gradient(135deg,#7A2B4A,#EE4E8B); color:white; border-radius:10px; font-weight:600; font-size:0.875rem; cursor:pointer; transition:all 0.2s; font-family:inherit; box-shadow:0 4px 12px rgba(122, 43, 74,0.30);"
-                    onmouseover="this.style.background='linear-gradient(135deg,#5A1F3A,#B83863)'" 
-                    onmouseout="this.style.background='linear-gradient(135deg,#7A2B4A,#EE4E8B)'">
-                    <i class="fas fa-check" style="margin-right:6px;"></i>Ya, Book Sekarang
-                </button>
-            </div>
+                Book Now
+            </button>
         </div>
     </div>
+    {{-- End of floating booking bar --}}
+
 </div>
+{{-- End of flex wrapper --}}
 
 {{-- ============================================
      BULK BOOKING CONFIRMATION MODAL
@@ -1316,114 +1186,261 @@
             0% { opacity: 0; transform: scale(0.95) translateY(10px); }
             100% { opacity: 1; transform: scale(1) translateY(0); }
         }
+
+        .schedule-card { cursor: pointer; }
+        .schedule-card.is-booked { cursor: default; }
+        .schedule-card.opacity-50 { cursor: default; }
+
+        .schedule-card.is-selected {
+            border-color: #EE4E8B !important;
+            background: rgba(238, 78, 139, 0.03) !important;
+            box-shadow: 0 4px 24px rgba(238, 78, 139, 0.18) !important;
+            transform: translateY(-4px);
+        }
+
+        .schedule-card.is-selected .schedule-card-accent {
+            display: none !important;
+        }
+
+        .schedule-card.is-selected .schedule-card-check {
+            display: inline-flex !important;
+        }
+
+        .schedule-card:hover:not(.is-booked):not(.opacity-50):not(.is-selected) {
+            border-color: rgba(238, 78, 139, 0.3) !important;
+        }
+
+        /* ===== FLOATING BOOKING BAR ===== */
+        #bulk-booking-bar {
+            position: fixed;
+            left: calc(13.5rem + (100vw - 13.5rem) / 2);
+            transform: translateX(-50%);
+            bottom: 24px;
+            z-index: 9999;
+            width: calc(100% - 32px);
+            max-width: 620px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+        }
+        #bulk-booking-bar.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .bulk-bar-inner {
+            position: relative;
+            background: rgba(28,28,28,0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            color: white;
+            padding: 1rem 1.25rem;
+            border-radius: 20px;
+            box-shadow: 0 12px 48px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.06);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+        .bulk-bar-close {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.75rem;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.3);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0.25rem;
+            transition: color 0.2s;
+            line-height: 1;
+        }
+        .bulk-bar-close:hover {
+            color: rgba(255,255,255,0.7);
+        }
+        .bulk-bar-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 0 0 auto;
+        }
+        .bulk-bar-label {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+            white-space: nowrap;
+            font-family: 'Poppins', sans-serif;
+        }
+        .bulk-bar-count {
+            font-weight: 700;
+            color: #EE4E8B;
+            font-size: 18px;
+        }
+        .bulk-bar-sep {
+            color: rgba(255,255,255,0.15);
+        }
+        .bulk-bar-credits {
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+            white-space: nowrap;
+            font-family: 'Poppins', sans-serif;
+        }
+        .bulk-bar-book-btn {
+            background: #EE4E8B;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 16px rgba(238,78,139,0.35);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+            font-family: 'Poppins', sans-serif;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .bulk-bar-book-btn:not(:disabled) {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .bulk-bar-book-btn:hover:not(:disabled) {
+            box-shadow: 0 6px 24px rgba(238,78,139,0.45);
+            transform: translateY(-1px);
+        }
+        .bulk-bar-book-btn:disabled {
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            #bulk-booking-bar {
+                left: 50%;
+                width: calc(100% - 24px);
+            }
+            .bulk-bar-info {
+                flex: 0 0 100%;
+                justify-content: center;
+            }
+            .bulk-bar-inner {
+                padding: 0.85rem 1rem;
+                border-radius: 16px;
+            }
+            .bulk-bar-book-btn {
+                flex: 1;
+                justify-content: center;
+            }
+        }
     </style>
 
 <script>
-    let pendingScheduleId = null;
     const maxSelectableClasses = {{ (int) ($remainingClasses ?? $customer->quota ?? 0) }};
-
-    function showCreditLimitAlert() {
-        const alert = document.getElementById('credit-limit-alert');
-        const message = document.getElementById('credit-limit-message');
-        if (!alert || !message) return;
-
-        message.textContent = `Credit aktif kamu hanya ${maxSelectableClasses}. Silakan pilih maksimal ${maxSelectableClasses} kelas atau beli package tambahan untuk booking lebih banyak kelas.`;
-        alert.style.display = 'flex';
-        alert.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-        window.clearTimeout(window.creditLimitAlertTimer);
-        window.creditLimitAlertTimer = window.setTimeout(() => {
-            alert.style.display = 'none';
-        }, 6000);
-    }
-
-    function handleCardClick(event, label) {
-        event.preventDefault();
-        
-        const checkbox = label.querySelector('.schedule-checkbox');
-        if (!checkbox || checkbox.disabled) return;
-
-        if (!checkbox.checked && getSelectedScheduleCheckboxes().length >= maxSelectableClasses) {
-            showCreditLimitAlert();
-            return;
-        }
-        
-        // Toggle checkbox - biarkan user select/unselect tanpa modal
-        checkbox.checked = !checkbox.checked;
-        
-        // Update visual states
-        updateSelectedCardStates();
-        updateBulkBookingBar();
-    }
-
-    function showBookConfirm(className, day, date, time, coach, scheduleId) {
-        document.getElementById('confirm-class').textContent = className;
-        document.getElementById('confirm-day').textContent = day;
-        document.getElementById('confirm-date').textContent = date;
-        document.getElementById('confirm-time').textContent = time;
-        document.getElementById('confirm-coach').textContent = coach;
-        pendingScheduleId = scheduleId;
-
-        const modal = document.getElementById('book-confirm-modal');
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeBookConfirm() {
-        const modal = document.getElementById('book-confirm-modal');
-        modal.style.display = 'none';
-        document.body.style.overflow = '';
-        pendingScheduleId = null;
-    }
-
-    function confirmBook() {
-        if (!pendingScheduleId) return;
-        const form = document.getElementById('book-form-' + pendingScheduleId);
-        const checkbox = document.querySelector(`.schedule-checkbox[data-schedule-id="${pendingScheduleId}"]`);
-        
-        if (form) {
-            // Disable button to prevent double-click
-            const btn = document.getElementById('confirm-book-btn');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i>Booking...';
-            btn.style.opacity = '0.7';
-            btn.style.cursor = 'not-allowed';
-            
-            // Check the checkbox visually
-            if (checkbox) {
-                checkbox.checked = true;
-                updateSelectedCardStates();
-                updateBulkBookingBar();
-            }
-            
-            form.submit();
-        }
-    }
-
     const bookingStoreUrl = @json(route('member.book.store'));
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
 
     function getSelectedScheduleCheckboxes() {
-        return Array.from(document.querySelectorAll('.schedule-checkbox:checked'));
+        return Array.from(document.querySelectorAll('.schedule-card.is-selected'));
+    }
+
+    function toggleCard(card) {
+        card.classList.toggle('is-selected');
+        updateBulkBookingBar();
+    }
+
+    function showCreditLimitAlert() {
+        const popup = document.createElement('div');
+        popup.style.cssText = 'position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; padding:1rem; animation:modalIn 0.25s ease-out;';
+        popup.innerHTML = `
+            <div style="background:white; border-radius:20px; max-width:400px; width:100%; padding:2.5rem 2rem; text-align:center; box-shadow:0 25px 60px rgba(0,0,0,0.2);">
+                <div style="width:72px; height:72px; border-radius:50%; background:rgba(238,78,139,0.1); display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;">
+                    <i class="fas fa-exclamation-triangle" style="font-size:2rem; color:#EE4E8B;"></i>
+                </div>
+                <h3 style="font-size:1.25rem; font-weight:700; color:#7A2B4A; margin:0 0 0.5rem; font-family:Nord,'Poppins',sans-serif;">Credit Tidak Mencukupi</h3>
+                <p style="font-size:0.9rem; color:#64748b; margin:0 0 1.5rem; line-height:1.5;">Credit aktif kamu hanya <strong>${maxSelectableClasses}</strong>. Silakan pilih maksimal ${maxSelectableClasses} kelas atau beli package tambahan untuk booking lebih banyak kelas.</p>
+                <button onclick="this.closest('div[style]').remove()"
+                   style="padding:0.85rem 2.5rem; border-radius:12px; font-weight:700; font-size:0.9rem; border:none; background:linear-gradient(135deg, #EE4E8B, #7A2B4A); color:white; cursor:pointer; box-shadow:0 4px 16px rgba(238,78,139,0.3); font-family:'Poppins',sans-serif;">
+                    <i class="fas fa-check mr-2"></i>Mengerti
+                </button>
+            </div>
+        `;
+        document.body.appendChild(popup);
+        popup.addEventListener('click', function(e) {
+            if (e.target === this) this.remove();
+        });
     }
 
     function updateBulkBookingBar() {
         const selected = getSelectedScheduleCheckboxes();
         const count = selected.length;
+        const bar = document.getElementById('bulk-booking-bar');
         const selectedClassCount = document.getElementById('selected-class-count');
-        const selectedSessionCount = document.getElementById('selected-session-count');
         const button = document.getElementById('book-selected-btn');
+        const creditTop = document.getElementById('credit-value-top');
+        const creditDisplay = document.getElementById('credit-display');
 
         if (selectedClassCount) selectedClassCount.textContent = count;
-        if (selectedSessionCount) selectedSessionCount.textContent = count;
-        if (button) button.disabled = count === 0;
+        if (creditTop) creditTop.textContent = maxSelectableClasses - count;
+        if (creditDisplay) creditDisplay.textContent = maxSelectableClasses - count;
+
+        if (bar) {
+            if (count > 0) {
+                bar.classList.add('visible');
+            } else {
+                bar.classList.remove('visible');
+            }
+        }
+
+        if (button) {
+            button.disabled = count === 0 || count > maxSelectableClasses;
+        }
     }
 
-    function updateSelectedCardStates() {
-        document.querySelectorAll('.schedule-checkbox').forEach(checkbox => {
-            const card = checkbox.closest('.schedule-card');
-            if (!card) return;
-            card.classList.toggle('is-selected', checkbox.checked);
+    function clearAllSelections() {
+        document.querySelectorAll('.schedule-card.is-selected').forEach(card => {
+            card.classList.remove('is-selected');
+        });
+        updateBulkBookingBar();
+    }
+
+    function switchPackage(orderId) {
+        window.location.href = '{{ route("member.book") }}?order_id=' + orderId;
+    }
+
+    function changeWeek(direction) {
+        // Placeholder for week navigation
+    }
+
+    function selectDate(dateStr) {
+        window.location.href = '{{ route("member.book") }}?date=' + dateStr;
+    }
+
+    function bookSingleSchedule(scheduleId) {
+        const formData = new FormData();
+        formData.append('_token', csrfToken);
+        formData.append('schedule_id', scheduleId);
+
+        const button = event?.target?.closest('button');
+        if (button) { button.disabled = true; button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; }
+
+        fetch(bookingStoreUrl, {
+            method: 'POST',
+            headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert(data.message || 'Booking failed');
+                if (button) { button.disabled = false; button.innerHTML = 'BOOK NOW'; }
+            }
+        })
+        .catch(err => {
+            alert('Error booking class');
+            if (button) { button.disabled = false; button.innerHTML = 'BOOK NOW'; }
         });
     }
 
@@ -1436,12 +1453,10 @@
             return;
         }
         
-        // Tampilkan modal konfirmasi dengan daftar class yang dipilih
         showBulkBookingConfirm(selected);
     }
     
     function showBulkBookingConfirm(selectedCheckboxes) {
-        // Build class list
         let classListHtml = '';
         selectedCheckboxes.forEach((checkbox, index) => {
             const className = checkbox.dataset.className;
@@ -1456,7 +1471,7 @@
                     </div>
                     <div style="flex:1; min-width:0;">
                         <div style="font-weight:700; color:#7A2B4A; font-size:0.85rem; margin-bottom:2px;">${className}</div>
-                        <div style="font-size:0.75rem; color:#64748b;">${day}, ${date} • ${time}</div>
+                        <div style="font-size:0.75rem; color:#64748b;">${day}, ${date} � ${time}</div>
                     </div>
                     <i class="fas fa-check-circle" style="color:#10b981; font-size:1.25rem;"></i>
                 </div>
@@ -1495,9 +1510,9 @@
             for (const checkbox of selected) {
                 const formData = new FormData();
                 formData.append('_token', csrfToken);
-                formData.append('schedule_id', checkbox.value);
+                formData.append('schedule_id', checkbox.dataset.scheduleId);
 
-                await fetch(bookingStoreUrl, {
+                const res = await fetch(bookingStoreUrl, {
                     method: 'POST',
                     credentials: 'same-origin',
                     headers: {
@@ -1506,39 +1521,58 @@
                     },
                     body: formData,
                 });
+
+                if (!res.ok) {
+                    const errData = await res.json().catch(() => null);
+                    throw new Error(errData?.message || 'Booking gagal');
+                }
             }
 
-            window.location.reload();
+            closeBulkConfirm();
+            showSuccessPopup(selected.length);
         } catch (error) {
             console.error('Bulk booking failed', error);
-            window.location.reload();
-        } finally {
+            alert(error.message || 'Booking gagal. Silakan coba lagi.');
             if (button) {
                 button.disabled = false;
                 button.innerHTML = originalHtml;
+                button.style.opacity = '1';
             }
         }
     }
 
-    // Close on clicking backdrop
-    document.getElementById('book-confirm-modal')?.addEventListener('click', function(e) {
-        if (e.target === this) closeBookConfirm();
-    });
-
-    // Close on Escape
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeBookConfirm();
-    });
+    function showSuccessPopup(count) {
+        const popup = document.createElement('div');
+        popup.style.cssText = 'position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; padding:1rem; animation:modalIn 0.25s ease-out;';
+        popup.innerHTML = `
+            <div style="background:white; border-radius:20px; max-width:400px; width:100%; padding:2.5rem 2rem; text-align:center; box-shadow:0 25px 60px rgba(0,0,0,0.2);">
+                <div style="width:72px; height:72px; border-radius:50%; background:rgba(26,122,94,0.1); display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;">
+                    <i class="fas fa-check-circle" style="font-size:2rem; color:#1A7A5E;"></i>
+                </div>
+                <h3 style="font-size:1.25rem; font-weight:700; color:#1C1C1C; margin:0 0 0.5rem; font-family:Nord,'Poppins',sans-serif;">Booking Berhasil!</h3>
+                <p style="font-size:0.9rem; color:#64748b; margin:0 0 1.5rem; line-height:1.5;">${count} class telah berhasil di booking. Silakan cek jadwal kamu di My Classes.</p>
+                <button onclick="this.closest('div[style]').remove(); window.location.reload();"
+                   style="padding:0.85rem 2.5rem; border-radius:12px; font-weight:700; font-size:0.9rem; border:none; background:linear-gradient(135deg, #EE4E8B, #7A2B4A); color:white; cursor:pointer; box-shadow:0 4px 16px rgba(238,78,139,0.3); font-family:'Poppins',sans-serif;">
+                    <i class="fas fa-arrow-right mr-2"></i>Lihat My Classes
+                </button>
+            </div>
+        `;
+        document.body.appendChild(popup);
+    }
 
     document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.schedule-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                updateSelectedCardStates();
-                updateBulkBookingBar();
-            });
-        });
-        updateSelectedCardStates();
         updateBulkBookingBar();
+        
+        // Backup: Event delegation for schedule cards
+        document.body.addEventListener('click', function(e) {
+            const card = e.target.closest('.schedule-card');
+            if (card && !card.classList.contains('is-booked') && !card.classList.contains('opacity-50')) {
+                if (!card.hasAttribute('onclick') || card.getAttribute('onclick') === '') {
+                    e.preventDefault();
+                    toggleCard(card);
+                }
+            }
+        });
     });
 
     // ===== SIDEBAR TOGGLE FUNCTION =====

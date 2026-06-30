@@ -161,7 +161,7 @@
 
         <div class="text-center text-sm">
             Belum memiliki akun?
-            <a href="{{ route('home') }}#join" class="brand-link hover:underline">Daftar Sekarang</a>
+            <a href="{{ route('join') }}" class="brand-link hover:underline">Daftar Sekarang</a>
         </div>
 
         <p class="text-center text-xs text-[#1C1C1C]/40 mt-4">

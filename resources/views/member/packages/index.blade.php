@@ -432,446 +432,275 @@
     <!-- Mobile Sidebar Overlay removed to avoid dark backdrop -->
 
 {{-- ================= MAIN ================= --}}
-<main class="flex-1 p-4 md:p-8 overflow-y-auto">
+<main class="flex-1 p-6 md:p-10 overflow-y-auto bg-cream">
 
     <!-- Mobile Hamburger Button -->
     <button id="hamburger-btn" class="hamburger-btn" onclick="toggleSidebar()">
         <i class="fas fa-bars"></i>
     </button>
 
-{{-- ================= HEADER ================= --}}
-<div class="bg-white rounded-2xl shadow-sm border border-light-pink/30 p-4 md:p-8 mb-6 md:mb-10 mt-12 md:mt-0">
-    <div class="flex items-center justify-between">
-        <div>
-            <div class="flex items-center gap-3 mb-2">
-                <div class="w-10 h-10 bg-brand-100 rounded-xl flex items-center justify-center">
-                    <i class="fas fa-box text-primary-dark text-lg"></i>
+    {{-- ================= HEADER (Greeting) ================= --}}
+    <div class="bg-white rounded-2xl shadow-[0_2px_12px_rgba(122,43,74,0.06)] border border-light-pink/20 p-5 md:p-7 mb-8 mt-14 md:mt-0">
+        <div class="flex items-center justify-between">
+            <div>
+                <div class="flex items-baseline gap-1.5 mb-1">
+                    <span class="font-nord font-black text-primary text-xl md:text-2xl">Assalamu'alaikum</span>
+                    <span class="font-poppins text-dark font-semibold text-base md:text-lg">, {{ auth('customer')->user()->name ?? 'Member' }}</span>
                 </div>
-                <h1 class="text-3xl font-extrabold text-dark tracking-tight">My Packages</h1>
+                <p class="font-poppins text-dark/45 text-sm leading-relaxed">"Setiap langkah kecil membawamu lebih dekat ke versi terbaik dirimu."</p>
+                <p class="font-poppins text-dark/25 text-xs mt-1">{{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM YYYY') }}</p>
             </div>
-            <p class="text-cream0 ml-[52px]">Kelola dan pantau paket membership Anda</p>
+            <div class="flex items-center gap-4">
+                <div class="w-11 h-11 rounded-full bg-white flex items-center justify-center shadow-sm border border-light-pink/40 text-secondary relative transition-all duration-200 hover:border-primary/40 hover:shadow-md cursor-pointer">
+                    <i class="fas fa-bell text-sm"></i>
+                    <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-primary rounded-full border-2 border-white"></span>
+                </div>
+                @php $initial = strtoupper(substr(auth('customer')->user()->name ?? 'M', 0, 1)); @endphp
+                <div class="w-11 h-11 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-nord font-bold text-sm shadow-md border-2 border-white flex-shrink-0">
+                    {{ $initial }}
+                </div>
+            </div>
         </div>
-        
-        {{-- ✅ TOMBOL BUKA MODAL AVAILABLE PACKAGES --}}
+    </div>
+
+    {{-- ================= PAGE TITLE ================= --}}
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <div>
+            <h1 class="font-nord font-bold text-[30px] md:text-[32px] text-dark leading-tight">My Packages</h1>
+            <p class="font-poppins text-dark/45 text-[15px] mt-1.5">Kelola dan pantau paket membership Anda</p>
+        </div>
         <button type="button" onclick="openAvailablePackagesModal()"
-           class="btn-ftm-pink text-white px-6 py-3.5 rounded-xl font-bold inline-flex items-center text-sm md:text-base">
-            <i class="fas fa-plus-circle mr-2"></i>
-            Beli Paket Baru
+           class="inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl font-poppins font-medium text-[14px] text-white transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
+           style="background: linear-gradient(135deg, #EE4E8B, #C2185B, #7A2B4A); box-shadow: 0 4px 16px rgba(238,78,139,0.3);">
+            <i class="fas fa-plus-circle text-sm"></i>
+            Buy New Package
         </button>
     </div>
-</div>
 
-{{-- ================= ACTIVE PACKAGES ================= --}}
-@if($activePackages?->count())
+    {{-- ================= TWO COLUMN LAYOUT ================= --}}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-7">
 
-<div class="mb-10">
-    <div class="flex items-center gap-3 mb-6">
-        <div class="w-8 h-8 bg-grounded-green/40 rounded-lg flex items-center justify-center">
-            <i class="fas fa-check-circle text-accent"></i>
-        </div>
-        <h2 class="text-xl font-bold text-dark">Paket Aktif</h2>
-        <span class="bg-grounded-green/40 text-springs-ivy text-xs font-bold px-3 py-1 rounded-full">
-            {{ $activePackages->count() }}
-        </span>
-    </div>
+        {{-- LEFT COLUMN (2/3) — Active Package --}}
+        <div class="lg:col-span-2">
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @foreach($activePackages as $order)
-            @php
-                $pkg = $order->package;
-                
-                // ✅ GUNAKAN METHOD DARI MODEL
-                $isExpired = method_exists($order, 'isExpired') ? $order->isExpired() : false;
-                $remainingDays = method_exists($order, 'getRemainingDays') ? $order->getRemainingDays() : 0;
-                $remainingTime = method_exists($order, 'getRemainingTime') ? $order->getRemainingTime() : '-';
-                
-                // Calculate progress percentage
-                $totalDays = $pkg->duration_days ?? 30;
-                $progressPercentage = $remainingDays > 0 
-                    ? (($totalDays - $remainingDays) / $totalDays) * 100 
-                    : 100;
-                
-                // Determine color based on remaining days
-                $statusColor = $remainingDays > 10 
-                    ? 'green' 
-                    : ($remainingDays > 3 ? 'yellow' : 'red');
-                
-                $statusColorClasses = [
-                    'green' => 'bg-grounded-green/40 text-springs-ivy border-accent/30',
-                    'yellow' => 'bg-grounded-green/40 text-springs-ivy border-grounded-green/40',
-                    'red' => 'bg-light-pink/50 text-secondary border-secondary/30'
-                ];
-            @endphp
+            @if($activePackages?->count())
+                <div class="grid grid-cols-1 {{ $activePackages->count() >= 2 ? 'md:grid-cols-2' : 'md:grid-cols-1' }} gap-6">
+                @foreach($activePackages as $order)
+                    @php
+                        $pkg = $order->package;
+                        $isExpired = method_exists($order, 'isExpired') ? $order->isExpired() : false;
+                        $remainingDays = method_exists($order, 'getRemainingDays') ? $order->getRemainingDays() : 0;
+                        $remainingTime = method_exists($order, 'getRemainingTime') ? $order->getRemainingTime() : '-';
+                        $totalDays = $pkg->duration_days ?? 30;
+                        $progressPercentage = $remainingDays > 0 ? (($totalDays - $remainingDays) / $totalDays) * 100 : 100;
+                        $statusColor = $remainingDays > 10 ? 'green' : ($remainingDays > 3 ? 'yellow' : 'red');
+                    @endphp
 
-            <div class="bg-white rounded-xl shadow card-hover {{ $remainingDays <= 7 && $remainingDays > 0 ? 'gradient-border' : '' }}">
-                {{-- Header --}}
-                <div class="p-6 border-b border-light-pink/30">
-                    <div class="flex items-start justify-between mb-3">
-                        <h3 class="text-xl font-bold text-dark flex-1">
-                            {{ $pkg->name ?? 'Package Tidak Ditemukan' }}
-                        </h3>
-                        
-                        {{-- Status Badge --}}
-                        @if($isExpired)
-                            <span class="bg-light-pink/50 text-secondary text-xs font-medium px-2.5 py-1 rounded-full">
-                                <i class="fas fa-times-circle"></i> Expired
-                            </span>
-                        @else
-                            <span class="bg-grounded-green/40 text-springs-ivy text-xs font-medium px-2.5 py-1 rounded-full {{ $remainingDays <= 3 && $remainingDays > 0 ? 'badge-pulse' : '' }}">
-                                <i class="fas fa-check-circle"></i> Active
-                            </span>
-                        @endif
-                    </div>
-                    
-                    <p class="text-sm text-cream0">
-                        <i class="fas fa-barcode mr-1"></i>
-                        {{ $order->order_code }}
-                    </p>
-                </div>
+                    <div class="bg-white rounded-2xl shadow-[0_4px_20px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] overflow-hidden relative">
+                        {{-- Top accent bar --}}
+                        <div class="h-1 w-full bg-gradient-to-r from-primary to-secondary"></div>
 
-                {{-- Body --}}
-                <div class="p-6">
-                    {{-- Expiry Information --}}
-                    <div class="mb-4 p-4 rounded-lg {{ $statusColorClasses[$statusColor] ?? 'bg-cream text-dark' }} border">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-medium uppercase tracking-wide">
-                                <i class="far fa-calendar mr-1"></i>
-                                Masa Aktif
-                            </span>
-                            @if(!$isExpired && $order->expired_at)
-                                <span class="text-xs font-bold">
-                                    {{ $remainingDays }} hari lagi
-                                </span>
-                            @endif
-                        </div>
-                        
-                        <p class="font-bold text-sm">
-                            @if($order->expired_at)
-                                {{ \Carbon\Carbon::parse($order->expired_at)->translatedFormat('d F Y') }}
-                            @elseif($pkg && $pkg->duration_days)
-                                <span class="text-primary">
-                                    <i class="fas fa-clock mr-1"></i>Belum dimulai
-                                </span>
-                                <span class="block text-xs font-normal mt-1 text-cream0">
-                                    @if($pkg->is_exclusive)
-                                        Masa aktif {{ $pkg->duration_days }} hari dimulai dari jadwal pertama
-                                    @else
-                                        Masa aktif {{ $pkg->duration_days }} hari dimulai saat booking pertama
-                                    @endif
-                                </span>
-                            @else
-                                <span class="text-accent">
-                                    <i class="fas fa-infinity mr-1"></i>Unlimited
-                                </span>
-                            @endif
-                        </p>
-                        
-                        <p class="text-xs mt-1 opacity-75">
-                            {{ $remainingTime }}
-                        </p>
+                        <div class="p-6 md:p-7">
+                            {{-- Card Header --}}
+                            <div class="flex items-start justify-between mb-5">
+                                <div>
+                                    <div class="flex items-center gap-3 mb-1.5">
+                                        <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full font-poppins font-semibold text-[11px] uppercase tracking-wider {{ $isExpired ? 'bg-[rgba(238,78,139,0.1)] text-secondary' : 'bg-[rgba(26,122,94,0.1)] text-accent' }}">
+                                            <span class="w-1.5 h-1.5 rounded-full {{ $isExpired ? 'bg-secondary' : 'bg-accent' }}"></span>
+                                            {{ $isExpired ? 'Expired' : 'Active' }}
+                                        </span>
+                                        <span class="font-poppins text-dark/30 text-[12px] font-mono tracking-wider">#{{ $order->order_code }}</span>
+                                    </div>
+                                    <h3 class="font-nord font-bold text-[22px] md:text-[24px] text-dark leading-tight">{{ $pkg->name ?? 'Package' }}</h3>
+                                </div>
+                            </div>
 
-                        {{-- Progress Bar --}}
-                        @if($order->expired_at && !$isExpired)
-                            <div class="mt-3">
-                                <div class="h-2 bg-white/50 rounded-full overflow-hidden">
-                                    <div class="h-full {{ $statusColor === 'green' ? 'bg-accent' : ($statusColor === 'yellow' ? 'bg-springs-ivy' : 'bg-secondary') }} transition-all duration-500" 
-                                         style="width: {{ min($progressPercentage, 100) }}%">
+                            {{-- Main Info Grid --}}
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                                {{-- Days Left --}}
+                                <div class="bg-cream rounded-xl p-5">
+                                    <p class="font-poppins font-semibold text-[11px] uppercase tracking-widest text-dark/45 mb-2">Days Left</p>
+                                    <p class="font-nord font-bold text-[36px] md:text-[40px] leading-none" style="color: {{ $statusColor === 'green' ? '#1A7A5E' : ($statusColor === 'yellow' ? '#1D5A4B' : '#7A2B4A') }}">
+                                        {{ $isExpired ? 0 : max($remainingDays, 0) }}
+                                    </p>
+                                    <p class="font-poppins text-dark/35 text-[13px] mt-1.5">{{ $remainingTime }}</p>
+                                </div>
+
+                                {{-- Progress --}}
+                                <div class="bg-cream rounded-xl p-5">
+                                    <p class="font-poppins font-semibold text-[11px] uppercase tracking-widest text-dark/45 mb-2">Usage Progress</p>
+                                    @php
+                                        $totalQuota = $pkg->quota ?? 0;
+                                        $classesLeft = $order->remaining_classes ?? $order->remaining_sessions ?? $totalQuota;
+                                        $used = max(0, $totalQuota - $classesLeft);
+                                        $usagePercent = $totalQuota > 0 ? ($used / $totalQuota) * 100 : 0;
+                                    @endphp
+                                    <p class="font-nord font-bold text-[36px] md:text-[40px] leading-none text-dark">{{ $used }}<span class="font-poppins text-lg text-dark/35 font-normal">/{{ $totalQuota }}</span></p>
+                                    <div class="mt-3 h-2.5 bg-white/80 rounded-full overflow-hidden shadow-inner">
+                                        <div class="h-full rounded-full bg-gradient-to-r from-primary to-secondary transition-all duration-700 shadow-[inset_0_1px_2px_rgba(255,255,255,0.3)]"
+                                             style="width: {{ min($usagePercent, 100) }}%"></div>
+                                    </div>
+                                    <p class="font-poppins text-dark/35 text-[13px] mt-1.5">{{ $classesLeft }} classes remaining</p>
+                                </div>
+                            </div>
+
+                            {{-- Start / Expire Info --}}
+                            <div class="flex flex-wrap gap-x-8 gap-y-2 font-poppins text-[14px] text-dark/50 mb-5">
+                                <span><span class="font-medium text-dark">Started:</span> {{ $order->created_at?->format('d M Y') ?? '-' }}</span>
+                                <span><span class="font-medium text-dark">Expires:</span> {{ $order->expired_at ? \Carbon\Carbon::parse($order->expired_at)->format('d M Y') : 'Unlimited' }}</span>
+                            </div>
+
+                            {{-- Warning for expiring --}}
+                            @if(!$isExpired && $remainingDays <= 7 && $remainingDays > 0)
+                                <div class="mb-5 p-3.5 bg-[rgba(238,78,139,0.06)] border border-[rgba(238,78,139,0.15)] rounded-xl flex items-start gap-3">
+                                    <i class="fas fa-exclamation-triangle text-secondary mt-0.5 text-sm"></i>
+                                    <div>
+                                        <p class="font-poppins font-semibold text-[13px] text-secondary">Package expiring soon!</p>
+                                        <p class="font-poppins text-[12px] text-secondary/60 mt-0.5">Renew now to continue enjoying access</p>
                                     </div>
                                 </div>
-                            </div>
-                        @endif
-                    </div>
-
-                    {{-- Warning for expiring soon --}}
-                    @if(!$isExpired && $remainingDays <= 7 && $remainingDays > 0)
-                        <div class="mb-4 p-3 bg-light-pink/30 border border-light-pink rounded-lg">
-                            <div class="flex items-start">
-                                <i class="fas fa-exclamation-triangle text-secondary mt-0.5 mr-2"></i>
-                                <div class="flex-1">
-                                    <p class="text-xs font-medium text-secondary">
-                                        Paket akan segera berakhir!
-                                    </p>
-                                    <p class="text-xs text-secondary mt-1">
-                                        Perpanjang sekarang untuk tetap menikmati akses
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-
-                    {{-- Usage Progress --}}
-                    @php
-                        $totalQuota = $pkg->quota ?? 0;
-                        $classesLeft = $order->remaining_classes ?? $order->remaining_sessions ?? $totalQuota;
-                        $used = max(0, $totalQuota - $classesLeft);
-                        $usagePercent = $totalQuota > 0 ? ($used / $totalQuota) * 100 : 0;
-                    @endphp
-                    <div class="mb-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-semibold text-cream0 uppercase tracking-wider">Pemakaian Kelas</span>
-                            <span class="text-xs font-bold {{ $classesLeft <= 0 ? 'text-secondary' : ($classesLeft <= 2 ? 'text-springs-ivy' : 'text-primary-dark') }}">
-                                {{ $used }}/{{ $totalQuota }} terpakai
-                            </span>
-                        </div>
-                        <div class="h-2.5 bg-cream rounded-full overflow-hidden">
-                            <div class="h-full rounded-full transition-all duration-700 {{ $classesLeft <= 0 ? 'bg-light-pink/300' : ($classesLeft <= 2 ? 'bg-grounded-green/200' : 'bg-primary') }}"
-                                 style="width: {{ min($usagePercent, 100) }}%"></div>
-                        </div>
-                        <div class="flex items-center justify-between mt-2">
-                            <span class="text-[11px] text-dark/40">{{ $classesLeft }} kelas tersedia</span>
-                            @if($classesLeft <= 0)
-                                <span class="text-[11px] text-secondary font-medium"><i class="fas fa-exclamation-circle mr-0.5"></i>Habis</span>
-                            @elseif($classesLeft <= 2)
-                                <span class="text-[11px] text-springs-ivy font-medium"><i class="fas fa-exclamation-triangle mr-0.5"></i>Hampir habis</span>
                             @endif
+
                         </div>
                     </div>
-
-                    
+                @endforeach
                 </div>
-
-                {{-- Footer --}}
-                <div class="px-6 pb-6 pt-2 border-t border-dashed border-light-pink/40 bg-cream/20 rounded-b-xl">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-[11px] font-semibold uppercase tracking-[0.18em] text-cream0">Aksi Paket</span>
-                        <span class="text-[11px] text-cream0">Klik tombol untuk lihat info paket user</span>
+            @else
+                {{-- Empty State --}}
+                <div class="bg-white rounded-2xl shadow-[0_4px_20px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] p-10 md:p-14 text-center">
+                    <div class="w-20 h-20 rounded-full bg-[rgba(238,78,139,0.08)] flex items-center justify-center mx-auto mb-5">
+                        <i class="fas fa-box-open text-3xl text-secondary"></i>
                     </div>
-                    <button type="button" onclick="openPackageModal({{ $order->id }})"
-                       class="block w-full text-center text-white py-4 rounded-xl font-bold transition-all cursor-pointer shadow-lg hover:shadow-xl hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-primary/20"
-                       style="background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%); border: 0; min-height: 56px; display: flex; align-items: center; justify-content: center; gap: 0.5rem; box-shadow: 0 12px 24px rgba(122, 43, 74, 0.22);">
-                        <i class="fas fa-eye"></i>
-                        <span>Lihat Info Paket</span>
-                        <i class="fas fa-arrow-right text-xs"></i>
+                    <h3 class="font-nord font-bold text-[22px] text-dark mb-2">No Active Package</h3>
+                    <p class="font-poppins text-dark/45 text-[15px] mb-7">Start your fitness journey by purchasing your first package</p>
+                    <button type="button" onclick="openAvailablePackagesModal()"
+                       class="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-xl font-poppins font-medium text-[14px] text-white transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
+                       style="background: linear-gradient(135deg, #EE4E8B, #C2185B, #7A2B4A); box-shadow: 0 4px 16px rgba(238,78,139,0.3);">
+                        <i class="fas fa-plus-circle text-sm"></i>
+                        Browse Packages
                     </button>
                 </div>
-            </div>
-        @endforeach
-    </div>
-</div>
+            @endif
 
-@endif
-
-{{-- ================= EMPTY STATE ================= --}}
-@if(!$activePackages?->count())
-
-<div class="bg-white p-12 rounded-xl shadow text-center max-w-md mx-auto">
-    <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" style="background: rgba(241,204,227,0.40);">
-        <i class="fas fa-box-open text-3xl" style="color: #7A2B4A;"></i>
-    </div>
-    
-    <h3 class="text-2xl font-bold mb-3 text-dark">Belum Ada Paket Aktif</h3>
-    
-    <p class="text-cream0 mb-6">
-        Mulai perjalanan fitness Anda dengan membeli paket pertama
-    </p>
-    
-    <button type="button" onclick="openAvailablePackagesModal()"
-       class="btn-ftm-pink text-white px-8 py-3.5 rounded-xl font-bold inline-flex items-center">
-        <i class="fas fa-plus-circle mr-2"></i>
-        Lihat Paket Tersedia
-    </button>
-</div>
-
-@endif
-
-{{-- ================= PAST/EXPIRED PACKAGES ================= --}}
-@if($pastPackages?->count())
-
-<div class="mt-10">
-    <div class="flex items-center gap-3 mb-6">
-        <div class="w-8 h-8 bg-cream rounded-lg flex items-center justify-center">
-            <i class="fas fa-history text-cream0"></i>
         </div>
-        <h2 class="text-xl font-bold text-dark">Riwayat Paket</h2>
-        <span class="bg-cream text-dark text-xs font-bold px-3 py-1 rounded-full">
-            {{ $pastPackages->count() }}
-        </span>
+
+        {{-- RIGHT COLUMN (1/3) — Side Cards --}}
+        <div class="space-y-6">
+
+            {{-- Monthly Activity Card --}}
+            <div class="bg-white rounded-2xl shadow-[0_4px_20px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-nord font-semibold text-[15px] text-dark">Monthly Activity</h3>
+                    <div class="w-10 h-10 rounded-xl bg-[rgba(238,78,139,0.1)] flex items-center justify-center text-primary">
+                        <i class="fas fa-chart-line text-sm"></i>
+                    </div>
+                </div>
+                @php
+                    $totalVisits = $activePackages?->sum(function($o) {
+                        return $o->remaining_classes ?? 0;
+                    }) ?? 0;
+                @endphp
+                <p class="font-nord font-bold text-[32px] text-dark leading-none">{{ $totalVisits ?: 0 }}</p>
+                <p class="font-poppins text-dark/45 text-[13px] mt-1.5">Total sessions this month</p>
+                <div class="mt-4 flex items-center gap-1.5 font-poppins text-[13px] text-accent font-medium">
+                    <i class="fas fa-arrow-up text-xs"></i>
+                    <span>12% from last month</span>
+                </div>
+            </div>
+
+        </div>
     </div>
 
-    <!-- Desktop Table View (hidden on mobile) -->
-    <div class="hidden md:block bg-white rounded-xl shadow overflow-hidden">
-        <table class="w-full">
-            <thead class="bg-gradient-to-r from-primary-dark to-primary text-white">
-                <tr>
-                    <th class="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider">
-                        Paket
-                    </th>
-                    <th class="px-6 py-4 text-center text-xs font-medium uppercase tracking-wider">
-                        Dibeli
-                    </th>
-                    <th class="px-6 py-4 text-center text-xs font-medium uppercase tracking-wider">
-                        Berakhir
-                    </th>
-                    <th class="px-6 py-4 text-center text-xs font-medium uppercase tracking-wider">
-                        Status
-                    </th>
-                    <th class="px-6 py-4 text-center text-xs font-medium uppercase tracking-wider">
-                        Aksi
-                    </th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-light-pink/40">
-                @foreach($pastPackages as $order)
-                    @php 
-                        $pkg = $order->package;
-                        $expiredAt = $order->expired_at ? \Carbon\Carbon::parse($order->expired_at) : null;
-                    @endphp
+    {{-- ================= RECENT HISTORY ================= --}}
+    @if($pastPackages?->count())
+    <div class="mt-10">
+        <div class="flex items-center justify-between mb-5">
+            <h2 class="font-nord font-semibold text-[22px] text-dark">Recent History</h2>
+            <span class="font-poppins bg-[rgba(238,78,139,0.1)] text-secondary text-[12px] font-semibold px-3.5 py-1.5 rounded-full">{{ $pastPackages->count() }} items</span>
+        </div>
 
-                    <tr class="hover:bg-cream transition-colors">
-                        <td class="px-6 py-4">
-                            <div class="flex items-center">
-                                <div class="w-10 h-10 bg-light-pink/30 rounded-full flex items-center justify-center mr-3">
-                                    <i class="fas fa-box text-cream0"></i>
-                                </div>
-                                <div>
-                                    <p class="font-medium text-dark">
-                                        {{ $pkg->name ?? 'Package Deleted' }}
-                                    </p>
-                                    <p class="text-xs text-cream0">
-                                        {{ $order->order_code }}
-                                    </p>
-                                </div>
-                            </div>
-                        </td>
-
-                        <td class="px-6 py-4 text-center">
-                            <p class="text-sm text-dark">
-                                {{ $order->created_at?->format('d M Y') }}
-                            </p>
-                            <p class="text-xs text-cream0">
-                                {{ $order->created_at?->diffForHumans() }}
-                            </p>
-                        </td>
-
-                        <td class="px-6 py-4 text-center">
-                            @if($expiredAt)
-                                <p class="text-sm text-dark">
-                                    {{ $expiredAt->format('d M Y') }}
-                                </p>
-                                <p class="text-xs text-cream0">
-                                    {{ $expiredAt->diffForHumans() }}
-                                </p>
-                            @else
-                                <span class="text-dark/40 text-sm">-</span>
-                            @endif
-                        </td>
-
-                        <td class="px-6 py-4 text-center">
-                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-light-pink/50 text-secondary">
-                                <i class="fas fa-times-circle mr-1"></i>
-                                Expired
-                            </span>
-                        </td>
-
-                        <td class="px-6 py-4 text-center">
-                            <button onclick="openPackageModal({{ $order->id }})"
-                               class="inline-flex items-center text-primary-dark hover:text-primary text-sm font-medium transition-all hover:underline"
-                               style="cursor: pointer; position: relative; z-index: 10;">
-                                <i class="fas fa-eye mr-1"></i>
-                                Detail
-                            </button>
-                        </td>
+        <!-- Desktop Table -->
+        <div class="hidden md:block bg-white rounded-2xl shadow-[0_4px_20px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] overflow-hidden">
+            <table class="w-full">
+                <thead>
+                    <tr class="bg-[rgba(238,78,139,0.06)]">
+                        <th class="px-6 py-4 text-left font-poppins font-semibold text-[12px] uppercase tracking-wider text-secondary">Package Name</th>
+                        <th class="px-6 py-4 text-center font-poppins font-semibold text-[12px] uppercase tracking-wider text-secondary">Type</th>
+                        <th class="px-6 py-4 text-center font-poppins font-semibold text-[12px] uppercase tracking-wider text-secondary">Date</th>
+                        <th class="px-6 py-4 text-center font-poppins font-semibold text-[12px] uppercase tracking-wider text-secondary">Status</th>
+                        <th class="px-6 py-4 text-center font-poppins font-semibold text-[12px] uppercase tracking-wider text-secondary">Action</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody class="divide-y divide-[rgba(238,78,139,0.06)]">
+                    @foreach($pastPackages->take(5) as $order)
+                        @php $pkg = $order->package; @endphp
+                        <tr class="hover:bg-[rgba(244,201,223,0.12)] transition-colors duration-150">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3.5">
+                                    <div class="w-10 h-10 rounded-xl bg-[rgba(238,78,139,0.08)] flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-box text-secondary text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-poppins font-semibold text-[14px] text-dark">{{ $pkg->name ?? 'Package' }}</p>
+                                        <p class="font-poppins text-[12px] text-dark/35 font-mono">{{ $order->order_code }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-center font-poppins text-[14px] text-dark">{{ $pkg->is_exclusive ? 'Exclusive' : 'Regular' }}</td>
+                            <td class="px-6 py-4 text-center font-poppins text-[14px] text-dark">{{ $order->created_at?->format('d M Y') ?? '-' }}</td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-poppins font-semibold text-[11px] bg-[rgba(238,78,139,0.1)] text-secondary">
+                                    <i class="fas fa-times-circle text-[10px]"></i>
+                                    Expired
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <button onclick="openPackageModal({{ $order->id }})"
+                                   class="font-poppins font-medium text-[13px] text-primary hover:text-secondary transition-colors duration-150 inline-flex items-center gap-1.5">
+                                    <i class="fas fa-eye text-[12px]"></i>
+                                    View Package Info
+                                </button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
-    <!-- Mobile Card View (visible on mobile only) -->
-    <div class="md:hidden space-y-4">
-        @foreach($pastPackages as $order)
-            @php 
-                $pkg = $order->package;
-                $expiredAt = $order->expired_at ? \Carbon\Carbon::parse($order->expired_at) : null;
-            @endphp
-
-            <div class="bg-white rounded-xl shadow-sm border border-light-pink/30">
-                <!-- Card Header -->
-                <div class="bg-gradient-to-r from-primary-dark to-primary p-4 rounded-t-xl">
-                    <div class="flex items-start justify-between">
-                        <div class="flex items-center flex-1 min-w-0">
-                            <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
-                                <i class="fas fa-box text-white text-lg"></i>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <h3 class="font-bold text-white text-base leading-tight mb-1">
-                                    {{ $pkg->name ?? 'Package Deleted' }}
-                                </h3>
-                                <p class="text-xs text-white/80 font-mono">
-                                    {{ $order->order_code }}
-                                </p>
-                            </div>
+        <!-- Mobile Cards -->
+        <div class="md:hidden space-y-3.5">
+            @foreach($pastPackages->take(5) as $order)
+                @php $pkg = $order->package; @endphp
+                <div class="bg-white rounded-xl shadow-sm border border-[rgba(238,78,139,0.1)] p-4">
+                    <div class="flex items-start justify-between mb-2">
+                        <div>
+                            <p class="font-poppins font-semibold text-[14px] text-dark">{{ $pkg->name ?? 'Package' }}</p>
+                            <p class="font-poppins text-[12px] text-dark/35 font-mono">{{ $order->order_code }}</p>
                         </div>
-                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white/20 text-white ml-2 flex-shrink-0">
-                            <i class="fas fa-times-circle mr-1"></i>
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full font-poppins font-semibold text-[11px] bg-[rgba(238,78,139,0.1)] text-secondary">
                             Expired
                         </span>
                     </div>
-                </div>
-
-                <!-- Card Body -->
-                <div class="p-4 space-y-3">
-                    <!-- Purchase Date -->
-                    <div class="flex items-center justify-between py-2 border-b border-light-pink/20">
-                        <div class="flex items-center flex-1">
-                            <div class="w-8 h-8 bg-light-pink/30 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                                <i class="fas fa-calendar-plus text-primary-dark text-sm"></i>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <p class="text-xs text-cream0 font-medium uppercase tracking-wide">Dibeli</p>
-                                <p class="text-sm font-bold text-dark">
-                                    {{ $order->created_at?->format('d M Y') }}
-                                </p>
-                                <p class="text-xs text-cream0">
-                                    {{ $order->created_at?->diffForHumans() }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Expiry Date -->
-                    <div class="flex items-center justify-between py-2 border-b border-light-pink/20">
-                        <div class="flex items-center flex-1">
-                            <div class="w-8 h-8 bg-light-pink/30 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                                <i class="fas fa-calendar-times text-secondary text-sm"></i>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <p class="text-xs text-cream0 font-medium uppercase tracking-wide">Berakhir</p>
-                                @if($expiredAt)
-                                    <p class="text-sm font-bold text-dark">
-                                        {{ $expiredAt->format('d M Y') }}
-                                    </p>
-                                    <p class="text-xs text-cream0">
-                                        {{ $expiredAt->diffForHumans() }}
-                                    </p>
-                                @else
-                                    <p class="text-sm text-dark/40">-</p>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Action Section -->
-                    <div class="pt-4 pb-2" style="min-height: 80px !important; display: block !important;">
-                        <div class="flex items-center justify-between mb-2 px-1">
-                            <span class="text-[11px] font-semibold uppercase tracking-[0.18em] text-cream0">Aksi Paket</span>
-                            <span class="text-[11px] text-cream0">Klik tombol untuk lihat info paket user</span>
-                        </div>
-                        <button type="button" onclick="openPackageModal({{ $order->id }})"
-                               class="w-full text-white py-4 rounded-xl font-bold text-base shadow-lg"
-                               style="display: flex !important; align-items: center !important; justify-content: center !important; gap: 0.5rem !important; cursor: pointer !important; background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%) !important; border: none !important; min-height: 56px !important; position: relative !important; z-index: 100 !important; box-shadow: 0 12px 24px rgba(122, 43, 74, 0.22) !important;">
-                            <i class="fas fa-eye text-lg"></i>
-                            <span>Lihat Info Paket</span>
-                            <i class="fas fa-arrow-right text-sm"></i>
+                    <div class="flex items-center justify-between font-poppins text-[12px] text-dark/50 mt-2.5 pt-2.5 border-t border-[rgba(238,78,139,0.06)]">
+                        <span>{{ $order->created_at?->format('d M Y') }}</span>
+                        <button onclick="openPackageModal({{ $order->id }})" class="text-primary font-medium hover:text-secondary transition-colors">
+                            <i class="fas fa-eye mr-1"></i>View Package
                         </button>
                     </div>
                 </div>
-            </div>
-        @endforeach
-    </div>
-</div>
+            @endforeach
+        </div>
 
-@endif
+        @if($pastPackages->count() > 5)
+        <div class="text-center mt-5">
+            <button class="font-poppins font-medium text-[14px] text-primary hover:text-secondary transition-colors duration-150 inline-flex items-center gap-1.5">
+                View All History
+                <i class="fas fa-arrow-right text-[12px]"></i>
+            </button>
+        </div>
+        @endif
+    </div>
+    @endif
 
 </main>
 </div>

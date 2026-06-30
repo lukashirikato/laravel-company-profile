@@ -49,6 +49,10 @@ use App\Http\Controllers\QRApiController;
 */
 
 // Landing Page
+Route::get('/join', function () {
+    return view('join');
+})->name('join');
+
 Route::get('/', function () {
     try {
         $schedules = Schedule::with('classModel')

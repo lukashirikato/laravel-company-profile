@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Customer;
+use App\Models\CustomerSchedule;
 
 class ProfileController extends Controller
 {
@@ -76,6 +77,20 @@ class ProfileController extends Controller
         // Get most recent order for display purposes
         $activeOrder = $activeOrders->first();
 
+        // ✅ GET NEXT UPCOMING CLASS from CustomerSchedule
+        $nextClass = CustomerSchedule::with(['schedule.classModel', 'order.package'])
+            ->where('customer_schedules.customer_id', $customer->id)
+            ->where('customer_schedules.status', 'confirmed')
+            ->join('schedules', 'schedules.id', '=', 'customer_schedules.schedule_id')
+            ->where(function ($q) {
+                $q->where('schedules.schedule_date', '>=', now()->toDateString())
+                  ->orWhereNull('schedules.schedule_date');
+            })
+            ->select('customer_schedules.*')
+            ->orderByRaw("COALESCE(schedules.schedule_date, '9999-12-31') ASC")
+            ->orderBy('schedules.class_time')
+            ->first();
+
         return view('member.profile-modal', compact(
             'customer',
             'transactions',
@@ -86,7 +101,8 @@ class ProfileController extends Controller
             'totalQuota',
             'totalClasses',
             'activeOrders',
-            'activeOrder'
+            'activeOrder',
+            'nextClass'
         ));
     }
 

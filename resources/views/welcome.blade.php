@@ -765,8 +765,7 @@
                      class="flex flex-wrap gap-4 justify-center lg:justify-start pt-6">
                     @auth('customer')
                     @else
-                        <a href="https://wa.me/6287785767395?text=Halo%20FTM%20Society%2C%20saya%20tertarik%20untuk%20bergabung%20sebagai%20member." 
-                           target="_blank"
+                        <a href="{{ route('join') }}" 
                            class="group relative inline-flex items-center justify-center gap-3 px-8 py-4 text-lg font-black text-white bg-gradient-to-r from-primary to-secondary rounded-full overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-300 ease-out hover:scale-105 hover:-translate-y-1">
                             <span class="relative z-10 tracking-wide">Join Now</span>
                             <i class="ri-arrow-right-line text-xl relative z-10 transition-all group-hover:translate-x-2 group-hover:scale-110"></i>
@@ -2588,9 +2587,10 @@ document.addEventListener('DOMContentLoaded', function() {
     /* PREMIUM PRICING SECTION — Ultra Premium     */
     /* ═══════════════════════════════════════════ */
     .premium-pricing-section {
-        background: linear-gradient(165deg, #1C1C1C 0%, #2A1520 25%, #1C1C1C 50%, #1A2328 75%, #1C1C1C 100%);
+        background: linear-gradient(100deg, #fffcfd 20%, #fff2f6 60%, #ffe3ec 100%);
         position: relative;
         overflow: hidden;
+        font-family: 'Poppins', sans-serif;
     }
 
     /* Animated mesh gradient overlay */
@@ -2599,9 +2599,8 @@ document.addEventListener('DOMContentLoaded', function() {
         position: absolute;
         inset: 0;
         background:
-            radial-gradient(ellipse 800px 600px at 15% 20%, rgba(238,78,139,0.08) 0%, transparent 60%),
-            radial-gradient(ellipse 600px 800px at 85% 80%, rgba(122,43,74,0.06) 0%, transparent 60%),
-            radial-gradient(ellipse 400px 400px at 50% 50%, rgba(26,122,94,0.04) 0%, transparent 60%);
+            radial-gradient(ellipse 800px 600px at 15% 20%, rgba(238,78,139,0.05) 0%, transparent 60%),
+            radial-gradient(ellipse 600px 800px at 85% 80%, rgba(122,43,74,0.04) 0%, transparent 60%);
         pointer-events: none;
         z-index: 1;
     }
@@ -2619,7 +2618,7 @@ document.addEventListener('DOMContentLoaded', function() {
         left: -50px;
         width: 400px;
         height: 400px;
-        background: radial-gradient(circle, rgba(238,78,139,0.12) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(238,78,139,0.08) 0%, transparent 70%);
         animation: pricing-float-orb 8s ease-in-out infinite;
     }
     .pricing-glow-orb-2 {
@@ -2627,7 +2626,7 @@ document.addEventListener('DOMContentLoaded', function() {
         right: -100px;
         width: 500px;
         height: 500px;
-        background: radial-gradient(circle, rgba(122,43,74,0.10) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(122,43,74,0.06) 0%, transparent 70%);
         animation: pricing-float-orb 10s ease-in-out infinite reverse;
     }
     .pricing-glow-orb-3 {
@@ -2635,7 +2634,7 @@ document.addEventListener('DOMContentLoaded', function() {
         left: 40%;
         width: 300px;
         height: 300px;
-        background: radial-gradient(circle, rgba(26,122,94,0.06) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(244,201,223,0.08) 0%, transparent 70%);
         animation: pricing-float-orb 12s ease-in-out infinite 2s;
     }
 
@@ -2650,19 +2649,19 @@ document.addEventListener('DOMContentLoaded', function() {
         position: absolute;
         inset: 0;
         background-image:
-            linear-gradient(rgba(238,78,139,0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(238,78,139,0.03) 1px, transparent 1px);
+            linear-gradient(rgba(238,78,139,0.02) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(238,78,139,0.02) 1px, transparent 1px);
         background-size: 60px 60px;
         pointer-events: none;
         z-index: 1;
     }
 
-    /* Premium pricing card — glassmorphism dark */
+    /* Premium pricing card — light, feminine glassmorphism */
     .premium-pricing-card {
-        background: rgba(255, 255, 255, 0.04);
+        background: rgba(255, 255, 255, 0.85);
         backdrop-filter: blur(24px);
         -webkit-backdrop-filter: blur(24px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(238,78,139,0.12);
         border-radius: 28px;
         transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         position: relative;
@@ -2671,9 +2670,9 @@ document.addEventListener('DOMContentLoaded', function() {
         flex-direction: column;
         height: 100%;
         box-shadow:
-            0 4px 30px rgba(0, 0, 0, 0.2),
-            0 1px 3px rgba(0, 0, 0, 0.1),
-            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            0 4px 20px rgba(238,78,139,0.06),
+            0 1px 3px rgba(0, 0, 0, 0.02),
+            inset 0 1px 0 rgba(255, 255, 255, 0.8);
     }
 
     /* Shimmer border effect */
@@ -2685,11 +2684,11 @@ document.addEventListener('DOMContentLoaded', function() {
         padding: 1.5px;
         background: linear-gradient(
             135deg,
-            rgba(238,78,139,0.3) 0%,
-            rgba(255,255,255,0.05) 25%,
-            rgba(122,43,74,0.2) 50%,
-            rgba(255,255,255,0.05) 75%,
-            rgba(238,78,139,0.3) 100%
+            rgba(238,78,139,0.2) 0%,
+            rgba(255,255,255,0.6) 25%,
+            rgba(244,201,223,0.3) 50%,
+            rgba(255,255,255,0.6) 75%,
+            rgba(238,78,139,0.2) 100%
         );
         background-size: 300% 300%;
         animation: pricing-shimmer 6s ease infinite;
@@ -2713,7 +2712,7 @@ document.addEventListener('DOMContentLoaded', function() {
         left: -50%;
         width: 200%;
         height: 200%;
-        background: radial-gradient(circle at 30% 30%, rgba(238,78,139,0.08), transparent 50%);
+        background: radial-gradient(circle at 30% 30%, rgba(238,78,139,0.05), transparent 50%);
         opacity: 0;
         transition: opacity 0.6s ease;
         pointer-events: none;
@@ -2722,11 +2721,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     .premium-pricing-card:hover {
         transform: translateY(-5px) scale(1.015);
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.95);
         box-shadow:
-            0 20px 40px rgba(238,78,139,0.15),
-            0 10px 20px rgba(0, 0, 0, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            0 20px 40px rgba(238,78,139,0.12),
+            0 10px 20px rgba(0, 0, 0, 0.04),
+            inset 0 1px 0 rgba(255, 255, 255, 0.9);
         border-color: rgba(238,78,139,0.25);
     }
 
@@ -2735,15 +2734,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     .premium-pricing-card:hover::before {
-        background: linear-gradient(135deg, #EE4E8B, rgba(238,78,139,0.5), #7A2B4A, rgba(238,78,139,0.5), #EE4E8B);
+        background: linear-gradient(135deg, #EE4E8B, rgba(238,78,139,0.3), #F4C9DF, rgba(238,78,139,0.3), #EE4E8B);
         background-size: 300% 300%;
         animation: pricing-shimmer 3s ease infinite;
     }
 
     /* Premium card price tag */
     .pricing-price-tag {
-        background: linear-gradient(135deg, rgba(238,78,139,0.15), rgba(122,43,74,0.1));
-        border: 1px solid rgba(238,78,139,0.2);
+        background: linear-gradient(135deg, #fff0f5 0%, #ffe0ec 100%);
+        border: 1px solid rgba(238,78,139,0.15);
         border-radius: 16px;
         padding: 14px 18px;
         position: relative;
@@ -2760,7 +2759,7 @@ document.addEventListener('DOMContentLoaded', function() {
         right: -50%;
         width: 100%;
         height: 100%;
-        background: radial-gradient(circle, rgba(238,78,139,0.1) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(238,78,139,0.06) 0%, transparent 70%);
         pointer-events: none;
     }
 
@@ -2769,7 +2768,7 @@ document.addEventListener('DOMContentLoaded', function() {
         display: flex;
         gap: 12px;
         padding: 8px 0;
-        border-bottom: 1px solid rgba(255,255,255,0.04);
+        border-bottom: 1px solid rgba(238,78,139,0.06);
         transition: all 0.3s ease;
     }
 
@@ -2785,7 +2784,7 @@ document.addEventListener('DOMContentLoaded', function() {
         width: 32px;
         height: 32px;
         border-radius: 10px;
-        background: linear-gradient(135deg, rgba(238,78,139,0.2), rgba(122,43,74,0.15));
+        background: linear-gradient(135deg, #fff0f5 0%, #ffe0ec 100%);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -2793,12 +2792,14 @@ document.addEventListener('DOMContentLoaded', function() {
         color: #EE4E8B;
         font-size: 14px;
         transition: all 0.3s ease;
+        border: 1px solid rgba(238,78,139,0.1);
     }
 
     .pricing-feature-item:hover .pricing-feature-icon {
         background: linear-gradient(135deg, #EE4E8B, #7A2B4A);
         color: white;
         transform: scale(1.1);
+        border-color: transparent;
     }
 
     /* CTA button premium */
@@ -2856,9 +2857,9 @@ document.addEventListener('DOMContentLoaded', function() {
         font-weight: 700;
         letter-spacing: 0.15em;
         text-transform: uppercase;
-        background: linear-gradient(135deg, rgba(238,78,139,0.2), rgba(122,43,74,0.15));
-        color: #EE4E8B;
-        border: 1px solid rgba(238,78,139,0.2);
+        background: linear-gradient(135deg, #EE4E8B, #7A2B4A);
+        color: white;
+        border: none;
     }
 
     /* Decorative floating elements */
@@ -2878,7 +2879,7 @@ document.addEventListener('DOMContentLoaded', function() {
     .pricing-accent-divider {
         width: 100%;
         height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(238,78,139,0.3), rgba(122,43,74,0.2), transparent);
+        background: linear-gradient(90deg, transparent, rgba(238,78,139,0.2), rgba(244,201,223,0.3), transparent);
         margin: 16px 0;
     }
 
@@ -2907,7 +2908,7 @@ document.addEventListener('DOMContentLoaded', function() {
     /* Sparkle decoration */
     .pricing-sparkle {
         position: absolute;
-        color: rgba(238,78,139,0.3);
+        color: rgba(238,78,139,0.2);
         font-size: 18px;
         pointer-events: none;
         z-index: 2;
@@ -3154,7 +3155,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="text-center lg:text-left mb-14 md:mb-16 max-w-2xl">
 
             <!-- Eyebrow label -->
-            <div class="inline-flex items-center gap-2.5 px-5 py-2.5 mb-8 rounded-full border border-[rgba(238,78,139,0.25)] backdrop-blur-md" style="background: rgba(238,78,139,0.08);">
+            <div class="inline-flex items-center gap-2.5 px-5 py-2.5 mb-8 rounded-full border border-[rgba(238,78,139,0.15)] backdrop-blur-md" style="background: rgba(238,78,139,0.05);">
                 <div class="relative">
                     <div class="w-2.5 h-2.5 bg-primary rounded-full animate-ping absolute"></div>
                     <div class="w-2.5 h-2.5 bg-primary rounded-full relative"></div>
@@ -3170,7 +3171,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 font-weight: 900;
                 font-size: clamp(42px, 5.5vw, 72px);
                 line-height: 1.05;
-                color: #ffffff;
+                color: #2D2D2D;
                 margin-bottom: 24px;
             ">
                 Packages &<br>
@@ -3201,7 +3202,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 font-size: 15px;
                 font-weight: 400;
                 line-height: 1.8;
-                color: rgba(255,255,255,0.55);
+                color: #6B7280;
             " class="mx-auto lg:mx-0">
                 Pilih rencana yang sempurna yang sesuai dengan perjalanan kebugaran dan gaya hidup Anda.
             </p>
@@ -3212,11 +3213,11 @@ document.addEventListener('DOMContentLoaded', function() {
             
             <!-- Nav Left -->
             <button type="button" id="pricingScrollLeft"
-                class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 items-center justify-center w-12 h-12 rounded-full shadow-2xl transition-all duration-300 z-20 group hover:scale-110"
-                style="background: rgba(238,78,139,0.2); border: 1px solid rgba(238,78,139,0.3); backdrop-filter: blur(12px); display:none;"
+                class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 items-center justify-center w-12 h-12 rounded-full shadow-lg transition-all duration-300 z-20 group hover:scale-110"
+                style="background: rgba(255, 255, 255, 0.85); border: 1px solid rgba(238,78,139,0.2); backdrop-filter: blur(12px); display:none;"
                 aria-label="Scroll Left"
                 onclick="pricingSlide(-1)">
-                <i class="ri-arrow-left-s-line text-2xl text-primary group-hover:text-white transition-colors"></i>
+                <i class="ri-arrow-left-s-line text-2xl text-primary group-hover:text-secondary transition-colors"></i>
             </button>
 
             <!-- Cards Container -->
@@ -3241,8 +3242,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                     </span>
                                 </div>
 
-                                {{-- Package Name --}}
-                                <h3 class="font-nord font-bold text-base md:text-lg text-white mb-3 leading-snug group-hover:text-primary transition-colors duration-500" style="min-height: 72px;">
+                                <!-- Package Name -->
+                                <h3 class="font-nord font-bold text-base md:text-lg text-dark mb-3 leading-snug group-hover:text-primary transition-colors duration-500" style="min-height: 72px;">
                                     {{ $package->name }}
                                 </h3>
 
@@ -3253,7 +3254,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                             Rp {{ number_format($package->price, 0, ',', '.') }}
                                         </span>
                                         @if($package->duration_days)
-                                            <p class="text-white/40 text-xs mt-1 font-poppins">Valid {{ $package->duration_days }} hari</p>
+                                            <p class="text-dark/50 text-xs mt-1 font-poppins">Valid {{ $package->duration_days }} hari</p>
                                         @endif
                                     </div>
                                 </div>
@@ -3265,14 +3266,14 @@ document.addEventListener('DOMContentLoaded', function() {
                                         <div class="pricing-feature-icon">
                                             <i class="ri-checkbox-circle-fill"></i>
                                         </div>
-                                        <span class="text-white/70 text-xs font-poppins">{{ $package->quota }} Sessions</span>
+                                        <span class="text-dark/70 text-xs font-poppins">{{ $package->quota }} Sessions</span>
                                     </div>
                                     @else
                                     <div class="pricing-feature-item min-h-[40px] flex items-center">
                                         <div class="pricing-feature-icon">
                                             <i class="ri-checkbox-circle-fill"></i>
                                         </div>
-                                        <span class="text-white/70 text-xs font-poppins">Unlimited Sessions</span>
+                                        <span class="text-dark/70 text-xs font-poppins">Unlimited Sessions</span>
                                     </div>
                                     @endif
 
@@ -3281,7 +3282,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                         <div class="pricing-feature-icon mt-0.5">
                                             <i class="ri-information-fill"></i>
                                         </div>
-                                        <span class="text-white/60 text-xs font-poppins leading-normal pl-1">{{ Str::limit($package->description, 60) }}</span>
+                                        <span class="text-dark/60 text-xs font-poppins leading-normal pl-1">{{ Str::limit($package->description, 60) }}</span>
                                     </div>
                                     @endif
                                 </div>
@@ -3292,16 +3293,14 @@ document.addEventListener('DOMContentLoaded', function() {
                                 {{-- CTA Button --}}
                                 <div class="w-full mt-auto">
                                     @auth('customer')
-                                        <a href="https://wa.me/6287785767395?text=Halo%20FTM%20Society%2C%20saya%20tertarik%20untuk%20daftar%20paket%20{{ urlencode($package->name) }}."
-                                             target="_blank"
+                                        <a href="{{ route('join') }}"
                                              class="pricing-cta-btn pricing-cta-btn-primary">
-                                             <i class="ri-whatsapp-fill mr-1.5"></i> Daftar Sekarang
+                                             <i class="ri-arrow-right-line mr-1.5"></i> Daftar Sekarang
                                         </a>
                                     @else
-                                        <a href="https://wa.me/6287785767395?text=Halo%20FTM%20Society%2C%20saya%20tertarik%20untuk%20daftar%20paket%20{{ urlencode($package->name) }}."
-                                             target="_blank"
+                                        <a href="{{ route('join') }}"
                                              class="pricing-cta-btn pricing-cta-btn-primary">
-                                             <i class="ri-whatsapp-fill mr-1.5"></i> Sign Up Now
+                                             <i class="ri-arrow-right-line mr-1.5"></i> Sign Up Now
                                         </a>
                                     @endauth
                                 </div>
@@ -3316,11 +3315,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             <!-- Nav Right -->
             <button type="button" id="pricingScrollRight"
-                class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 items-center justify-center w-12 h-12 rounded-full shadow-2xl transition-all duration-300 z-20 group hover:scale-110"
-                style="background: rgba(238,78,139,0.2); border: 1px solid rgba(238,78,139,0.3); backdrop-filter: blur(12px);"
+                class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 items-center justify-center w-12 h-12 rounded-full shadow-lg transition-all duration-300 z-20 group hover:scale-110"
+                style="background: rgba(255, 255, 255, 0.85); border: 1px solid rgba(238,78,139,0.2); backdrop-filter: blur(12px);"
                 aria-label="Scroll Right"
                 onclick="pricingSlide(1)">
-                <i class="ri-arrow-right-s-line text-2xl text-primary group-hover:text-white transition-colors"></i>
+                <i class="ri-arrow-right-s-line text-2xl text-primary group-hover:text-secondary transition-colors"></i>
             </button>
 
         </div>
@@ -4039,8 +4038,8 @@ const classSchedules = {
             </p>
         </div>
 
-        {{-- Scrolling Partner Strip --}}
-        <div class="relative overflow-hidden py-3">
+        {{-- Scrolling Partner Strip with Drag --}}
+        <div class="relative overflow-hidden py-3" id="partner-section">
 
             {{-- Fade edges --}}
             <div class="absolute left-0 top-0 bottom-0 w-28 z-10 pointer-events-none"
@@ -4049,23 +4048,19 @@ const classSchedules = {
                  style="background:linear-gradient(to left,cream,transparent);"></div>
 
             {{-- Track --}}
-            <div class="flex items-center partner-scroll-track" style="animation: partnerScroll 24s linear infinite;">
+            <div id="partner-track" class="flex items-center cursor-grab active:cursor-grabbing select-none">
 
                 @php $partners = ['partner 2..png','partner 3..png','partner 4..png','partner 5..png','partner 6..png','partner 1..png']; @endphp
 
                 @foreach(array_merge($partners, $partners) as $p)
-                {{-- Card identik dengan card Classes --}}
                 <div class="group relative flex-shrink-0 mx-4 px-7 py-5 rounded-3xl
                             bg-cream border-2 border-light-pink/60
                             shadow-lg transition-shadow duration-300 hover:shadow-2xl hover:border-secondary/30"
-                     style="cursor:default;">
-                    {{-- Hover tint sama dengan Classes --}}
+                     style="cursor:default; pointer-events:none;">
                     <div class="absolute inset-0 bg-gradient-to-br from-light-pink/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-3xl pointer-events-none"></div>
-                    {{-- Logo BERWARNA (tidak grayscale) --}}
                     <img src="icons/{{ $p }}"
                          class="relative z-10 h-14 object-contain transition-transform duration-300 group-hover:scale-110"
                          style="min-width:80px;" />
-                    {{-- Bottom accent line identik Classes --}}
                     <div class="h-0.5 w-0 group-hover:w-full rounded-full transition-all duration-500 mt-3"
                          style="background:linear-gradient(to right,primary,#7A2B4A,primary);"></div>
                 </div>
@@ -4088,16 +4083,14 @@ const classSchedules = {
         50%      { background-position: 100% 50%; }
     }
 
-    /* Partner scroll */
-    @keyframes partnerScroll {
-        0%   { transform: translateX(0); }
-        100% { transform: translateX(-50%); }
+    /* Partner drag overrides */
+    #partner-track {
+        will-change: transform;
+        user-select: none;
+        -webkit-user-select: none;
     }
-    .partner-scroll-track {
-        animation: partnerScroll 24s linear infinite;
-    }
-    .partner-scroll-track:hover {
-        animation-play-state: paused;
+    #partner-track.dragging {
+        cursor: grabbing !important;
     }
 
     /* Dot indicator */
@@ -4212,213 +4205,526 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
+{{-- ========================================= --}}
+{{-- PARTNER CAROUSEL SCRIPT                   --}}
+{{-- ========================================= --}}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const track      = document.getElementById('partner-track');
+    if (!track) return;
 
+    const speed      = 0.5; // px per frame at 60fps
+    let pos          = 0;
+    let isDragging   = false;
+    let startX       = 0;
+    let dragPos      = 0;
+    let animId       = null;
+    let isPaused     = false;
 
+    // Duplicate content if not already duplicated (ensure seamless loop)
+    // The track already has 2x items via array_merge in Blade, so offset is totalWidth/2
+    const totalWidth = () => track.scrollWidth / 2;
 
+    // ── Auto scroll ──
+    function autoScroll() {
+        if (isPaused) return;
+        pos -= speed;
+        const half = totalWidth();
+        if (pos <= -half) pos += half;
+        track.style.transform = `translateX(${pos}px)`;
+        animId = requestAnimationFrame(autoScroll);
+    }
 
+    function startAuto() {
+        if (animId) cancelAnimationFrame(animId);
+        isPaused = false;
+        animId = requestAnimationFrame(autoScroll);
+    }
+
+    function stopAuto() {
+        isPaused = true;
+        if (animId) {
+            cancelAnimationFrame(animId);
+            animId = null;
+        }
+    }
+
+    // ── Drag ──
+    function onDown(e) {
+        stopAuto();
+        isDragging = true;
+        startX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
+        dragPos = pos;
+        track.classList.add('dragging');
+    }
+
+    function onMove(e) {
+        if (!isDragging) return;
+        const x = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
+        const dx = x - startX;
+        pos = dragPos + dx;
+        const half = totalWidth();
+        if (pos <= -half) pos += half;
+        if (pos > 0) pos -= half;
+        track.style.transform = `translateX(${pos}px)`;
+    }
+
+    function onUp() {
+        if (!isDragging) return;
+        isDragging = false;
+        track.classList.remove('dragging');
+        startAuto();
+    }
+
+    // ── Mouse events ──
+    track.addEventListener('mousedown', onDown);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+
+    // ── Touch events ──
+    track.addEventListener('touchstart', onDown, { passive: true });
+    window.addEventListener('touchmove', onMove, { passive: true });
+    window.addEventListener('touchend', onUp);
+
+    // ── Pause on hover ──
+    track.addEventListener('mouseenter', stopAuto);
+    track.addEventListener('mouseleave', startAuto);
+
+    // ── Init ──
+    startAuto();
+});
+</script>
 
     <!-- Contact Section -->
-    <section id="contact" class="bg-cream" style="padding: 100px 0 110px;">
-      <div class="container mx-auto px-4">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4">
-            Get in Touch
-          </h2>
-          <p class="text-dark/70 max-w-2xl mx-auto">
-            Have questions or want to learn more? We're here to help you on your
-            fitness journey.
-          </p>
-          <div class="w-24 h-1 bg-secondary mx-auto mt-4"></div>
+    <section id="contact" class="relative overflow-hidden py-24 md:py-32 bg-white">
+        <!-- Desktop Building Hero Image (Background) with Organic Curved Mask SVG -->
+        <div class="absolute top-0 right-0 w-[60%] h-[600px] z-0 hidden lg:block overflow-hidden">
+            <img src="{{ asset('images/building_ftm.png') }}" class="w-full h-full object-cover" style="object-position: center 82%;" alt="FTM Society Building" />
+            <!-- Organic S-curve White Separator -->
+            <svg class="absolute inset-0 w-full h-full pointer-events-none z-10" viewBox="0 0 1440 1200" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <filter id="wave-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="-6" dy="2" stdDeviation="15" flood-color="#ff2d75" flood-opacity="0.015" />
+                </filter>
+              </defs>
+              <path d="M 0 0 L 220 0 C 20 350, 380 850, 160 1200 L 0 1200 Z" fill="#ffffff" filter="url(#wave-shadow)" />
+            </svg>
+            <!-- Bottom fade to white -->
+            <div class="absolute bottom-0 left-0 right-0 h-[150px] bg-gradient-to-t from-white via-white/95 to-transparent z-20"></div>
         </div>
-        <div class="flex flex-col md:flex-row gap-10">
-          <div class="md:w-1/2">
-            <div class="bg-cream p-8 rounded-lg shadow-md h-full">
-              <h3 class="text-2xl font-semibold text-primary mb-6">
-                Contact Information
-              </h3>
-              <div class="space-y-6">
-                <div class="flex items-start space-x-4">
-                  <div
-                    class="w-10 h-10 flex items-center justify-center rounded-full bg-primary bg-opacity-10 text-primary flex-shrink-0"
-                  >
-                    <i class="ri-map-pin-line ri-lg"></i>
-                  </div>
-                  <div>
-                    <h4 class="font-medium text-dark">Address</h4>
-                    <p class="text-dark/70">
-                    📍Jakarta Selatan: <br />
-                      Jl. Wijaya 8 No.2, RT.6/RW.7. <br />Melawai, Kec. Kby. Baru, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12160
-                    </p>
-                    📍Jakarta Pusat: <br />
-                      Jl. Cempaka Putih Tengah XIII No.56, RT.4/RW.6. <br />Cemp. Putih Tim., Kec. Cemp. Putih, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10510
-                    </p>
-                  </div>
+        
+        <!-- Mobile/Tablet decorative blur blobs -->
+        <div class="absolute top-1/4 left-10 w-72 h-72 rounded-full bg-[#ff2d75]/[0.015] blur-3xl pointer-events-none z-0 lg:hidden"></div>
+        <div class="absolute bottom-1/3 right-10 w-96 h-96 rounded-full bg-[#ff5d9e]/[0.02] blur-3xl pointer-events-none z-0 lg:hidden"></div>
+
+        <div class="container mx-auto px-6 sm:px-8 lg:px-12 relative z-20">
+            <div class="flex flex-col lg:flex-row gap-16 lg:gap-20">
+                <!-- Left Column: Info & Maps (w-full lg:w-[48%]) -->
+                <div class="w-full lg:w-[48%] space-y-12">
+                    <div class="space-y-4">
+                        <span class="text-[#ff2d75] font-semibold text-xs tracking-[0.25em] uppercase block">
+                            KONTAK KAMI
+                        </span>
+                        <h2 class="text-[#111827] font-instrument text-5xl lg:text-[72px] leading-[1.02] tracking-tight font-light">
+                            Kami Siap<br/>
+                            <span class="text-[#ff2d75] italic">Mendengar & Membantu</span>
+                        </h2>
+                        <p class="text-[#6b7280] text-sm md:text-base leading-relaxed max-w-[520px] pt-2 font-poppins">
+                            Punya pertanyaan, ingin berkolaborasi, atau butuh informasi lebih lanjut? Jangan ragu untuk menghubungi kami. Tim kami akan dengan senang hati membantu Anda.
+                        </p>
+                    </div>
+
+                    <div class="space-y-8 font-poppins">
+                        <!-- Address -->
+                        <div class="flex items-start gap-6">
+                            <div class="w-14 h-14 rounded-full flex items-center justify-center bg-white shadow-[0_8px_30px_rgba(255,45,117,0.06)] border border-[#ececec]/60 text-[#ff2d75] flex-shrink-0">
+                                <i class="ri-map-pin-line text-xl"></i>
+                            </div>
+                            <div class="space-y-1 mt-1">
+                                <h4 class="font-bold text-sm text-[#111827] uppercase tracking-wider">Alamat</h4>
+                                <p class="text-[#6b7280] text-sm leading-relaxed">
+                            <strong class="text-[#111827]">Jakarta Selatan:</strong><br />
+                            Jl. Wijaya 8 No.2, RT.6/RW.7, Melawai,<br />
+                            Kec. Kby. Baru, Kota Jakarta Selatan,<br />
+                            Daerah Khusus Ibukota Jakarta 12160
+                        </p>
+                        <p class="text-[#6b7280] text-sm leading-relaxed mt-2">
+                            <strong class="text-[#111827]">Jakarta Pusat:</strong><br />
+                            Jl. Cempaka Putih Tengah XIII No.56, RT.4/RW.6,<br />
+                            Cemp. Putih Tim., Kec. Cemp. Putih,<br />
+                            Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10510
+                        </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Email -->
+                        <div class="flex items-start gap-6">
+                            <div class="w-14 h-14 rounded-full flex items-center justify-center bg-white shadow-[0_8px_30px_rgba(255,45,117,0.06)] border border-[#ececec]/60 text-[#ff2d75] flex-shrink-0">
+                                <i class="ri-mail-line text-xl"></i>
+                            </div>
+                            <div class="space-y-1 mt-1">
+                                <h4 class="font-bold text-sm text-[#111827] uppercase tracking-wider">Email</h4>
+                                <p class="text-[#6b7280] text-sm">ftmsociety@gmail.com</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Telepon / WA -->
+                        <div class="flex items-start gap-6">
+                            <div class="w-14 h-14 rounded-full flex items-center justify-center bg-white shadow-[0_8px_30px_rgba(255,45,117,0.06)] border border-[#ececec]/60 text-[#ff2d75] flex-shrink-0">
+                                <i class="ri-phone-line text-xl"></i>
+                            </div>
+                            <div class="space-y-1 mt-1">
+                                <h4 class="font-bold text-sm text-[#111827] uppercase tracking-wider">Telepon / WhatsApp</h4>
+                                <p class="text-[#6b7280] text-sm">+62 877-8576-7395</p>
+                                <a href="https://wa.me/6287785767395" target="_blank" class="inline-flex items-center text-[#ff2d75] text-sm hover:text-[#ff5d9e] transition-colors gap-1">
+                                    <i class="ri-whatsapp-line"></i> Message us on WhatsApp
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Jam Operasional -->
+                        <div class="flex items-start gap-6">
+                            <div class="w-14 h-14 rounded-full flex items-center justify-center bg-white shadow-[0_8px_30px_rgba(255,45,117,0.06)] border border-[#ececec]/60 text-[#ff2d75] flex-shrink-0">
+                                <i class="ri-time-line text-xl"></i>
+                            </div>
+                            <div class="space-y-1 mt-1">
+                                <h4 class="font-bold text-sm text-[#111827] uppercase tracking-wider">Jam Operasional</h4>
+                                <div class="text-[#6b7280] text-sm leading-relaxed">
+                                    <p>Senin - Sabtu: 08.00 - 20.00 WIB</p>
+                                    <p>Minggu: 08.00 - 15.00 WIB</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Google Maps Component -->
+                    <div class="relative w-full h-[320px] rounded-[32px] overflow-hidden shadow-[0_15px_40px_rgba(0,0,0,0.03)] border border-[#ececec] group">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.692581073393!2d106.8020902!3d-6.2463343!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f100300812e3%3A0xf433b3d8a738f209!2sFTM%20Society!5e0!3m2!1sen!2sid!4v1716463880000!5m2!1sen!2sid"
+                            width="100%"
+                            height="100%"
+                            style="border:0;"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            class="w-full h-full"
+                        ></iframe>
+                        
+                        <!-- Floating Map Card -->
+                        <div class="absolute top-4 left-4 bg-white rounded-2xl p-4 shadow-[0_12px_36px_rgba(0,0,0,0.06)] border border-[#ececec]/80 max-w-[280px] z-10 flex flex-col gap-2.5 transition-all duration-300">
+                            <div class="flex items-start gap-3">
+                                <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center flex-shrink-0 mt-0.5 overflow-hidden border border-[#ececec]">
+                                    <img src="{{ asset('images/LOGOGRAM PINK.png') }}" class="w-full h-full object-cover" alt="FTM Society Logo">
+                                </div>
+                                <div class="font-poppins">
+                                    <h5 class="font-bold text-xs text-[#111827]">FTM Society</h5>
+                                    <p class="text-[10px] text-[#6b7280] leading-normal mt-0.5 whitespace-pre-line">Jl. Wijaya 8 No.2, RT.6/RW.7, Melawai
+Kec. Kby. Baru, Jakarta Selatan 12160</p>
+                                </div>
+                            </div>
+                            <a href="https://maps.google.com/?q=FTM+Society+Jakarta+Selatan" target="_blank" class="text-[11px] text-[#ff2d75] font-bold hover:text-[#ff5d9e] flex items-center gap-1 transition-colors">
+                                Lihat di Google Maps <i class="ri-arrow-right-line"></i>
+                            </a>
+                        </div>
+
+                        <!-- Absolute Map Pin in Center to Replicate Mockup -->
+                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <div class="relative -top-4">
+                                <i class="ri-map-pin-2-fill text-[#ff2d75] text-4xl drop-shadow-[0_4px_10px_rgba(255,45,117,0.35)] animate-bounce" style="animation-duration: 2s;"></i>
+                                <div class="w-2.5 h-1 bg-black/15 rounded-full blur-[1px] mx-auto mt-0.5 animate-pulse"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- End Left Column -->
+
+                <!-- Right Column: Floating Contact Form (w-full lg:w-[52%]) -->
+                <div class="w-full lg:w-[52%] relative">
+                    <!-- Mobile Building Image (shown only on mobile/tablet) -->
+                    <div class="w-full rounded-[40px] overflow-hidden shadow-lg h-[360px] relative lg:hidden mb-8">
+                        <img src="{{ asset('images/building_ftm.png') }}" class="w-full h-full object-cover" style="object-position: center 82%;" alt="FTM Society Building" />
+                        <div class="absolute bottom-0 left-0 right-0 h-[100px] bg-gradient-to-t from-white to-transparent z-10"></div>
+                    </div>
+                    
+                    <!-- Floating Contact Form Card -->
+                    <div class="relative z-10 bg-white rounded-[36px] shadow-[0_25px_60px_rgba(0,0,0,0.03),0_15px_40px_rgba(255,45,117,0.015)] border border-[#ececec]/80 p-8 sm:p-10 lg:p-12 lg:mt-[180px]">
+                        <!-- Email icon badge centered on top border -->
+                        <div class="w-14 h-14 rounded-full bg-[#ff2d75]/10 flex items-center justify-center mx-auto -mt-16 sm:-mt-[60px] mb-6 shadow-[0_8px_20px_rgba(255,45,117,0.15)] border-4 border-white">
+                            <i class="ri-mail-fill text-[#ff2d75] text-xl"></i>
+                        </div>
+                        
+                        <h3 class="text-3xl font-medium font-instrument text-[#111827] text-center leading-tight">
+                            Kirim Pesan untuk Kami
+                        </h3>
+                        <p class="text-sm text-[#6b7280] text-center mt-2 max-w-sm mx-auto leading-relaxed font-poppins">
+                            Isi formulir di bawah ini dan tim kami akan segera merespons pesan Anda.
+                        </p>
+                        
+                        <!-- Flash Message Alert -->
+                        @if (session('success'))
+                        <div class="mt-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-2xl flex items-start gap-3 shadow-[0_4px_12px_rgba(0,0,0,0.01)] animate-fadeIn">
+                            <i class="ri-checkbox-circle-fill text-xl text-green-500 mt-0.5"></i>
+                            <div class="font-poppins">
+                                <h5 class="font-bold text-sm">Berhasil!</h5>
+                                <p class="text-xs text-green-600 mt-0.5">{{ session('success') }}</p>
+                            </div>
+                        </div>
+                        @endif
+                        
+                        <form class="space-y-5 mt-8 font-poppins" method="POST" action="{{ route('feedback.store') }}">
+                            @csrf
+                            
+                            <!-- Nama Lengkap -->
+                            <div class="space-y-2">
+                                <label for="contact-name" class="block text-xs font-bold text-[#111827] uppercase tracking-wider pl-1">Nama Lengkap</label>
+                                <input
+                                    type="text"
+                                    id="contact-name"
+                                    name="name"
+                                    class="w-full h-14 px-6 bg-white border border-[#ececec] rounded-[18px] text-sm text-[#111827] placeholder-[#a3a3a3] focus:border-[#ff2d75] focus:ring-4 focus:ring-[#ff2d75]/5 focus:shadow-[0_8px_25px_rgba(255,45,117,0.05)] focus:outline-none transition-all duration-300"
+                                    placeholder="Masukkan nama lengkap Anda"
+                                    required
+                                />
+                            </div>
+                            
+                            <!-- Email -->
+                            <div class="space-y-2">
+                                <label for="contact-email" class="block text-xs font-bold text-[#111827] uppercase tracking-wider pl-1">Email</label>
+                                <input
+                                    type="email"
+                                    id="contact-email"
+                                    name="email"
+                                    class="w-full h-14 px-6 bg-white border border-[#ececec] rounded-[18px] text-sm text-[#111827] placeholder-[#a3a3a3] focus:border-[#ff2d75] focus:ring-4 focus:ring-[#ff2d75]/5 focus:shadow-[0_8px_25px_rgba(255,45,117,0.05)] focus:outline-none transition-all duration-300"
+                                    placeholder="Masukkan email aktif Anda"
+                                    required
+                                />
+                            </div>
+                            
+                            <!-- Subjek -->
+                            <div class="space-y-2">
+                                <label for="subject" class="block text-xs font-bold text-[#111827] uppercase tracking-wider pl-1">Subjek</label>
+                                <div class="relative">
+                                    <select
+                                        id="subject"
+                                        name="subject"
+                                        class="w-full h-14 px-6 bg-white border border-[#ececec] rounded-[18px] text-sm text-[#111827] focus:border-[#ff2d75] focus:ring-4 focus:ring-[#ff2d75]/5 focus:shadow-[0_8px_25px_rgba(255,45,117,0.05)] focus:outline-none transition-all duration-300 appearance-none cursor-pointer"
+                                        required
+                                    >
+                                        <option value="" selected disabled>Pilih subjek pesan</option>
+                                        <option value="membership">Membership Inquiry</option>
+                                        <option value="classes">Class Information</option>
+                                        <option value="trial">Free Trial</option>
+                                        <option value="feedback">Feedback</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-6 pointer-events-none text-[#6b7280]">
+                                        <i class="ri-arrow-down-s-line text-lg"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Pesan -->
+                            <div class="space-y-2">
+                                <label for="message" class="block text-xs font-bold text-[#111827] uppercase tracking-wider pl-1">Pesan</label>
+                                <textarea
+                                    id="message"
+                                    name="message"
+                                    class="w-full h-[180px] py-4 px-6 bg-white border border-[#ececec] rounded-[18px] text-sm text-[#111827] placeholder-[#a3a3a3] focus:border-[#ff2d75] focus:ring-4 focus:ring-[#ff2d75]/5 focus:shadow-[0_8px_25px_rgba(255,45,117,0.05)] focus:outline-none transition-all duration-300 resize-none"
+                                    placeholder="Tulis pesan Anda di sini..."
+                                    required
+                                ></textarea>
+                            </div>
+                            
+                            <!-- Submit Button -->
+                            <button
+                                type="submit"
+                                class="w-full h-14 bg-gradient-to-r from-[#ff2d75] to-[#ff5d9e] text-white font-bold rounded-full hover:shadow-[0_12px_30px_rgba(255,45,117,0.3)] hover:brightness-110 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 group mt-2"
+                            >
+                                <span>Kirim Pesan</span>
+                                <i class="ri-arrow-right-line text-lg transition-transform duration-300 group-hover:translate-x-1"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div> <!-- End Right Column -->
+            </div> <!-- End Columns Grid -->
+
+            <!-- Bottom Section: Social Media & FAQ Cards -->
+            <div class="mt-32 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+                <!-- Left Card: Social Media -->
+                <div class="bg-white rounded-[32px] shadow-[0_15px_40px_rgba(0,0,0,0.02)] border border-[#ececec]/60 p-8 sm:p-10 lg:p-12 space-y-6">
+                    <div>
+                        <h3 class="text-3xl font-medium font-instrument text-[#111827]">
+                            Terhubung Bersama Kami
+                        </h3>
+                        <p class="text-sm text-[#6b7280] mt-2 leading-relaxed font-poppins">
+                            Ikuti kami di media sosial untuk mendapatkan update terbaru, inspirasi, dan kegiatan menarik.
+                        </p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 font-poppins pt-2">
+                        <!-- Instagram -->
+                        <a href="https://www.instagram.com/ftmsociety.id" target="_blank" class="flex items-center justify-between p-4 bg-white rounded-2xl border border-[#ececec] hover:shadow-[0_8px_25px_rgba(255,45,117,0.04)] hover:-translate-y-0.5 hover:border-[#ff2d75]/20 transition-all duration-300 group">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] text-white">
+                                    <i class="ri-instagram-line text-lg"></i>
+                                </div>
+                                <span class="font-semibold text-xs text-[#111827] group-hover:text-[#ff2d75] transition-colors duration-300">@ftmsociety.id</span>
+                            </div>
+                            <i class="ri-arrow-right-line text-[#6b7280] group-hover:text-[#ff2d75] group-hover:translate-x-0.5 transition-all duration-300 text-sm"></i>
+                        </a>
+                        
+                        <!-- Facebook -->
+                        <a href="https://www.facebook.com/share/129JRu5DDXa/" target="_blank" class="flex items-center justify-between p-4 bg-white rounded-2xl border border-[#ececec] hover:shadow-[0_8px_25px_rgba(255,45,117,0.04)] hover:-translate-y-0.5 hover:border-[#ff2d75]/20 transition-all duration-300 group">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center bg-[#1877f2] text-white">
+                                    <i class="ri-facebook-fill text-lg"></i>
+                                </div>
+                                <span class="font-semibold text-xs text-[#111827] group-hover:text-[#ff2d75] transition-colors duration-300">FTM Society</span>
+                            </div>
+                            <i class="ri-arrow-right-line text-[#6b7280] group-hover:text-[#ff2d75] group-hover:translate-x-0.5 transition-all duration-300 text-sm"></i>
+                        </a>
+                        
+                        <!-- TikTok -->
+                        <a href="https://www.tiktok.com/@ftm.society" target="_blank" class="flex items-center justify-between p-4 bg-white rounded-2xl border border-[#ececec] hover:shadow-[0_8px_25px_rgba(255,45,117,0.04)] hover:-translate-y-0.5 hover:border-[#ff2d75]/20 transition-all duration-300 group">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center bg-[#111827] text-white">
+                                    <i class="ri-tiktok-line text-lg"></i>
+                                </div>
+                                <span class="font-semibold text-xs text-[#111827] group-hover:text-[#ff2d75] transition-colors duration-300">@ftm.society</span>
+                            </div>
+                            <i class="ri-arrow-right-line text-[#6b7280] group-hover:text-[#ff2d75] group-hover:translate-x-0.5 transition-all duration-300 text-sm"></i>
+                        </a>
+                        
+                        <!-- YouTube -->
+                        <a href="https://www.youtube.com/@ftmsociety" target="_blank" class="flex items-center justify-between p-4 bg-white rounded-2xl border border-[#ececec] hover:shadow-[0_8px_25px_rgba(255,45,117,0.04)] hover:-translate-y-0.5 hover:border-[#ff2d75]/20 transition-all duration-300 group">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center bg-[#ff0000] text-white">
+                                    <i class="ri-youtube-fill text-lg"></i>
+                                </div>
+                                <span class="font-semibold text-xs text-[#111827] group-hover:text-[#ff2d75] transition-colors duration-300">FTM Society</span>
+                            </div>
+                            <i class="ri-arrow-right-line text-[#6b7280] group-hover:text-[#ff2d75] group-hover:translate-x-0.5 transition-all duration-300 text-sm"></i>
+                        </a>
+                    </div>
                 </div>
-                <div class="flex items-start space-x-4">
-                  <div
-                    class="w-10 h-10 flex items-center justify-center rounded-full bg-primary bg-opacity-10 text-primary flex-shrink-0"
-                  >
-                    <i class="ri-time-line ri-lg"></i>
-                  </div>
-                  <div>
-                    <h4 class="font-medium text-dark">Opening Hours</h4>
-                    <p class="text-dark/70">
-                      Monday - Saturday: 08:00 AM - 20:00 PM <br />Sunday: 08:00 AM -15:00 AM
-                    </p>
-                  </div>
+                
+                <!-- Right Card: FAQ -->
+                <div class="bg-white rounded-[32px] shadow-[0_15px_40px_rgba(0,0,0,0.02)] border border-[#ececec]/60 p-8 sm:p-10 lg:p-12 space-y-6">
+                    <div>
+                        <h3 class="text-3xl font-medium font-instrument text-[#111827]">
+                            Pertanyaan yang Sering Diajukan
+                        </h3>
+                        
+                        <div class="space-y-3 mt-6 font-poppins">
+                            <!-- FAQ 1 -->
+                            <div class="faq-item bg-white border border-[#ececec] rounded-[18px] overflow-hidden transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.01)]">
+                                <button class="faq-toggle w-full h-[60px] md:h-[64px] flex justify-between items-center text-left px-6 focus:outline-none group">
+                                    <span class="font-semibold text-xs md:text-sm text-[#111827] group-hover:text-[#ff2d75] transition-colors duration-200">Bagaimana cara bergabung dengan program di FTM Society?</span>
+                                    <span class="faq-icon text-[#ff2d75] font-light text-2xl pl-4 transition-transform duration-300 select-none">+</span>
+                                </button>
+                                <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out px-6">
+                                    <p class="text-xs md:text-sm text-[#6b7280] pb-4 leading-relaxed">
+                                        Anda dapat bergabung dengan mengisi formulir pendaftaran online di halaman <a href="{{ route('join') }}" class="text-primary hover:text-secondary underline underline-offset-2">Daftar Sekarang</a>. Setelah mendaftar, Anda akan menerima kode OTP via WhatsApp untuk verifikasi nomor Anda. Atau Anda dapat menghubungi WhatsApp customer service kami untuk dibantu proses registrasinya.
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <!-- FAQ 2 -->
+                            <div class="faq-item bg-white border border-[#ececec] rounded-[18px] overflow-hidden transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.01)]">
+                                <button class="faq-toggle w-full h-[60px] md:h-[64px] flex justify-between items-center text-left px-6 focus:outline-none group">
+                                    <span class="font-semibold text-xs md:text-sm text-[#111827] group-hover:text-[#ff2d75] transition-colors duration-200">Apakah program di FTM Society berbayar?</span>
+                                    <span class="faq-icon text-[#ff2d75] font-light text-2xl pl-4 transition-transform duration-300 select-none">+</span>
+                                </button>
+                                <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out px-6">
+                                    <p class="text-xs md:text-sm text-[#6b7280] pb-4 leading-relaxed">
+                                        Ya, kami menyediakan berbagai program membership dan kelas berbayar. Namun, kami juga sering mengadakan program gratis atau berdonasi untuk komunitas.
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <!-- FAQ 3 -->
+                            <div class="faq-item bg-white border border-[#ececec] rounded-[18px] overflow-hidden transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.01)]">
+                                <button class="faq-toggle w-full h-[60px] md:h-[64px] flex justify-between items-center text-left px-6 focus:outline-none group">
+                                    <span class="font-semibold text-xs md:text-sm text-[#111827] group-hover:text-[#ff2d75] transition-colors duration-200">Bagaimana jika saya ingin berkolaborasi atau menjadi donatur?</span>
+                                    <span class="faq-icon text-[#ff2d75] font-light text-2xl pl-4 transition-transform duration-300 select-none">+</span>
+                                </button>
+                                <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out px-6">
+                                    <p class="text-xs md:text-sm text-[#6b7280] pb-4 leading-relaxed">
+                                        Kami sangat terbuka untuk kolaborasi dan donasi. Anda dapat menghubungi kami melalui formulir kontak di sebelah kanan atau langsung mengirim pesan ke email halo@ftmsociety.id.
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <!-- FAQ 4 -->
+                            <div class="faq-item bg-white border border-[#ececec] rounded-[18px] overflow-hidden transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.01)]">
+                                <button class="faq-toggle w-full h-[60px] md:h-[64px] flex justify-between items-center text-left px-6 focus:outline-none group">
+                                    <span class="font-semibold text-xs md:text-sm text-[#111827] group-hover:text-[#ff2d75] transition-colors duration-200">Di mana lokasi kegiatan FTM Society?</span>
+                                    <span class="faq-icon text-[#ff2d75] font-light text-2xl pl-4 transition-transform duration-300 select-none">+</span>
+                                </button>
+                                <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out px-6">
+                                    <p class="text-xs md:text-sm text-[#6b7280] pb-4 leading-relaxed">
+                                        Kegiatan kami berpusat di cabang Jakarta Selatan (Melawai, Kebayoran Baru) dan Jakarta Pusat (Cempaka Putih). Detail alamat lengkap dapat dilihat pada informasi kontak kami.
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <!-- FAQ 5 -->
+                            <div class="faq-item bg-white border border-[#ececec] rounded-[18px] overflow-hidden transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.01)]">
+                                <button class="faq-toggle w-full h-[60px] md:h-[64px] flex justify-between items-center text-left px-6 focus:outline-none group">
+                                    <span class="font-semibold text-xs md:text-sm text-[#111827] group-hover:text-[#ff2d75] transition-colors duration-200">Bagaimana cara mendapatkan informasi terbaru?</span>
+                                    <span class="faq-icon text-[#ff2d75] font-light text-2xl pl-4 transition-transform duration-300 select-none">+</span>
+                                </button>
+                                <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out px-6">
+                                    <p class="text-xs md:text-sm text-[#6b7280] pb-4 leading-relaxed">
+                                        Ikuti akun Instagram kami @ftmsociety dan berlangganan newsletter di bagian bawah halaman ini untuk mendapatkan informasi ter-update secara berkala.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-start pt-4 font-poppins">
+                        <a href="#faq" class="px-8 py-3.5 border border-[#ff2d75] text-[#ff2d75] hover:bg-[#ff2d75]/5 text-sm font-bold rounded-full transition-all duration-300 flex items-center justify-center gap-2 group">
+                            <span>Lihat Semua FAQ</span>
+                            <i class="ri-arrow-right-line transition-transform duration-300 group-hover:translate-x-1"></i>
+                        </a>
+                    </div>
                 </div>
-                <div class="flex items-start space-x-4">
-                  <div
-                    class="w-10 h-10 flex items-center justify-center rounded-full bg-primary bg-opacity-10 text-primary flex-shrink-0"
-                  >
-                    <i class="ri-phone-line ri-lg"></i>
-                  </div>
-                  <div>
-                    <h4 class="font-medium text-dark">Phone & WhatsApp</h4>
-                    <p class="text-dark/70">+62 877-8576-7395</p>
-                    <a
-                     href="https://wa.me/6287785767395"
-                      class="inline-flex items-center text-secondary mt-2 hover:underline"
-                    >
-                      <i class="ri-whatsapp-line mr-2"></i> Message us on
-                      WhatsApp
-                    </a>
-                  </div>
-                </div>
-                <div class="flex items-start space-x-4">
-                  <div
-                    class="w-10 h-10 flex items-center justify-center rounded-full bg-primary bg-opacity-10 text-primary flex-shrink-0"
-                  >
-                    <i class="ri-mail-line ri-lg"></i>
-                  </div>
-                  <div>
-                    <h4 class="font-medium text-dark">Email</h4>
-                    <p class="text-dark/70">ftmsociety@gmail.com</p>
-                  </div>
-                </div>
-              </div>
-              <div class="mt-8">
-                <h4 class="font-medium text-dark mb-4">Follow Us</h4>
-                <div class="flex space-x-4">
-                  <a
-                    href="https://www.instagram.com/ftmsociety.id"
-                    class="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white 
-                    hover:bg-secondary hover:scale-105 hover:shadow-lg 
-                    transition-all text-sm font-semibold"
-                  >
-                    <i class="ri-instagram-line"></i>
-                  </a>
-                  <a
-                    href="https://www.facebook.com/share/129JRu5DDXa/"
-                    class="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white 
-                    hover:bg-secondary hover:scale-105 hover:shadow-lg 
-                    transition-all text-sm font-semibold"
-                  >
-                    <i class="ri-facebook-fill"></i>
-                  </a>
-                <a
-                    href="https://www.tiktok.com/@ftm.society"
-                    class="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white 
-                    hover:bg-secondary hover:scale-105 hover:shadow-lg 
-                    transition-all text-sm font-semibold"
-                    target="_blank" rel="noopener"
-                  >
-                    <i class="ri-tiktok-line"></i>
-                  </a>
-                </div>
-              </div>
             </div>
-          </div>
-          <div class="md:w-1/2">
-            <div class="bg-cream p-8 rounded-lg shadow-md">
-              <h3 class="text-2xl font-semibold text-primary mb-6">
-                Send Us a Message
-              </h3>
-              <form class="space-y-6" method="POST" action="{{ route('feedback.store') }}">
-                @csrf
-                <div>
-                  <label for="contact-name" class="block text-dark mb-2">Your Name</label>
-                  <input
-                    type="text"
-                    id="contact-name"
-                    name="name"
-                    class="w-full px-4 py-3 rounded border border-light-pink focus:border-secondary"
-                    placeholder="Your name"
-                    required
-                  />
-                </div>
-                <div>
-                  <label for="contact-email" class="block text-dark mb-2">Email Address</label>
-                  <input
-                    type="email"
-                    id="contact-email"
-                    name="email"
-                    class="w-full px-4 py-3 rounded border border-light-pink focus:border-secondary"
-                    placeholder="your.email@example.com"
-                    required
-                  />
-                </div>
-                <div>
-                  <label for="subject" class="block text-dark mb-2">Subject</label>
-                  <select
-                    id="subject"
-                    name="subject"
-                    class="w-full px-4 py-3 rounded border border-light-pink focus:border-secondary pr-8 appearance-none bg-cream"
-                    required
-                  >
-                    <option value="" selected disabled>Select a subject</option>
-                    <option value="membership">Membership Inquiry</option>
-                    <option value="classes">Class Information</option>
-                    <option value="trial">Free Trial</option>
-                    <option value="feedback">Feedback</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                <div>
-                  <label for="message" class="block text-dark mb-2">Your Message</label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows="5"
-                    class="w-full px-4 py-3 rounded border border-light-pink focus:border-secondary"
-                    placeholder="How can we help you?"
-                    required
-                  ></textarea>
-                </div>
-                <button
-                  type="submit"
-                class="w-full py-3 text-white bg-primary rounded-button 
-                hover:bg-secondary hover:scale-105 hover:shadow-lg 
-                transition-all duration-200 text-sm font-semibold text-center shadow-lg">     
-                  Send Message
-                </button>
-              </form>
-            </div>
-          </div>
         </div>
-      </div>
-          <!-- filepath: resources/views/dashboard.blade.php -->
-        <!-- filepath: resources/views/dashboard.blade.php -->
-<section id="maps" class="py-12 bg-cream">
-  <div class="container mx-auto px-4">
-    <div class="rounded-lg overflow-hidden shadow-md h-80">
-      <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.692581073393!2d106.8020902!3d-6.2463343!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f100300812e3%3A0xf433b3d8a738f209!2sFTM%20Society!5e0!3m2!1sen!2sid!4v1716463880000!5m2!1sen!2sid"
-        width="100%"
-        height="100%"
-        style="border:0;"
-        allowfullscreen=""
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-        class="w-full h-full"
-      ></iframe>
-    </div>
-  </div>
-</section>
+    </section>
 
-</main>
+    <!-- Accordion Toggle JavaScript -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggles = document.querySelectorAll('.faq-toggle');
+        toggles.forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const content = this.nextElementSibling;
+                const icon = this.querySelector('.faq-icon');
+                
+                // Close other items
+                toggles.forEach(other => {
+                    if (other !== toggle && other.classList.contains('active')) {
+                        other.classList.remove('active');
+                        other.nextElementSibling.style.maxHeight = '0px';
+                        other.querySelector('.faq-icon').style.transform = 'rotate(0deg)';
+                    }
+                });
+                
+                this.classList.toggle('active');
+                if (this.classList.contains('active')) {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    icon.style.transform = 'rotate(45deg)';
+                } else {
+                    content.style.maxHeight = '0px';
+                    icon.style.transform = 'rotate(0deg)';
+                }
+            });
+        });
+    });
+    </script>
 
-   <!-- Footer -->
+
 <footer class="relative bg-gradient-to-br from-burnt-cherry via-secondary to-burnt-cherry text-white pt-16 pb-8 overflow-hidden">
 
   <!-- Footer decorative ornaments -->
