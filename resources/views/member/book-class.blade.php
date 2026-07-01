@@ -882,10 +882,7 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-4">
-                    <div class="w-11 h-11 rounded-full bg-white flex items-center justify-center shadow-sm border border-[rgba(238,78,139,0.2)] text-secondary relative transition-all duration-200 hover:border-primary/40 hover:shadow-md cursor-pointer">
-                        <i class="fas fa-bell text-sm"></i>
-                        <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-primary rounded-full border-2 border-white"></span>
-                    </div>
+
                     @php $initial = strtoupper(substr($customer->name ?? 'M', 0, 1)); @endphp
                     <div class="w-11 h-11 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-nord font-bold text-sm shadow-md border-2 border-white flex-shrink-0">
                         {{ $initial }}
@@ -955,18 +952,9 @@
         </div>
 
         {{-- DATE SELECTOR --}}
-        @php
-            $today = \Carbon\Carbon::today();
-            $weekStart = $today->copy()->startOfWeek();
-            $weekDates = [];
-            for ($i = 0; $i < 7; $i++) {
-                $weekDates[] = $weekStart->copy()->addDays($i);
-            }
-            $selectedDate = request('date', $today->format('Y-m-d'));
-        @endphp
         <div class="mb-8">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="font-nord font-semibold text-[17px] text-dark">SELECT DATE <span class="font-poppins font-normal text-dark/40 text-[15px]">� {{ $today->isoFormat('MMMM YYYY') }}</span></h2>
+                <h2 class="font-nord font-semibold text-[17px] text-dark">SELECT DATE <span id="selected-date-label" class="font-poppins font-normal text-dark/40 text-[15px]">&mdash; {{ \Carbon\Carbon::parse($selectedDate)->format('l, d M Y') }}</span></h2>
                 <div class="flex items-center gap-2">
                     <button onclick="changeWeek(-1)" class="w-8 h-8 rounded-lg bg-white border border-[rgba(238,78,139,0.15)] flex items-center justify-center text-dark/50 hover:text-primary hover:border-primary transition-all">
                         <i class="fas fa-chevron-left text-xs"></i>
@@ -976,116 +964,92 @@
                     </button>
                 </div>
             </div>
-            <div id="week-dates" class="grid grid-cols-7 gap-2">
-                @foreach($weekDates as $date)
-                    @php
-                        $isSelected = $date->format('Y-m-d') === $selectedDate;
-                        $isToday = $date->isToday();
-                    @endphp
-                    <button onclick="selectDate('{{ $date->format('Y-m-d') }}')"
-                        class="rounded-xl p-3 text-center transition-all duration-200 {{ $isSelected ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-white border border-[rgba(238,78,139,0.1)] text-dark hover:border-primary/30 hover:shadow-sm' }}">
-                        <p class="font-poppins text-[10px] font-semibold uppercase tracking-wider {{ $isSelected ? 'text-white/70' : 'text-dark/40' }}">{{ $date->isoFormat('dd') }}</p>
-                        <p class="font-nord font-bold text-lg leading-tight mt-0.5">{{ $date->format('d') }}</p>
-                        @if($isToday)
-                            <p class="font-poppins text-[9px] mt-0.5 font-semibold {{ $isSelected ? 'text-white/70' : 'text-primary' }}">TODAY</p>
-                        @endif
-                    </button>
-                @endforeach
-            </div>
+            <div id="week-dates" class="grid grid-cols-7 gap-2"></div>
         </div>
 
         {{-- FILTER BAR --}}
+        @php
+            $currentClassType = $filters['class_type'] ?? '';
+            $currentInstructor = $filters['instructor'] ?? '';
+            $currentTime = $filters['time'] ?? '';
+        @endphp
         <div class="flex flex-wrap items-center gap-3 mb-8">
-            <button class="px-4 py-2 rounded-xl bg-primary text-white font-poppins font-medium text-[12px] shadow-sm hover:shadow-md transition-all">Class Type: ALL</button>
-            <button class="px-4 py-2 rounded-xl bg-white border border-[rgba(238,78,139,0.15)] text-dark/60 font-poppins font-medium text-[12px] hover:border-primary/30 hover:text-dark transition-all">Instructor</button>
-            <button class="px-4 py-2 rounded-xl bg-white border border-[rgba(238,78,139,0.15)] text-dark/60 font-poppins font-medium text-[12px] hover:border-primary/30 hover:text-dark transition-all">Time</button>
-            <a href="{{ route('member.book') }}" class="ml-auto font-poppins text-[12px] text-primary hover:text-secondary font-medium transition-colors">RESET</a>
+            {{-- CLASS TYPE FILTER --}}
+            <div class="relative filter-dropdown" data-filter="class_type">
+                <button onclick="toggleFilterDropdown(this)"
+                    class="px-4 py-2 rounded-xl font-poppins font-medium text-[12px] shadow-sm hover:shadow-md transition-all {{ $currentClassType ? 'bg-primary text-white' : 'bg-white border border-[rgba(238,78,139,0.15)] text-dark/60 hover:border-primary/30 hover:text-dark' }}">
+                    Class Type: <span class="font-semibold filter-label">{{ $currentClassType ?: 'ALL' }}</span>
+                    <i class="fas fa-chevron-down ml-1.5 text-[10px]"></i>
+                </button>
+                <div class="absolute top-full left-0 mt-1.5 w-48 bg-white rounded-xl shadow-lg border border-[rgba(238,78,139,0.1)] py-1.5 z-50 hidden" data-filter-options="class_type">
+                    <button data-value="" class="w-full text-left px-4 py-2 font-poppins text-[12px] hover:bg-[rgba(238,78,139,0.05)] transition-colors {{ !$currentClassType ? 'text-primary font-semibold' : 'text-dark/60' }}">
+                        All Classes
+                    </button>
+                    @foreach($filterOptions['class_types'] as $type)
+                        <button data-value="{{ $type }}"
+                            class="w-full text-left px-4 py-2 font-poppins text-[12px] hover:bg-[rgba(238,78,139,0.05)] transition-colors {{ $currentClassType === $type ? 'text-primary font-semibold' : 'text-dark/60' }}">
+                            {{ $type }}
+                        </button>
+                    @endforeach
+                </div>
+            </div>
+
+            {{-- INSTRUCTOR FILTER --}}
+            <div class="relative filter-dropdown" data-filter="instructor">
+                <button onclick="toggleFilterDropdown(this)"
+                    class="px-4 py-2 rounded-xl font-poppins font-medium text-[12px] shadow-sm hover:shadow-md transition-all {{ $currentInstructor ? 'bg-primary text-white' : 'bg-white border border-[rgba(238,78,139,0.15)] text-dark/60 hover:border-primary/30 hover:text-dark' }}">
+                    Instructor: <span class="font-semibold filter-label">{{ $currentInstructor ?: 'ALL' }}</span>
+                    <i class="fas fa-chevron-down ml-1.5 text-[10px]"></i>
+                </button>
+                <div class="absolute top-full left-0 mt-1.5 w-48 bg-white rounded-xl shadow-lg border border-[rgba(238,78,139,0.1)] py-1.5 z-50 hidden" data-filter-options="instructor">
+                    <button data-value="" class="w-full text-left px-4 py-2 font-poppins text-[12px] hover:bg-[rgba(238,78,139,0.05)] transition-colors {{ !$currentInstructor ? 'text-primary font-semibold' : 'text-dark/60' }}">
+                        All Instructors
+                    </button>
+                    @foreach($filterOptions['instructors'] as $instructor)
+                        <button data-value="{{ $instructor }}"
+                            class="w-full text-left px-4 py-2 font-poppins text-[12px] hover:bg-[rgba(238,78,139,0.05)] transition-colors {{ $currentInstructor === $instructor ? 'text-primary font-semibold' : 'text-dark/60' }}">
+                            {{ $instructor }}
+                        </button>
+                    @endforeach
+                </div>
+            </div>
+
+            {{-- TIME FILTER --}}
+            <div class="relative filter-dropdown" data-filter="time">
+                <button onclick="toggleFilterDropdown(this)"
+                    class="px-4 py-2 rounded-xl font-poppins font-medium text-[12px] shadow-sm hover:shadow-md transition-all {{ $currentTime ? 'bg-primary text-white' : 'bg-white border border-[rgba(238,78,139,0.15)] text-dark/60 hover:border-primary/30 hover:text-dark' }}">
+                    Time: <span class="font-semibold filter-label">{{ $currentTime ? ucfirst($currentTime) : 'ALL' }}</span>
+                    <i class="fas fa-chevron-down ml-1.5 text-[10px]"></i>
+                </button>
+                <div class="absolute top-full left-0 mt-1.5 w-52 bg-white rounded-xl shadow-lg border border-[rgba(238,78,139,0.1)] py-1.5 z-50 hidden" data-filter-options="time">
+                    <button data-value="" class="w-full text-left px-4 py-2 font-poppins text-[12px] hover:bg-[rgba(238,78,139,0.05)] transition-colors {{ !$currentTime ? 'text-primary font-semibold' : 'text-dark/60' }}">
+                        All Times
+                    </button>
+                    @foreach($filterOptions['time_slots'] as $key => $label)
+                        <button data-value="{{ $key }}"
+                            class="w-full text-left px-4 py-2 font-poppins text-[12px] hover:bg-[rgba(238,78,139,0.05)] transition-colors {{ $currentTime === $key ? 'text-primary font-semibold' : 'text-dark/60' }}">
+                            {{ $label }}
+                        </button>
+                    @endforeach
+                </div>
+            </div>
+
+            <button onclick="resetAllFilters()" class="ml-auto font-poppins text-[12px] text-primary hover:text-secondary font-medium transition-colors">RESET</button>
         </div>
 
-        {{-- SCHEDULE GRID --}}
-        @if($schedules && $schedules->count() > 0)
-            @foreach($schedules as $day => $daySchedules)
-                <div class="mb-10">
-                    <div class="flex items-center gap-3 mb-5">
-                        <h3 class="font-nord font-bold text-[18px] text-dark">{{ $day }}</h3>
-                        <span class="font-poppins text-[12px] text-dark/35 bg-white px-3 py-1 rounded-full border border-[rgba(238,78,139,0.08)]">{{ $daySchedules->count() }} classes</span>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        @foreach($daySchedules as $schedule)
-                            @php
-                                $isBooked = in_array($schedule->id, $bookedScheduleIds ?? []);
-                                $capacity = $schedule->capacity ?? null;
-                                $bookedCount = $schedule->booked_count ?? null;
-                                $hasCapacity = !is_null($capacity) && !is_null($bookedCount);
-                                $remaining = $hasCapacity ? $capacity - $bookedCount : null;
-                                $isFull = $hasCapacity ? $remaining <= 0 : false;
-                                $classIcon = 'fa-dumbbell';
-                                $iconBg = 'from-primary to-secondary';
-                                if ($schedule->classModel) {
-                                    $name = strtolower($schedule->classModel->class_name ?? '');
-                                    if (strpos($name, 'pilates') !== false) { $classIcon = 'fa-spa'; $iconBg = 'from-accent to-springs-ivy'; }
-                                    elseif (strpos($name, 'muaythai') !== false || strpos($name, 'boxing') !== false) { $classIcon = 'fa-fist-raised'; $iconBg = 'from-secondary to-primary'; }
-                                    elseif (strpos($name, 'yoga') !== false) { $classIcon = 'fa-peace'; $iconBg = 'from-accent to-patina-green'; }
-                                }
-                            @endphp
-
-                            <div class="bg-white rounded-2xl shadow-[0_2px_12px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 schedule-card {{ $isBooked ? 'is-booked opacity-60' : '' }} {{ $isFull ? 'opacity-50' : '' }} {{ (!$isBooked && !$isFull) ? 'cursor-pointer' : 'cursor-default' }}"
-                                 data-schedule-id="{{ $schedule->id }}"
-                                 data-class-name="{{ $schedule->className ?? 'Class' }}"
-                                 data-day="{{ $day }}"
-                                 data-date="{{ $schedule->schedule_date ?? '' }}"
-                                 data-time="{{ $schedule->class_time ?? '' }}"
-                                 data-instructor="{{ $schedule->instructor ?? 'Instructor' }}"
-                                 onclick="{{ $isBooked || $isFull ? '' : "toggleCard(this)" }}">
-                                <div class="p-4 pb-3">
-                                    <div class="flex items-start justify-between mb-3">
-                                        <div class="w-11 h-11 rounded-xl bg-gradient-to-br {{ $iconBg }} flex items-center justify-center text-white shadow-sm">
-                                            <i class="fas {{ $classIcon }} text-sm"></i>
-                                        </div>
-                                        <span class="font-poppins text-[10px] font-semibold uppercase tracking-wider {{ $isFull ? 'text-secondary' : 'text-accent' }} bg-[rgba(26,122,94,0.06)] px-2.5 py-1 rounded-full border border-[rgba(26,122,94,0.1)]">
-                                            CAPACITY {{ $hasCapacity ? "$bookedCount/$capacity" : '-/-' }}
-                                        </span>
-                                    </div>
-                                    <h4 class="font-nord font-bold text-[16px] text-dark leading-tight mb-0.5">{{ $schedule->className ?? 'Class' }}</h4>
-                                    <p class="font-poppins text-[13px] text-dark/50 flex items-center gap-1.5">
-                                        <i class="fas fa-user text-[10px]"></i>
-                                        {{ $schedule->instructor ?? 'Instructor' }}
-                                    </p>
-                                </div>
-                                <div class="border-t border-[rgba(238,78,139,0.06)] px-4 py-3 flex items-center justify-between">
-                                    <div class="flex items-center gap-1.5 font-poppins text-[12px] text-dark/50">
-                                        <i class="fas fa-clock text-primary text-[10px]"></i>
-                                        <span>{{ $schedule->class_time ? \Carbon\Carbon::parse($schedule->class_time)->format('H:i') : '--:--' }}</span>
-                                    </div>
-                                    @if($isBooked)
-                                        <span class="font-poppins text-[11px] font-semibold text-accent bg-[rgba(26,122,94,0.08)] px-3 py-1.5 rounded-full">
-                                            <i class="fas fa-check mr-1"></i>Booked
-                                        </span>
-                                    @elseif($isFull)
-                                        <span class="font-poppins text-[11px] font-semibold text-dark/30 bg-[rgba(28,28,28,0.05)] px-3 py-1.5 rounded-full">
-                                            Full
-                                        </span>
-                                    @else
-                                        <span class="font-poppins text-[11px] font-semibold text-primary bg-[rgba(238,78,139,0.08)] px-3 py-1.5 rounded-full schedule-card-accent">
-                                            <i class="fas fa-plus-circle mr-1"></i>Select
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
+        {{-- SCHEDULE GRID -- JS RENDERED --}}
+        <div id="schedule-grid">
+            <div id="schedule-loading" class="hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="bg-white rounded-2xl shadow-[0_2px_12px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] p-4 animate-pulse"><div class="h-4 bg-gray-200 rounded w-3/4 mb-3"></div><div class="h-3 bg-gray-200 rounded w-1/2 mb-2"></div><div class="h-3 bg-gray-200 rounded w-2/3"></div></div>
+                    <div class="bg-white rounded-2xl shadow-[0_2px_12px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] p-4 animate-pulse"><div class="h-4 bg-gray-200 rounded w-3/4 mb-3"></div><div class="h-3 bg-gray-200 rounded w-1/2 mb-2"></div><div class="h-3 bg-gray-200 rounded w-2/3"></div></div>
+                    <div class="bg-white rounded-2xl shadow-[0_2px_12px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] p-4 animate-pulse"><div class="h-4 bg-gray-200 rounded w-3/4 mb-3"></div><div class="h-3 bg-gray-200 rounded w-1/2 mb-2"></div><div class="h-3 bg-gray-200 rounded w-2/3"></div></div>
                 </div>
-            @endforeach
-        @else
-            <div class="bg-white rounded-2xl shadow-[0_2px_12px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] p-10 text-center">
-                <div class="w-16 h-16 rounded-full bg-[rgba(238,78,139,0.08)] flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-calendar-times text-2xl text-secondary"></i>
-                </div>
-                <h3 class="font-nord font-bold text-[20px] text-dark mb-1">No Classes Available</h3>
-                <p class="font-poppins text-dark/45 text-[14px]">There are no classes scheduled for this period. Check back later.</p>
             </div>
-        @endif
+            <div id="schedule-content" class="transition-opacity duration-300 opacity-100">
+                {{-- JS writes filtered schedule cards here --}}
+            </div>
+        </div>
 
         {{-- PROMO BANNER --}}
         <div class="mt-10 rounded-2xl overflow-hidden relative shadow-[0_4px_20px_rgba(122,43,74,0.08)]"
@@ -1408,162 +1372,361 @@
         window.location.href = '{{ route("member.book") }}?order_id=' + orderId;
     }
 
-    function changeWeek(direction) {
-        // Placeholder for week navigation
+    // ============================================
+    // CLIENT-SIDE FILTERING & STATE
+    // ============================================
+    const allSchedules = @json($schedulesJson);
+    const dayOrder = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+    const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const todayStr = getTodayStr();
+
+    let selectedDate = '{{ $selectedDate }}';
+    let currentWeekStart = getMonday(new Date(selectedDate));
+    let activeFilters = {
+        class_type: '',
+        instructor: '',
+        time: ''
+    };
+
+    function getMonday(date) {
+        const d = new Date(date);
+        const day = d.getDay();
+        const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+        d.setDate(diff);
+        d.setHours(0, 0, 0, 0);
+        return d;
     }
 
-    function selectDate(dateStr) {
-        window.location.href = '{{ route("member.book") }}?date=' + dateStr;
+    function formatYMD(date) {
+        return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
     }
 
-    function bookSingleSchedule(scheduleId) {
-        const formData = new FormData();
-        formData.append('_token', csrfToken);
-        formData.append('schedule_id', scheduleId);
-
-        const button = event?.target?.closest('button');
-        if (button) { button.disabled = true; button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; }
-
-        fetch(bookingStoreUrl, {
-            method: 'POST',
-            headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken },
-            body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                window.location.reload();
-            } else {
-                alert(data.message || 'Booking failed');
-                if (button) { button.disabled = false; button.innerHTML = 'BOOK NOW'; }
-            }
-        })
-        .catch(err => {
-            alert('Error booking class');
-            if (button) { button.disabled = false; button.innerHTML = 'BOOK NOW'; }
-        });
+    function getScheduleDate(schedule, weekStart) {
+        if (schedule.scheduleDate) {
+            return schedule.scheduleDate;
+        }
+        const date = new Date(weekStart);
+        date.setDate(weekStart.getDate() + schedule.dayIdx);
+        return formatYMD(date);
     }
 
-    function bookSelectedClasses() {
-        const selected = getSelectedScheduleCheckboxes();
-        if (!selected.length) return;
+    function formatTime12(timeStr) {
+        if (!timeStr) return '--:--';
+        const parts = timeStr.split(':');
+        const h = parseInt(parts[0]);
+        const m = parts[1];
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        const h12 = h % 12 || 12;
+        return h12 + ':' + m + ' ' + ampm;
+    }
 
-        if (selected.length > maxSelectableClasses) {
-            showCreditLimitAlert();
+    function renderWeekPills() {
+        const container = document.getElementById('week-dates');
+        if (!container) return;
+        const dayAbbr = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+        let html = '';
+        for (let i = 0; i < 7; i++) {
+            const date = new Date(currentWeekStart);
+            date.setDate(currentWeekStart.getDate() + i);
+            const dateStr = formatYMD(date);
+            const dayName = dayAbbr[date.getDay()];
+            const dayNum = date.getDate();
+            const isToday = dateStr === todayStr;
+            const isSelected = dateStr === selectedDate;
+
+            html += `
+                <button onclick="selectDate('${dateStr}')"
+                    class="rounded-xl p-3 text-center transition-all duration-200 ${isSelected ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-white border border-[rgba(238,78,139,0.1)] text-dark hover:border-primary/30 hover:shadow-sm'}">
+                    <p class="font-poppins text-[10px] font-semibold uppercase tracking-wider ${isSelected ? 'text-white/70' : 'text-dark/40'}">${dayName.slice(0, 3)}</p>
+                    <p class="font-nord font-bold text-lg leading-tight mt-0.5">${dayNum}</p>
+                    ${isToday ? '<p class="font-poppins text-[9px] mt-0.5 font-semibold ' + (isSelected ? 'text-white/70' : 'text-primary') + '">TODAY</p>' : ''}
+                </button>
+            `;
+        }
+        container.innerHTML = html;
+    }
+
+    function renderScheduleCards(schedules) {
+        const content = document.getElementById('schedule-content');
+        if (!content) return;
+
+        if (schedules.length === 0) {
+            content.innerHTML = `
+                <div class="bg-white rounded-2xl shadow-[0_2px_12px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] p-10 text-center">
+                    <div class="w-16 h-16 rounded-full bg-[rgba(238,78,139,0.08)] flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-calendar-times text-2xl text-secondary"></i>
+                    </div>
+                    <h3 class="font-nord font-bold text-[20px] text-dark mb-1">Belum Ada Kelas</h3>
+                    <p class="font-poppins text-dark/45 text-[14px]">Belum ada kelas terjadwal di tanggal ini</p>
+                </div>
+            `;
             return;
         }
-        
-        showBulkBookingConfirm(selected);
-    }
-    
-    function showBulkBookingConfirm(selectedCheckboxes) {
-        let classListHtml = '';
-        selectedCheckboxes.forEach((checkbox, index) => {
-            const className = checkbox.dataset.className;
-            const day = checkbox.dataset.day;
-            const date = checkbox.dataset.date;
-            const time = checkbox.dataset.time;
-            
-            classListHtml += `
-                <div style="display:flex; align-items:center; gap:0.75rem; padding:0.75rem; background:${index % 2 === 0 ? '#f8fafc' : 'white'}; border-radius:8px;">
-                    <div style="width:32px; height:32px; background:#EE4E8B; color:white; border-radius:6px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.75rem; flex-shrink:0;">
-                        ${index + 1}
+
+        const d = new Date(selectedDate + 'T12:00:00');
+        const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+        const heading = dayNames[d.getDay()] + ', ' + d.getDate() + ' ' + monthNames[d.getMonth()] + ' ' + d.getFullYear();
+        function fmtDisplayDate(dStr) { if (!dStr) return '-'; const p = dStr.split('-'); return parseInt(p[2]) + ' ' + monthNames[parseInt(p[1])-1] + ' ' + p[0]; }
+
+        let cardsHtml = '';
+        schedules.forEach(function(s) {
+            const isDisabled = s.isBooked || s.isFull;
+            const capLabel = s.hasCapacity ? s.bookedCount + '/' + s.capacity : '-/-';
+            const statusHtml = s.isBooked
+                ? '<span class="font-poppins text-[11px] font-semibold text-accent bg-[rgba(26,122,94,0.08)] px-3.5 py-1.5 rounded-full flex items-center gap-1.5"><i class="fas fa-check-circle text-[12px]"></i>Booked</span>'
+                : s.isFull
+                ? '<span class="font-poppins text-[11px] font-semibold text-dark/30 bg-[rgba(28,28,28,0.05)] px-3.5 py-1.5 rounded-full flex items-center gap-1.5"><i class="fas fa-ban text-[12px]"></i>Full</span>'
+                : '<span class="font-poppins text-[11px] font-semibold text-primary bg-[rgba(238,78,139,0.08)] px-3.5 py-1.5 rounded-full schedule-card-accent flex items-center gap-1.5"><i class="fas fa-plus-circle text-[12px]"></i>Select</span>';
+
+            cardsHtml += `
+                <div class="bg-white rounded-2xl shadow-[0_2px_12px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 schedule-card ${s.isBooked ? 'is-booked opacity-60' : ''} ${s.isFull ? 'opacity-50' : ''} ${!isDisabled ? 'cursor-pointer' : 'cursor-default'}"
+                      data-schedule-id="${s.id}"
+                      data-class-name="${s.className}"
+                      data-day="${s.day}"
+                      data-date="${getScheduleDate(s, currentWeekStart)}"
+                      data-time="${s.classTime || ''}"
+                      data-instructor="${s.instructor || ''}"
+                      onclick="${isDisabled ? '' : "toggleCard(this)"}">
+                    <div class="p-4">
+                        <div class="flex items-start gap-3.5 mb-3.5">
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-md flex-shrink-0 overflow-hidden" style="background: ${s.iconGradient};">
+                                <i class="fas ${s.classIcon} text-base"></i>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-start justify-between gap-2">
+                                    <div class="min-w-0">
+                                        <h4 class="font-nord font-bold text-[17px] text-dark leading-tight truncate">${s.className}</h4>
+                                        ${s.level ? '<span class="font-poppins text-[11px] text-dark/35 font-medium">' + s.level + '</span>' : ''}
+                                    </div>
+                                    <span class="font-poppins text-[10px] font-semibold uppercase tracking-wider whitespace-nowrap ${s.isFull ? 'text-secondary' : 'text-accent'} bg-[rgba(26,122,94,0.06)] px-2.5 py-1 rounded-full border border-[rgba(26,122,94,0.1)] flex-shrink-0">${capLabel}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-2.5 mb-3.5">
+                            <div class="flex items-center gap-2.5 font-poppins text-[13px] text-dark/55">
+                                <div class="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 overflow-hidden text-[#E91E63]" style="background: #FCE4EC;">
+                                    <i class="fas fa-calendar-alt text-[11px]"></i>
+                                </div>
+                                <span>${fmtDisplayDate(getScheduleDate(s, currentWeekStart))}</span>
+                            </div>
+                            <div class="flex items-center gap-2.5 font-poppins text-[13px] text-dark/55">
+                                <div class="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 overflow-hidden text-[#E91E63]" style="background: #FCE4EC;">
+                                    <i class="fas fa-clock text-[11px]"></i>
+                                </div>
+                                <span>${formatTime12(s.classTime)}</span>
+                            </div>
+                            <div class="flex items-center gap-2.5 font-poppins text-[13px] text-dark/55">
+                                <div class="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 overflow-hidden text-[#E91E63]" style="background: #FCE4EC;">
+                                    <i class="fas fa-user text-[11px]"></i>
+                                </div>
+                                <span>${s.instructor || 'Instructor'}</span>
+                            </div>
+                        </div>
+                        <div class="border-t border-[rgba(238,78,139,0.06)] pt-3 flex items-center justify-between">${statusHtml}</div>
                     </div>
-                    <div style="flex:1; min-width:0;">
-                        <div style="font-weight:700; color:#7A2B4A; font-size:0.85rem; margin-bottom:2px;">${className}</div>
-                        <div style="font-size:0.75rem; color:#64748b;">${day}, ${date} � ${time}</div>
-                    </div>
-                    <i class="fas fa-check-circle" style="color:#10b981; font-size:1.25rem;"></i>
                 </div>
             `;
         });
-        
-        // Update modal content
-        document.getElementById('bulk-confirm-list').innerHTML = classListHtml;
-        document.getElementById('bulk-confirm-count').textContent = selectedCheckboxes.length;
-        
-        // Show modal
-        const modal = document.getElementById('bulk-confirm-modal');
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    }
-    
-    function closeBulkConfirm() {
-        const modal = document.getElementById('bulk-confirm-modal');
-        modal.style.display = 'none';
-        document.body.style.overflow = '';
-    }
-    
-    async function confirmBulkBooking() {
-        const selected = getSelectedScheduleCheckboxes();
-        if (!selected.length) return;
 
-        const button = document.getElementById('confirm-bulk-book-btn');
-        const originalHtml = button?.innerHTML || '';
-        if (button) {
-            button.disabled = true;
-            button.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i>Booking...';
-            button.style.opacity = '0.7';
-        }
-
-        try {
-            for (const checkbox of selected) {
-                const formData = new FormData();
-                formData.append('_token', csrfToken);
-                formData.append('schedule_id', checkbox.dataset.scheduleId);
-
-                const res = await fetch(bookingStoreUrl, {
-                    method: 'POST',
-                    credentials: 'same-origin',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json, text/plain, */*'
-                    },
-                    body: formData,
-                });
-
-                if (!res.ok) {
-                    const errData = await res.json().catch(() => null);
-                    throw new Error(errData?.message || 'Booking gagal');
-                }
-            }
-
-            closeBulkConfirm();
-            showSuccessPopup(selected.length);
-        } catch (error) {
-            console.error('Bulk booking failed', error);
-            alert(error.message || 'Booking gagal. Silakan coba lagi.');
-            if (button) {
-                button.disabled = false;
-                button.innerHTML = originalHtml;
-                button.style.opacity = '1';
-            }
-        }
-    }
-
-    function showSuccessPopup(count) {
-        const popup = document.createElement('div');
-        popup.style.cssText = 'position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; padding:1rem; animation:modalIn 0.25s ease-out;';
-        popup.innerHTML = `
-            <div style="background:white; border-radius:20px; max-width:400px; width:100%; padding:2.5rem 2rem; text-align:center; box-shadow:0 25px 60px rgba(0,0,0,0.2);">
-                <div style="width:72px; height:72px; border-radius:50%; background:rgba(26,122,94,0.1); display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;">
-                    <i class="fas fa-check-circle" style="font-size:2rem; color:#1A7A5E;"></i>
+        content.innerHTML = `
+            <div class="mb-6 day-section">
+                <div class="flex items-center gap-3 mb-0 py-3 px-4 rounded-xl">
+                    <div class="flex-1 flex items-center gap-3">
+                        <h3 id="schedule-heading" class="font-nord font-bold text-[18px] text-dark">${heading}</h3>
+                        <span id="schedule-count" class="font-poppins text-[12px] text-dark/35 bg-white px-3 py-1 rounded-full border border-[rgba(238,78,139,0.08)]">${schedules.length} classes</span>
+                    </div>
                 </div>
-                <h3 style="font-size:1.25rem; font-weight:700; color:#1C1C1C; margin:0 0 0.5rem; font-family:Nord,'Poppins',sans-serif;">Booking Berhasil!</h3>
-                <p style="font-size:0.9rem; color:#64748b; margin:0 0 1.5rem; line-height:1.5;">${count} class telah berhasil di booking. Silakan cek jadwal kamu di My Classes.</p>
-                <button onclick="this.closest('div[style]').remove(); window.location.reload();"
-                   style="padding:0.85rem 2.5rem; border-radius:12px; font-weight:700; font-size:0.9rem; border:none; background:linear-gradient(135deg, #EE4E8B, #7A2B4A); color:white; cursor:pointer; box-shadow:0 4px 16px rgba(238,78,139,0.3); font-family:'Poppins',sans-serif;">
-                    <i class="fas fa-arrow-right mr-2"></i>Lihat My Classes
-                </button>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4">
+                    ${cardsHtml}
+                </div>
             </div>
         `;
-        document.body.appendChild(popup);
     }
+
+    function applyFilters() {
+        const loading = document.getElementById('schedule-loading');
+        const content = document.getElementById('schedule-content');
+        if (loading) loading.classList.remove('hidden');
+        if (content) content.style.opacity = '0';
+
+        setTimeout(function() {
+            let filtered = allSchedules.filter(function(s) {
+                const sDate = getScheduleDate(s, currentWeekStart);
+                return sDate === selectedDate;
+            });
+
+            if (activeFilters.class_type) {
+                filtered = filtered.filter(function(s) {
+                    return s.classModelName === activeFilters.class_type;
+                });
+            }
+            if (activeFilters.instructor) {
+                filtered = filtered.filter(function(s) {
+                    return s.instructor === activeFilters.instructor;
+                });
+            }
+            if (activeFilters.time) {
+                filtered = filtered.filter(function(s) {
+                    const t = s.classTime || '';
+                    switch (activeFilters.time) {
+                        case 'morning': return t >= '00:00' && t < '12:00';
+                        case 'afternoon': return t >= '12:00' && t < '17:00';
+                        case 'evening': return t >= '17:00' && t <= '23:59';
+                        default: return true;
+                    }
+                });
+            }
+
+            filtered.sort(function(a, b) {
+                return (a.classTime || '').localeCompare(b.classTime || '');
+            });
+
+            const label = document.getElementById('selected-date-label');
+            if (label) {
+                const d = new Date(selectedDate + 'T12:00:00');
+                const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+                label.textContent = '\u2014 ' + dayNames[d.getDay()] + ', ' + d.getDate() + ' ' + monthNames[d.getMonth()] + ' ' + d.getFullYear();
+            }
+
+            if (loading) loading.classList.add('hidden');
+            renderScheduleCards(filtered);
+            if (content) content.style.opacity = '1';
+            updateBulkBookingBar();
+        }, 200);
+    }
+
+    function renderAll() {
+        renderWeekPills();
+        applyFilters();
+    }
+
+    function changeWeek(direction) {
+        const jsDay = new Date(selectedDate + 'T12:00:00').getDay();
+        const dayIdx = jsDay === 0 ? 6 : jsDay - 1;
+        currentWeekStart.setDate(currentWeekStart.getDate() + direction * 7);
+        const newDate = new Date(currentWeekStart);
+        newDate.setDate(currentWeekStart.getDate() + dayIdx);
+        selectedDate = formatYMD(newDate);
+        renderAll();
+    }
+
+    function getTodayStr() {
+        const d = new Date();
+        return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+
+    function selectDate(dateStr) {
+        selectedDate = dateStr;
+        renderAll();
+    }
+
+    function applyFilter(key, value) {
+        activeFilters[key] = value;
+        applyFilters();
+        updateFilterButtonUI(key, value);
+    }
+
+    function resetAllFilters() {
+        selectedDate = todayStr;
+        currentWeekStart = getMonday(new Date(selectedDate));
+        activeFilters = { class_type: '', instructor: '', time: '' };
+        renderAll();
+        resetFilterButtonUI();
+    }
+
+    function updateFilterButtonUI(key, value) {
+        const dropdown = document.querySelector('.filter-dropdown[data-filter="' + key + '"]');
+        if (!dropdown) return;
+        const button = dropdown.querySelector('button');
+        const label = dropdown.querySelector('.filter-label');
+        if (button) {
+            if (value) {
+                button.classList.remove('bg-white', 'border', 'border-[rgba(238,78,139,0.15)]', 'text-dark/60', 'hover:border-primary/30', 'hover:text-dark');
+                button.classList.add('bg-primary', 'text-white');
+            } else {
+                button.classList.remove('bg-primary', 'text-white');
+                button.classList.add('bg-white', 'border', 'border-[rgba(238,78,139,0.15)]', 'text-dark/60', 'hover:border-primary/30', 'hover:text-dark');
+            }
+        }
+        if (label) {
+            if (key === 'time') {
+                label.textContent = value ? value.charAt(0).toUpperCase() + value.slice(1) : 'ALL';
+            } else {
+                label.textContent = value ? value : 'ALL';
+            }
+        }
+        // Update dropdown option highlights
+        dropdown.querySelectorAll('[data-filter-options] button').forEach(function(opt) {
+            const optVal = opt.dataset.value || '';
+            if (optVal === value) {
+                opt.classList.add('text-primary', 'font-semibold');
+                opt.classList.remove('text-dark/60');
+            } else {
+                opt.classList.remove('text-primary', 'font-semibold');
+                opt.classList.add('text-dark/60');
+            }
+        });
+    }
+
+    function resetFilterButtonUI() {
+        document.querySelectorAll('.filter-dropdown').forEach(function(dropdown) {
+            const key = dropdown.dataset.filter;
+            const button = dropdown.querySelector('button');
+            const label = dropdown.querySelector('.filter-label');
+            if (button) {
+                button.classList.remove('bg-primary', 'text-white');
+                button.classList.add('bg-white', 'border', 'border-[rgba(238,78,139,0.15)]', 'text-dark/60', 'hover:border-primary/30', 'hover:text-dark');
+            }
+            if (label) label.textContent = key === 'time' ? 'ALL' : 'ALL';
+            dropdown.querySelectorAll('[data-filter-options] button').forEach(function(opt) {
+                if (!opt.dataset.value) {
+                    opt.classList.add('text-primary', 'font-semibold');
+                    opt.classList.remove('text-dark/60');
+                } else {
+                    opt.classList.remove('text-primary', 'font-semibold');
+                    opt.classList.add('text-dark/60');
+                }
+            });
+        });
+    }
+
+    function toggleFilterDropdown(button) {
+        const dropdown = button.nextElementSibling;
+        const isHidden = dropdown.classList.contains('hidden');
+        document.querySelectorAll('.filter-dropdown > div:not(.hidden)').forEach(d => {
+            if (d !== dropdown) d.classList.add('hidden');
+        });
+        dropdown.classList.toggle('hidden', !isHidden);
+    }
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.filter-dropdown')) {
+            document.querySelectorAll('.filter-dropdown > div').forEach(d => {
+                d.classList.add('hidden');
+            });
+        }
+    });
+
+    // Filter dropdown option clicks via event delegation
+    document.addEventListener('click', function(e) {
+        const option = e.target.closest('[data-filter-options] button[data-value]');
+        if (option) {
+            const parent = option.closest('[data-filter-options]');
+            const filterKey = parent.closest('.filter-dropdown').dataset.filter;
+            const value = option.dataset.value;
+            applyFilter(filterKey, value);
+            // Close dropdown
+            const dropdown = parent.closest('.filter-dropdown > div');
+            if (dropdown) dropdown.classList.add('hidden');
+        }
+    });
 
     document.addEventListener('DOMContentLoaded', function() {
         updateBulkBookingBar();
-        
-        // Backup: Event delegation for schedule cards
+        renderAll();
+
+        // Backup: Event delegation for schedule cards (for JS-rendered cards)
         document.body.addEventListener('click', function(e) {
             const card = e.target.closest('.schedule-card');
             if (card && !card.classList.contains('is-booked') && !card.classList.contains('opacity-50')) {

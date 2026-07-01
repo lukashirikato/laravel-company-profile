@@ -21,10 +21,10 @@
 
 <style>
     /* ============================================================
-       FTM SOCIETY — MY PROFILE PAGE
-       Brand: Burnt Cherry #7A2B4A · Power Pink #EE4E8B
-              Soft Petals #F4C9DF · Rising #FCF9F2 · Layl #1C1C1C
-              Patina Green #1A7A5E · Grounded #C5D79B
+       FTM SOCIETY ï¿½ MY PROFILE PAGE
+       Brand: Burnt Cherry #7A2B4A ï¿½ Power Pink #EE4E8B
+              Soft Petals #F4C9DF ï¿½ Rising #FCF9F2 ï¿½ Layl #1C1C1C
+              Patina Green #1A7A5E ï¿½ Grounded #C5D79B
        ============================================================ */
 
     .acct-main { background: #FCF9F2; min-height: 100vh; font-family: 'Poppins', system-ui, sans-serif; overflow-x: hidden; box-sizing: border-box; }
@@ -41,7 +41,7 @@
     }
     .acct-header p { font-size: 0.85rem; color: rgba(28,28,28,0.6); margin-top: 4px; }
 
-    /* -- HERO (member card) — Brand Burnt Cherry -- */
+    /* -- HERO (member card) ï¿½ Brand Burnt Cherry -- */
     .member-hero {
         background: linear-gradient(135deg, #7A2B4A 0%, #5A1F37 60%, #1C1C1C 100%);
         border-radius: 22px;
@@ -989,7 +989,7 @@
                     <div class="detail-grid">
                         <div class="detail-item">
                             <div class="dlabel"><i class="fas fa-phone"></i> Phone</div>
-                            <div class="dvalue" id="memberPhoneLabel">{{ $member->phone_number ?? '—' }}</div>
+                            <div class="dvalue" id="memberPhoneLabel">{{ $member->phone_number ?? 'ï¿½' }}</div>
                         </div>
                         <div class="detail-item">
                             <div class="dlabel"><i class="fas fa-calendar"></i> Member Since</div>
@@ -1124,11 +1124,11 @@
                         @endif
                     </div>
 
-                    <div class="cc-title" style="margin-top: 1.25rem; margin-bottom: 0.85rem;"><i class="fas fa-bell"></i> Notifikasi</div>
+                    <div class="cc-title" style="margin-top: 1.25rem; margin-bottom: 0.85rem;">Notifikasi</div>
 
                     <div class="setting-row">
                         <div class="setting-row-info">
-                            <div class="sr-title">WhatsApp — Booking</div>
+                            <div class="sr-title">WhatsApp ï¿½ Booking</div>
                             <div class="sr-sub">Konfirmasi booking kelas via WhatsApp</div>
                         </div>
                         <label class="toggle">
@@ -1138,7 +1138,7 @@
                     </div>
                     <div class="setting-row">
                         <div class="setting-row-info">
-                            <div class="sr-title">WhatsApp — Pembayaran</div>
+                            <div class="sr-title">WhatsApp ï¿½ Pembayaran</div>
                             <div class="sr-sub">Notifikasi pembayaran berhasil/gagal</div>
                         </div>
                         <label class="toggle">
@@ -1148,7 +1148,7 @@
                     </div>
                     <div class="setting-row">
                         <div class="setting-row-info">
-                            <div class="sr-title">Email — Promo & Newsletter</div>
+                            <div class="sr-title">Email ï¿½ Promo & Newsletter</div>
                             <div class="sr-sub">Penawaran dan info terbaru via email</div>
                         </div>
                         <label class="toggle">
@@ -1185,7 +1185,7 @@
 {{-- Edit Profile Modal --}}
 <div id="editProfileModal" class="ftm-modal-overlay">
     <div class="ftm-modal-box">
-        <button type="button" class="ftm-modal-close" onclick="closeModal('editProfileModal')">×</button>
+        <button type="button" class="ftm-modal-close" onclick="closeModal('editProfileModal')">ï¿½</button>
         <h3 class="ftm-modal-title">Edit Profil</h3>
         <p class="ftm-modal-sub">Email tidak dapat diubah. Hubungi support jika perlu mengganti email.</p>
         <form id="formEditProfile" onsubmit="saveProfile(event)">
@@ -1208,7 +1208,7 @@
 {{-- Change Password Modal --}}
 <div id="changePasswordModal" class="ftm-modal-overlay">
     <div class="ftm-modal-box">
-        <button type="button" class="ftm-modal-close" onclick="closeModal('changePasswordModal')">×</button>
+        <button type="button" class="ftm-modal-close" onclick="closeModal('changePasswordModal')">ï¿½</button>
         <h3 class="ftm-modal-title">Ubah Password</h3>
         <p class="ftm-modal-sub">Password minimal 8 karakter. Setelah berhasil, gunakan password baru di login berikutnya.</p>
         <form id="formChangePassword" onsubmit="savePassword(event)">
@@ -1235,7 +1235,7 @@
 {{-- QR Preview --}}
 <div id="qr-preview-overlay" class="qr-preview-overlay">
     <div class="qr-preview-card">
-        <button type="button" class="qp-close" onclick="closeQRPreview()">×</button>
+        <button type="button" class="qp-close" onclick="closeQRPreview()">ï¿½</button>
         <div class="qp-inner">
             <div class="qp-header">
                 <div class="qp-brand">FTM Society</div>
@@ -1251,7 +1251,7 @@
                 <div class="qp-id">Member ID: #{{ $memberId }}</div>
             </div>
             <div class="qp-status">
-                <span class="qp-status-badge"><span class="qp-dot"></span> QR Active — Ready to Scan</span>
+                <span class="qp-status-badge"><span class="qp-dot"></span> QR Active ï¿½ Ready to Scan</span>
             </div>
         </div>
     </div>
@@ -1260,7 +1260,7 @@
 {{-- Print modal --}}
 <div id="print-modal" class="ftm-modal-overlay">
     <div class="ftm-modal-box">
-        <button type="button" class="ftm-modal-close" onclick="closeModal('print-modal')">×</button>
+        <button type="button" class="ftm-modal-close" onclick="closeModal('print-modal')">ï¿½</button>
         <h3 class="ftm-modal-title"><i class="fas fa-print" style="color:#EE4E8B; margin-right:6px;"></i>Print Member Card</h3>
         <div class="print-member-card">
             <div class="brand">FTM SOCIETY</div>
@@ -1420,7 +1420,7 @@ async function saveProfile(ev) {
     if (r.ok && r.data.success) {
         toast('Profil tersimpan', r.data.message, 'success');
         document.getElementById('memberNameLabel').textContent = payload.name;
-        document.getElementById('memberPhoneLabel').textContent = payload.phone_number || '—';
+        document.getElementById('memberPhoneLabel').textContent = payload.phone_number || 'ï¿½';
         // Update inisial avatar kalau belum ada foto
         const letterEl = document.getElementById('memberAvatarLetter');
         if (letterEl) letterEl.textContent = payload.name.charAt(0).toUpperCase();
@@ -1524,8 +1524,8 @@ async function loadLoginHistory() {
             <div class="lh-item">
                 <div class="lh-icon"><i class="fas ${deviceIcon((l.device || '').toLowerCase())}"></i></div>
                 <div class="lh-info">
-                    <div class="lh-title">${l.device || 'Unknown'} — ${l.user_agent || ''}</div>
-                    <div class="lh-sub">${l.ip || '—'} · ${l.logged_in_at || ''}</div>
+                    <div class="lh-title">${l.device || 'Unknown'} ï¿½ ${l.user_agent || ''}</div>
+                    <div class="lh-sub">${l.ip || 'ï¿½'} ï¿½ ${l.logged_in_at || ''}</div>
                 </div>
                 <div class="lh-time">${l.ago || ''}</div>
             </div>

@@ -451,10 +451,7 @@
                 <p class="font-poppins text-dark/25 text-xs mt-1">{{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM YYYY') }}</p>
             </div>
             <div class="flex items-center gap-4">
-                <div class="w-11 h-11 rounded-full bg-white flex items-center justify-center shadow-sm border border-light-pink/40 text-secondary relative transition-all duration-200 hover:border-primary/40 hover:shadow-md cursor-pointer">
-                    <i class="fas fa-bell text-sm"></i>
-                    <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-primary rounded-full border-2 border-white"></span>
-                </div>
+
                 @php $initial = strtoupper(substr(auth('customer')->user()->name ?? 'M', 0, 1)); @endphp
                 <div class="w-11 h-11 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-nord font-bold text-sm shadow-md border-2 border-white flex-shrink-0">
                     {{ $initial }}

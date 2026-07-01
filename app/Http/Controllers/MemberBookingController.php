@@ -94,11 +94,27 @@ class MemberBookingController extends Controller
             // ✅ AMBIL JADWAL YANG SUDAH DI-BOOK
             $bookedScheduleIds = $this->getBookedScheduleIds($customer, $selectedOrder);
 
-            // ✅ AMBIL JADWAL BERDASARKAN TIPE PAKET
-            $schedules = $this->getSchedulesForPackage($customer, $selectedOrder, $package);
+            // ✅ AMBIL FILTER PARAMS
+            $filters = [
+                'date' => $request->get('date'),
+                'time' => $request->get('time'),
+                'class_type' => $request->get('class_type'),
+                'instructor' => $request->get('instructor'),
+            ];
 
-            // ✅ CEK JIKA TIDAK ADA JADWAL
-            if ($schedules->isEmpty()) {
+            // ✅ HITUNG WEEK START DARI SELECTED DATE
+            $selectedDate = $filters['date'] ? Carbon::parse($filters['date']) : Carbon::today();
+            $weekStart = $selectedDate->copy()->startOfWeek(Carbon::MONDAY);
+            $weekEnd = $selectedDate->copy()->endOfWeek(Carbon::SUNDAY);
+
+            // ✅ AMBIL JADWAL TANPA FILTER DAY (biar JS yang filter)
+            $allSchedules = $this->getSchedulesForPackage($customer, $selectedOrder, $package, $filters, $weekStart, $weekEnd);
+
+            // ✅ AMBIL OPSI FILTER UNTUK DROPDOWN
+            $filterOptions = $this->getFilterOptions($package);
+
+            // ✅ CEK JIKA TIDAK ADA JADWAL SAMA SEKALI
+            if ($allSchedules->isEmpty()) {
                 Log::warning('📭 No schedules available for this package', [
                     'customer_id' => $customer->id,
                     'order_id' => $selectedOrder->id,
@@ -115,28 +131,82 @@ class MemberBookingController extends Controller
                 );
             }
 
-            // ✅ SORT & GROUP SCHEDULES
-            $groupedSchedules = $this->sortAndGroupSchedules($schedules);
+            // ✅ BUILD JSON DATA UNTUK CLIENT-SIDE FILTERING
+            $dayOrder = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+            $schedulesJson = $allSchedules->map(function ($schedule) use ($weekStart, $dayOrder, $bookedScheduleIds) {
+                $dayIdx = array_search($schedule->day, $dayOrder);
+                $scheduleDate = $schedule->schedule_date
+                    ? Carbon::parse($schedule->schedule_date)
+                    : ($dayIdx !== false ? $weekStart->copy()->addDays($dayIdx) : null);
 
-            Log::info('📅 Schedules loaded successfully', [
+                $isBooked = in_array($schedule->id, $bookedScheduleIds ?? []);
+                $capacity = $schedule->capacity ?? null;
+                $bookedCount = $schedule->booked_count ?? null;
+                $hasCapacity = !is_null($capacity) && !is_null($bookedCount);
+                $remaining = $hasCapacity ? $capacity - $bookedCount : null;
+                $isFull = $hasCapacity ? $remaining <= 0 : false;
+
+                $classIcon = 'fa-dumbbell';
+                $iconGradient = 'linear-gradient(135deg, #EE4E8B, #7A2B4A)';
+                if ($schedule->classModel) {
+                    $name = strtolower($schedule->classModel->class_name ?? '');
+                    if (strpos($name, 'reformer pilates') !== false) { $classIcon = 'fa-dumbbell'; $iconGradient = 'linear-gradient(135deg, #1A7A5E, #0F766E)'; }
+                    elseif (strpos($name, 'mat pilates') !== false) { $classIcon = 'fa-person-praying'; $iconGradient = 'linear-gradient(135deg, #1A7A5E, #059669)'; }
+                    elseif (strpos($name, 'pilates') !== false) { $classIcon = 'fa-spa'; $iconGradient = 'linear-gradient(135deg, #1A7A5E, #1D5A4B)'; }
+                    elseif (strpos($name, 'muaythai') !== false) { $classIcon = 'fa-hand-fist'; $iconGradient = 'linear-gradient(135deg, #7A2B4A, #EE4E8B)'; }
+                    elseif (strpos($name, 'boxing') !== false) { $classIcon = 'fa-fire'; $iconGradient = 'linear-gradient(135deg, #7A2B4A, #EA580C)'; }
+                    elseif (strpos($name, 'body shaping') !== false) { $classIcon = 'fa-heart-pulse'; $iconGradient = 'linear-gradient(135deg, #EC4899, #E11D48)'; }
+                    elseif (strpos($name, 'mix') !== false) { $classIcon = 'fa-layer-group'; $iconGradient = 'linear-gradient(135deg, #8B5CF6, #7C3AED)'; }
+                    elseif (strpos($name, 'yoga') !== false) { $classIcon = 'fa-person-praying'; $iconGradient = 'linear-gradient(135deg, #1A7A5E, #1D5A4B)'; }
+                    elseif (strpos($name, 'private') !== false) { $classIcon = 'fa-crown'; $iconGradient = 'linear-gradient(135deg, #F59E0B, #CA8A04)'; }
+                    elseif (strpos($name, 'single') !== false || strpos($name, 'visit') !== false) { $classIcon = 'fa-ticket'; $iconGradient = 'linear-gradient(135deg, #3B82F6, #4F46E5)'; }
+                    elseif (strpos($name, 'exclusive') !== false) { $classIcon = 'fa-gem'; $iconGradient = 'linear-gradient(135deg, #06B6D4, #2563EB)'; }
+                }
+
+                return [
+                    'id' => $schedule->id,
+                    'className' => $schedule->className ?? 'Class',
+                    'day' => $schedule->day,
+                    'dayIdx' => $dayIdx !== false ? $dayIdx : -1,
+                    'classTime' => $schedule->class_time,
+                    'instructor' => $schedule->instructor,
+                    'scheduleDate' => $scheduleDate ? $scheduleDate->format('Y-m-d') : null,
+                    'displayDate' => $scheduleDate ? $scheduleDate->format('d M Y') : '-',
+                    'capacity' => $capacity,
+                    'bookedCount' => $bookedCount,
+                    'isBooked' => $isBooked,
+                    'isFull' => $isFull,
+                    'hasCapacity' => $hasCapacity,
+                    'remaining' => $remaining,
+                    'classIcon' => $classIcon,
+                    'iconGradient' => $iconGradient,
+                    'level' => $schedule->classModel->level ?? null,
+                    'classModelName' => $schedule->classModel->class_name ?? $schedule->schedule_label ?? 'Class',
+                ];
+            })->values();
+
+            Log::info('📅 Schedules loaded successfully for JS filtering', [
                 'customer_id' => $customer->id,
                 'order_id' => $selectedOrder->id,
                 'package_name' => $package->name,
-                'total_schedules' => $schedules->count(),
-                'days' => $groupedSchedules->keys()->toArray(),
+                'total_schedules' => $allSchedules->count(),
                 'classes_remaining' => $selectedOrder->remaining_classes,
                 'quota_remaining' => $selectedOrder->remaining_quota,
             ]);
 
             return view('member.book-class', [
                 'customer' => $customer,
-                'schedules' => $groupedSchedules,
+                'schedulesJson' => $schedulesJson,
                 'bookedScheduleIds' => $bookedScheduleIds,
                 'activeOrders' => $activeOrders,
                 'selectedOrderId' => $selectedOrderId,
                 'selectedPackage' => $package,
+                'selectedDate' => $selectedDate->format('Y-m-d'),
                 'remainingClasses' => $selectedOrder->remaining_classes ?? 0,
                 'remainingQuota' => $selectedOrder->remaining_quota ?? 0,
+                'filters' => $filters,
+                'filterOptions' => $filterOptions,
+                'weekStart' => $weekStart,
             ]);
 
         } catch (\Exception $e) {
@@ -168,14 +238,14 @@ class MemberBookingController extends Controller
             $customer = Auth::guard('customer')->user();
 
             if (!$customer) {
-                return back()->with('error', 'Silakan login ulang');
+                return $this->bookingResponse($request, false, 'Silakan login ulang');
             }
 
             // ✅ AMBIL SCHEDULE
             $schedule = Schedule::find($validated['schedule_id']);
 
             if (!$schedule) {
-                return back()->with('error', 'Jadwal tidak ditemukan');
+                return $this->bookingResponse($request, false, 'Jadwal tidak ditemukan');
             }
 
             // ✅ CARI ORDER YANG VALID (SEBELUM CEK CLASSES)
@@ -188,7 +258,7 @@ class MemberBookingController extends Controller
                     'schedule_packages' => $schedule->packages->pluck('id')->toArray(),
                 ]);
 
-                return back()->with('error', 'Anda tidak memiliki paket yang sesuai untuk jadwal ini.');
+                return $this->bookingResponse($request, false, 'Anda tidak memiliki paket yang sesuai untuk jadwal ini.');
             }
 
             // ✅ CEK CLASSES REMAINING (dari order yang valid, untuk booking)
@@ -199,7 +269,7 @@ class MemberBookingController extends Controller
                     'remaining_classes' => $validOrder->remaining_classes,
                 ]);
 
-                return back()->with('error', 'Classes remaining kamu sudah habis. Tidak bisa booking lagi');
+                return $this->bookingResponse($request, false, 'Classes remaining kamu sudah habis. Tidak bisa booking lagi');
             }
 
             // ✅ CEK DOUBLE BOOKING
@@ -214,7 +284,7 @@ class MemberBookingController extends Controller
                     'schedule_id' => $validated['schedule_id'],
                 ]);
 
-                return back()->with('error', 'Kamu sudah booking kelas ini');
+                return $this->bookingResponse($request, false, 'Kamu sudah booking kelas ini');
             }
 
             // ✅ TRANSACTION BOOKING
@@ -268,9 +338,12 @@ class MemberBookingController extends Controller
             // 📱 Kirim notifikasi WhatsApp setelah booking berhasil
             $this->sendMemberBookingNotification($customer, $validOrder);
 
-            return back()->with('success', 'Class berhasil dibooking!');
+            return $this->bookingResponse($request, true, 'Class berhasil dibooking!');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => $e->getMessage()], 422);
+            }
             return back()
                 ->withErrors($e->validator)
                 ->withInput();
@@ -282,8 +355,27 @@ class MemberBookingController extends Controller
                 'trace' => $e->getTraceAsString(),
             ]);
 
-            return back()->with('error', 'Gagal melakukan booking. Silakan coba lagi.');
+            return $this->bookingResponse($request, false, 'Gagal melakukan booking. Silakan coba lagi.');
         }
+    }
+
+    /**
+     * Return JSON for AJAX requests, or redirect with flash for normal requests.
+     */
+    private function bookingResponse(Request $request, bool $success, string $message)
+    {
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => $success,
+                'message' => $message,
+            ]);
+        }
+
+        if ($success) {
+            return back()->with('success', $message);
+        }
+
+        return back()->with('error', $message);
     }
 
     // ========================================
@@ -321,13 +413,13 @@ class MemberBookingController extends Controller
     /**
      * Get schedules based on package type
      */
-    private function getSchedulesForPackage($customer, $order, $package)
+    private function getSchedulesForPackage($customer, $order, $package, $filters = [], $weekStart = null, $weekEnd = null)
     {
         if ($package->is_exclusive) {
             return $this->getExclusiveSchedules($customer, $order);
         }
 
-        return $this->getRegularSchedules($package);
+        return $this->getRegularSchedules($package, $filters, $weekStart, $weekEnd);
     }
 
     /**
@@ -365,27 +457,62 @@ class MemberBookingController extends Controller
     /**
      * ✅ UPDATED: Get schedules for regular package - SUPPORT MULTI-PACKAGE SCHEDULES
      * Menampilkan SEMUA jadwal yang terhubung ke package (tidak filter visibility)
+     * Mendukung filter: date, time, class_type, instructor
      */
-    private function getRegularSchedules($package)
+    private function getRegularSchedules($package, $filters = [], $weekStart = null, $weekEnd = null)
     {
         // ✅ Query schedules dari gabungan package terpilih + seluruh package dalam group
-        // Tujuan: jika admin membuat jadwal pada varian package lain dalam group yang sama,
-        // jadwal tetap muncul di halaman booking member.
         $schedulePackageIds = collect([$package->id])
             ->merge($this->getSchedulePackageIds($package))
             ->unique()
             ->values()
             ->all();
 
-        $schedules = Schedule::whereHas('packages', function ($query) use ($schedulePackageIds) {
+        $query = Schedule::whereHas('packages', function ($query) use ($schedulePackageIds) {
             $query->whereIn('packages.id', $schedulePackageIds);
         })
-        ->with(['classModel', 'packages'])
-        ->orderBy('schedule_date')
-        ->orderBy('class_time')
-        ->get();
+        ->with(['classModel', 'packages']);
 
-        // ✅ 3. Attach classModel data manually untuk display jika tidak ada
+        // ✅ FILTER BY DAY (dari SELECT DATE)
+        if (!empty($filters['day'])) {
+            $query->where('day', $filters['day']);
+        }
+
+        // ✅ FILTER BY TIME RANGE
+        if (!empty($filters['time'])) {
+            switch ($filters['time']) {
+                case 'morning':
+                    $query->whereTime('class_time', '>=', '00:00:00')
+                          ->whereTime('class_time', '<', '12:00:00');
+                    break;
+                case 'afternoon':
+                    $query->whereTime('class_time', '>=', '12:00:00')
+                          ->whereTime('class_time', '<', '17:00:00');
+                    break;
+                case 'evening':
+                    $query->whereTime('class_time', '>=', '17:00:00')
+                          ->whereTime('class_time', '<=', '23:59:00');
+                    break;
+            }
+        }
+
+        // ✅ FILTER BY CLASS TYPE (via classModel relationship)
+        if (!empty($filters['class_type'])) {
+            $query->whereHas('classModel', function ($q) use ($filters) {
+                $q->where('class_name', $filters['class_type']);
+            });
+        }
+
+        // ✅ FILTER BY INSTRUCTOR
+        if (!empty($filters['instructor'])) {
+            $query->where('instructor', $filters['instructor']);
+        }
+
+        $schedules = $query->orderBy('schedule_date')
+            ->orderBy('class_time')
+            ->get();
+
+        // ✅ Attach classModel data manually untuk display jika tidak ada
         $schedules = $schedules->map(function ($schedule) {
             if (!$schedule->classModel && $schedule->class_id) {
                 $schedule->classModel = ClassModel::find($schedule->class_id);
@@ -401,12 +528,12 @@ class MemberBookingController extends Controller
             return $schedule;
         });
 
-        Log::info('✅ Loaded regular package schedules', [
+        Log::info('✅ Loaded regular package schedules with filters', [
             'package_id' => $package->id,
             'package_name' => $package->name,
             'schedule_package_ids' => $schedulePackageIds,
             'count' => $schedules->count(),
-            'note' => 'All schedules including hidden ones (tidak filter show_on_landing)',
+            'filters' => $filters,
         ]);
 
         return $schedules;
@@ -481,6 +608,50 @@ class MemberBookingController extends Controller
         });
 
         return $sorted->groupBy('day');
+    }
+
+    /**
+     * Get available filter options for dropdowns
+     */
+    private function getFilterOptions($package)
+    {
+        $schedulePackageIds = collect([$package->id])
+            ->merge($this->getSchedulePackageIds($package))
+            ->unique()
+            ->values()
+            ->all();
+
+        $classTypes = Schedule::whereHas('packages', function ($query) use ($schedulePackageIds) {
+            $query->whereIn('packages.id', $schedulePackageIds);
+        })
+        ->whereHas('classModel')
+        ->with('classModel')
+        ->get()
+        ->pluck('classModel.class_name')
+        ->filter()
+        ->unique()
+        ->values()
+        ->toArray();
+
+        $instructors = Schedule::whereHas('packages', function ($query) use ($schedulePackageIds) {
+            $query->whereIn('packages.id', $schedulePackageIds);
+        })
+        ->whereNotNull('instructor')
+        ->distinct()
+        ->pluck('instructor')
+        ->filter()
+        ->values()
+        ->toArray();
+
+        return [
+            'class_types' => $classTypes,
+            'instructors' => $instructors,
+            'time_slots' => [
+                'morning' => 'Morning (00:00 - 11:59)',
+                'afternoon' => 'Afternoon (12:00 - 16:59)',
+                'evening' => 'Evening (17:00 - 23:59)',
+            ],
+        ];
     }
 
     /**
@@ -560,11 +731,17 @@ class MemberBookingController extends Controller
     {
         $viewData = [
             'customer' => $customer,
-            'schedules' => collect(),
+            'schedulesJson' => collect(),
             'bookedScheduleIds' => [],
             'activeOrders' => collect(),
             'selectedOrderId' => null,
             'selectedPackage' => null,
+            'selectedDate' => now()->format('Y-m-d'),
+            'remainingClasses' => 0,
+            'remainingQuota' => 0,
+            'filters' => [],
+            'filterOptions' => ['class_types' => [], 'instructors' => [], 'time_slots' => []],
+            'weekStart' => now()->startOfWeek(),
         ];
 
         if ($errorMessage) {
@@ -581,11 +758,17 @@ class MemberBookingController extends Controller
     {
         return view('member.book-class', [
             'customer' => $customer,
-            'schedules' => collect(),
+            'schedulesJson' => collect(),
             'bookedScheduleIds' => [],
             'activeOrders' => $activeOrders,
             'selectedOrderId' => $selectedOrderId,
             'selectedPackage' => $package,
+            'selectedDate' => now()->format('Y-m-d'),
+            'remainingClasses' => 0,
+            'remainingQuota' => 0,
+            'filters' => [],
+            'filterOptions' => ['class_types' => [], 'instructors' => [], 'time_slots' => []],
+            'weekStart' => now()->startOfWeek(),
         ])->with('error', $errorMessage);
     }
 

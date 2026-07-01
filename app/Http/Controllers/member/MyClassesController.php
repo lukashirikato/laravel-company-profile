@@ -106,7 +106,7 @@ class MyClassesController extends Controller
         // ✅ STATS
         $stats = [
             'total_classes' => $myClasses->count(),
-            'unique_packages' => $customerOrders->count(),
+            'unique_packages' => $customerOrders->pluck('package_id')->unique()->count(),
         ];
 
         // ✅ FIX: Tambahkan null check sebelum toArray()

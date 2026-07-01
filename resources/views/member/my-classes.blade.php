@@ -6,721 +6,721 @@
     <title>My Classes | FTM Society</title>
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link rel="stylesheet" href="{{ asset('css/ftm-typography.css') }}">
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --pink: #EE4E8B;
+            --cherry: #7A2B4A;
+            --petal: #F4C9DF;
+            --green: #1A7A5E;
+            --ivy: #1D5A4B;
+            --rising: #FCF9F2;
+            --layl: #1C1C1C;
+            --card-bg: #FFFDF9;
+            --section-bg: #F6D9E3;
+            --caption: #B4907C;
+            --springs-light: #E1F5EE;
         }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #f8fafc;
+            font-family: 'Poppins', system-ui, sans-serif;
+            background: var(--rising);
+            color: var(--layl);
+            -webkit-font-smoothing: antialiased;
         }
 
         .main-content {
             padding: 2.5rem;
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
         .page-header {
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
         }
 
         .page-header h1 {
-            font-size: 2rem;
+            font-family: 'Nord', 'Poppins', sans-serif;
+            font-size: 28px;
             font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.025em;
+            color: var(--cherry);
+            margin-bottom: 0.15rem;
         }
 
         .page-header p {
-            color: #64748b;
-            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            color: var(--caption);
         }
 
-        .stats-grid {
+        .stats-row {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.25rem;
-            margin-bottom: 2.5rem;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            max-width: 600px;
+            margin-bottom: 2.25rem;
         }
 
         .stat-card {
-            background: white;
-            padding: 1.75rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--card-bg);
             border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            transition: all 0.2s ease;
-        }
-
-        .stat-card:hover {
-            border-color: #cbd5e1;
-            transform: translateY(-2px);
-        }
-
-        .stat-label {
-            font-size: 0.875rem;
-            color: #64748b;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #0f172a;
+            padding: 1rem 1.25rem;
+            border: none !important;
+            outline: none !important;
         }
 
         .stat-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
             width: 44px;
             height: 44px;
             border-radius: 10px;
-            margin-bottom: 0.875rem;
-            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: #fff;
+            flex-shrink: 0;
         }
 
-        .stat-icon.blue { 
-            background: linear-gradient(135deg, #FAE0EE 0%, #F4C9DF 100%);
-            color: #7A2B4A;
-        }
-        .stat-icon.purple { 
-            background: linear-gradient(135deg, #C5D79B 0%, #C6E8E0 100%);
-            color: #1D5A4B;
+        .stat-icon.pink { background: var(--pink); }
+        .stat-icon.green { background: var(--green); }
+
+        .stat-info .num {
+            font-family: 'Nord', 'Poppins', sans-serif;
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--cherry);
+            line-height: 1.1;
         }
 
-        .classes-section h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #0f172a;
+        .stat-info .label {
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--caption);
+        }
+
+        .section-title {
+            font-family: 'Nord', 'Poppins', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--cherry);
+            margin-bottom: 1rem;
+        }
+
+        .package-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.625rem;
             margin-bottom: 1.5rem;
-            letter-spacing: -0.025em;
+        }
+
+        .package-tab {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.5rem 1.125rem;
+            border-radius: 999px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--caption);
+            background: transparent;
+            border: 1px solid #F0C4D6;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+        }
+
+        .package-tab:hover {
+            background: var(--section-bg);
+            color: var(--cherry);
+            border-color: var(--petal);
+        }
+
+        .package-tab.active {
+            background: var(--pink);
+            color: #fff;
+            border-color: var(--pink);
+            box-shadow: 0 3px 10px rgba(238,78,139,0.2);
+        }
+
+        .package-tab .tab-count {
+            font-size: 11px;
+            font-weight: 600;
+            opacity: 0.65;
+        }
+
+        .package-tab.active .tab-count {
+            opacity: 0.9;
+        }
+
+        .package-tab .tab-icon {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .package-tab.active .tab-icon {
+            opacity: 1;
+        }
+
+        .card-package-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--ivy);
+            padding: 0.1rem 0.5rem;
+            border-radius: 3px;
+            background: rgba(197, 215, 155, 0.18);
+            margin-left: 0.5rem;
+            vertical-align: middle;
+            letter-spacing: 0.01em;
+        }
+
+        .card-package-badge i {
+            font-size: 8px;
+            opacity: 0.7;
+        }
+
+        .filter-empty {
+            display: none;
+            text-align: center;
+            padding: 2.5rem 1.5rem;
+            grid-column: 1 / -1;
+        }
+
+        .filter-empty.visible {
+            display: block;
+        }
+
+        .filter-empty .fe-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--petal), rgba(238,78,139,0.06));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--cherry);
+            margin: 0 auto 0.75rem;
+        }
+
+        .filter-empty h4 {
+            font-family: 'Nord', 'Poppins', sans-serif;
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--cherry);
+            margin-bottom: 0.25rem;
+        }
+
+        .filter-empty p {
+            font-size: 13px;
+            color: var(--caption);
         }
 
         .classes-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 1.25rem;
         }
 
         .class-card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 16px;
-            border: 1px solid #e2e8f0;
             overflow: hidden;
-            transition: all 0.3s ease;
-            position: relative;
+            border: 1px solid #E8C0D4;
+            box-shadow: 0 2px 8px rgba(122,43,74,0.06), 0 1px 3px rgba(122,43,74,0.04);
+            transition: opacity 0.25s ease, box-shadow 0.2s ease, transform 0.2s ease;
         }
 
         .class-card:hover {
-            border-color: #EE4E8B;
-            box-shadow: 0 10px 40px rgba(238, 78, 139, 0.12);
-            transform: translateY(-4px);
-        }
-
-        .card-header {
-            padding: 1.5rem;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            border-bottom: 1px solid #e2e8f0;
-            position: relative;
-        }
-
-        .card-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, #7A2B4A 0%, #EE4E8B 100%);
-        }
-
-        .class-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: #0f172a;
-            margin-bottom: 0.25rem;
-            letter-spacing: -0.025em;
-        }
-
-        .class-category {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #64748b;
-            font-weight: 600;
+            box-shadow: 0 6px 20px rgba(122,43,74,0.10), 0 2px 6px rgba(122,43,74,0.06);
+            transform: translateY(-2px);
         }
 
         .card-body {
-            padding: 1.5rem;
+            padding: 1.25rem;
+            border: none !important;
+            outline: none !important;
         }
 
-        .package-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.625rem 1rem;
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            border: 1px solid #fcd34d;
-            color: #92400e;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.8125rem;
-            margin-bottom: 1.25rem;
-            width: 100%;
-            justify-content: center;
-        }
-
-        .package-icon {
-            font-size: 0.875rem;
-        }
-
-        .schedule-info {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 0.75rem;
-            margin-bottom: 1.25rem;
-            padding-bottom: 1.25rem;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .schedule-item {
+        .card-header-row {
             display: flex;
-            align-items: center;
-            gap: 0.625rem;
-            min-width: 0;
-            overflow: hidden;
-        }
-
-        .schedule-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            background: rgba(241,204,227,0.30);
-            color: #7A2B4A;
-            font-size: 0.8rem;
-            flex-shrink: 0;
-        }
-
-        .schedule-details {
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-            overflow: hidden;
-        }
-
-        .schedule-label {
-            font-size: 0.75rem;
-            color: #64748b;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .schedule-value {
-            font-size: 0.8125rem;
-            color: #0f172a;
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .instructor-info {
-            display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 0.875rem;
-            margin-bottom: 1.25rem;
-            padding: 0.875rem;
-            background: #f8fafc;
-            border-radius: 10px;
+            margin-bottom: 0.85rem;
+            border: none !important;
+            outline: none !important;
         }
 
-        .instructor-avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%);
+        .class-icon-badge {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 1rem;
+            color: #fff;
+            font-size: 0.9rem;
             flex-shrink: 0;
         }
 
-        .instructor-details {
+        .card-title-area {
             flex: 1;
             min-width: 0;
+            border: none !important;
+            outline: none !important;
         }
 
-        .instructor-label {
-            font-size: 0.75rem;
-            color: #64748b;
+        .card-class-name {
+            font-family: 'Nord', 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--cherry);
+            line-height: 1.2;
+            margin-bottom: 0.1rem;
+            border: none !important;
+            outline: none !important;
+        }
+
+        .card-subtitle {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: 14px;
+            font-style: italic;
+            color: var(--caption);
+            border: none !important;
+            outline: none !important;
+        }
+
+        .visit-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            padding: 0.2rem 0.7rem;
+            border-radius: 999px;
+            background: var(--section-bg);
+            color: var(--cherry);
+            margin-bottom: 0.85rem;
+            border: none !important;
+            outline: none !important;
+        }
+
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            padding: 0.75rem 0;
+            margin-bottom: 0;
+            border: none !important;
+            outline: none !important;
+        }
+
+        .sched-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+        }
+
+        .sched-cell .s-label {
+            font-family: 'Poppins', sans-serif;
+            font-size: 11px;
             font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.125rem;
+            letter-spacing: 0.03em;
+            color: var(--caption);
         }
 
-        .instructor-name {
-            font-size: 0.95rem;
-            color: #0f172a;
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .status-badge {
-            display: inline-flex;
+        .sched-cell .s-value {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--layl);
+            display: flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.625rem 1rem;
-            background: #dcfce7;
-            color: #166534;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.875rem;
-            border: 1px solid #bbf7d0;
+            gap: 0.35rem;
         }
 
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            background: #16a34a;
-            border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .empty-state {
+        .sched-cell .s-value i {
+            font-size: 12px;
+            color: var(--pink);
+            width: 16px;
             text-align: center;
-            padding: 4rem 2rem;
-            background: white;
-            border-radius: 16px;
-            border: 1px solid #e2e8f0;
         }
 
-        .empty-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 1.5rem;
-            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 0.75rem;
+            border: none !important;
+            outline: none !important;
+        }
+
+        .instructor-group {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+        }
+
+        .instructor-group .iavatar {
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
+            background: var(--cherry);
+            color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
+            font-family: 'Poppins', sans-serif;
+            font-size: 10px;
+            font-weight: 600;
+            flex-shrink: 0;
         }
 
-        .empty-state h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.025em;
+        .instructor-group .iinfo .ilabel {
+            font-family: 'Poppins', sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: var(--caption);
         }
 
-        .empty-state p {
-            color: #64748b;
-            margin-bottom: 2rem;
-            font-size: 0.95rem;
+        .instructor-group .iinfo .iname {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--layl);
         }
 
-        .btn-book {
+        .status-pill {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.875rem 1.75rem;
-            background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%);
-            color: white;
+            gap: 0.35rem;
+            padding: 0.35rem 0.85rem;
+            border-radius: 999px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            background: var(--green);
+            color: var(--springs-light);
+            border: none !important;
+            outline: none !important;
+        }
+
+        .status-pill .sdot {
+            width: 5px;
+            height: 5px;
+            background: var(--springs-light);
+            border-radius: 50%;
+        }
+
+        .empty-card {
+            text-align: center;
+            padding: 3rem 2rem;
+            max-width: 380px;
+            margin: 0 auto;
+            border: none !important;
+            outline: none !important;
+        }
+
+        .empty-card .eicon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--petal), rgba(238,78,139,0.08));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--cherry);
+            margin: 0 auto 1rem;
+        }
+
+        .empty-card h3 {
+            font-family: 'Nord', 'Poppins', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--cherry);
+            margin-bottom: 0.4rem;
+        }
+
+        .empty-card p {
+            font-size: 14px;
+            color: var(--caption);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-pink {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--pink);
+            color: #fff;
             border-radius: 10px;
             text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.2s;
-            border: none;
-            cursor: pointer;
+            font-family: 'Nord', 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            box-shadow: 0 3px 12px rgba(238,78,139,0.2);
+            transition: background 0.2s ease;
         }
 
-        .btn-book:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(122, 43, 74, 0.30);
-        }
-
-        @media (max-width: 1024px) {
-            .main-content {
-                padding: 2rem;
-            }
-
-            .classes-grid {
-                grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            }
+        .btn-pink:hover {
+            background: var(--cherry);
         }
 
         @media (max-width: 768px) {
             .main-content {
-                padding: 1rem;
-                margin-top: 3rem;
-            }
-
-            .page-header {
-                margin-bottom: 1.5rem;
-            }
-
-            .page-header h1 {
-                font-size: 1.5rem;
-            }
-
-            .page-header p {
-                font-size: 0.8rem;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-                margin-bottom: 1.5rem;
-            }
-
-            .stat-card {
                 padding: 1.25rem;
+                margin-top: 3.5rem;
             }
 
-            .stat-value {
-                font-size: 1.5rem;
-            }
+            .page-header h1 { font-size: 22px; }
+            .page-header p { font-size: 13px; }
 
-            .classes-grid {
+            .stats-row {
                 grid-template-columns: 1fr;
-                gap: 1rem;
+                gap: 0.75rem;
+                margin-bottom: 1.75rem;
             }
 
-            .class-card {
-                border-radius: 12px;
+            .stat-card { padding: 0.85rem 1rem; }
+            .stat-icon { width: 38px; height: 38px; font-size: 0.95rem; }
+            .stat-info .num { font-size: 22px; }
+
+            .classes-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+
+            .card-body { padding: 1rem; }
+
+            .schedule-grid {
+                gap: 0.35rem;
             }
 
-            .card-header {
-                padding: 1rem;
-            }
-
-            .card-body {
-                padding: 1rem;
-            }
-
-            .schedule-info {
-                grid-template-columns: 1fr;
+            .card-footer {
+                flex-wrap: wrap;
                 gap: 0.5rem;
-                margin-bottom: 1rem;
-                padding-bottom: 1rem;
-            }
-
-            .schedule-item {
-                gap: 0.5rem;
-            }
-
-            .instructor-info {
-                margin-bottom: 1rem;
-                padding: 0.75rem;
-            }
-
-            .package-badge {
-                margin-bottom: 1rem;
-                font-size: 0.75rem;
-                padding: 0.5rem 0.875rem;
-            }
-
-            .status-badge {
-                font-size: 0.75rem;
-                padding: 0.5rem 0.875rem;
-            }
-
-            .classes-section h2 {
-                font-size: 1.1rem;
-                margin-bottom: 1rem;
-            }
-
-            .empty-state {
-                padding: 2rem 1rem;
-            }
-
-            .empty-icon {
-                width: 60px;
-                height: 60px;
-                font-size: 1.75rem;
-                margin-bottom: 1rem;
-            }
-
-            .empty-state h3 {
-                font-size: 1.25rem;
-            }
-
-            .empty-state p {
-                font-size: 0.9rem;
-                margin-bottom: 1.5rem;
-            }
-
-            .btn-book {
-                padding: 0.75rem 1.5rem;
-                font-size: 0.9rem;
-            }
-        }
-
-        /* ═══════════════════════════════════════════ RESPONSIVE SIDEBAR ═══════════════════════════════════════════ */
-        .sidebar {
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-        }
-
-        .sidebar-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 20;
-            backdrop-filter: blur(4px);
-        }
-
-        .hamburger-btn {
-            display: none !important;
-            position: fixed !important;
-            top: 1rem !important;
-            left: 1rem !important;
-            z-index: 9999 !important;
-            width: 3rem !important;
-            height: 3rem !important;
-            background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%) !important;
-            color: white !important;
-            border: none !important;
-            border-radius: 0.5rem !important;
-            align-items: center !important;
-            justify-content: center !important;
-            box-shadow: 0 4px 12px rgba(122, 43, 74, 0.35) !important;
-            cursor: pointer !important;
-            transition: all 0.2s !important;
-            font-size: 1.25rem !important;
-        }
-
-        .hamburger-btn:hover {
-            background: linear-gradient(135deg, #5A1F3A 0%, #B83863 100%) !important;
-            transform: translateY(-1px) !important;
-            box-shadow: 0 6px 16px rgba(122, 43, 74, 0.45) !important;
-        }
-
-        .hamburger-btn:active {
-            transform: translateY(0) !important;
-        }
-
-        @media (max-width: 768px) {
-            .hamburger-btn {
-                display: flex !important;
-            }
-
-            .sidebar-overlay.active {
-                display: block !important;
             }
         }
     </style>
     <link rel="stylesheet" href="{{ asset('css/ftm-member-portal.css') }}?v={{ filemtime(public_path('css/ftm-member-portal.css')) }}">
 </head>
 
-<body class="bg-cream h-screen overflow-hidden">
+<body>
 
 <div class="flex h-screen">
-
     @include('partials.member-sidebar')
 
-    <!-- MAIN CONTENT -->
-    <!-- Mobile Sidebar Overlay -->
-    <!-- Mobile Sidebar Overlay removed to avoid dark backdrop -->
-
-    <!-- Mobile Hamburger Button -->
     <button id="hamburger-btn" class="hamburger-btn" onclick="toggleSidebar()">
         <i class="fas fa-bars"></i>
     </button>
 
     <main class="flex-1 overflow-y-auto">
         <div class="main-content">
-            
-            <!-- Page Header -->
+
             <div class="page-header">
-                <h1 class="text-2xl md:text-3xl">My Classes</h1>
-                <p class="text-xs md:text-sm">Manage your scheduled workout sessions</p>
+                <h1>My Classes</h1>
+                <p>Manage your scheduled sessions</p>
             </div>
 
             @if(!$myClasses->isEmpty())
-                <!-- Stats Overview -->
-                <div class="stats-grid">
+                <div class="stats-row">
                     <div class="stat-card">
-                        <div class="stat-icon blue">
+                        <div class="stat-icon pink">
                             <i class="fas fa-calendar-check"></i>
                         </div>
-                        <div class="stat-label">Total Scheduled Classes</div>
-                        <div class="stat-value">{{ $stats['total_classes'] ?? 0 }}</div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon purple">
-                            <i class="fas fa-fire-flame-curved"></i>
+                        <div class="stat-info">
+                            <div class="num">{{ $stats['total_classes'] ?? 0 }}</div>
+                            <div class="label">Scheduled Classes</div>
                         </div>
-                        <div class="stat-label">Active Memberships</div>
-                        <div class="stat-value">{{ $stats['unique_packages'] ?? 0 }}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="num">{{ $stats['unique_packages'] ?? 0 }}</div>
+                            <div class="label">Active Memberships</div>
+                        </div>
                     </div>
                 </div>
             @endif
 
-            <!-- Classes Section -->
-            <div class="classes-section">
-                @if($myClasses->isEmpty())
-                    <!-- Empty State -->
-                    <div class="empty-state">
-                        <div class="empty-icon">
-                            <i class="fas fa-calendar-xmark" style="color: #94a3b8;"></i>
-                        </div>
-                        <h3>No Scheduled Classes</h3>
-                        <p>You haven't booked any classes yet. Start your fitness journey today!</p>
-                        <a href="{{ route('member.book') }}" class="btn-book">
-                            <i class="fas fa-plus-circle"></i>
-                            Book Your First Class
-                        </a>
+            @if($myClasses->isEmpty())
+                <div class="empty-card">
+                    <div class="eicon">
+                        <i class="fas fa-calendar-xmark"></i>
                     </div>
-                @else
-                    <h2>Scheduled Sessions</h2>
-                    <div class="classes-grid">
-                        @foreach($myClasses as $item)
-                            @php
-                                $className = $item->schedule->classModel->class_name ?? 'Class';
-                                $classType = '';
-                                
-                                if (str_contains($className, 'Pilates')) {
-                                    $classType = 'Pilates';
-                                } elseif (str_contains($className, 'Muaythai')) {
-                                    $classType = 'Muaythai';
-                                } elseif (str_contains($className, 'Body Shaping')) {
-                                    $classType = 'Body Shaping';
-                                } else {
-                                    $classType = 'Fitness';
-                                }
+                    <h3>No Scheduled Classes</h3>
+                    <p>You haven't booked any classes yet.</p>
+                    <a href="{{ route('member.book') }}" class="btn-pink">
+                        <i class="fas fa-plus-circle"></i> Book Your First Class
+                    </a>
+                </div>
+            @else
+                <div class="section-title">Scheduled Sessions</div>
 
-                                $instructor = $item->schedule->instructor ?? 'FTM Coach';
-                                
-                                $words = explode(' ', $instructor);
-                                $initials = '';
-                                foreach ($words as $word) {
-                                    $initials .= strtoupper(substr($word, 0, 1));
-                                }
-                                if (strlen($initials) > 2) {
-                                    $initials = substr($initials, 0, 2);
-                                }
+                @php
+                    $hasMulti = $activePackages->count() > 1;
+                    $allPkgs = $activePackages->pluck('package.name')->unique()->filter()->values();
+                    if ($hasMulti && $allPkgs->count() < 2) $hasMulti = false;
+                @endphp
 
-                                // ✅ GET PACKAGE NAME dari package_info
-                                $packageName = $item->package_info['name'] ?? 'Your Package';
-                            @endphp
+                @if($hasMulti)
+                <div class="package-tabs" id="packageTabs">
+                    <button class="package-tab active" data-package="all">
+                        <i class="fas fa-th-large tab-icon"></i> All Classes
+                        <span class="tab-count">{{ $myClasses->count() }}</span>
+                    </button>
+                    @foreach($allPkgs as $pkgName)
+                        @php
+                            $pkgSlug = Str::slug($pkgName);
+                            $pkgCount = $myClasses->filter(function($c) use ($pkgName) {
+                                $info = $c->package_info ?? [];
+                                return ($info['name'] ?? '') === $pkgName;
+                            })->count();
+                        @endphp
+                        @if($pkgCount > 0)
+                            <button class="package-tab" data-package="{{ $pkgSlug }}">
+                                <i class="fas fa-box-open tab-icon"></i> {{ $pkgName }}
+                                <span class="tab-count">{{ $pkgCount }}</span>
+                            </button>
+                        @endif
+                    @endforeach
+                </div>
+                @endif
 
-                            <div class="class-card">
-                                <!-- Card Header -->
-                                <div class="card-header">
-                                    <div class="class-category">{{ $classType }}</div>
-                                    <h3 class="class-title">{{ $className }}</h3>
+                <div class="classes-grid" id="classesGrid">
+                    @foreach($myClasses as $item)
+                        @php
+                            $className = $item->schedule->classModel->class_name ?? 'Class';
+                            $classNameLower = strtolower($className);
+                            $classIcon = 'fa-dumbbell';
+                            $classType = 'Fitness';
+
+                            if (str_contains($classNameLower, 'reformer pilates')) {
+                                $classIcon = 'fa-dumbbell'; $classType = 'Reformer Pilates';
+                            } elseif (str_contains($classNameLower, 'mat pilates')) {
+                                $classIcon = 'fa-person-praying'; $classType = 'Mat Pilates';
+                            } elseif (str_contains($classNameLower, 'pilates')) {
+                                $classIcon = 'fa-spa'; $classType = 'Pilates';
+                            } elseif (str_contains($classNameLower, 'muaythai')) {
+                                $classIcon = 'fa-hand-fist'; $classType = 'Muaythai';
+                            } elseif (str_contains($classNameLower, 'boxing')) {
+                                $classIcon = 'fa-fire'; $classType = 'Boxing';
+                            } elseif (str_contains($classNameLower, 'body shaping')) {
+                                $classIcon = 'fa-heart-pulse'; $classType = 'Body Shaping';
+                            } elseif (str_contains($classNameLower, 'mix')) {
+                                $classIcon = 'fa-layer-group'; $classType = 'Mix Class';
+                            } elseif (str_contains($classNameLower, 'yoga')) {
+                                $classIcon = 'fa-person-praying'; $classType = 'Yoga';
+                            } elseif (str_contains($classNameLower, 'private')) {
+                                $classIcon = 'fa-crown'; $classType = 'Private';
+                            } elseif (str_contains($classNameLower, 'single') || str_contains($classNameLower, 'visit')) {
+                                $classIcon = 'fa-ticket'; $classType = 'Single Visit';
+                            } elseif (str_contains($classNameLower, 'exclusive')) {
+                                $classIcon = 'fa-gem'; $classType = 'Exclusive';
+                            }
+
+                            $instructor = $item->schedule->instructor ?? 'FTM Coach';
+                            $words = explode(' ', $instructor);
+                            $initials = '';
+                            foreach ($words as $word) { $initials .= strtoupper(substr($word, 0, 1)); }
+                            if (strlen($initials) > 2) $initials = substr($initials, 0, 2);
+
+                            $pkgInfo = $item->package_info ?? [];
+                            $pkgName = $pkgInfo['name'] ?? 'Membership';
+                            $pkgSlug = Str::slug($pkgName);
+                        @endphp
+
+                        <div class="class-card" data-package="{{ $pkgSlug }}">
+                            <div class="card-body">
+                                <div class="card-header-row">
+                                    <div class="class-icon-badge" style="background: var(--green);">
+                                        <i class="fas {{ $classIcon }}"></i>
+                                    </div>
+                                    <div class="card-title-area">
+                                        <div class="card-class-name">{{ $className }}</div>
+                                        <div class="card-subtitle">
+                                            {{ $classType }}
+                                            @if($hasMulti)
+                                            <span class="card-package-badge">
+                                                <i class="fas fa-tag"></i> {{ $pkgName }}
+                                            </span>
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                    <!-- Package Badge -->
-                                    <div class="package-badge">
-                                        <i class="fas fa-box-open package-icon"></i>
-                                        <span>{{ $packageName }}</span>
+                                <div class="visit-badge">
+                                    <i class="fas fa-ticket" style="font-size: 10px; margin-right: 0.25rem;"></i>
+                                    {{ $classType }}
+                                </div>
+
+                                <div class="schedule-grid">
+                                    <div class="sched-cell">
+                                        <span class="s-label">Day</span>
+                                        <span class="s-value"><i class="fas fa-calendar-alt"></i>{{ $item->schedule->day }}</span>
                                     </div>
+                                    <div class="sched-cell">
+                                        <span class="s-label">Date</span>
+                                        <span class="s-value"><i class="fas fa-calendar-day"></i>{{ $item->schedule->schedule_date_formatted }}</span>
+                                    </div>
+                                    <div class="sched-cell">
+                                        <span class="s-label">Time</span>
+                                        <span class="s-value"><i class="fas fa-clock"></i>{{ \Carbon\Carbon::parse($item->schedule->class_time)->format('H:i') }}</span>
+                                    </div>
+                                </div>
 
-                                    <!-- Schedule Info -->
-                                    <div class="schedule-info">
-                                        <div class="schedule-item">
-                                            <div class="schedule-icon">
-                                                <i class="fas fa-calendar-day"></i>
-                                            </div>
-                                            <div class="schedule-details">
-                                                <span class="schedule-label">Day</span>
-                                                <span class="schedule-value">{{ $item->schedule->day }}</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="schedule-item">
-                                            <div class="schedule-icon">
-                                                <i class="fas fa-calendar"></i>
-                                            </div>
-                                            <div class="schedule-details">
-                                                <span class="schedule-label">Date</span>
-                                                <span class="schedule-value">{{ $item->schedule->schedule_date_formatted }}</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="schedule-item">
-                                            <div class="schedule-icon">
-                                                <i class="fas fa-clock"></i>
-                                            </div>
-                                            <div class="schedule-details">
-                                                <span class="schedule-label">Time</span>
-                                                <span class="schedule-value">
-                                                    {{ \Carbon\Carbon::parse($item->schedule->class_time)->format('H:i') }}
-                                                </span>
-                                            </div>
+                                <div class="card-footer">
+                                    <div class="instructor-group">
+                                        <div class="iavatar">{{ $initials }}</div>
+                                        <div class="iinfo">
+                                            <div class="ilabel">Instructor</div>
+                                            <div class="iname">{{ $instructor }}</div>
                                         </div>
                                     </div>
-
-                                    <!-- Instructor Info -->
-                                    <div class="instructor-info">
-                                        <div class="instructor-avatar">
-                                            {{ $initials }}
-                                        </div>
-                                        <div class="instructor-details">
-                                            <div class="instructor-label">Instructor</div>
-                                            <div class="instructor-name">{{ $instructor }}</div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Status Badge -->
-                                    <div class="status-badge">
-                                        <span class="status-dot"></span>
-                                        Confirmed
+                                    <div class="status-pill">
+                                        <span class="sdot"></span> Confirmed
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
+                        </div>
+                    @endforeach
+
+                    <div class="filter-empty" id="filterEmpty">
+                        <div class="fe-icon">
+                            <i class="fas fa-calendar-xmark"></i>
+                        </div>
+                        <h4>No classes in this package</h4>
+                        <p>Switch to another package to see its schedule.</p>
                     </div>
-                @endif
-            </div>
+                </div>
+            @endif
         </div>
     </main>
-
 </div>
 
 <script>
-// ===== SIDEBAR TOGGLE FUNCTION =====
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     const hamburger = document.getElementById('hamburger-btn');
     if (!sidebar) return;
-
     const willOpen = !sidebar.classList.contains('active') && !sidebar.classList.contains('open');
     sidebar.classList.toggle('active');
     sidebar.classList.toggle('open');
-
     if (willOpen) {
         document.body.classList.add('sidebar-open');
         document.body.style.overflow = 'hidden';
@@ -733,31 +733,58 @@ function toggleSidebar() {
         document.querySelectorAll('.hamburger-btn, .more-btn, .dots-btn, .three-dots, .more-menu-btn').forEach(el => el.style.display = '');
     }
 }
-
-// Close sidebar when clicking on a nav link
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM loaded, setting up sidebar');
-    
-    const navLinks = document.querySelectorAll('#sidebar nav a');
-    console.log('Found nav links:', navLinks.length);
-    
-    navLinks.forEach(link => {
+    document.querySelectorAll('#sidebar nav a').forEach(link => {
         link.addEventListener('click', function() {
             if (window.innerWidth <= 768) {
                 const sidebar = document.getElementById('sidebar');
-                if (sidebar && sidebar.classList.contains('active')) {
-                    toggleSidebar();
-                }
+                if (sidebar && sidebar.classList.contains('active')) toggleSidebar();
             }
         });
     });
 });
+// Package filter — professional filtering with transitions
+(function() {
+    var tabs = document.querySelectorAll('.package-tab');
+    var grid = document.getElementById('classesGrid');
+    var cards = grid ? grid.querySelectorAll('.class-card') : [];
+    var emptyMsg = document.getElementById('filterEmpty');
+    if (!tabs.length || !cards.length) return;
 
-// Reset sidebar on window resize
+    function applyFilter(pkg) {
+        var visibleCount = 0;
+        cards.forEach(function(card) {
+            var match = pkg === 'all' || card.getAttribute('data-package') === pkg;
+            if (match) {
+                card.style.display = '';
+                card.style.opacity = '0';
+                requestAnimationFrame(function() {
+                    card.style.opacity = '1';
+                });
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+                card.style.opacity = '0';
+            }
+        });
+
+        if (emptyMsg) {
+            emptyMsg.classList.toggle('visible', visibleCount === 0);
+        }
+    }
+
+    tabs.forEach(function(tab) {
+        tab.addEventListener('click', function(e) {
+            tabs.forEach(function(t) { t.classList.remove('active'); });
+            tab.classList.add('active');
+            applyFilter(tab.getAttribute('data-package'));
+        });
+    });
+})();
+
 window.addEventListener('resize', function() {
     const sidebar = document.getElementById('sidebar');
     const hamburger = document.getElementById('hamburger-btn');
-    
     if (window.innerWidth > 768 && sidebar) {
         sidebar.classList.remove('active');
         if (hamburger) hamburger.style.display = '';

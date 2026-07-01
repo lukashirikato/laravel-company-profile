@@ -137,10 +137,7 @@
                     </p>
                 </div>
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm border border-[#F4C9DF]/50 text-[#7A2B4A] relative">
-                        <i class="fas fa-bell text-sm"></i>
-                        <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-[#EE4E8B] rounded-full border-2 border-white"></span>
-                    </div>
+
                     <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#EE4E8B] to-[#7A2B4A] flex items-center justify-center text-white font-nord font-bold text-sm shadow-md border-2 border-white">
                         {{ strtoupper(substr($customer->name, 0, 1)) }}
                     </div>
