@@ -40,360 +40,380 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        :root {
+            --ftm-pink: #EE4E8B;
+            --ftm-cherry: #7A2B4A;
+            --ftm-petal: #F4C9DF;
+            --ftm-green: #1A7A5E;
+            --ftm-ivy: #1D5A4B;
+            --ftm-sage: #C5D79B;
+            --ftm-layl: #1C1C1C;
+            --ftm-rising: #FCF9F2;
+            --card-bg: #FFFDF9;
+            --border-color: rgba(122, 43, 74, 0.15);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #f8fafc;
+            font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+            background: var(--ftm-rising);
+            color: var(--ftm-layl);
+            -webkit-font-smoothing: antialiased;
         }
 
         .main-content {
             padding: 2.5rem;
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
         .page-header {
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
 
         .page-header h1 {
-            font-size: 2rem;
+            font-family: 'Nord', sans-serif;
+            font-size: 28px;
             font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.025em;
+            color: var(--ftm-cherry);
+            margin-bottom: 0.25rem;
+            line-height: 1.2;
         }
 
         .page-header p {
-            color: #64748b;
-            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            color: #6B7280;
+            line-height: 1.5;
         }
 
-        /* Transaction Grid - More compact */
+        /* Transactions list container */
         .transactions-grid {
             display: grid;
-            gap: 1.25rem;
+            gap: 1.5rem;
         }
 
-        /* Compact Transaction Card */
+        /* 🎟️ Distinctive "Class Ticket/Receipt" Card design */
         .transaction-card {
-            background: white;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            position: relative;
             overflow: hidden;
-            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(122, 43, 74, 0.04);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
         }
 
         .transaction-card:hover {
-            border-color: #cbd5e1;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(122, 43, 74, 0.08);
+            border-color: var(--ftm-pink);
         }
 
-        /* Card Layout - Horizontal compact */
-        .card-content {
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            gap: 1.5rem;
-            padding: 1.5rem;
+        /* Ticket side-cutout circles for the receipt aesthetic */
+        .transaction-card::before,
+        .transaction-card::after {
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: var(--ftm-rising);
+            border-radius: 50%;
+            top: 55px; /* aligned right at the dashed line */
+            z-index: 10;
+            border: 1px solid var(--border-color);
+            box-sizing: border-box;
+        }
+        .transaction-card::before {
+            left: -8px;
+            clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+        }
+        .transaction-card::after {
+            right: -8px;
+            clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+        }
+
+        /* Header of the ticket card */
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
+            padding: 1.25rem 1.5rem;
+            background: rgba(244, 201, 223, 0.1);
+            border-bottom: 1px dashed var(--border-color);
+            min-width: 0;
+            gap: 1rem;
         }
 
-        /* Status Section - Compact */
-        .status-section {
+        .ticket-package-info {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            min-width: 200px;
+            gap: 0.75rem;
+            min-width: 0;
         }
 
-        .status-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+        .ticket-package-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: #fff;
+            font-size: 0.9rem;
             flex-shrink: 0;
+            background: var(--ftm-cherry);
         }
 
-        .status-icon.success {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-            color: #059669;
+        .ticket-package-name {
+            font-family: 'Nord', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--ftm-cherry);
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .status-icon.pending {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            color: #d97706;
-        }
-
-        .status-icon.failed {
-            background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
-            color: #dc2626;
-        }
-
-        .status-icon i {
-            font-size: 1.25rem;
-        }
-
-        .status-info h3 {
-            font-size: 1rem;
+        .ticket-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.35rem 0.85rem;
+            border-radius: 999px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
             font-weight: 600;
-            color: #0f172a;
-            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            white-space: nowrap;
         }
 
-        .status-info p {
-            font-size: 0.875rem;
-            color: #64748b;
+        .ticket-status-badge.success {
+            background: rgba(26, 122, 94, 0.1);
+            color: var(--ftm-green);
+        }
+        .ticket-status-badge.pending {
+            background: rgba(238, 78, 139, 0.1);
+            color: var(--ftm-pink);
+        }
+        .ticket-status-badge.failed {
+            background: #fee2e2;
+            color: #b91c1c;
         }
 
-        /* Details Grid - Compact */
-        .details-grid {
+        /* Body of the ticket card */
+        .ticket-body {
+            padding: 1.5rem;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1.25rem;
-            flex: 1;
+            grid-template-columns: repeat(4, 1fr) auto;
+            gap: 1.5rem;
+            align-items: center;
         }
 
-        .detail-item {
+        .ticket-col {
             display: flex;
             flex-direction: column;
-            gap: 0.375rem;
+            gap: 0.35rem;
+            min-width: 0;
         }
 
-        .detail-label {
-            font-size: 0.75rem;
+        .ticket-label {
+            font-family: 'Poppins', sans-serif;
+            font-size: 11px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: #94a3b8;
+            color: #6B7280;
         }
 
-        .detail-value {
-            font-size: 0.9rem;
+        .ticket-value {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
             font-weight: 600;
-            color: #1e293b;
+            color: var(--ftm-layl);
+            line-height: 1.4;
+            word-break: break-word;
         }
 
-        /* Amount Section */
-        .amount-section {
-            text-align: right;
-            min-width: 140px;
-        }
-
-        .amount-label {
-            font-size: 0.75rem;
-            color: #64748b;
-            margin-bottom: 0.25rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .amount-value {
-            font-size: 1.5rem;
+        .ticket-value.amount {
+            font-family: 'Nord', sans-serif;
+            font-size: 17px;
             font-weight: 700;
-            color: #0f172a;
+            color: var(--ftm-cherry);
         }
 
-        .amount-value.success {
-            color: #059669;
+        .ticket-value.amount.success {
+            color: var(--ftm-green);
         }
 
-        /* Badges */
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.375rem;
-            padding: 0.375rem 0.75rem;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.8125rem;
-            white-space: nowrap;
-        }
-
-        .status-badge.success {
-            background: #d1fae5;
-            color: #065f46;
-            border: 1px solid #6ee7b7;
-        }
-
-        .status-badge.pending {
-            background: #fef3c7;
-            color: #92400e;
-            border: 1px solid #fcd34d;
-        }
-
-        .status-badge.failed {
-            background: #fecaca;
-            color: #991b1b;
-            border: 1px solid #f87171;
-        }
-
-        .payment-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.375rem;
-            padding: 0.375rem 0.75rem;
-            background: #ede9fe;
-            color: #6d28d9;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.8125rem;
-            border: 1px solid #c4b5fd;
-            white-space: nowrap;
-        }
-
-        .payment-badge i {
-            font-size: 0.875rem;
-        }
-
-        /* Order Code */
-        .order-code {
-            font-family: 'Courier New', monospace;
-            font-size: 0.8125rem;
-            color: #64748b;
-            background: #f8fafc;
-            padding: 0.25rem 0.625rem;
+        .ticket-value.order-code {
+            font-family: monospace;
+            background: #F3F4F6;
+            padding: 0.15rem 0.5rem;
             border-radius: 4px;
-            border: 1px solid #e2e8f0;
-        }
-
-        /* Date */
-        .transaction-date {
-            color: #64748b;
-            font-size: 0.8125rem;
-            display: flex;
-            align-items: center;
-            gap: 0.375rem;
-        }
-
-        .transaction-date i {
-            font-size: 0.875rem;
+            font-size: 12px;
+            border: 1px solid #E5E7EB;
+            display: inline-block;
+            width: fit-content;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
         }
 
         /* Action Button */
-        .action-button {
-            padding: 0.5rem 1rem;
-            background: white;
-            color: #475569;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.875rem;
-            text-decoration: none;
-            transition: all 0.2s;
+        .ticket-btn {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
+            padding: 0.55rem 1rem;
+            background: #fff;
+            color: var(--ftm-cherry);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
             cursor: pointer;
+            white-space: nowrap;
         }
 
-        .action-button:hover {
-            background: #f8fafc;
-            border-color: #cbd5e1;
-            transform: translateY(-1px);
+        .ticket-btn:hover {
+            background: var(--ftm-cherry);
+            color: #fff;
+            border-color: var(--ftm-cherry);
+            box-shadow: 0 4px 12px rgba(122, 43, 74, 0.15);
         }
 
-        .action-button i {
-            font-size: 0.875rem;
-        }
-
-        /* Empty State */
+        /* Empty State Override */
         .empty-state {
             text-align: center;
             padding: 4rem 2rem;
-            background: white;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px dashed var(--border-color);
         }
 
         .empty-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 1.5rem;
-            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 1.25rem;
+            background: rgba(244, 201, 223, 0.15);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
+            font-size: 1.6rem;
+            color: var(--ftm-cherry);
         }
 
         .empty-state h3 {
-            font-size: 1.5rem;
+            font-family: 'Nord', sans-serif;
+            font-size: 20px;
             font-weight: 700;
-            color: #0f172a;
+            color: var(--ftm-cherry);
             margin-bottom: 0.5rem;
-            letter-spacing: -0.025em;
         }
 
         .empty-state p {
-            color: #64748b;
-            margin-bottom: 2rem;
-            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            color: #6B7280;
+            margin-bottom: 1.75rem;
         }
 
         .btn-primary {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.875rem 1.75rem;
-            background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%);
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--ftm-cherry) 0%, var(--ftm-pink) 100%);
             color: white;
             border-radius: 10px;
             text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.2s;
+            font-family: 'Nord', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            box-shadow: 0 4px 15px rgba(238, 78, 139, 0.2);
+            transition: all 0.2s ease;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(122, 43, 74, 0.28);
+            box-shadow: 0 8px 22px rgba(238, 78, 139, 0.3);
         }
 
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .card-content {
-                grid-template-columns: 1fr;
+        /* Responsive Breakpoints */
+        @media (max-width: 968px) {
+            .ticket-body {
+                grid-template-columns: repeat(2, 1fr);
                 gap: 1.25rem;
             }
-
-            .status-section {
-                min-width: auto;
+            .ticket-col.amount-col {
+                grid-column: span 2;
+                border-top: 1px dashed rgba(122, 43, 74, 0.08);
+                padding-top: 1rem;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
             }
-
-            .amount-section {
-                text-align: left;
-                min-width: auto;
+            .ticket-col.btn-col {
+                grid-column: span 2;
+                align-items: stretch;
             }
-
-            .details-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .ticket-btn {
+                justify-content: center;
             }
         }
 
         @media (max-width: 768px) {
             .main-content {
-                padding: 1.5rem;
+                padding: 1.25rem;
+                margin-top: 3.5rem;
             }
-
+            .page-header {
+                margin-bottom: 1.75rem;
+            }
             .page-header h1 {
-                font-size: 1.75rem;
+                font-size: 22px;
             }
-
-            .details-grid {
-                grid-template-columns: 1fr;
+            .page-header p {
+                font-size: 13px;
             }
-
-            .amount-value {
-                font-size: 1.25rem;
+            .ticket-header {
+                padding: 1rem 1.25rem;
+            }
+            .ticket-package-name {
+                font-size: 14px;
+            }
+            .ticket-body {
+                padding: 1.25rem;
+                gap: 1rem;
+            }
+            .ticket-col {
+                gap: 0.25rem;
+            }
+            .ticket-label {
+                font-size: 10px;
+            }
+            .ticket-value {
+                font-size: 13px;
+            }
+            .ticket-value.amount {
+                font-size: 15px;
+            }
+            .transaction-card::before,
+            .transaction-card::after {
+                top: 50px;
             }
         }
 
@@ -507,86 +527,70 @@
                     @endphp
 
                     <div class="transaction-card">
-                        <div class="card-content">
-                            
-                            <!-- Status Section -->
-                            <div class="status-section">
-                                <div class="status-icon {{ $statusClass }}">
-                                    <i class="fas {{ $statusIcon }}"></i>
+                        <!-- Ticket Header -->
+                        <div class="ticket-header">
+                            <div class="ticket-package-info">
+                                <div class="ticket-package-icon">
+                                    <i class="fas fa-receipt"></i>
                                 </div>
-                                <div class="status-info">
-                                    <h3>{{ $statusText }}</h3>
-                                    <p class="transaction-date">
-                                        <i class="far fa-calendar"></i>
-                                        {{ $t->created_at ? $t->created_at->format('d M Y, H:i') : '-' }}
-                                    </p>
+                                <div class="ticket-package-name">
+                                    {{ $t->package->name ?? 'Membership Class' }}
                                 </div>
                             </div>
+                            <div class="ticket-status-badge {{ $statusClass }}">
+                                <i class="fas {{ $statusIcon }}"></i>
+                                {{ $statusText }}
+                            </div>
+                        </div>
 
-                            <!-- Details Grid -->
-                            <div class="details-grid">
-                                <!-- Order Code -->
-                                <div class="detail-item">
-                                    <span class="detail-label">Order Code</span>
-                                    <span class="order-code">
-                                        {{ Str::limit($t->transaction_id ?? $t->order_code ?? '-', 20) }}
-                                    </span>
-                                </div>
+                        <!-- Ticket Body -->
+                        <div class="ticket-body">
+                            <!-- Order Code -->
+                            <div class="ticket-col">
+                                <span class="ticket-label">Order Code</span>
+                                <span class="ticket-value order-code">
+                                    {{ $t->transaction_id ?? $t->order_code ?? '-' }}
+                                </span>
+                            </div>
 
-                                <!-- Package -->
-                                @if(isset($t->package) && $t->package)
-                                <div class="detail-item">
-                                    <span class="detail-label">Package</span>
-                                    <span class="detail-value">
-                                        {{ Str::limit($t->package->name ?? '-', 25) }}
-                                    </span>
-                                </div>
-                                @endif
-
-                                <!-- Payment Method -->
-                                <div class="detail-item">
-                                    <span class="detail-label">Payment</span>
+                            <!-- Payment Method -->
+                            <div class="ticket-col">
+                                <span class="ticket-label">Payment</span>
+                                <span class="ticket-value">
                                     @if($t->payment_type && $t->payment_type !== '-')
-                                        <span class="payment-badge">
-                                            <i class="fas fa-credit-card"></i>
-                                            {{ $formatPaymentMethod($t->payment_type) }}
-                                        </span>
+                                        {{ $formatPaymentMethod($t->payment_type) }}
                                     @else
-                                        <span class="detail-value" style="color: #94a3b8;">-</span>
+                                        -
                                     @endif
-                                </div>
-
-                                <!-- Status Badge -->
-                                <div class="detail-item">
-                                    <span class="detail-label">Status</span>
-                                    <span class="status-badge {{ $statusClass }}">
-                                        <i class="fas {{ $statusIcon }}"></i>
-                                        {{ ucfirst($t->status ?? 'Pending') }}
-                                    </span>
-                                </div>
-
-                                <!-- Action Button -->
-                                @if(isset($t->order_id))
-                                <div class="detail-item">
-                                    <span class="detail-label">Invoice</span>
-                                    <a href="{{ route('invoice.show', $t->order_id) }}" 
-                                       target="_blank"
-                                       class="action-button">
-                                        <i class="fas fa-download"></i>
-                                        Download
-                                    </a>
-                                </div>
-                                @endif
+                                </span>
                             </div>
 
-                            <!-- Amount Section -->
-                            <div class="amount-section">
-                                <div class="amount-label">Total Amount</div>
-                                <div class="amount-value {{ $statusClass }}">
+                            <!-- Date & Time -->
+                            <div class="ticket-col">
+                                <span class="ticket-label">Date & Time</span>
+                                <span class="ticket-value">
+                                    {{ $t->created_at ? $t->created_at->format('d M Y, H:i') : '-' }}
+                                </span>
+                            </div>
+
+                            <!-- Amount Column -->
+                            <div class="ticket-col amount-col">
+                                <span class="ticket-label">Total Amount</span>
+                                <span class="ticket-value amount {{ $statusClass }}">
                                     Rp {{ number_format($t->amount ?? 0, 0, ',', '.') }}
-                                </div>
+                                </span>
                             </div>
 
+                            <!-- Action Column -->
+                            @if(isset($t->order_id))
+                            <div class="ticket-col btn-col">
+                                <a href="{{ route('invoice.show', $t->order_id) }}" 
+                                   target="_blank"
+                                   class="ticket-btn">
+                                    <i class="fas fa-download"></i> Download Invoice
+                                </a>
+                            </div>
+                            @endif
                         </div>
                     </div>
         @empty

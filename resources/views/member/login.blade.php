@@ -76,6 +76,16 @@
 
         hr { border-color: #F4C9DF; }
 
+        /* Sembunyikan icon mata bawaan browser (Chrome/Edge) biar cuma 1 */
+        input[type="password"]::-webkit-credentials-auto-fill-button,
+        input[type="password"]::-webkit-textfield-decoration-container {
+            display: none !important;
+        }
+        input[type="password"]::-ms-reveal,
+        input[type="password"]::-ms-clear {
+            display: none;
+        }
+
         a.brand-link {
             color: #7A2B4A;
             font-weight: 600;
@@ -164,9 +174,6 @@
             <a href="{{ route('join') }}" class="brand-link hover:underline">Daftar Sekarang</a>
         </div>
 
-        <p class="text-center text-xs text-[#1C1C1C]/40 mt-4">
-            Data Anda aman dan terlindungi
-        </p>
     </div>
 
     <script>

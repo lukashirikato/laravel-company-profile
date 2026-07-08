@@ -19,7 +19,7 @@
             --layl: #1C1C1C;
             --card-bg: #FFFDF9;
             --section-bg: #F6D9E3;
-            --caption: #B4907C;
+            --caption: #555555;
             --springs-light: #E1F5EE;
         }
 
@@ -68,10 +68,11 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-            background: var(--card-bg);
+            background: #FFFFFF;
             border-radius: 12px;
             padding: 1rem 1.25rem;
-            border: none !important;
+            border: 1px solid #E8C0D4;
+            box-shadow: 0 4px 14px rgba(122,43,74,0.08), 0 1px 3px rgba(122,43,74,0.04);
             outline: none !important;
         }
 
@@ -174,8 +175,9 @@
             display: inline-flex;
             align-items: center;
             gap: 0.25rem;
-            font-size: 10px;
+            font-size: 12px;
             font-weight: 500;
+            font-style: normal;
             color: var(--ivy);
             padding: 0.1rem 0.5rem;
             border-radius: 3px;
@@ -186,7 +188,7 @@
         }
 
         .card-package-badge i {
-            font-size: 8px;
+            font-size: 10px;
             opacity: 0.7;
         }
 
@@ -234,16 +236,16 @@
         }
 
         .class-card {
-            background: var(--card-bg);
+            background: #FFFFFF;
             border-radius: 16px;
             overflow: hidden;
             border: 1px solid #E8C0D4;
-            box-shadow: 0 2px 8px rgba(122,43,74,0.06), 0 1px 3px rgba(122,43,74,0.04);
+            box-shadow: 0 4px 16px rgba(122,43,74,0.10), 0 1px 4px rgba(122,43,74,0.06);
             transition: opacity 0.25s ease, box-shadow 0.2s ease, transform 0.2s ease;
         }
 
         .class-card:hover {
-            box-shadow: 0 6px 20px rgba(122,43,74,0.10), 0 2px 6px rgba(122,43,74,0.06);
+            box-shadow: 0 8px 28px rgba(122,43,74,0.14), 0 2px 8px rgba(122,43,74,0.08);
             transform: translateY(-2px);
         }
 
@@ -295,7 +297,8 @@
         .card-subtitle {
             font-family: 'Instrument Serif', Georgia, serif;
             font-size: 14px;
-            font-style: italic;
+            font-style: normal;
+            line-height: 1.45;
             color: var(--caption);
             border: none !important;
             outline: none !important;
@@ -303,7 +306,7 @@
 
         .visit-badge {
             display: inline-block;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.03em;
@@ -314,6 +317,7 @@
             margin-bottom: 0.85rem;
             border: none !important;
             outline: none !important;
+            line-height: 1.4;
         }
 
         .schedule-grid {
@@ -334,11 +338,12 @@
 
         .sched-cell .s-label {
             font-family: 'Poppins', sans-serif;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.03em;
             color: var(--caption);
+            line-height: 1.4;
         }
 
         .sched-cell .s-value {
@@ -349,6 +354,7 @@
             display: flex;
             align-items: center;
             gap: 0.35rem;
+            line-height: 1.45;
         }
 
         .sched-cell .s-value i {
@@ -390,11 +396,12 @@
 
         .instructor-group .iinfo .ilabel {
             font-family: 'Poppins', sans-serif;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.03em;
             color: var(--caption);
+            line-height: 1.4;
         }
 
         .instructor-group .iinfo .iname {
@@ -402,6 +409,7 @@
             font-size: 14px;
             font-weight: 500;
             color: var(--layl);
+            line-height: 1.45;
         }
 
         .status-pill {
@@ -654,19 +662,9 @@
                                     <div class="card-title-area">
                                         <div class="card-class-name">{{ $className }}</div>
                                         <div class="card-subtitle">
-                                            {{ $classType }}
-                                            @if($hasMulti)
-                                            <span class="card-package-badge">
-                                                <i class="fas fa-tag"></i> {{ $pkgName }}
-                                            </span>
-                                            @endif
+                                            <i class="fas fa-box-open" style="font-size: 11px; margin-right: 0.25rem; color: var(--pink);"></i> {{ $pkgName }}
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="visit-badge">
-                                    <i class="fas fa-ticket" style="font-size: 10px; margin-right: 0.25rem;"></i>
-                                    {{ $classType }}
                                 </div>
 
                                 <div class="schedule-grid">

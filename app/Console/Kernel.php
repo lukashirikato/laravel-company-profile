@@ -85,6 +85,23 @@ class Kernel extends ConsoleKernel
         */
 
         // ========================================
+        // AUTO-FOLLOWUP CHECK — CUSTOMER YANG PERLU DIFOLLOW
+        // ========================================
+        // Scan setiap hari jam 08:00 untuk customer yang paketnya expired/belum beli
+        $schedule->command('customer:check-followup')
+            ->daily()
+            ->at('08:00')
+            ->timezone('Asia/Jakarta')
+            ->withoutOverlapping()
+            ->runInBackground()
+            ->onSuccess(function () {
+                \Log::info('✅ Follow-up check berhasil dijalankan');
+            })
+            ->onFailure(function () {
+                \Log::error('❌ Follow-up check gagal dijalankan');
+            });
+
+        // ========================================
         // BACKUP DATABASE (OPTIONAL)
         // ========================================
         // Backup database setiap hari jam 02:00

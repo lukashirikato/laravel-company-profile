@@ -843,6 +843,96 @@
             .main-content {
                 margin-top: 3rem;
             }
+
+            /* Horizontal Overflow & Layout Adjustments */
+            body {
+                overflow-x: hidden !important;
+            }
+            .flex.h-screen {
+                max-width: 100vw !important;
+                overflow-x: hidden !important;
+            }
+            main.flex-1 {
+                max-width: 100vw !important;
+                overflow-x: hidden !important;
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+
+            /* Card Package Info & Credit Status Bar */
+            .credit-status-card {
+                padding: 1rem !important;
+                box-sizing: border-box;
+                width: 100% !important;
+            }
+            .credit-status-card .flex-wrap {
+                gap: 0.75rem !important;
+            }
+            .credit-status-card .flex.items-center.gap-3 {
+                width: 100% !important;
+                min-width: 0;
+            }
+            .credit-status-card .flex.items-center.gap-3 > div:last-child {
+                min-width: 0;
+                flex: 1;
+            }
+            .credit-status-card p {
+                white-space: normal !important;
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+            }
+            .credit-status-card p.font-semibold {
+                font-size: 13px !important;
+                line-height: 1.3 !important;
+            }
+            #package-select {
+                max-width: 100% !important;
+                width: 100% !important;
+                font-size: 12px !important;
+                box-sizing: border-box;
+            }
+            .credit-status-card .ml-auto {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+
+            /* Date Picker (SELECT DATE) */
+            .date-selector-container > .flex.items-center.justify-between {
+                padding-right: 12px !important;
+            }
+            #week-dates {
+                display: flex !important;
+                grid-template-columns: none !important;
+                overflow-x: auto !important;
+                scroll-snap-type: x mandatory !important;
+                gap: 8px !important;
+                padding-bottom: 6px !important;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none; /* Hide scrollbar for Firefox */
+                width: 100% !important;
+                box-sizing: border-box;
+            }
+            #week-dates::-webkit-scrollbar {
+                display: none; /* Hide scrollbar for Chrome/Safari */
+            }
+            #week-dates button {
+                flex: 0 0 54px !important;
+                width: 54px !important;
+                min-width: 54px !important;
+                padding: 8px 4px !important;
+                scroll-snap-align: start !important;
+                box-sizing: border-box;
+            }
+            #week-dates button p {
+                font-size: 10px !important;
+            }
+            #week-dates button p.font-nord {
+                font-size: 16px !important;
+            }
+            #week-dates button .today-label {
+                font-size: 9px !important;
+                white-space: nowrap !important;
+            }
         }
     </style>
     <link rel="stylesheet" href="{{ asset('css/ftm-member-portal.css') }}?v={{ filemtime(public_path('css/ftm-member-portal.css')) }}">
@@ -906,7 +996,7 @@
         @endif
 
         {{-- CREDIT STATUS BAR --}}
-        <div class="bg-white rounded-2xl shadow-[0_2px_12px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] p-4 md:p-5 mb-8">
+        <div class="credit-status-card bg-white rounded-2xl shadow-[0_2px_12px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] p-4 md:p-5 mb-8">
             <div class="flex flex-wrap items-center gap-4 md:gap-8">
                 @if($selectedPackage)
                 <div class="flex items-center gap-3">
@@ -952,7 +1042,7 @@
         </div>
 
         {{-- DATE SELECTOR --}}
-        <div class="mb-8">
+        <div class="date-selector-container mb-8">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="font-nord font-semibold text-[17px] text-dark">SELECT DATE <span id="selected-date-label" class="font-poppins font-normal text-dark/40 text-[15px]">&mdash; {{ \Carbon\Carbon::parse($selectedDate)->format('l, d M Y') }}</span></h2>
                 <div class="flex items-center gap-2">
@@ -1052,25 +1142,6 @@
         </div>
 
         {{-- PROMO BANNER --}}
-        <div class="mt-10 rounded-2xl overflow-hidden relative shadow-[0_4px_20px_rgba(122,43,74,0.08)]"
-             style="background: linear-gradient(135deg, #1C1C1C 0%, #7A2B4A 100%); min-height: 180px;">
-            <div class="absolute inset-0 opacity-20"
-                 style="background-image: url('https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=800&q=80'); background-size: cover; background-position: center;"></div>
-            <div class="absolute inset-0 bg-gradient-to-r from-[#1C1C1C]/90 via-[#1C1C1C]/60 to-transparent"></div>
-            <div class="relative z-10 p-6 md:p-8 flex items-center h-full">
-                <div class="max-w-md">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-white/80 text-[10px] font-bold uppercase tracking-[0.2em] mb-3 border border-white/20">
-                        MEMBER EXCLUSIVE
-                    </span>
-                    <h3 class="font-nord font-bold text-[22px] text-white leading-tight mb-2">Elevate your wellness journey.</h3>
-                    <p class="font-poppins text-white/70 text-[13px] leading-relaxed">Unlock premium classes, priority booking, and exclusive perks with our Diamond membership.</p>
-                    <a href="{{ route('member.packages.index') }}" class="inline-flex items-center gap-2 mt-4 px-5 py-2.5 rounded-xl bg-white text-secondary font-poppins font-semibold text-[13px] hover:bg-white/90 transition-all shadow-lg">
-                        Learn More <i class="fas fa-arrow-right text-[11px]"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-
         <div class="h-8"></div>
 
     </main>
@@ -1439,7 +1510,7 @@
                     class="rounded-xl p-3 text-center transition-all duration-200 ${isSelected ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-white border border-[rgba(238,78,139,0.1)] text-dark hover:border-primary/30 hover:shadow-sm'}">
                     <p class="font-poppins text-[10px] font-semibold uppercase tracking-wider ${isSelected ? 'text-white/70' : 'text-dark/40'}">${dayName.slice(0, 3)}</p>
                     <p class="font-nord font-bold text-lg leading-tight mt-0.5">${dayNum}</p>
-                    ${isToday ? '<p class="font-poppins text-[9px] mt-0.5 font-semibold ' + (isSelected ? 'text-white/70' : 'text-primary') + '">TODAY</p>' : ''}
+                    ${isToday ? '<p class="font-poppins text-[9px] mt-0.5 font-semibold today-label ' + (isSelected ? 'text-white/70' : 'text-primary') + '">TODAY</p>' : ''}
                 </button>
             `;
         }

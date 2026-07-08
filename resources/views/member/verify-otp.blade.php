@@ -298,8 +298,8 @@
                 <div class="flex justify-center mb-5">
                     <div class="expiry-badge">
                         <i class="fas fa-clock" style="color:#EE4E8B;"></i>
-                        OTP berlaku hingga
-                        <span class="expiry-time" id="expiryTime">{{ $expiresAt->format('H:i:s') }}</span>
+                        OTP berlaku selama
+                        <span class="expiry-time" id="expiryTime" data-expires="{{ $expiresAt->timestamp }}">--:--</span>
                     </div>
                 </div>
             @endif
@@ -333,8 +333,6 @@
                 </button>
             </form>
         </div>
-
-       d
     </div>
 
     <script>
@@ -436,6 +434,27 @@
         if (cooldown > 0) {
             resendBtn.disabled = true;
             tickCooldown();
+        }
+
+        // ============================================================
+        // OTP EXPIRY COUNTDOWN
+        // ============================================================
+        const expiryEl = document.getElementById('expiryTime');
+        if (expiryEl) {
+            const expiresAt = parseInt(expiryEl.dataset.expires) * 1000;
+            function tickExpiry() {
+                const diff = expiresAt - Date.now();
+                if (diff <= 0) {
+                    expiryEl.textContent = 'Kedaluwarsa';
+                    expiryEl.style.color = '#EE4E8B';
+                    return;
+                }
+                const m = Math.floor(diff / 60000);
+                const s = Math.floor((diff % 60000) / 1000);
+                expiryEl.textContent = m + ':' + String(s).padStart(2, '0');
+                setTimeout(tickExpiry, 1000);
+            }
+            tickExpiry();
         }
     </script>
 </body>

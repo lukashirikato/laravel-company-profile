@@ -232,9 +232,9 @@
 
             @if($expiresAt)
                 <p class="text-center text-xs" style="color: rgba(28, 28, 28, 0.55);">
-                    Kode berlaku hingga
-                    <span class="countdown-text" id="otp-expires-display">
-                        {{ \Carbon\Carbon::parse($expiresAt)->format('H:i:s') }}
+                    Kode berlaku selama
+                    <span class="countdown-text" id="otp-expires-display" data-expires="{{ \Carbon\Carbon::parse($expiresAt)->timestamp }}">
+                        --:--
                     </span>
                 </p>
             @endif
@@ -353,6 +353,27 @@
                         cdSpan.textContent = remaining;
                     }
                 }, 1000);
+            }
+
+            /* ============================================================
+               OTP Expiry countdown
+               ============================================================ */
+            const otpExpiryEl = document.getElementById('otp-expires-display');
+            if (otpExpiryEl) {
+                const expiresAt = parseInt(otpExpiryEl.dataset.expires) * 1000;
+                function tickOtpExpiry() {
+                    const diff = expiresAt - Date.now();
+                    if (diff <= 0) {
+                        otpExpiryEl.textContent = 'Kedaluwarsa';
+                        otpExpiryEl.style.color = '#EE4E8B';
+                        return;
+                    }
+                    const m = Math.floor(diff / 60000);
+                    const s = Math.floor((diff % 60000) / 1000);
+                    otpExpiryEl.textContent = m + ':' + String(s).padStart(2, '0');
+                    setTimeout(tickOtpExpiry, 1000);
+                }
+                tickOtpExpiry();
             }
         })();
     </script>

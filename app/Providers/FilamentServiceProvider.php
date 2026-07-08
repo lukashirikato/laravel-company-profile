@@ -25,12 +25,9 @@ class FilamentServiceProvider extends ServiceProvider
                 LatestOrders::class,
             ]);
 
-            // Cache the filemtime lookup so each admin request avoids repeated filesystem reads.
-            $version = cache()->remember('filament.theme.version', 3600, function () {
-                $themePath = public_path('css/filament-theme.css');
-
-                return file_exists($themePath) ? filemtime($themePath) : time();
-            });
+            // Use filemtime directly for cache busting so CSS changes reflect immediately.
+            $themePath = public_path('css/filament-theme.css');
+            $version = file_exists($themePath) ? filemtime($themePath) : time();
 
             Filament::registerStyles([
                 asset('css/filament-theme.css') . '?v=' . $version,

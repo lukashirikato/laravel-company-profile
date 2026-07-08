@@ -20,4 +20,9 @@ class ClassGroup extends Model
     {
         return $this->hasMany(ClassModel::class, 'class_group_id');
     }
+
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class, 'class_group_id');
+    }
 }

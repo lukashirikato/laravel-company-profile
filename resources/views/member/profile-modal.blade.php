@@ -138,9 +138,12 @@
                 </div>
                 <div class="flex items-center gap-3">
 
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#EE4E8B] to-[#7A2B4A] flex items-center justify-center text-white font-nord font-bold text-sm shadow-md border-2 border-white">
-                        {{ strtoupper(substr($customer->name, 0, 1)) }}
-                    </div>
+                    <a href="{{ route('member.account') }}" class="block group">
+                        <div class="w-12 h-12 rounded-full flex items-center justify-center text-white font-nord font-bold text-base shadow-lg border-2 border-white/80 transition-transform duration-200 group-hover:scale-105 group-hover:shadow-xl"
+                             style="background: linear-gradient(135deg, #EE4E8B, #7A2B4A); box-shadow: 0 4px 12px rgba(238,78,139,0.3), 0 0 0 4px rgba(238,78,139,0.12);">
+                            {{ strtoupper(substr($customer->name, 0, 1)) }}
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>

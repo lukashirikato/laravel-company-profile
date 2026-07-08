@@ -17,6 +17,8 @@
     --ftm-rising: #FCF9F2;
 
     --topbar-h: 64px;       /* one source of truth for topbar/header height */
+    --sidebar-width: 17rem; /* sync sidebar width with padding on main content */
+    --collapsed-sidebar-width: 5.4rem;
 }
 
 /* ================================================================
@@ -64,7 +66,6 @@ aside > div,
 aside {
     border-right: 1px solid rgba(244, 201, 223, 0.10) !important;
     box-shadow: none !important;
-    width: 17rem !important;
     color: var(--ftm-rising) !important;
 }
 
@@ -339,16 +340,22 @@ header[data-topbar],
     gap: 1.25rem !important;
 }
 
-.fi-topbar a,
-.fi-topbar button,
-.filament-main-topbar a,
-.filament-main-topbar button {
+/* Breadcrumb links in topbar — light text on dark cherry bg */
+.fi-topbar .filament-breadcrumbs a,
+.filament-main-topbar .filament-breadcrumbs a {
     color: var(--ftm-rising) !important;
     font-weight: 500 !important;
 }
-.fi-topbar a:hover,
-.filament-main-topbar a:hover {
+.fi-topbar .filament-breadcrumbs a:hover,
+.filament-main-topbar .filament-breadcrumbs a:hover {
     color: var(--ftm-petal) !important;
+}
+
+/* Topbar buttons — keep light text for hamburger, notification, user menu */
+.fi-topbar button,
+.filament-main-topbar button {
+    color: var(--ftm-rising) !important;
+    font-weight: 500 !important;
 }
 
 .fi-topbar svg,
@@ -430,6 +437,45 @@ header[data-topbar],
 .fi-global-search svg,
 .filament-global-search svg {
     color: rgba(28, 28, 28, 0.45) !important;
+}
+
+/* Global search results dropdown — dark text on white bg */
+.filament-global-search-results-container,
+.filament-global-search-results-container * {
+    color: #1C1C1C !important;
+}
+
+.filament-global-search-results-container a {
+    color: #1C1C1C !important;
+}
+
+.filament-global-search-results-container a:hover {
+    color: #1C1C1C !important;
+}
+
+/* Result group header label */
+.filament-global-search-result-group header p {
+    color: #5B3F46 !important;
+}
+
+/* Hover state on result items — pink tinted */
+.filament-global-search-result > div:hover {
+    background: rgba(244, 201, 223, 0.25) !important;
+}
+
+/* Result title — bold and dark */
+.filament-global-search-result p.font-medium {
+    color: #1C1C1C !important;
+}
+
+/* Detail labels (Email:, Phone:) */
+.filament-global-search-result .text-gray-700 {
+    color: #374151 !important;
+}
+
+/* Detail values */
+.filament-global-search-result .text-gray-500 {
+    color: #4B5563 !important;
 }
 
 /* ================================================================

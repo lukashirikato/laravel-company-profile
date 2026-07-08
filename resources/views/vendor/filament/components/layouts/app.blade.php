@@ -4,9 +4,6 @@
 
 <x-filament::layouts.base :title="$title">
 
-    {{-- ✅ PANGGIL CSS THEME --}}
-    <link rel="stylesheet" href="{{ asset('css/filament-theme.css') }}">
-
     <div class="filament-app-layout flex h-full w-full overflow-x-clip">
         <div
             x-data="{}"
@@ -31,7 +28,7 @@
                 x-bind:style="'display: flex'"
             @endif
             @class([
-                'filament-main w-screen flex-1 flex-col gap-y-6 rtl:lg:pl-0',
+                'filament-main w-full flex-1 flex-col gap-y-6 rtl:lg:pl-0',
                 'hidden h-full transition-all' => config('filament.layout.sidebar.is_collapsible_on_desktop'),
                 'flex lg:pl-[var(--sidebar-width)] rtl:lg:pr-[var(--sidebar-width)]' => ! config('filament.layout.sidebar.is_collapsible_on_desktop'),
             ])

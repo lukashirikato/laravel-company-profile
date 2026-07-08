@@ -28,7 +28,10 @@
        ============================================================ */
 
     .acct-main { background: #FCF9F2; min-height: 100vh; font-family: 'Poppins', system-ui, sans-serif; overflow-x: hidden; box-sizing: border-box; }
-    @media (min-width: 769px) { .acct-main { margin-left: 13.5rem; width: calc(100% - 13.5rem); } }
+    @media (min-width: 769px) {
+        .acct-main { margin-left: 13.5rem; width: calc(100% - 13.5rem); }
+        .ftm-sidebar { position: fixed; top: 0; left: 0; bottom: 0; z-index: 30; }
+    }
     .acct-container { max-width: 1100px; margin: 0 auto; }
 
     .acct-header { margin-bottom: 1.5rem; }
@@ -349,12 +352,6 @@
     }
 
     /* -- Content cards -- */
-    .content-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1.25rem;
-        margin-bottom: 1.25rem;
-    }
     .content-card {
         background: #FFFFFF;
         border: 1px solid rgba(244, 201, 223, 0.6);
@@ -373,60 +370,6 @@
         margin-bottom: 1rem;
     }
     .cc-title i { font-size: 1rem; color: #EE4E8B; }
-
-    /* QR action buttons */
-    .qr-actions { display: flex; flex-direction: column; gap: 0.5rem; }
-    .qr-action-btn {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 0.8rem 1rem;
-        border-radius: 10px;
-        border: none;
-        cursor: pointer;
-        font-family: 'Poppins', sans-serif;
-        font-size: 0.85rem;
-        font-weight: 600;
-        transition: background .15s, transform .12s, box-shadow .15s;
-        text-decoration: none;
-        width: 100%;
-        text-align: left;
-    }
-    .qr-action-btn:active { transform: scale(0.99); }
-    .qr-action-btn i { width: 20px; text-align: center; }
-
-    .qr-action-btn.btn-download { background: #1C1C1C; color: #FCF9F2; }
-    .qr-action-btn.btn-download:hover { background: #000; }
-
-    .qr-action-btn.btn-print { background: #EE4E8B; color: #FFFFFF; box-shadow: 0 4px 10px rgba(238, 78, 139, 0.28); }
-    .qr-action-btn.btn-print:hover { background: #7A2B4A; }
-
-    .qr-action-btn.btn-regen { background: #FCF9F2; color: #7A2B4A; border: 1px solid #F4C9DF; }
-    .qr-action-btn.btn-regen:hover { background: #F4C9DF; }
-
-    .qr-action-btn.btn-disable { background: #FFF0F2; color: #B22336; border: 1px solid #FAD0D5; }
-    .qr-action-btn.btn-disable:hover { background: #FFE5E9; }
-
-    .qr-action-btn.btn-generate {
-        background: linear-gradient(135deg, #EE4E8B 0%, #7A2B4A 100%);
-        color: #FFFFFF;
-        justify-content: center;
-        padding: 0.95rem 1rem;
-        box-shadow: 0 6px 14px rgba(238, 78, 139, 0.32);
-    }
-
-    .info-tip {
-        background: rgba(244, 201, 223, 0.35);
-        border-left: 3px solid #EE4E8B;
-        border-radius: 0 10px 10px 0;
-        padding: 0.7rem 0.9rem;
-        font-size: 0.78rem;
-        color: #7A2B4A;
-        display: flex;
-        gap: 8px;
-        align-items: flex-start;
-        margin-top: 0.85rem;
-    }
 
     /* -- Quick links -- */
     .quick-links { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
@@ -503,51 +446,7 @@
     .toggle input:checked + .slider { background-color: #EE4E8B; }
     .toggle input:checked + .slider::before { transform: translateX(18px); }
 
-    /* Login history list */
-    .lh-list { display: flex; flex-direction: column; gap: 0.6rem; }
-    .lh-item {
-        display: flex;
-        align-items: center;
-        gap: 0.7rem;
-        padding: 0.6rem 0.8rem;
-        background: #FCF9F2;
-        border: 1px solid rgba(244, 201, 223, 0.5);
-        border-radius: 10px;
-    }
-    .lh-icon {
-        width: 32px; height: 32px;
-        border-radius: 8px;
-        background: rgba(122, 43, 74, 0.10);
-        color: #7A2B4A;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        font-size: 0.85rem;
-    }
-    .lh-info { flex: 1; min-width: 0; }
-    .lh-info .lh-title { font-size: 0.82rem; font-weight: 600; color: #1C1C1C; }
-    .lh-info .lh-sub   { font-size: 0.72rem; color: rgba(28,28,28,0.55); margin-top: 1px; }
-    .lh-time { font-size: 0.7rem; color: rgba(28,28,28,0.5); white-space: nowrap; }
 
-    /* Danger button (logout all) */
-    .btn-danger-outline {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 0.6rem 1rem;
-        border: 1px solid #B22336;
-        color: #B22336;
-        background: transparent;
-        border-radius: 10px;
-        font-family: 'Poppins', sans-serif;
-        font-weight: 600;
-        font-size: 0.8rem;
-        cursor: pointer;
-        margin-top: 0.85rem;
-        transition: background .15s;
-    }
-    .btn-danger-outline:hover { background: #FFF0F2; }
 
     /* --- Modal generic --- */
     .ftm-modal-overlay {
@@ -758,79 +657,6 @@
     }
     .qp-status-badge .qp-dot { width: 6px; height: 6px; border-radius: 50%; background: #1A7A5E; animation: pulse-dot 1.6s infinite; }
 
-    /* Print modal */
-    .print-member-card {
-        background: linear-gradient(135deg, #7A2B4A 0%, #5A1F37 100%);
-        border-radius: 14px;
-        padding: 1.5rem;
-        text-align: center;
-        margin-bottom: 1rem;
-        position: relative;
-        overflow: hidden;
-    }
-    .print-member-card::before {
-        content: ''; position: absolute; top: -40px; right: -40px;
-        width: 110px; height: 110px; border-radius: 50%;
-        background: rgba(238, 78, 139, 0.18);
-    }
-    .print-member-card .brand {
-        font-family: 'Nord','Poppins',sans-serif;
-        font-size: 0.6rem;
-        font-weight: 800;
-        letter-spacing: 0.25em;
-        color: #F4C9DF;
-        text-transform: uppercase;
-        position: relative;
-    }
-    .print-member-card .card-type {
-        font-family: 'Nord','Poppins',sans-serif;
-        font-size: 0.9rem;
-        font-weight: 800;
-        color: #FCF9F2;
-        letter-spacing: 0.06em;
-        margin-bottom: 1rem;
-        position: relative;
-    }
-    .print-member-card .qr-wrap {
-        background: #FFFFFF;
-        border-radius: 10px;
-        padding: 0.6rem;
-        display: inline-block;
-        margin-bottom: 0.85rem;
-        position: relative;
-    }
-    .print-member-card .pmname {
-        font-size: 0.9rem;
-        font-weight: 700;
-        color: #FCF9F2;
-        position: relative;
-    }
-    .print-member-card .pmid {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.72rem;
-        color: rgba(244, 201, 223, 0.85);
-        margin-top: 2px;
-        position: relative;
-    }
-    .btn-print-now {
-        width: 100%;
-        padding: 0.8rem;
-        border-radius: 12px;
-        border: none;
-        background: #EE4E8B;
-        color: #FFFFFF;
-        font-family: 'Nord','Poppins',sans-serif;
-        font-weight: 700;
-        font-size: 0.85rem;
-        cursor: pointer;
-        transition: background .15s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-    .btn-print-now:hover { background: #7A2B4A; }
-
     /* Toast */
     .toast-stack {
         position: fixed;
@@ -906,19 +732,12 @@
         .member-info .name { font-size: 1.4rem !important; }
         .member-info .detail-grid { grid-template-columns: 1fr !important; }
         .stats-grid { grid-template-columns: 1fr !important; }
-        .content-grid { grid-template-columns: 1fr !important; }
         .quick-links { grid-template-columns: 1fr !important; }
     }
 
     @keyframes spin { to { transform: rotate(360deg); } }
     .spin { animation: spin 1s linear infinite; }
 
-    @media print {
-        body > *:not(#print-modal) { display: none; }
-        #print-modal { display: block !important; position: static; background: none; }
-        .ftm-modal-box { box-shadow: none; border: none; }
-        .ftm-modal-close, button { display: none !important; }
-    }
 </style>
 
 <div style="display:flex; min-height:100vh; overflow-x:hidden;">
@@ -1046,131 +865,79 @@
                 </div>
             </div>
 
-  {{-- ----------------------------------------------
-       QR ACTIONS
-  ---------------------------------------------- --}}
-            <div class="content-grid">
-                {{-- QR Actions --}}
-                <div class="content-card">
-                    <div class="cc-title"><i class="fas fa-qrcode"></i> QR Code Actions</div>
-                    <div class="qr-actions">
-                        @if($member->qr_token && $member->qr_active)
-                            <button onclick="downloadQR()" class="qr-action-btn btn-download" type="button">
-                                <i class="fas fa-download"></i> Download QR Code
-                            </button>
-                            <button onclick="printQR()" class="qr-action-btn btn-print" type="button">
-                                <i class="fas fa-print"></i> Print Member Card
-                            </button>
-                            <button onclick="regenerateQR(event)" class="qr-action-btn btn-regen" type="button">
-                                <i class="fas fa-sync-alt"></i> Regenerate QR Code
-                            </button>
-                            <button onclick="disableQR(event)" class="qr-action-btn btn-disable" type="button">
-                                <i class="fas fa-ban"></i> Disable QR Code
-                            </button>
-                        @else
-                            <button onclick="generateQR(event)" class="qr-action-btn btn-generate" type="button">
-                                <i class="fas fa-qrcode"></i> Generate QR Code
-                            </button>
-                        @endif
-                    </div>
-                    <div class="info-tip">
-                        <i class="fas fa-info-circle"></i>
-                        <span>Tunjukkan QR code di pintu masuk gym untuk check-in. Staff akan scan otomatis.</span>
-                    </div>
-                </div>
-            </div>
-
             {{-- --------------------------------------
-                 ACCOUNT SETTINGS + EMERGENCY CONTACT
+                 ACCOUNT SETTINGS
             -------------------------------------- --}}
-            <div class="content-grid">
-                {{-- Account Settings --}}
-                <div class="content-card">
-                    <div class="cc-title"><i class="fas fa-user-cog"></i> Pengaturan Akun</div>
+            <div class="content-card">
+                <div class="cc-title"><i class="fas fa-user-cog"></i> Pengaturan Akun</div>
 
-                    <div class="setting-row">
-                        <div class="setting-row-info">
-                            <div class="sr-title">Edit Profil</div>
-                            <div class="sr-sub">Ubah nama dan nomor HP</div>
-                        </div>
-                        <button class="btn-cancel" style="flex:0; padding: 0.5rem 0.85rem;" onclick="openModal('editProfileModal')" type="button">
-                            Edit
-                        </button>
+                <div class="setting-row">
+                    <div class="setting-row-info">
+                        <div class="sr-title">Edit Profil</div>
+                        <div class="sr-sub">Ubah nama dan nomor HP</div>
                     </div>
-
-                    <div class="setting-row">
-                        <div class="setting-row-info">
-                            <div class="sr-title">Ubah Password</div>
-                            <div class="sr-sub">Update password akun secara berkala</div>
-                        </div>
-                        <button class="btn-cancel" style="flex:0; padding: 0.5rem 0.85rem;" onclick="openModal('changePasswordModal')" type="button">
-                            Ubah
-                        </button>
-                    </div>
-
-                    <div class="setting-row">
-                        <div class="setting-row-info">
-                            <div class="sr-title">Foto Profil</div>
-                            <div class="sr-sub">{{ $hasAvatar ? 'Foto sudah diunggah' : 'Belum ada foto' }}</div>
-                        </div>
-                        @if($hasAvatar)
-                            <button class="btn-cancel" style="flex:0; padding: 0.5rem 0.85rem; color:#B22336; border-color:#FAD0D5;" onclick="removeAvatar()" type="button">
-                                Hapus
-                            </button>
-                        @else
-                            <button class="btn-cancel" style="flex:0; padding: 0.5rem 0.85rem;" onclick="document.getElementById('avatarInput').click()" type="button">
-                                Upload
-                            </button>
-                        @endif
-                    </div>
-
-                    <div class="cc-title" style="margin-top: 1.25rem; margin-bottom: 0.85rem;">Notifikasi</div>
-
-                    <div class="setting-row">
-                        <div class="setting-row-info">
-                            <div class="sr-title">WhatsApp � Booking</div>
-                            <div class="sr-sub">Konfirmasi booking kelas via WhatsApp</div>
-                        </div>
-                        <label class="toggle">
-                            <input type="checkbox" id="notifWaBooking" {{ ($member->notify_whatsapp_booking ?? true) ? 'checked' : '' }} onchange="saveNotifications()">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="setting-row">
-                        <div class="setting-row-info">
-                            <div class="sr-title">WhatsApp � Pembayaran</div>
-                            <div class="sr-sub">Notifikasi pembayaran berhasil/gagal</div>
-                        </div>
-                        <label class="toggle">
-                            <input type="checkbox" id="notifWaPayment" {{ ($member->notify_whatsapp_payment ?? true) ? 'checked' : '' }} onchange="saveNotifications()">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="setting-row">
-                        <div class="setting-row-info">
-                            <div class="sr-title">Email � Promo & Newsletter</div>
-                            <div class="sr-sub">Penawaran dan info terbaru via email</div>
-                        </div>
-                        <label class="toggle">
-                            <input type="checkbox" id="notifEmailMarketing" {{ ($member->notify_email_marketing ?? false) ? 'checked' : '' }} onchange="saveNotifications()">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
+                    <button class="btn-cancel" style="flex:0; padding: 0.5rem 0.85rem;" onclick="openModal('editProfileModal')" type="button">
+                        Edit
+                    </button>
                 </div>
 
-                {{-- Login History + Logout All --}}
-                <div class="content-card">
-                    <div class="cc-title"><i class="fas fa-history"></i> Riwayat Login</div>
-                    <div style="font-size: 0.78rem; color: rgba(28,28,28,0.6); margin-bottom: 0.85rem;">
-                        5 sesi login terakhir di akun Anda. Pantau kalau ada aktivitas mencurigakan.
+                <div class="setting-row">
+                    <div class="setting-row-info">
+                        <div class="sr-title">Ubah Password</div>
+                        <div class="sr-sub">Update password akun secara berkala</div>
                     </div>
-                    <div class="lh-list" id="loginHistoryList">
-                        <div style="font-size: 0.78rem; color: rgba(28,28,28,0.5); padding: 0.5rem 0;">Memuat riwayat login...</div>
-                    </div>
-
-                    <button class="btn-danger-outline" type="button" onclick="logoutAllDevices()">
-                        <i class="fas fa-sign-out-alt"></i> Logout dari Semua Perangkat
+                    <button class="btn-cancel" style="flex:0; padding: 0.5rem 0.85rem;" onclick="openModal('changePasswordModal')" type="button">
+                        Ubah
                     </button>
+                </div>
+
+                <div class="setting-row">
+                    <div class="setting-row-info">
+                        <div class="sr-title">Foto Profil</div>
+                        <div class="sr-sub">{{ $hasAvatar ? 'Foto sudah diunggah' : 'Belum ada foto' }}</div>
+                    </div>
+                    @if($hasAvatar)
+                        <button class="btn-cancel" style="flex:0; padding: 0.5rem 0.85rem; color:#B22336; border-color:#FAD0D5;" onclick="removeAvatar()" type="button">
+                            Hapus
+                        </button>
+                    @else
+                        <button class="btn-cancel" style="flex:0; padding: 0.5rem 0.85rem;" onclick="document.getElementById('avatarInput').click()" type="button">
+                            Upload
+                        </button>
+                    @endif
+                </div>
+
+                <div class="cc-title" style="margin-top: 1.25rem; margin-bottom: 0.85rem;">Notifikasi</div>
+
+                <div class="setting-row">
+                    <div class="setting-row-info">
+                        <div class="sr-title">WhatsApp &mdash; Booking</div>
+                        <div class="sr-sub">Konfirmasi booking kelas via WhatsApp</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="notifWaBooking" {{ ($member->notify_whatsapp_booking ?? true) ? 'checked' : '' }} onchange="saveNotifications()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="setting-row">
+                    <div class="setting-row-info">
+                        <div class="sr-title">WhatsApp &mdash; Pembayaran</div>
+                        <div class="sr-sub">Notifikasi pembayaran berhasil/gagal</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="notifWaPayment" {{ ($member->notify_whatsapp_payment ?? true) ? 'checked' : '' }} onchange="saveNotifications()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="setting-row">
+                    <div class="setting-row-info">
+                        <div class="sr-title">Email &mdash; Promo & Newsletter</div>
+                        <div class="sr-sub">Penawaran dan info terbaru via email</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="notifEmailMarketing" {{ ($member->notify_email_marketing ?? false) ? 'checked' : '' }} onchange="saveNotifications()">
+                        <span class="slider"></span>
+                    </label>
                 </div>
             </div>
 
@@ -1185,7 +952,7 @@
 {{-- Edit Profile Modal --}}
 <div id="editProfileModal" class="ftm-modal-overlay">
     <div class="ftm-modal-box">
-        <button type="button" class="ftm-modal-close" onclick="closeModal('editProfileModal')">�</button>
+        <button type="button" class="ftm-modal-close" onclick="closeModal('editProfileModal')"><i class="fas fa-times"></i></button>
         <h3 class="ftm-modal-title">Edit Profil</h3>
         <p class="ftm-modal-sub">Email tidak dapat diubah. Hubungi support jika perlu mengganti email.</p>
         <form id="formEditProfile" onsubmit="saveProfile(event)">
@@ -1208,7 +975,7 @@
 {{-- Change Password Modal --}}
 <div id="changePasswordModal" class="ftm-modal-overlay">
     <div class="ftm-modal-box">
-        <button type="button" class="ftm-modal-close" onclick="closeModal('changePasswordModal')">�</button>
+        <button type="button" class="ftm-modal-close" onclick="closeModal('changePasswordModal')"><i class="fas fa-times"></i></button>
         <h3 class="ftm-modal-title">Ubah Password</h3>
         <p class="ftm-modal-sub">Password minimal 8 karakter. Setelah berhasil, gunakan password baru di login berikutnya.</p>
         <form id="formChangePassword" onsubmit="savePassword(event)">
@@ -1235,7 +1002,7 @@
 {{-- QR Preview --}}
 <div id="qr-preview-overlay" class="qr-preview-overlay">
     <div class="qr-preview-card">
-        <button type="button" class="qp-close" onclick="closeQRPreview()">�</button>
+        <button type="button" class="qp-close" onclick="closeQRPreview()"><i class="fas fa-times"></i></button>
         <div class="qp-inner">
             <div class="qp-header">
                 <div class="qp-brand">FTM Society</div>
@@ -1257,42 +1024,18 @@
     </div>
 </div>
 
-{{-- Print modal --}}
-<div id="print-modal" class="ftm-modal-overlay">
-    <div class="ftm-modal-box">
-        <button type="button" class="ftm-modal-close" onclick="closeModal('print-modal')">�</button>
-        <h3 class="ftm-modal-title"><i class="fas fa-print" style="color:#EE4E8B; margin-right:6px;"></i>Print Member Card</h3>
-        <div class="print-member-card">
-            <div class="brand">FTM SOCIETY</div>
-            <div class="card-type">MEMBER CARD</div>
-            <div class="qr-wrap">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=170x170&data={{ urlencode($qrData) }}&color=7A2B4A" alt="QR" style="width:170px; height:170px; display:block;">
-            </div>
-            <div class="pmname">{{ $member->name }}</div>
-            <div class="pmid">Member ID: #{{ $memberId }}</div>
-        </div>
-        <button onclick="window.print()" class="btn-print-now" type="button">
-            <i class="fas fa-print"></i> Print Sekarang
-        </button>
-    </div>
-</div>
-
 {{-- Toast container --}}
 <div class="toast-stack" id="toastStack"></div>
 
 <script>
 const csrfToken = '{{ csrf_token() }}';
 const ROUTES = {
-    qrGenerate:    '{{ route("member.api.qr.generate") }}',
-    qrRegenerate:  '{{ route("member.api.qr.regenerate") }}',
-    qrDisable:     '{{ route("member.api.qr.disable") }}',
     profileUpdate: '{{ route("member.api.profile.update") }}',
     profileAvatar: '{{ route("member.api.profile.avatar") }}',
     profileAvatarRemove: '{{ route("member.api.profile.avatar.remove") }}',
     profilePassword: '{{ route("member.api.profile.password") }}',
     profileNotifs: '{{ route("member.api.profile.notifications") }}',
-    profileLoginHistory: '{{ route("member.api.profile.login-history") }}',
-    profileLogoutAll: '{{ route("member.api.profile.logout-all") }}',
+
 };
 
 /* ------------ TOAST ------------ */
@@ -1324,11 +1067,10 @@ function closeModal(id) {
 }
 function openQRPreview()   { document.getElementById('qr-preview-overlay').classList.add('open'); document.body.style.overflow = 'hidden'; }
 function closeQRPreview()  { document.getElementById('qr-preview-overlay').classList.remove('open'); document.body.style.overflow = ''; }
-function printQR()         { openModal('print-modal'); }
 
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
-        ['editProfileModal','changePasswordModal','print-modal'].forEach(closeModal);
+        ['editProfileModal','changePasswordModal'].forEach(closeModal);
         closeQRPreview();
     }
 });
@@ -1362,45 +1104,6 @@ async function postJSON(url, payload = null, isFormData = false) {
     let data = {};
     try { data = await res.json(); } catch (_) {}
     return { ok: res.ok, status: res.status, data };
-}
-
-/* ------------ QR ACTIONS ------------ */
-async function generateQR(ev) {
-    if (ev) setLoading(ev, 'Generating...');
-    const r = await postJSON(ROUTES.qrGenerate);
-    if (r.ok && r.data.success) { toast('QR berhasil dibuat', '', 'success'); setTimeout(() => location.reload(), 800); }
-    else toast('Gagal membuat QR', r.data.message || 'Coba lagi', 'error');
-}
-async function regenerateQR(ev) {
-    if (!confirm('Ini akan menonaktifkan QR lama Anda. Lanjutkan?')) return;
-    if (ev) setLoading(ev, 'Regenerating...');
-    const r = await postJSON(ROUTES.qrRegenerate);
-    if (r.ok && r.data.success) { toast('QR diregenerasi', '', 'success'); setTimeout(() => location.reload(), 800); }
-    else toast('Gagal regenerate', r.data.message || '', 'error');
-}
-async function disableQR(ev) {
-    if (!confirm('Disable QR Code? Anda tidak bisa check-in sampai diaktifkan kembali.')) return;
-    if (ev) setLoading(ev, 'Disabling...');
-    const r = await postJSON(ROUTES.qrDisable);
-    if (r.ok && r.data.success) { toast('QR dinonaktifkan', '', 'success'); setTimeout(() => location.reload(), 800); }
-    else toast('Gagal disable', r.data.message || '', 'error');
-}
-function downloadQR() {
-    const img = document.querySelector('#qr-container img');
-    if (!img) return toast('QR tidak ditemukan', '', 'error');
-    const a = document.createElement('a');
-    a.href = img.src;
-    a.download = 'ftm-qr-{{ $memberId }}.png';
-    a.click();
-    toast('QR berhasil diunduh', '', 'success');
-}
-function setLoading(ev, msg) {
-    const btn = ev.target.closest('button');
-    if (btn) {
-        btn.dataset.original = btn.innerHTML;
-        btn.disabled = true;
-        btn.innerHTML = `<i class="fas fa-spinner spin"></i> ${msg}`;
-    }
 }
 
 /* ------------ PROFILE EDIT ------------ */
@@ -1506,47 +1209,6 @@ function saveNotifications() {
     }, 400);
 }
 
-/* ------------ LOGIN HISTORY ------------ */
-async function loadLoginHistory() {
-    try {
-        const res = await fetch(ROUTES.profileLoginHistory, {
-            headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-            credentials: 'include',
-        });
-        const data = await res.json();
-        const container = document.getElementById('loginHistoryList');
-        if (!data.success || !data.data?.logs?.length) {
-            container.innerHTML = '<div style="font-size:0.78rem;color:rgba(28,28,28,0.5);padding:0.5rem 0;">Belum ada riwayat login.</div>';
-            return;
-        }
-        const deviceIcon = (d) => d === 'mobile' ? 'fa-mobile-alt' : d === 'tablet' ? 'fa-tablet-alt' : 'fa-desktop';
-        container.innerHTML = data.data.logs.map(l => `
-            <div class="lh-item">
-                <div class="lh-icon"><i class="fas ${deviceIcon((l.device || '').toLowerCase())}"></i></div>
-                <div class="lh-info">
-                    <div class="lh-title">${l.device || 'Unknown'} � ${l.user_agent || ''}</div>
-                    <div class="lh-sub">${l.ip || '�'} � ${l.logged_in_at || ''}</div>
-                </div>
-                <div class="lh-time">${l.ago || ''}</div>
-            </div>
-        `).join('');
-    } catch (e) {
-        document.getElementById('loginHistoryList').innerHTML =
-            '<div style="font-size:0.78rem;color:rgba(28,28,28,0.5);padding:0.5rem 0;">Gagal memuat riwayat.</div>';
-    }
-}
-
-async function logoutAllDevices() {
-    if (!confirm('Logout dari semua perangkat? Anda akan diminta login ulang.')) return;
-    const r = await postJSON(ROUTES.profileLogoutAll);
-    if (r.ok && r.data.success) {
-        toast('Berhasil logout', 'Mengarahkan ke halaman login...', 'success');
-        setTimeout(() => window.location.href = r.data.data?.redirect || '/member/login', 1200);
-    } else {
-        toast('Gagal logout', r.data.message || '', 'error');
-    }
-}
-
 /* ------------ SIDEBAR MOBILE ------------ */
 function toggleSidebar() {
     const sidebar  = document.getElementById('sidebar');
@@ -1577,11 +1239,6 @@ window.addEventListener('resize', () => {
         if (h) h.innerHTML = '<i class="fas fa-bars text-lg"></i>';
         document.body.style.overflow = '';
     }
-});
-
-/* ------------ INIT ------------ */
-document.addEventListener('DOMContentLoaded', () => {
-    loadLoginHistory();
 });
 </script>
 @endsection

@@ -15,6 +15,7 @@ use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Carbon\Carbon;
 use Filament\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 
 class CustomerResource extends Resource
 {
@@ -474,17 +475,7 @@ class CustomerResource extends Resource
                         $phone = '62' . ltrim($record->phone_number, '0');
 
                         $message = urlencode(
-                            "Assalamu'alaikum {$record->name} 😊
-
-Akun FTM Society Anda sudah aktif!
-
-Login Member:
-Email: {$record->email}
-Password: {$plainPassword}
-
-Silakan login dan ganti password Anda.
-
-Selamat berlatih 💪"
+                            "Assalamu'alaikum {$record->name} 😊\n\nAkun FTM Society Anda sudah aktif!\n\nLogin Member:\nEmail: {$record->email}\nPassword: {$plainPassword}\n\nSilakan login dan ganti password Anda.\n\nSelamat berlatih 💪"
                         );
 
                         Notification::make()
@@ -494,6 +485,67 @@ Selamat berlatih 💪"
 
                         // Redirect ke WhatsApp
                         return redirect()->away("https://wa.me/{$phone}?text={$message}");
+                    }),
+
+                /* KIRIM WHATSAPP CUSTOM */
+                \Filament\Tables\Actions\Action::make('send_whatsapp')
+                    ->label('Kirim WA')
+                    ->icon('heroicon-o-chat')
+                    ->color('warning')
+                    ->visible(fn($record) => $record->phone_number)
+                    ->modalHeading('Kirim WhatsApp ke Member')
+                    ->modalWidth('lg')
+                    ->form(function (Customer $record) {
+                        return [
+                            \Filament\Forms\Components\Placeholder::make('customer_info')
+                                ->label('Member')
+                                ->content("{$record->name} — {$record->phone_number}"),
+                            \Filament\Forms\Components\Select::make('template_key')
+                                ->label('Template Pesan')
+                                ->options(\App\Helpers\MessageTemplate::getOptions())
+                                ->reactive()
+                                ->afterStateUpdated(fn (callable $set, $state) =>
+                                    $set('message', \App\Helpers\MessageTemplate::render($state, $record))
+                                )
+                                ->default('followup_reengagement'),
+                            \Filament\Forms\Components\Textarea::make('message')
+                                ->label('Pesan')
+                                ->required()
+                                ->rows(6)
+                                ->helperText('Anda bisa edit pesan sebelum dikirim.'),
+                        ];
+                    })
+                    ->action(function (Customer $record, array $data) {
+                        $message = trim($data['message'] ?? '');
+                        if (!$message) {
+                            Notification::make()->title('Pesan tidak boleh kosong')->warning()->send();
+                            return;
+                        }
+                        $phone = '62' . ltrim($record->phone_number, '0');
+                        $encoded = urlencode($message);
+                        $waUrl = "https://wa.me/{$phone}?text={$encoded}";
+
+                        // Log follow-up
+                        try {
+                            \App\Models\CustomerFollowUp::create([
+                                'customer_id'   => $record->id,
+                                'follow_up_type' => 'whatsapp',
+                                'template_used' => $data['template_key'] ?? 'custom',
+                                'message_sent'  => $message,
+                                'notes'         => 'WA dikirim dari halaman Customer: ' . now()->format('d/m/Y H:i'),
+                                'followed_up_by' => auth()->id(),
+                                'result'        => 'success',
+                            ]);
+                        } catch (\Throwable $e) {
+                            Log::warning('Gagal log follow-up: ' . $e->getMessage());
+                        }
+
+                        Notification::make()
+                            ->title('WhatsApp siap dikirim!')
+                            ->success()
+                            ->send();
+
+                        return redirect()->away($waUrl);
                     }),
 
                 Tables\Actions\EditAction::make(),
@@ -511,6 +563,29 @@ Selamat berlatih 💪"
                     ->modalHeading('Konfirmasi Hapus Customer Terpilih')
                     ->modalSubheading('Semua data customer yang dipilih akan dihapus permanen.')
                     ->successNotificationTitle('Data berhasil dihapus.'),
+                \Filament\Tables\Actions\BulkAction::make('export_csv')
+                    ->label('Export CSV')
+                    ->icon('heroicon-o-download')
+                    ->action(function (\Illuminate\Database\Eloquent\Collection $records) {
+                        $csv = "Nama,Email,Telepon,Paket,Membership,Status,Quota,Bergabung\n";
+                        foreach ($records as $record) {
+                            $csv .= implode(',', [
+                                '"' . str_replace('"', '""', $record->name ?? '') . '"',
+                                '"' . ($record->email ?? '') . '"',
+                                '"' . ($record->phone_number ?? '') . '"',
+                                '"' . ($record->package->name ?? '') . '"',
+                                $record->membership ?? '',
+                                $record->is_verified ? 'Verified' : 'Unverified',
+                                $record->quota ?? '0',
+                                $record->created_at ? $record->created_at->format('d/m/Y') : '',
+                            ]) . "\n";
+                        }
+                        return response()->streamDownload(function () use ($csv) {
+                            echo $csv;
+                        }, 'customers-export-' . now()->format('Ymd-His') . '.csv', [
+                            'Content-Type' => 'text/csv',
+                        ]);
+                    }),
             ]);
     }
 
