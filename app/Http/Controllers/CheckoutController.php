@@ -13,6 +13,7 @@ use App\Models\Transaction;
 use App\Models\Voucher;
 use App\Models\Schedule;
 use App\Models\CustomerSchedule;
+use App\Models\ScheduleLabelMapping;
 use App\Services\WhatsAppService;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -1098,56 +1099,34 @@ class CheckoutController extends Controller
 
     private function getPosterExclusiveClassOptions(): array
     {
+        $dbLabels = ScheduleLabelMapping::query()
+            ->orderBy('label')
+            ->pluck('label')
+            ->toArray();
+
+        if (!empty($dbLabels)) {
+            $result = [];
+
+            foreach ($dbLabels as $label) {
+                $slug = Str::slug($label, '_');
+                $result[$slug] = [
+                    'label' => $label,
+                    'schedules' => [],
+                ];
+            }
+
+            return $result;
+        }
+
+        // Fallback jika tabel masih kosong
         return [
-            'muaythai_intermediate' => [
-                'label' => 'Muaythai Intermediate',
-                'schedules' => [
-                    'Monday 19:00',
-                    'Thursday 19:00',
-                ],
-            ],
-            'mat_pilates' => [
-                'label' => 'Mat Pilates',
-                'schedules' => [
-                    'Wednesday 09:00',
-                    'Friday 09:00',
-                ],
-            ],
-            'mix_class_1' => [
-                'label' => 'Mix Class (1)',
-                'schedules' => [
-                    'Wednesday 19:00 – Mat Pilates',
-                    'Sunday 09:00 – Muaythai',
-                ],
-            ],
-            'mix_class_2' => [
-                'label' => 'Mix Class (2)',
-                'schedules' => [
-                    'Tuesday 19:00 – Mat Pilates',
-                    'Saturday 09:30 – Muaythai',
-                ],
-            ],
-            'mix_class_3' => [
-                'label' => 'Mix Class (3)',
-                'schedules' => [
-                    'Thursday 19:00 – Mat Pilates',
-                    'Sunday 11:00 – Body Shaping',
-                ],
-            ],
-            'mix_class_4' => [
-                'label' => 'Mix Class (4)',
-                'schedules' => [
-                    'Friday 19:00 – Body Shaping',
-                    'Sunday 10:00 – Muaythai',
-                ],
-            ],
-            'muaythai_beginner' => [
-                'label' => 'Muaythai Beginner',
-                'schedules' => [
-                    'Tuesday 19:00',
-                    'Saturday 08:00',
-                ],
-            ],
+            'muaythai_intermediate' => ['label' => 'Muaythai Intermediate', 'schedules' => []],
+            'mat_pilates'           => ['label' => 'Mat Pilates',           'schedules' => []],
+            'mix_class_1'           => ['label' => 'Mix Class (1)',         'schedules' => []],
+            'mix_class_2'           => ['label' => 'Mix Class (2)',         'schedules' => []],
+            'mix_class_3'           => ['label' => 'Mix Class (3)',         'schedules' => []],
+            'mix_class_4'           => ['label' => 'Mix Class (4)',         'schedules' => []],
+            'muaythai_beginner'     => ['label' => 'Muaythai Beginner',    'schedules' => []],
         ];
     }
 
@@ -1285,6 +1264,13 @@ class CheckoutController extends Controller
             return null;
         }
 
+        // ✅ Cek apakah label terdaftar di database (Management → Schedule Labels)
+        $mapping = ScheduleLabelMapping::where('label', $rawLabel)->first();
+        if ($mapping) {
+            return $mapping->label;
+        }
+
+        // ⚠️ Fallback: alias legacy untuk label lama yang belum di-migrasi
         $normalized = Str::of($rawLabel)
             ->lower()
             ->replace(['-', '_'], ' ')

@@ -5,7 +5,9 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ScheduleResource\Pages;
 use App\Models\Schedule;
 use App\Models\Package;
+use App\Models\ClassGroup;
 use App\Models\ClassModel;
+use App\Models\ScheduleLabelMapping;
 use App\Services\ScheduleExpansionService;
 use Filament\Forms;
 use Filament\Resources\Resource;
@@ -13,7 +15,6 @@ use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
 use Illuminate\Support\HtmlString;
 
@@ -25,24 +26,14 @@ class ScheduleResource extends Resource
     protected static ?string $navigationGroup = 'Management';
     protected static ?string $navigationLabel = 'Schedules';
 
-    private const POSTER_EXCLUSIVE_LABELS = [
-        'Muaythai Intermediate' => 'Muaythai Intermediate',
-        'Mat Pilates' => 'Mat Pilates',
-        'Mix Class (1)' => 'Mix Class (1)',
-        'Mix Class (2)' => 'Mix Class (2)',
-        'Mix Class (3)' => 'Mix Class (3)',
-        'Mix Class (4)' => 'Mix Class (4)',
-        'Muaythai Beginner' => 'Muaythai Beginner',
-    ];
-
     public static function form(Form $form): Form
     {
 
         $packageOptions = Package::query()->orderBy('name')->pluck('name', 'id')->toArray();
 
-        $classOptions = Cache::remember('classes_select_options', 3600, fn() => 
-            ClassModel::query()->orderBy('class_name')->pluck('class_name', 'id')->toArray()
-        );
+        $classOptions = ClassModel::query()->orderBy('class_name')->pluck('class_name', 'id')->toArray();
+
+        $labelOptions = ScheduleLabelMapping::query()->orderBy('label')->pluck('label', 'label')->toArray();
 
         return $form->schema([
             Forms\Components\Section::make('ℹ️ Informasi Tampilan')
@@ -72,16 +63,33 @@ class ScheduleResource extends Resource
                         ->label('Class')
                         ->options($classOptions)
                         ->searchable()
-                        ->nullable(),
+                        ->nullable()
+                        ->reactive()
+                        ->afterStateUpdated(function (callable $set, $state) {
+                            if ($state) {
+                                $classModel = \App\Models\ClassModel::find($state);
+                                if ($classModel && $classModel->class_group_id) {
+                                    $set('class_group_id', $classModel->class_group_id);
+                                }
+                            }
+                        }),
 
                     Forms\Components\Select::make('schedule_label')
                         ->label('Schedule Label')
-                        ->options(self::POSTER_EXCLUSIVE_LABELS)
+                        ->options($labelOptions)
                         ->placeholder('Pilih label sesuai poster')
-                        ->helperText('Pakai label resmi poster agar dropdown checkout dan jadwal otomatis sinkron.')
+                        ->helperText('Kelola label di Management → Schedule Labels. Class Group otomatis menyesuaikan.')
                         ->searchable()
                         ->required()
-                        ->reactive(),
+                        ->reactive()
+                        ->afterStateUpdated(function (callable $set, $state) {
+                            if ($state) {
+                                $mapping = \App\Models\ScheduleLabelMapping::where('label', $state)->first();
+                                if ($mapping && $mapping->class_group_id) {
+                                    $set('class_group_id', $mapping->class_group_id);
+                                }
+                            }
+                        }),
 
                     Forms\Components\TextInput::make('day')
                         ->label('Day(s)')
@@ -212,6 +220,11 @@ class ScheduleResource extends Resource
                     ->label('Class')
                     ->placeholder('—'),
 
+                Tables\Columns\TextColumn::make('classGroup.name')
+                    ->label('Group')
+                    ->placeholder('—')
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('day')
                     ->label('Day'),
 
@@ -279,6 +292,11 @@ class ScheduleResource extends Resource
                     ->label('Class')
                     ->options(ClassModel::query()->orderBy('class_name')->pluck('class_name', 'id')->toArray()),
 
+                Tables\Filters\SelectFilter::make('class_group_id')
+                    ->label('Group')
+                    ->relationship('classGroup', 'name')
+                    ->multiple(),
+
                 // Text filter for instructor (partial match)
                 Tables\Filters\Filter::make('instructor')
                     ->label('Instructor')
@@ -341,7 +359,7 @@ class ScheduleResource extends Resource
 
                         Forms\Components\Select::make('class_id')
                             ->label('Class')
-                            ->options(Cache::remember('classes_select_options', 3600, fn() => \App\Models\ClassModel::query()->orderBy('class_name')->pluck('class_name', 'id')->toArray()))
+                            ->options(\App\Models\ClassModel::query()->orderBy('class_name')->pluck('class_name', 'id')->toArray())
                             ->nullable(),
                     ])
                     ->action(function ($records, $data) {
@@ -394,10 +412,11 @@ class ScheduleResource extends Resource
             // ✅ Tampilkan SEMUA jadwal dari database (tidak ada filter)
             // Eager load packages untuk display
             return parent::getEloquentQuery()
-                ->with(['packages', 'classModel'])
+                ->with(['packages', 'classModel', 'classGroup'])
                 ->withCount('children')
                 ->select([
                     'schedules.id',
+                    'schedules.class_group_id',
                     'schedules.class_id',
                     'schedules.schedule_label',
                     'schedules.day',

@@ -39,6 +39,7 @@ class Schedule extends Model
 
     // ✅ TAMBAHKAN SEMUA KOLOM YANG ADA DI DATABASE
     protected $fillable = [
+        'class_group_id',
         'class_id',
         'schedule_label',
         'day',
@@ -119,6 +120,14 @@ class Schedule extends Model
         return 'Single';
     }
 
+
+    /**
+     * Relasi ke ClassGroup (group tempat schedule ini berada)
+     */
+    public function classGroup()
+    {
+        return $this->belongsTo(ClassGroup::class, 'class_group_id');
+    }
 
     /**
      * Relasi ke satu package (opsional, legacy)

@@ -1439,6 +1439,122 @@
         updateBulkBookingBar();
     }
 
+    function bookSelectedClasses() {
+        const selected = getSelectedScheduleCheckboxes();
+        if (selected.length === 0) return;
+
+        const modal = document.getElementById('bulk-confirm-modal');
+        const countEl = document.getElementById('bulk-confirm-count');
+        const listEl = document.getElementById('bulk-confirm-list');
+
+        if (countEl) countEl.textContent = selected.length;
+
+        if (listEl) {
+            listEl.innerHTML = '';
+            selected.forEach(function(card) {
+                const name = card.dataset.className || 'Class';
+                const time = card.dataset.time || '';
+                const instructor = card.dataset.instructor || 'Instructor';
+                const item = document.createElement('div');
+                item.style.cssText = 'display:flex; align-items:center; gap:0.75rem; padding:0.65rem 0.85rem; background:#f8fafc; border-radius:10px; font-size:0.85rem;';
+                item.innerHTML = `
+                    <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#EE4E8B,#7A2B4A);display:flex;align-items:center;justify-content:center;color:white;flex-shrink:0;">
+                        <i class="fas fa-calendar-alt" style="font-size:14px;"></i>
+                    </div>
+                    <div style="flex:1;min-width:0;">
+                        <div style="font-weight:600;color:#1C1C1C;font-size:0.85rem;">${name}</div>
+                        <div style="font-size:0.75rem;color:#94a3b8;margin-top:2px;">${time} &middot; ${instructor}</div>
+                    </div>
+                `;
+                listEl.appendChild(item);
+            });
+        }
+
+        if (modal) {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function confirmBulkBooking() {
+        const selected = getSelectedScheduleCheckboxes();
+        if (selected.length === 0) return;
+
+        const btn = document.getElementById('confirm-bulk-book-btn');
+        if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i>Processing...'; }
+
+        let completed = 0;
+        let errors = [];
+
+        selected.forEach(function(card) {
+            const scheduleId = card.dataset.scheduleId;
+            if (!scheduleId) { completed++; return; }
+
+            fetch(bookingStoreUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ schedule_id: scheduleId })
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (!data.success) {
+                    errors.push(data.message || 'Gagal booking');
+                }
+            })
+            .catch(function() {
+                errors.push('Network error');
+            })
+            .finally(function() {
+                completed++;
+                if (completed === selected.length) {
+                    finishBulkBooking(errors);
+                }
+            });
+        });
+    }
+
+    function finishBulkBooking(errors) {
+        const modal = document.getElementById('bulk-confirm-modal');
+        const btn = document.getElementById('confirm-bulk-book-btn');
+
+        if (modal) { modal.style.display = 'none'; document.body.style.overflow = ''; }
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-check" style="margin-right:6px;"></i>Ya, Book Semua'; }
+
+        if (errors.length === 0) {
+            showBookingToast('success', 'Semua kelas berhasil dibooking!');
+            clearAllSelections();
+            setTimeout(function() { window.location.reload(); }, 1500);
+        } else {
+            const msg = errors.length + ' dari ' + (getSelectedScheduleCheckboxes().length + errors.length) + ' booking gagal: ' + errors.join(', ');
+            showBookingToast('error', msg);
+            setTimeout(function() { window.location.reload(); }, 3000);
+        }
+    }
+
+    function showBookingToast(type, message) {
+        const existing = document.querySelector('.booking-toast');
+        if (existing) existing.remove();
+
+        const toast = document.createElement('div');
+        toast.className = 'booking-toast';
+        const isSuccess = type === 'success';
+        toast.style.cssText = 'position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:99999;padding:1rem 1.75rem;border-radius:14px;font-family:Poppins,sans-serif;font-size:0.875rem;font-weight:500;box-shadow:0 12px 48px rgba(0,0,0,0.18);display:flex;align-items:center;gap:10px;animation:modalIn 0.3s ease-out;max-width:90vw;' +
+            (isSuccess ? 'background:#1A7A5E;color:white;' : 'background:#DC2626;color:white;');
+        toast.innerHTML = '<i class="fas ' + (isSuccess ? 'fa-check-circle' : 'fa-exclamation-circle') + '"></i> ' + message;
+        document.body.appendChild(toast);
+        setTimeout(function() { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(function() { toast.remove(); }, 300); }, 4000);
+        toast.addEventListener('click', function() { toast.remove(); });
+    }
+
+    function closeBulkConfirm() {
+        const modal = document.getElementById('bulk-confirm-modal');
+        if (modal) { modal.style.display = 'none'; document.body.style.overflow = ''; }
+    }
+
     function switchPackage(orderId) {
         window.location.href = '{{ route("member.book") }}?order_id=' + orderId;
     }
@@ -1484,11 +1600,9 @@
     function formatTime12(timeStr) {
         if (!timeStr) return '--:--';
         const parts = timeStr.split(':');
-        const h = parseInt(parts[0]);
+        const h = parts[0].padStart(2, '0');
         const m = parts[1];
-        const ampm = h >= 12 ? 'PM' : 'AM';
-        const h12 = h % 12 || 12;
-        return h12 + ':' + m + ' ' + ampm;
+        return h + ':' + m;
     }
 
     function renderWeekPills() {
@@ -1790,6 +1904,14 @@
             // Close dropdown
             const dropdown = parent.closest('.filter-dropdown > div');
             if (dropdown) dropdown.classList.add('hidden');
+        }
+    });
+
+    // Close confirmation modal on backdrop click
+    document.addEventListener('click', function(e) {
+        const modal = document.getElementById('bulk-confirm-modal');
+        if (modal && modal.style.display === 'flex' && e.target === modal) {
+            closeBulkConfirm();
         }
     });
 

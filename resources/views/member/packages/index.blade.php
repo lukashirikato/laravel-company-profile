@@ -474,139 +474,105 @@
         </button>
     </div>
 
-    {{-- ================= TWO COLUMN LAYOUT ================= --}}
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-7">
+    {{-- ================= ACTIVE PACKAGES ================= --}}
+    @if($activePackages?->count())
+        <div class="grid grid-cols-1 {{ $activePackages->count() >= 2 ? 'md:grid-cols-2' : 'md:grid-cols-1' }} gap-6">
+        @foreach($activePackages as $order)
+            @php
+                $pkg = $order->package;
+                $isExpired = method_exists($order, 'isExpired') ? $order->isExpired() : false;
+                $remainingDays = method_exists($order, 'getRemainingDays') ? $order->getRemainingDays() : 0;
+                $remainingTime = method_exists($order, 'getRemainingTime') ? $order->getRemainingTime() : '-';
+                $totalDays = $pkg->duration_days ?? 30;
+                $progressPercentage = $remainingDays > 0 ? (($totalDays - $remainingDays) / $totalDays) * 100 : 100;
+                $statusColor = $remainingDays > 10 ? 'green' : ($remainingDays > 3 ? 'yellow' : 'red');
+            @endphp
 
-        {{-- LEFT COLUMN (2/3) — Active Package --}}
-        <div class="lg:col-span-2">
+            <div class="bg-white rounded-2xl shadow-[0_4px_20px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] overflow-hidden relative">
+                {{-- Top accent bar --}}
+                <div class="h-1 w-full bg-gradient-to-r from-primary to-secondary"></div>
 
-            @if($activePackages?->count())
-                <div class="grid grid-cols-1 {{ $activePackages->count() >= 2 ? 'md:grid-cols-2' : 'md:grid-cols-1' }} gap-6">
-                @foreach($activePackages as $order)
-                    @php
-                        $pkg = $order->package;
-                        $isExpired = method_exists($order, 'isExpired') ? $order->isExpired() : false;
-                        $remainingDays = method_exists($order, 'getRemainingDays') ? $order->getRemainingDays() : 0;
-                        $remainingTime = method_exists($order, 'getRemainingTime') ? $order->getRemainingTime() : '-';
-                        $totalDays = $pkg->duration_days ?? 30;
-                        $progressPercentage = $remainingDays > 0 ? (($totalDays - $remainingDays) / $totalDays) * 100 : 100;
-                        $statusColor = $remainingDays > 10 ? 'green' : ($remainingDays > 3 ? 'yellow' : 'red');
-                    @endphp
-
-                    <div class="bg-white rounded-2xl shadow-[0_4px_20px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] overflow-hidden relative">
-                        {{-- Top accent bar --}}
-                        <div class="h-1 w-full bg-gradient-to-r from-primary to-secondary"></div>
-
-                        <div class="p-6 md:p-7">
-                            {{-- Card Header --}}
-                            <div class="flex items-start justify-between mb-5">
-                                <div>
-                                    <div class="flex items-center gap-3 mb-1.5">
-                                        <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full font-poppins font-semibold text-[11px] uppercase tracking-wider {{ $isExpired ? 'bg-[rgba(238,78,139,0.1)] text-secondary' : 'bg-[rgba(26,122,94,0.1)] text-accent' }}">
-                                            <span class="w-1.5 h-1.5 rounded-full {{ $isExpired ? 'bg-secondary' : 'bg-accent' }}"></span>
-                                            {{ $isExpired ? 'Expired' : 'Active' }}
-                                        </span>
-                                        <span class="font-poppins text-dark/30 text-[12px] font-mono tracking-wider">#{{ $order->order_code }}</span>
-                                    </div>
-                                    <h3 class="font-nord font-bold text-[22px] md:text-[24px] text-dark leading-tight">{{ $pkg->name ?? 'Package' }}</h3>
-                                </div>
+                <div class="p-6 md:p-7">
+                    {{-- Card Header --}}
+                    <div class="flex items-start justify-between mb-5">
+                        <div>
+                            <div class="flex items-center gap-3 mb-1.5">
+                                <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full font-poppins font-semibold text-[11px] uppercase tracking-wider {{ $isExpired ? 'bg-[rgba(238,78,139,0.1)] text-secondary' : 'bg-[rgba(26,122,94,0.1)] text-accent' }}">
+                                    <span class="w-1.5 h-1.5 rounded-full {{ $isExpired ? 'bg-secondary' : 'bg-accent' }}"></span>
+                                    {{ $isExpired ? 'Expired' : 'Active' }}
+                                </span>
+                                <span class="font-poppins text-dark/30 text-[12px] font-mono tracking-wider">#{{ $order->order_code }}</span>
                             </div>
-
-                            {{-- Main Info Grid --}}
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                                {{-- Days Left --}}
-                                <div class="bg-cream rounded-xl p-5">
-                                    <p class="font-poppins font-semibold text-[11px] uppercase tracking-widest text-dark/45 mb-2">Days Left</p>
-                                    <p class="font-nord font-bold text-[36px] md:text-[40px] leading-none" style="color: {{ $statusColor === 'green' ? '#1A7A5E' : ($statusColor === 'yellow' ? '#1D5A4B' : '#7A2B4A') }}">
-                                        {{ $isExpired ? 0 : max($remainingDays, 0) }}
-                                    </p>
-                                    <p class="font-poppins text-dark/35 text-[13px] mt-1.5">{{ $remainingTime }}</p>
-                                </div>
-
-                                {{-- Progress --}}
-                                <div class="bg-cream rounded-xl p-5">
-                                    <p class="font-poppins font-semibold text-[11px] uppercase tracking-widest text-dark/45 mb-2">Usage Progress</p>
-                                    @php
-                                        $totalQuota = $pkg->quota ?? 0;
-                                        $classesLeft = $order->remaining_classes ?? $order->remaining_sessions ?? $totalQuota;
-                                        $used = max(0, $totalQuota - $classesLeft);
-                                        $usagePercent = $totalQuota > 0 ? ($used / $totalQuota) * 100 : 0;
-                                    @endphp
-                                    <p class="font-nord font-bold text-[36px] md:text-[40px] leading-none text-dark">{{ $used }}<span class="font-poppins text-lg text-dark/35 font-normal">/{{ $totalQuota }}</span></p>
-                                    <div class="mt-3 h-2.5 bg-white/80 rounded-full overflow-hidden shadow-inner">
-                                        <div class="h-full rounded-full bg-gradient-to-r from-primary to-secondary transition-all duration-700 shadow-[inset_0_1px_2px_rgba(255,255,255,0.3)]"
-                                             style="width: {{ min($usagePercent, 100) }}%"></div>
-                                    </div>
-                                    <p class="font-poppins text-dark/35 text-[13px] mt-1.5">{{ $classesLeft }} classes remaining</p>
-                                </div>
-                            </div>
-
-                            {{-- Start / Expire Info --}}
-                            <div class="flex flex-wrap gap-x-8 gap-y-2 font-poppins text-[14px] text-dark/50 mb-5">
-                                <span><span class="font-medium text-dark">Started:</span> {{ $order->created_at?->format('d M Y') ?? '-' }}</span>
-                                <span><span class="font-medium text-dark">Expires:</span> {{ $order->expired_at ? \Carbon\Carbon::parse($order->expired_at)->format('d M Y') : 'Unlimited' }}</span>
-                            </div>
-
-                            {{-- Warning for expiring --}}
-                            @if(!$isExpired && $remainingDays <= 7 && $remainingDays > 0)
-                                <div class="mb-5 p-3.5 bg-[rgba(238,78,139,0.06)] border border-[rgba(238,78,139,0.15)] rounded-xl flex items-start gap-3">
-                                    <i class="fas fa-exclamation-triangle text-secondary mt-0.5 text-sm"></i>
-                                    <div>
-                                        <p class="font-poppins font-semibold text-[13px] text-secondary">Package expiring soon!</p>
-                                        <p class="font-poppins text-[12px] text-secondary/60 mt-0.5">Renew now to continue enjoying access</p>
-                                    </div>
-                                </div>
-                            @endif
-
+                            <h3 class="font-nord font-bold text-[22px] md:text-[24px] text-dark leading-tight">{{ $pkg->name ?? 'Package' }}</h3>
                         </div>
                     </div>
-                @endforeach
-                </div>
-            @else
-                {{-- Empty State --}}
-                <div class="bg-white rounded-2xl shadow-[0_4px_20px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] p-10 md:p-14 text-center">
-                    <div class="w-20 h-20 rounded-full bg-[rgba(238,78,139,0.08)] flex items-center justify-center mx-auto mb-5">
-                        <i class="fas fa-box-open text-3xl text-secondary"></i>
+
+                    {{-- Main Info Grid --}}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                        {{-- Days Left --}}
+                        <div class="bg-cream rounded-xl p-5">
+                            <p class="font-poppins font-semibold text-[11px] uppercase tracking-widest text-dark/45 mb-2">Days Left</p>
+                            <p class="font-nord font-bold text-[36px] md:text-[40px] leading-none" style="color: {{ $statusColor === 'green' ? '#1A7A5E' : ($statusColor === 'yellow' ? '#1D5A4B' : '#7A2B4A') }}">
+                                {{ $isExpired ? 0 : max($remainingDays, 0) }}
+                            </p>
+                            <p class="font-poppins text-dark/35 text-[13px] mt-1.5">{{ $remainingTime }}</p>
+                        </div>
+
+                        {{-- Progress --}}
+                        <div class="bg-cream rounded-xl p-5">
+                            <p class="font-poppins font-semibold text-[11px] uppercase tracking-widest text-dark/45 mb-2">Usage Progress</p>
+                            @php
+                                $totalQuota = $pkg->quota ?? 0;
+                                $classesLeft = $order->remaining_classes ?? $order->remaining_sessions ?? $totalQuota;
+                                $used = max(0, $totalQuota - $classesLeft);
+                                $usagePercent = $totalQuota > 0 ? ($used / $totalQuota) * 100 : 0;
+                            @endphp
+                            <p class="font-nord font-bold text-[36px] md:text-[40px] leading-none text-dark">{{ $used }}<span class="font-poppins text-lg text-dark/35 font-normal">/{{ $totalQuota }}</span></p>
+                            <div class="mt-3 h-2.5 bg-white/80 rounded-full overflow-hidden shadow-inner">
+                                <div class="h-full rounded-full bg-gradient-to-r from-primary to-secondary transition-all duration-700 shadow-[inset_0_1px_2px_rgba(255,255,255,0.3)]"
+                                     style="width: {{ min($usagePercent, 100) }}%"></div>
+                            </div>
+                            <p class="font-poppins text-dark/35 text-[13px] mt-1.5">{{ $classesLeft }} classes remaining</p>
+                        </div>
                     </div>
-                    <h3 class="font-nord font-bold text-[22px] text-dark mb-2">No Active Package</h3>
-                    <p class="font-poppins text-dark/45 text-[15px] mb-7">Start your fitness journey by purchasing your first package</p>
-                    <button type="button" onclick="openAvailablePackagesModal()"
-                       class="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-xl font-poppins font-medium text-[14px] text-white transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
-                       style="background: linear-gradient(135deg, #EE4E8B, #C2185B, #7A2B4A); box-shadow: 0 4px 16px rgba(238,78,139,0.3);">
-                        <i class="fas fa-plus-circle text-sm"></i>
-                        Browse Packages
-                    </button>
-                </div>
-            @endif
 
-        </div>
-
-        {{-- RIGHT COLUMN (1/3) — Side Cards --}}
-        <div class="space-y-6">
-
-            {{-- Monthly Activity Card --}}
-            <div class="bg-white rounded-2xl shadow-[0_4px_20px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-nord font-semibold text-[15px] text-dark">Monthly Activity</h3>
-                    <div class="w-10 h-10 rounded-xl bg-[rgba(238,78,139,0.1)] flex items-center justify-center text-primary">
-                        <i class="fas fa-chart-line text-sm"></i>
+                    {{-- Start / Expire Info --}}
+                    <div class="flex flex-wrap gap-x-8 gap-y-2 font-poppins text-[14px] text-dark/50 mb-5">
+                        <span><span class="font-medium text-dark">Started:</span> {{ $order->created_at?->format('d M Y') ?? '-' }}</span>
+                        <span><span class="font-medium text-dark">Expires:</span> {{ $order->expired_at ? \Carbon\Carbon::parse($order->expired_at)->format('d M Y') : 'Unlimited' }}</span>
                     </div>
-                </div>
-                @php
-                    $totalVisits = $activePackages?->sum(function($o) {
-                        return $o->remaining_classes ?? 0;
-                    }) ?? 0;
-                @endphp
-                <p class="font-nord font-bold text-[32px] text-dark leading-none">{{ $totalVisits ?: 0 }}</p>
-                <p class="font-poppins text-dark/45 text-[13px] mt-1.5">Total sessions this month</p>
-                <div class="mt-4 flex items-center gap-1.5 font-poppins text-[13px] text-accent font-medium">
-                    <i class="fas fa-arrow-up text-xs"></i>
-                    <span>12% from last month</span>
+
+                    {{-- Warning for expiring --}}
+                    @if(!$isExpired && $remainingDays <= 7 && $remainingDays > 0)
+                        <div class="mb-5 p-3.5 bg-[rgba(238,78,139,0.06)] border border-[rgba(238,78,139,0.15)] rounded-xl flex items-start gap-3">
+                            <i class="fas fa-exclamation-triangle text-secondary mt-0.5 text-sm"></i>
+                            <div>
+                                <p class="font-poppins font-semibold text-[13px] text-secondary">Package expiring soon!</p>
+                                <p class="font-poppins text-[12px] text-secondary/60 mt-0.5">Renew now to continue enjoying access</p>
+                            </div>
+                        </div>
+                    @endif
+
                 </div>
             </div>
-
+        @endforeach
         </div>
-    </div>
+    @else
+        {{-- Empty State --}}
+        <div class="bg-white rounded-2xl shadow-[0_4px_20px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] p-10 md:p-14 text-center">
+            <div class="w-20 h-20 rounded-full bg-[rgba(238,78,139,0.08)] flex items-center justify-center mx-auto mb-5">
+                <i class="fas fa-box-open text-3xl text-secondary"></i>
+            </div>
+            <h3 class="font-nord font-bold text-[22px] text-dark mb-2">No Active Package</h3>
+            <p class="font-poppins text-dark/45 text-[15px] mb-7">Start your fitness journey by purchasing your first package</p>
+            <button type="button" onclick="openAvailablePackagesModal()"
+               class="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-xl font-poppins font-medium text-[14px] text-white transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
+               style="background: linear-gradient(135deg, #EE4E8B, #C2185B, #7A2B4A); box-shadow: 0 4px 16px rgba(238,78,139,0.3);">
+                <i class="fas fa-plus-circle text-sm"></i>
+                Browse Packages
+            </button>
+        </div>
+    @endif
 
     {{-- ================= RECENT HISTORY ================= --}}
     @if($pastPackages?->count())

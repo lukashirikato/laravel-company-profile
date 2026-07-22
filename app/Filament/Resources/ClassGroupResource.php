@@ -55,9 +55,15 @@ class ClassGroupResource extends Resource
                 Tables\Columns\TextColumn::make('level')
                     ->label('Level')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('distinct_classes_count')
-                    ->label('Total Kelas')
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('classes_count')
+                    ->label('Jumlah Class')
+                    ->sortable()
+                    ->counts('classes'),
+
+                Tables\Columns\TextColumn::make('schedules_count')
+                    ->label('Jumlah Schedule')
+                    ->sortable()
+                    ->counts('schedules'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Dibuat')
                     ->dateTime('d M Y')
@@ -91,9 +97,9 @@ class ClassGroupResource extends Resource
     {
         return parent::getEloquentQuery()
             ->select('class_groups.*')
-            ->selectSub(
-                'SELECT COUNT(DISTINCT schedules.class_id) FROM schedules WHERE schedules.class_group_id = class_groups.id',
-                'distinct_classes_count'
-            );
+            ->withCount([
+                'classes',
+                'schedules',
+            ]);
     }
 }

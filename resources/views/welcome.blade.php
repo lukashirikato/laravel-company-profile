@@ -960,10 +960,12 @@
         justify-content: center;
         position: relative;
         width: 100%;
+        padding: 0;
+        margin: 0;
     }
     .tentang-image-wrapper img {
         width: 100%;
-        max-width: 650px;
+        max-width: 500px;
         height: auto;
         object-fit: contain;
         filter: drop-shadow(0 20px 60px rgba(255,107,154,0.25)) drop-shadow(0 8px 24px rgba(255,107,154,0.15));
@@ -975,26 +977,22 @@
 
     @media (min-width: 1024px) {
         .tentang-image-wrapper {
-            justify-content: flex-end;
-            margin-right: -40px;
-            margin-bottom: -100px;
-            margin-top: 30px;
+            justify-content: center;
+            margin: 0;
         }
         .tentang-image-wrapper img {
-            max-width: 800px;
-            width: 110%;
+            max-width: 500px;
+            width: 100%;
         }
     }
 
     @media (min-width: 1280px) {
         .tentang-image-wrapper {
-            margin-right: -80px;
-            margin-bottom: -110px;
-            margin-top: 40px;
+            margin: 0;
         }
         .tentang-image-wrapper img {
-            max-width: 950px;
-            width: 115%;
+            max-width: 550px;
+            width: 100%;
         }
     }
 </style>
@@ -1109,7 +1107,7 @@
             <!-- RIGHT COLUMN: Image -->
             <div class="w-full lg:w-[58%] xl:w-[60%] order-2">
                 <div class="tentang-image-wrapper">
-                    <img src="{{ asset('images/logoftm2-removebg-preview.png') }}" alt="FTM Society Logo" loading="lazy">
+                    <img src="{{ asset('images/logo_ftm_society_HD.png') }}" alt="FTM Society Logo" loading="lazy">
                 </div>
             </div>
 

@@ -15,7 +15,7 @@
 
 <style>
     /* =====================================================
-       ATTENDANCE PAGE — GLOBAL TYPOGRAPHY RULES (desain.md)
+       ATTENDANCE PAGE ï¿½ GLOBAL TYPOGRAPHY RULES (desain.md)
        H1  : 30px / weight 700   ? desktop: 34px
        H2  : 24px / weight 600   ? desktop: 28px
        H3  : 20px / weight 600   ? desktop: 24px
@@ -27,13 +27,13 @@
        Table text: 14px / weight 400
        Table header: 14px / weight 600
        Caption: 12px / weight 400
-       line-height: 1.5–1.6
+       line-height: 1.5ï¿½1.6
     ===================================================== */
 
     /* Base line-height for readability */
     .attendance-page { line-height: 1.55; }
 
-    /* H1 — Judul utama halaman */
+    /* H1 ï¿½ Judul utama halaman */
     .att-h1 {
         font-size: 30px;
         font-weight: 700;
@@ -43,7 +43,7 @@
         .att-h1 { font-size: 34px; }
     }
 
-    /* H2 — Judul section */
+    /* H2 ï¿½ Judul section */
     .att-h2 {
         font-size: 24px;
         font-weight: 600;
@@ -53,7 +53,7 @@
         .att-h2 { font-size: 28px; }
     }
 
-    /* H3 — Judul card / sub-section */
+    /* H3 ï¿½ Judul card / sub-section */
     .att-h3 {
         font-size: 20px;
         font-weight: 600;
@@ -90,7 +90,7 @@
         font-weight: 500;
     }
 
-    /* Caption / info kecil — minimum 12px */
+    /* Caption / info kecil ï¿½ minimum 12px */
     .att-caption {
         font-size: 12px;
         font-weight: 400;
@@ -249,7 +249,7 @@
                             <i class="ri-calendar-check-line"></i> Attendance Center
                         </div>
 
-                        {{-- H1 — Judul utama halaman: 30px mobile, 34px desktop, weight 700 --}}
+                        {{-- H1 ï¿½ Judul utama halaman: 30px mobile, 34px desktop, weight 700 --}}
                         <h1 class="att-h1 mt-3 max-w-2xl !text-white">Pusat kehadiran latihan member.</h1>
 
                         {{-- Deskripsi: 15px, weight 400 --}}
@@ -276,7 +276,7 @@
                     <div class="rounded-[1.35rem] bg-white p-3 text-dark shadow-2xl shadow-black/10 sm:p-4">
                         <div class="flex items-start gap-3">
                             <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-light-pink text-secondary">
-                                <i class="ri-pulse-line text-xl"></i>
+                                <i class="fas fa-barcode text-xl"></i>
                             </div>
                             <div class="min-w-0 flex-1">
                                 <p class="att-caption-upper text-dark/45">Aktivitas terakhir</p>
@@ -370,7 +370,7 @@
                         <div>
                             {{-- Caption label --}}
                             <p class="att-caption-upper text-secondary/70">Attendance Log</p>
-                            {{-- H2 — Judul section --}}
+                            {{-- H2 ï¿½ Judul section --}}
                             <h2 class="att-h2 mt-1 text-dark">Riwayat Attendance</h2>
                             {{-- Deskripsi: 15px, weight 400 --}}
                             <p class="att-desc mt-1 text-dark/55">Filter kelas, tanggal, status, paket, atau metode scan.</p>
@@ -419,7 +419,7 @@
                                             <div class="min-w-0">
                                                 {{-- Tanggal: caption 12px --}}
                                                 <p class="att-caption-upper text-dark/42">{{ $date?->format('l, d M Y') ?? '-' }}</p>
-                                                {{-- H3 — Nama kelas: 20px mobile, 24px desktop --}}
+                                                {{-- H3 ï¿½ Nama kelas: 20px mobile, 24px desktop --}}
                                                 <h3 class="att-h3 mt-1 truncate text-dark">{{ $program }}</h3>
                                                 {{-- Nama paket: desc 15px --}}
                                                 <p class="att-desc mt-1 truncate text-dark/50">{{ $package }}</p>
