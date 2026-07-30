@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Member Dashboard | FTM Society</title>
+    <title>Beranda Member | FTM Society</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     @vite('resources/css/app.css')
@@ -150,82 +150,52 @@
 
         <div class="px-6 md:px-10 pb-8 space-y-6">
 
-            {{-- ===========================================================
-                 HERO SECTION — 2 Columns: Spotlight + Membership Card
-                 =========================================================== --}}
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-
-                {{-- LEFT: Member Spotlight --}}
-                <div class="lg:col-span-7 relative rounded-2xl overflow-hidden min-h-[320px] md:min-h-[360px] animate-fade-up delay-1"
-                     style="background: linear-gradient(135deg, #7A2B4A 0%, #1C1C1C 100%);">
-                    <div class="absolute inset-0 opacity-30"
-                         style="background-image: url('https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=800&q=80'); background-size: cover; background-position: center;"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#1C1C1C]/90 via-[#1C1C1C]/40 to-transparent"></div>
-
-                    <div class="relative z-10 p-6 md:p-8 flex flex-col justify-end h-full">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm text-white/90 text-[10px] font-bold uppercase tracking-[0.2em] mb-3 w-fit border border-white/20">
-                            <i class="fas fa-star text-[10px]"></i> MEMBER SPOTLIGHT
-                        </span>
-                        <h2 class="font-nord text-white text-2xl md:text-3xl font-black leading-tight">
-                            Your Fitness Journey<br>
-                            <span class="font-instrument italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#F4C9DF] to-[#EE4E8B]">Starts Here</span>
-                        </h2>
-                        <p class="text-white/70 text-sm mt-2 max-w-md">
-                            Stay consistent, track your progress, and achieve your goals with FTM Society.
-                        </p>
-                    </div>
-                </div>
-
-                {{-- RIGHT: Membership Card --}}
-                <div class="lg:col-span-5 rounded-2xl overflow-hidden relative animate-fade-up delay-2"
-                     style="background: linear-gradient(135deg, #EE4E8B 0%, #7A2B4A 100%); min-height: 320px;">
-                    <div class="absolute top-0 right-0 w-48 h-48 rounded-full bg-white/5 -mr-16 -mt-16"></div>
-                    <div class="absolute bottom-0 left-0 w-32 h-32 rounded-full bg-white/5 -ml-12 -mb-12"></div>
-
-                    <div class="relative z-10 p-6 md:p-8 flex flex-col h-full justify-between text-white">
+            {{-- MEMBERSHIP CARD --}}
+            <div class="rounded-2xl overflow-hidden relative animate-fade-up delay-1"
+                 style="background: linear-gradient(135deg, #EE4E8B 0%, #7A2B4A 100%);">
+                <div class="absolute top-0 right-0 w-48 h-48 rounded-full bg-white/5 -mr-16 -mt-16"></div>
+                <div class="absolute bottom-0 left-0 w-32 h-32 rounded-full bg-white/5 -ml-12 -mb-12"></div>
+                <div class="relative z-10 p-5 md:p-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
                         <div>
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/70">EXCLUSIVE MEMBER</span>
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C5D79B]/30 text-white text-[10px] font-bold uppercase tracking-[0.12em] border border-[#C5D79B]/40">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-[#C5D79B] animate-pulse"></span>
-                                    ACTIVE
-                                </span>
-                            </div>
-                            <h3 class="font-nord text-lg md:text-xl font-black tracking-tight">EXCLUSIVE ELITE</h3>
+                            <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/70">MEMBER EKSKLUSIF</span>
+                            <h3 class="font-nord text-lg md:text-xl font-black tracking-tight text-white mt-0.5">EXCLUSIVE ELITE</h3>
                         </div>
-
-                        <div class="space-y-3 mt-4">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C5D79B]/30 text-white text-[10px] font-bold uppercase tracking-[0.12em] border border-[#C5D79B]/40 w-fit">
+                            <span class="w-1.5 h-1.5 rounded-full bg-[#C5D79B] animate-pulse"></span>
+                            AKTIF
+                        </span>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                        <div class="flex items-center gap-6">
                             <div>
-                                <p class="text-[10px] uppercase tracking-[0.2em] text-white/60">Remaining Sessions</p>
-                                <p class="font-nord text-4xl md:text-5xl font-black leading-none mt-1">{{ $remainingQuota }}</p>
+                                <p class="text-[10px] uppercase tracking-[0.2em] text-white/60">Sisa Sesi</p>
+                                <p class="font-nord text-3xl md:text-4xl font-black leading-none mt-1 text-white">{{ $remainingQuota }}</p>
                             </div>
-                            <div class="w-full h-2 rounded-full bg-white/20 overflow-hidden">
-                                <div class="h-full rounded-full bg-white/80 transition-all duration-700"
-                                     style="width: {{ min(($remainingQuota / 12) * 100, 100) }}%"></div>
+                            <div class="max-w-[180px] w-full">
+                                <div class="w-full h-2 rounded-full bg-white/20 overflow-hidden">
+                                    <div class="h-full rounded-full bg-white/80 transition-all duration-700"
+                                         style="width: {{ min(($remainingQuota / 12) * 100, 100) }}%"></div>
+                                </div>
+                                <p class="text-[11px] text-white/60 mt-1">Berakhir: {{ \Carbon\Carbon::now()->addDays(30)->isoFormat('D MMMM YYYY') }}</p>
                             </div>
-                            <p class="text-[11px] text-white/60">Expired: {{ \Carbon\Carbon::now()->addDays(30)->isoFormat('D MMMM YYYY') }}</p>
                         </div>
-
-                        <div class="flex items-center justify-end mt-4 pt-3 border-t border-white/15">
-                            <a href="{{ route('member.packages.index') }}"
-                               class="inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-white text-[#7A2B4A] font-nord font-bold text-xs hover:bg-[#FCF9F2] transition-all shadow-lg hover:shadow-xl">
-                                RENEW PACKAGE <i class="fas fa-arrow-right text-[10px]"></i>
-                            </a>
-                        </div>
+                        <a href="{{ route('member.packages.index') }}"
+                           class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white text-[#7A2B4A] font-nord font-bold text-xs hover:bg-[#FCF9F2] transition-all shadow-lg hover:shadow-xl w-fit flex-shrink-0">
+                            PERPANJANG PAKET <i class="fas fa-arrow-right text-[10px]"></i>
+                        </a>
                     </div>
                 </div>
             </div>
 
-            {{-- ===========================================================
-                 QUICK ACTION CARDS — 4 Columns
-                 =========================================================== --}}
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 animate-fade-up delay-3">
+            {{-- QUICK ACTION CARDS --}}
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 animate-fade-up delay-2">
                 @php
                     $quickActions = [
-                        ['icon' => 'fa-calendar-plus', 'color' => 'pink', 'label' => 'Book Class', 'sub' => 'Schedule a class', 'route' => 'member.book'],
-                        ['icon' => 'fa-clock', 'color' => 'cherry', 'label' => 'Schedule', 'sub' => 'View timetable', 'route' => 'member.my-classes'],
-                        ['icon' => 'fa-qrcode', 'color' => 'green', 'label' => 'Attendance', 'sub' => 'Check your logs', 'route' => 'member.attendance'],
-                        ['icon' => 'fa-receipt', 'color' => 'soft', 'label' => 'Payment', 'sub' => 'Billing & history', 'route' => 'member.transactions'],
+                        ['icon' => 'fa-calendar-plus', 'color' => 'pink', 'label' => 'Booking Kelas', 'sub' => 'Jadwalkan kelas', 'route' => 'member.book'],
+                        ['icon' => 'fa-clock', 'color' => 'cherry', 'label' => 'Jadwal', 'sub' => 'Lihat jadwal', 'route' => 'member.my-classes'],
+                        ['icon' => 'fa-qrcode', 'color' => 'green', 'label' => 'Absensi', 'sub' => 'Cek log Anda', 'route' => 'member.attendance'],
+                        ['icon' => 'fa-receipt', 'color' => 'soft', 'label' => 'Pembayaran', 'sub' => 'Tagihan & riwayat', 'route' => 'member.transactions'],
                     ];
                 @endphp
                 @foreach($quickActions as $qa)
@@ -243,16 +213,16 @@
             {{-- ===========================================================
                  BOTTOM SECTION — 2 Columns: Next Class + Activity Stats
                  =========================================================== --}}
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 animate-fade-up delay-4">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 animate-fade-up delay-3">
 
                 {{-- LEFT: Your Next Class --}}
                 <div class="lg:col-span-7 bg-white rounded-2xl border border-[#F4C9DF]/40 p-5 md:p-6">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="font-nord font-bold text-sm text-[#7A2B4A] flex items-center gap-2">
-                            <i class="fas fa-dumbbell text-[#EE4E8B]"></i> Your Next Class
+                            <i class="fas fa-dumbbell text-[#EE4E8B]"></i> Kelas Selanjutnya
                         </h3>
                         <a href="{{ route('member.my-classes') }}" class="text-xs font-semibold text-[#EE4E8B] hover:text-[#7A2B4A] transition-colors flex items-center gap-1">
-                            View All <i class="fas fa-arrow-right text-[10px]"></i>
+                            Lihat Semua <i class="fas fa-arrow-right text-[10px]"></i>
                         </a>
                     </div>
 
@@ -301,7 +271,7 @@
                             </div>
                             <a href="{{ route('member.my-classes') }}"
                                class="inline-flex w-full items-center justify-center gap-2 mt-2 px-4 py-2.5 rounded-xl bg-[#FCF9F2] border border-[#F4C9DF]/50 text-[#7A2B4A] font-nord font-bold text-xs hover:bg-[#EE4E8B] hover:text-white hover:border-[#EE4E8B] transition-all">
-                                View Details & Location <i class="fas fa-arrow-right text-[10px]"></i>
+                                Lihat Detail & Lokasi <i class="fas fa-arrow-right text-[10px]"></i>
                             </a>
                         </div>
                     </div>
@@ -310,10 +280,10 @@
                         <div class="w-14 h-14 mx-auto rounded-full bg-[#F4C9DF]/40 flex items-center justify-center mb-3">
                             <i class="fas fa-calendar-day text-xl text-[#7A2B4A]/50"></i>
                         </div>
-                        <p class="font-semibold text-sm text-[#1C1C1C]">No upcoming class</p>
-                        <p class="text-xs text-[#1C1C1C]/50 mt-1">Book your first class now!</p>
+                        <p class="font-semibold text-sm text-[#1C1C1C]">Tidak ada kelas mendatang</p>
+                        <p class="text-xs text-[#1C1C1C]/50 mt-1">Booking kelas pertama Anda sekarang!</p>
                         <a href="{{ route('member.book') }}" class="inline-flex items-center gap-1.5 mt-3 px-5 py-2 rounded-full bg-[#EE4E8B] text-white font-nord font-bold text-xs hover:bg-[#7A2B4A] transition-all">
-                            Book Now <i class="fas fa-arrow-right text-[10px]"></i>
+                            Booking Sekarang <i class="fas fa-arrow-right text-[10px]"></i>
                         </a>
                     </div>
                     @endif
@@ -322,7 +292,7 @@
                 {{-- RIGHT: Activity Stats --}}
                 <div class="lg:col-span-5 bg-white rounded-2xl border border-[#F4C9DF]/40 p-5 md:p-6 flex flex-col">
                     <h3 class="font-nord font-bold text-sm text-[#7A2B4A] flex items-center gap-2 mb-5">
-                        <i class="fas fa-chart-line text-[#EE4E8B]"></i> Activity Stats
+                        <i class="fas fa-chart-line text-[#EE4E8B]"></i> Statistik Aktivitas
                     </h3>
 
                     @php
@@ -343,7 +313,7 @@
                             </svg>
                             <div class="absolute inset-0 flex flex-col items-center justify-center">
                                 <span class="font-nord text-4xl font-black text-[#1C1C1C]">{{ str_pad($streakDisplay, 2, '0', STR_PAD_LEFT) }}</span>
-                                <span class="text-[10px] font-semibold text-[#1C1C1C]/50 uppercase tracking-wider mt-0.5">DAY STREAK</span>
+                                <span class="text-[10px] font-semibold text-[#1C1C1C]/50 uppercase tracking-wider mt-0.5">RANGKAIAN HARI</span>
                             </div>
                         </div>
 
@@ -354,11 +324,11 @@
                             </div>
                             <div class="text-center">
                                 <p class="font-nord font-black text-lg text-[#1C1C1C]">{{ $remainingQuota }}</p>
-                                <p class="text-[10px] text-[#1C1C1C]/50 font-semibold uppercase tracking-wider">Quota</p>
+                                <p class="text-[10px] text-[#1C1C1C]/50 font-semibold uppercase tracking-wider">Kuota</p>
                             </div>
                             <div class="text-center">
                                 <p class="font-nord font-black text-lg text-[#1C1C1C]">{{ $attendances->count() }}</p>
-                                <p class="text-[10px] text-[#1C1C1C]/50 font-semibold uppercase tracking-wider">Visits</p>
+                                <p class="text-[10px] text-[#1C1C1C]/50 font-semibold uppercase tracking-wider">Kunjungan</p>
                             </div>
                         </div>
                     </div>
@@ -402,7 +372,7 @@
                         FTM Society
                     </p>
                     <h2 style="font-family: 'Nord', sans-serif; font-weight: 900; font-size: 1.4rem; letter-spacing: 0.04em; color: #FCF9F2; margin: 0.4rem 0 0;">
-                        MEMBER CARD
+                        KARTU MEMBER
                     </h2>
                     <span style="display: block; width: 44px; height: 3px; margin: 0.7rem auto 0; background-color: #EE4E8B; border-radius: 999px;"></span>
                 </div>
@@ -425,7 +395,7 @@
                         {{ $customer->name }}
                     </h3>
                     <p class="text-sm mt-1.5" style="color: rgba(252, 249, 242, 0.7); font-weight: 500;">
-                        Member ID:
+                        ID Member:
                         <span style="font-family: 'JetBrains Mono', 'SF Mono', monospace; font-weight: 800; color: #FCF9F2; background-color: #EE4E8B; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.1em; font-size: 0.78rem; margin-left: 0.25rem; box-shadow: 0 2px 6px rgba(238, 78, 139, 0.35);">
                             #{{ str_pad($customer->id, 4, '0', STR_PAD_LEFT) }}
                         </span>
@@ -436,14 +406,14 @@
                     <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full"
                           style="background-color: #C5D79B; color: #1D5A4B; font-family: 'Nord', sans-serif; font-weight: 800; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; box-shadow: 0 4px 12px rgba(26, 122, 94, 0.3);">
                         <span class="w-2 h-2 rounded-full" style="background-color: #1A7A5E; animation: pulse-dot 1.6s infinite;"></span>
-                        QR Active &mdash; Ready to Scan
+                        QR Aktif &mdash; Siap Scan
                     </span>
                 </div>
 
                 <div class="pt-3" style="border-top: 1px solid rgba(238, 78, 139, 0.25);">
                     <p class="text-center text-xs" style="color: rgba(244, 201, 223, 0.75); font-weight: 500;">
                         <i class="fas fa-info-circle mr-1" style="color: #EE4E8B;"></i>
-                        Show this code to staff for check-in
+                        Tunjukkan kode ini ke staff untuk check-in
                     </p>
                 </div>
             </div>

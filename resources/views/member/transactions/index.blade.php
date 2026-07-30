@@ -35,7 +35,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transaction History | FTM Society</title>
+    <title>Riwayat Transaksi | FTM Society</title>
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -502,8 +502,8 @@
             
             <!-- Page Header -->
             <div class="page-header">
-                <h1>Transaction History</h1>
-                <p>View all your transactions and payment details</p>
+                <h1>Riwayat Transaksi</h1>
+                <p>Lihat semua transaksi dan detail pembayaran Anda</p>
             </div>
 
             <!-- Transactions Grid -->
@@ -512,16 +512,16 @@
                     @php
                         $status = strtolower($t->status ?? 'pending');
                         $statusClass = 'pending';
-                        $statusText = 'Pending';
+                        $statusText = 'Menunggu';
                         $statusIcon = 'fa-clock';
                         
                         if (in_array($status, ['paid', 'success', 'settlement'])) {
                             $statusClass = 'success';
-                            $statusText = 'Success';
+                            $statusText = 'Berhasil';
                             $statusIcon = 'fa-check-circle';
                         } elseif (in_array($status, ['failed', 'expire'])) {
                             $statusClass = 'failed';
-                            $statusText = 'Failed';
+                            $statusText = 'Gagal';
                             $statusIcon = 'fa-times-circle';
                         }
                     @endphp
@@ -547,7 +547,7 @@
                         <div class="ticket-body">
                             <!-- Order Code -->
                             <div class="ticket-col">
-                                <span class="ticket-label">Order Code</span>
+                                <span class="ticket-label">Kode Order</span>
                                 <span class="ticket-value order-code">
                                     {{ $t->transaction_id ?? $t->order_code ?? '-' }}
                                 </span>
@@ -555,7 +555,7 @@
 
                             <!-- Payment Method -->
                             <div class="ticket-col">
-                                <span class="ticket-label">Payment</span>
+                                <span class="ticket-label">Pembayaran</span>
                                 <span class="ticket-value">
                                     @if($t->payment_type && $t->payment_type !== '-')
                                         {{ $formatPaymentMethod($t->payment_type) }}
@@ -567,7 +567,7 @@
 
                             <!-- Date & Time -->
                             <div class="ticket-col">
-                                <span class="ticket-label">Date & Time</span>
+                                <span class="ticket-label">Tanggal & Waktu</span>
                                 <span class="ticket-value">
                                     {{ $t->created_at ? $t->created_at->format('d M Y, H:i') : '-' }}
                                 </span>
@@ -575,7 +575,7 @@
 
                             <!-- Amount Column -->
                             <div class="ticket-col amount-col">
-                                <span class="ticket-label">Total Amount</span>
+                                <span class="ticket-label">Total</span>
                                 <span class="ticket-value amount {{ $statusClass }}">
                                     Rp {{ number_format($t->amount ?? 0, 0, ',', '.') }}
                                 </span>
@@ -587,7 +587,7 @@
                                 <a href="{{ route('invoice.show', $t->order_id) }}" 
                                    target="_blank"
                                    class="ticket-btn">
-                                    <i class="fas fa-download"></i> Download Invoice
+                                    <i class="fas fa-download"></i> Unduh Invoice
                                 </a>
                             </div>
                             @endif
@@ -599,11 +599,11 @@
                         <div class="empty-icon">
                             <i class="fas fa-receipt" style="color: #94a3b8;"></i>
                         </div>
-                        <h3>No Transactions Yet</h3>
-                        <p>You don't have any transaction history yet</p>
+                        <h3>Belum Ada Transaksi</h3>
+                        <p>Anda belum memiliki riwayat transaksi</p>
                         <a href="{{ route('home') ?? '#' }}" class="btn-primary">
                             <i class="fas fa-shopping-cart"></i>
-                            Start Shopping
+                            Mulai Belanja
                         </a>
                     </div>
         @endforelse

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\WhatsAppTemplate;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Exception;
@@ -97,7 +98,8 @@ class WhatsAppService
      */
     public function sendPaymentSuccessNotification(string $phoneNumber, array $paymentData): array
     {
-        $message = $this->buildPaymentSuccessMessage($paymentData);
+        $message = $this->renderFromDb('payment_success', $paymentData)
+            ?? $this->buildPaymentSuccessMessage($paymentData);
         return $this->send($phoneNumber, $message, ['priority' => 'high']);
     }
 
@@ -110,7 +112,13 @@ class WhatsAppService
      */
     public function sendBookingConfirmationNotification(string $phoneNumber, array $bookingData): array
     {
-        $message = $this->buildBookingConfirmationMessage($bookingData);
+        $data = $bookingData;
+        if (isset($data['schedules']) && is_array($data['schedules'])) {
+            $data['schedule_details'] = $this->buildScheduleDetailsString($data['schedules']);
+        }
+
+        $message = $this->renderFromDb('booking_confirmation', $data)
+            ?? $this->buildBookingConfirmationMessage($bookingData);
         return $this->send($phoneNumber, $message, ['priority' => 'high']);
     }
 
@@ -123,7 +131,8 @@ class WhatsAppService
      */
     public function sendClassReminderNotification(string $phoneNumber, array $classData): array
     {
-        $message = $this->buildClassReminderMessage($classData);
+        $message = $this->renderFromDb('class_reminder', $classData)
+            ?? $this->buildClassReminderMessage($classData);
         return $this->send($phoneNumber, $message, ['priority' => 'normal']);
     }
 
@@ -136,7 +145,8 @@ class WhatsAppService
      */
     public function sendCheckInNotification(string $phoneNumber, array $checkInData): array
     {
-        $message = $this->buildCheckInMessage($checkInData);
+        $message = $this->renderFromDb('check_in_success', $checkInData)
+            ?? $this->buildCheckInMessage($checkInData);
         return $this->send($phoneNumber, $message, ['priority' => 'high']);
     }
 
@@ -149,7 +159,8 @@ class WhatsAppService
      */
     public function sendCheckOutNotification(string $phoneNumber, array $checkOutData): array
     {
-        $message = $this->buildCheckOutMessage($checkOutData);
+        $message = $this->renderFromDb('check_out_success', $checkOutData)
+            ?? $this->buildCheckOutMessage($checkOutData);
         return $this->send($phoneNumber, $message, ['priority' => 'high']);
     }
 
@@ -542,5 +553,57 @@ EOT;
             'api_url' => $this->apiUrl,
             'max_retries' => $this->maxRetries,
         ];
+    }
+
+    /**
+     * Render message from database template if available
+     */
+    private function renderFromDb(string $key, array $data): ?string
+    {
+        $template = WhatsAppTemplate::where('key', $key)->where('is_active', true)->first();
+        if (!$template) {
+            return null;
+        }
+
+        $message = $template->message;
+
+        foreach ($data as $k => $v) {
+            if (is_scalar($v) || is_null($v)) {
+                $message = str_replace('{' . $k . '}', (string) ($v ?? ''), $message);
+            }
+        }
+
+        return $message;
+    }
+
+    /**
+     * Build schedule details string for booking confirmation
+     */
+    private function buildScheduleDetailsString(array $schedules): string
+    {
+        $details = '';
+        if (!empty($schedules)) {
+            $details .= "📅 *Jadwal Kelas Anda:*\n\n";
+
+            foreach ($schedules as $index => $schedule) {
+                $scheduleNum = $index + 1;
+                $day = $schedule['day'] ?? 'N/A';
+                $time = $schedule['time'] ?? '-';
+                $className = $schedule['class_name'] ?? 'Class';
+                $level = !empty($schedule['level']) ? " ({$schedule['level']})" : '';
+                $instructor = $schedule['instructor'] ?? 'Instructor';
+
+                $details .= "$scheduleNum. *{$className}{$level}*\n";
+                $details .= "   📆 {$day} · ⏰ {$time}\n";
+                $details .= "   👨‍🏫 {$instructor}\n";
+                $details .= "   📍 STUDIO FTM SOCIETY\n";
+
+                if ($index < count($schedules) - 1) {
+                    $details .= "\n";
+                }
+            }
+        }
+
+        return $details;
     }
 }

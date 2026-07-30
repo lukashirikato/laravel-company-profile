@@ -753,7 +753,7 @@
 
             {{-- -- Page header -- --}}
             <div class="acct-header">
-                <h1><i class="fas fa-user-circle" style="color:#EE4E8B; margin-right:8px;"></i>My Profile</h1>
+                <h1><i class="fas fa-user-circle" style="color:#EE4E8B; margin-right:8px;"></i>Profil Saya</h1>
                 <p>Kelola informasi akun, QR code, dan preferensi notifikasi</p>
             </div>
 
@@ -780,10 +780,10 @@
                              alt="QR Code" style="width:180px; height:180px;">
                     </div>
                     <div class="qr-card-id">
-                        <div class="label">Member ID</div>
+                        <div class="label">ID Member</div>
                         <div class="value">#{{ $memberId }}</div>
                     </div>
-                    <div class="qr-tap-hint"><i class="fas fa-expand-alt" style="margin-right:3px;"></i>Tap to enlarge</div>
+                    <div class="qr-tap-hint"><i class="fas fa-expand-alt" style="margin-right:3px;"></i>Ketuk untuk perbesar</div>
                 </div>
 
                 {{-- Member info --}}
@@ -807,27 +807,27 @@
 
                     <div class="detail-grid">
                         <div class="detail-item">
-                            <div class="dlabel"><i class="fas fa-phone"></i> Phone</div>
+                            <div class="dlabel"><i class="fas fa-phone"></i> No. HP</div>
                             <div class="dvalue" id="memberPhoneLabel">{{ $member->phone_number ?? '�' }}</div>
                         </div>
                         <div class="detail-item">
-                            <div class="dlabel"><i class="fas fa-calendar"></i> Member Since</div>
+                            <div class="dlabel"><i class="fas fa-calendar"></i> Member Sejak</div>
                             <div class="dvalue">{{ $member->created_at->format('d M Y') }}</div>
                         </div>
                         <div class="detail-item">
-                            <div class="dlabel"><i class="fas fa-id-badge"></i> Member ID</div>
+                            <div class="dlabel"><i class="fas fa-id-badge"></i> ID Member</div>
                             <div class="dvalue" style="font-family:'JetBrains Mono',monospace;">#{{ $memberId }}</div>
                         </div>
                         <div class="detail-item">
-                            <div class="dlabel"><i class="fas fa-qrcode"></i> QR Status</div>
-                            <div class="dvalue">{{ $member->qr_active ? 'Active' : 'Inactive' }}</div>
+                            <div class="dlabel"><i class="fas fa-qrcode"></i> Status QR</div>
+                            <div class="dvalue">{{ $member->qr_active ? 'Aktif' : 'Tidak Aktif' }}</div>
                         </div>
                     </div>
 
                     @if($member->qr_active)
-                        <span class="qr-badge active"><span class="dot"></span> QR Code Active</span>
+                        <span class="qr-badge active"><span class="dot"></span> QR Aktif</span>
                     @else
-                        <span class="qr-badge inactive"><span class="dot"></span> QR Code Inactive</span>
+                        <span class="qr-badge inactive"><span class="dot"></span> QR Tidak Aktif</span>
                     @endif
                 </div>
             </div>
@@ -838,17 +838,17 @@
             <div class="stats-grid">
                 <div class="stat-card sc-pink">
                     <div class="sc-icon"><i class="fas fa-box-open"></i></div>
-                    <div class="sc-label">Active Packages</div>
+                    <div class="sc-label">Paket Aktif</div>
                     <div class="sc-value">{{ $member->orders()->whereIn('status', ['active', 'paid'])->count() }}</div>
                 </div>
                 <div class="stat-card sc-green">
                     <div class="sc-icon"><i class="fas fa-calendar-check"></i></div>
-                    <div class="sc-label">Total Attendances</div>
+                    <div class="sc-label">Total Absensi</div>
                     <div class="sc-value">{{ $member->attendances()->count() }}</div>
                 </div>
                 <div class="stat-card sc-amber">
                     <div class="sc-icon"><i class="fas fa-ticket-alt"></i></div>
-                    <div class="sc-label">Remaining Quota</div>
+                    <div class="sc-label">Sisa Kuota</div>
                     @if($activeOrder)
                         @php
                             $remaining = $activeOrder->remaining_quota ?? 0;
@@ -857,10 +857,10 @@
                             $barColor = $pct > 50 ? '#1A7A5E' : ($pct > 20 ? '#EE4E8B' : '#B22336');
                         @endphp
                         <div class="sc-value">{{ $remaining }}</div>
-                        <div class="sc-sub">of {{ $total }} total</div>
+                        <div class="sc-sub">dari {{ $total }} total</div>
                         <div class="quota-bar"><div class="quota-bar-fill" style="width:{{ $pct }}%; background:{{ $barColor }};"></div></div>
                     @else
-                        <div class="sc-value" style="font-size:1rem; color:rgba(28,28,28,0.5);">No package</div>
+                        <div class="sc-value" style="font-size:1rem; color:rgba(28,28,28,0.5);">Tidak ada paket</div>
                     @endif
                 </div>
             </div>
@@ -902,7 +902,7 @@
                         </button>
                     @else
                         <button class="btn-cancel" style="flex:0; padding: 0.5rem 0.85rem;" onclick="document.getElementById('avatarInput').click()" type="button">
-                            Upload
+                            Unggah
                         </button>
                     @endif
                 </div>
@@ -993,7 +993,7 @@
             </div>
             <div class="ftm-modal-actions">
                 <button type="button" class="btn-cancel" onclick="closeModal('changePasswordModal')">Batal</button>
-                <button type="submit" class="btn-submit">Update Password</button>
+                <button type="submit" class="btn-submit">Perbarui Password</button>
             </div>
         </form>
     </div>
@@ -1006,7 +1006,7 @@
         <div class="qp-inner">
             <div class="qp-header">
                 <div class="qp-brand">FTM Society</div>
-                <div class="qp-title">MEMBER CARD</div>
+                <div class="qp-title">KARTU MEMBER</div>
             </div>
             <div class="qp-qr-wrap">
                 <div class="qp-qr-box">

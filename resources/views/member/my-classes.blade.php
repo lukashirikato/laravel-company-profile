@@ -539,8 +539,8 @@
         <div class="main-content">
 
             <div class="page-header">
-                <h1>My Classes</h1>
-                <p>Manage your scheduled sessions</p>
+                <h1>Kelas Saya</h1>
+                <p>Kelola jadwal kelas Anda</p>
             </div>
 
             @if(!$myClasses->isEmpty())
@@ -551,7 +551,7 @@
                         </div>
                         <div class="stat-info">
                             <div class="num">{{ $stats['total_classes'] ?? 0 }}</div>
-                            <div class="label">Scheduled Classes</div>
+                            <div class="label">Kelas Terjadwal</div>
                         </div>
                     </div>
                     <div class="stat-card">
@@ -560,7 +560,7 @@
                         </div>
                         <div class="stat-info">
                             <div class="num">{{ $stats['unique_packages'] ?? 0 }}</div>
-                            <div class="label">Active Memberships</div>
+                            <div class="label">Membership Aktif</div>
                         </div>
                     </div>
                 </div>
@@ -571,14 +571,14 @@
                     <div class="eicon">
                         <i class="fas fa-calendar-xmark"></i>
                     </div>
-                    <h3>No Scheduled Classes</h3>
-                    <p>You haven't booked any classes yet.</p>
+                    <h3>Belum Ada Kelas Terjadwal</h3>
+                    <p>Anda belum booking kelas apapun.</p>
                     <a href="{{ route('member.book') }}" class="btn-pink">
-                        <i class="fas fa-plus-circle"></i> Book Your First Class
+                        <i class="fas fa-plus-circle"></i> Booking Kelas Pertama
                     </a>
                 </div>
             @else
-                <div class="section-title">Scheduled Sessions</div>
+                <div class="section-title">Sesi Terjadwal</div>
 
                 @php
                     $hasMulti = $activePackages->count() > 1;
@@ -589,7 +589,7 @@
                 @if($hasMulti)
                 <div class="package-tabs" id="packageTabs">
                     <button class="package-tab active" data-package="all">
-                        <i class="fas fa-th-large tab-icon"></i> All Classes
+                        <i class="fas fa-th-large tab-icon"></i> Semua Kelas
                         <span class="tab-count">{{ $myClasses->count() }}</span>
                     </button>
                     @foreach($allPkgs as $pkgName)
@@ -669,15 +669,15 @@
 
                                 <div class="schedule-grid">
                                     <div class="sched-cell">
-                                        <span class="s-label">Day</span>
+                                        <span class="s-label">Hari</span>
                                         <span class="s-value"><i class="fas fa-calendar-alt"></i>{{ $item->schedule->day }}</span>
                                     </div>
                                     <div class="sched-cell">
-                                        <span class="s-label">Date</span>
+                                        <span class="s-label">Tanggal</span>
                                         <span class="s-value"><i class="fas fa-calendar-day"></i>{{ $item->schedule->schedule_date_formatted }}</span>
                                     </div>
                                     <div class="sched-cell">
-                                        <span class="s-label">Time</span>
+                                        <span class="s-label">Waktu</span>
                                         <span class="s-value"><i class="fas fa-clock"></i>{{ \Carbon\Carbon::parse($item->schedule->class_time)->format('H:i') }}</span>
                                     </div>
                                 </div>
@@ -686,12 +686,12 @@
                                     <div class="instructor-group">
                                         <div class="iavatar">{{ $initials }}</div>
                                         <div class="iinfo">
-                                            <div class="ilabel">Instructor</div>
+                                            <div class="ilabel">Instruktur</div>
                                             <div class="iname">{{ $instructor }}</div>
                                         </div>
                                     </div>
                                     <div class="status-pill">
-                                        <span class="sdot"></span> Confirmed
+                                        <span class="sdot"></span> Terkonfirmasi
                                     </div>
                                 </div>
                             </div>
@@ -702,8 +702,8 @@
                         <div class="fe-icon">
                             <i class="fas fa-calendar-xmark"></i>
                         </div>
-                        <h4>No classes in this package</h4>
-                        <p>Switch to another package to see its schedule.</p>
+                        <h4>Tidak ada kelas di paket ini</h4>
+                        <p>Ganti ke paket lain untuk melihat jadwalnya.</p>
                     </div>
                 </div>
             @endif

@@ -12,13 +12,13 @@
     $currentRoute = request()->route()?->getName() ?? '';
 
     $menus = [
-        ['route' => 'member.dashboard',         'label' => 'DASHBOARD',     'icon' => 'fa-home',           'match' => ['member.dashboard', 'member.profile']],
-        ['route' => 'member.packages.index',    'label' => 'MY PACKAGES',   'icon' => 'fa-box',            'match' => ['member.packages.index', 'member.packages.detail']],
-        ['route' => 'member.book',              'label' => 'BOOK CLASS',    'icon' => 'fa-calendar-plus',  'match' => ['member.book']],
-        ['route' => 'member.my-classes',        'label' => 'MY CLASSES',    'icon' => 'fa-dumbbell',       'match' => ['member.my-classes']],
-        ['route' => 'member.transactions',      'label' => 'TRANSACTIONS',  'icon' => 'fa-receipt',        'match' => ['member.transactions']],
-        ['route' => 'member.attendance',        'label' => 'ATTENDANCE',    'icon' => 'fa-calendar-check', 'match' => ['member.attendance']],
-        ['route' => 'member.account',           'label' => 'PROFILE',       'icon' => 'fa-user',           'match' => ['member.account']],
+        ['route' => 'member.dashboard',         'label' => 'BERANDA',     'icon' => 'fa-home',           'match' => ['member.dashboard', 'member.profile']],
+        ['route' => 'member.packages.index',    'label' => 'PAKET SAYA',  'icon' => 'fa-box',            'match' => ['member.packages.index', 'member.packages.detail']],
+        ['route' => 'member.book',              'label' => 'BOOKING KELAS', 'icon' => 'fa-calendar-plus', 'match' => ['member.book']],
+        ['route' => 'member.my-classes',        'label' => 'KELAS SAYA',  'icon' => 'fa-dumbbell',       'match' => ['member.my-classes']],
+        ['route' => 'member.transactions',      'label' => 'TRANSAKSI',   'icon' => 'fa-receipt',        'match' => ['member.transactions']],
+        ['route' => 'member.attendance',        'label' => 'ABSENSI',     'icon' => 'fa-calendar-check', 'match' => ['member.attendance']],
+        ['route' => 'member.account',           'label' => 'PROFIL',      'icon' => 'fa-user',           'match' => ['member.account']],
     ];
 @endphp
 
@@ -31,7 +31,7 @@
         <div class="ftm-sidebar-logo">
             <span class="ftm-logo-pink">FTM</span> <span class="ftm-logo-cream">SOCIETY</span>
         </div>
-        <div class="ftm-sidebar-tagline">MEMBER PORTAL</div>
+        <div class="ftm-sidebar-tagline">PORTAL MEMBER</div>
     </a>
 
     {{-- Navigation --}}

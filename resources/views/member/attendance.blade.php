@@ -246,7 +246,7 @@
                     <div>
                         {{-- Badge label --}}
                         <div class="inline-flex items-center gap-2 rounded-full bg-white/14 px-3 py-1.5 ring-1 ring-white/20" style="font-size:12px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:rgba(255,255,255,0.88);">
-                            <i class="ri-calendar-check-line"></i> Attendance Center
+                            <i class="ri-calendar-check-line"></i> Pusat Absensi
                         </div>
 
                         {{-- H1 � Judul utama halaman: 30px mobile, 34px desktop, weight 700 --}}
@@ -288,7 +288,7 @@
                         <div class="mt-3 grid grid-cols-2 gap-2">
                             {{-- Tombol: 14px, weight 500 --}}
                             <button type="button" onclick="openAttendanceQR()" class="att-btn inline-flex items-center justify-center gap-2 rounded-2xl bg-secondary px-3 py-3 text-white transition hover:bg-dark"><i class="ri-qr-scan-2-line"></i> Scan QR</button>
-                            <a href="{{ route('member.dashboard') }}" class="att-btn inline-flex items-center justify-center gap-2 rounded-2xl bg-cream px-3 py-3 text-secondary transition hover:bg-light-pink"><i class="ri-home-5-line"></i> Dashboard</a>
+                            <a href="{{ route('member.dashboard') }}" class="att-btn inline-flex items-center justify-center gap-2 rounded-2xl bg-cream px-3 py-3 text-secondary transition hover:bg-light-pink"><i class="ri-home-5-line"></i> Beranda</a>
                         </div>
                     </div>
                 </div>
@@ -327,7 +327,7 @@
             <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
                 <div class="attendance-metric rounded-[1.35rem] p-4 sm:p-5 attendance-animate" style="animation-delay:.04s">
                     <div class="flex items-center justify-between gap-3">
-                        <p class="att-caption-upper text-dark/45">Total Visit</p>
+                        <p class="att-caption-upper text-dark/45">Total Kunjungan</p>
                         <i class="ri-footprint-line text-secondary/70"></i>
                     </div>
                     <p class="att-metric-num mt-2 text-dark">{{ $totalAttendances }}</p>
@@ -369,9 +369,9 @@
                     <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                         <div>
                             {{-- Caption label --}}
-                            <p class="att-caption-upper text-secondary/70">Attendance Log</p>
+                            <p class="att-caption-upper text-secondary/70">Log Absensi</p>
                             {{-- H2 � Judul section --}}
-                            <h2 class="att-h2 mt-1 text-dark">Riwayat Attendance</h2>
+                            <h2 class="att-h2 mt-1 text-dark">Riwayat Absensi</h2>
                             {{-- Deskripsi: 15px, weight 400 --}}
                             <p class="att-desc mt-1 text-dark/55">Filter kelas, tanggal, status, paket, atau metode scan.</p>
                         </div>

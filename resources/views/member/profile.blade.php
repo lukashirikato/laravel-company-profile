@@ -7,7 +7,7 @@
     <!-- favicon  -->
     <link rel="icon" type="image/png" href="{{ asset('icon/favicon.jpg') }}" />
     <!-- end favicon  -->
-    <title>FTM SOCIETY - Muslimah-Only Gym</title>
+    <title>FTM SOCIETY</title>
     
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -733,7 +733,7 @@
                             {{ $authCustomer->name ?? 'Member' }}
                         </span>
                         <span class="text-[10px] uppercase tracking-widest font-nord font-bold text-[#EE4E8B]">
-                            Dashboard
+                            Beranda
                         </span>
                     </span>
                     {{-- Arrow icon --}}
@@ -810,16 +810,16 @@
 
       <nav class="flex flex-col gap-3 font-heading font-medium">
         @auth('customer')
-          <a href="{{ route('member.dashboard') }}" class="block px-4 py-3 rounded-md text-[#1C1C1C] hover:bg-[#EE4E8B] hover:text-white transition font-semibold">Dashboard</a>
+           <a href="{{ route('member.dashboard') }}" class="block px-4 py-3 rounded-md text-[#1C1C1C] hover:bg-[#EE4E8B] hover:text-white transition font-semibold">Beranda</a>
         @else
           <a href="{{ route('member.login') }}" class="block px-4 py-3 rounded-md text-[#1C1C1C] hover:bg-[#EE4E8B] hover:text-white transition font-semibold">Login</a>
           <a href="{{ route('member.register') }}" class="block px-4 py-3 rounded-md text-[#1C1C1C] hover:bg-[#EE4E8B] hover:text-white transition font-semibold">Register</a>
         @endauth
 
         <hr class="my-2">
-        <a href="{{ route('member.dashboard') }}" class="block px-4 py-3 rounded-md text-[#1C1C1C] hover:bg-[#EE4E8B] hover:text-white transition">Dashboard</a>
-        <a href="{{ route('member.account') }}" class="block px-4 py-3 rounded-md text-[#1C1C1C] hover:bg-[#EE4E8B] hover:text-white transition">My QR Card</a>
-        <a href="{{ route('member.attendance') }}" class="block px-4 py-3 rounded-md text-[#1C1C1C] hover:bg-[#EE4E8B] hover:text-white transition">Attendance</a>
+        <a href="{{ route('member.dashboard') }}" class="block px-4 py-3 rounded-md text-[#1C1C1C] hover:bg-[#EE4E8B] hover:text-white transition">Beranda</a>
+        <a href="{{ route('member.account') }}" class="block px-4 py-3 rounded-md text-[#1C1C1C] hover:bg-[#EE4E8B] hover:text-white transition">QR Saya</a>
+        <a href="{{ route('member.attendance') }}" class="block px-4 py-3 rounded-md text-[#1C1C1C] hover:bg-[#EE4E8B] hover:text-white transition">Absensi</a>
         <a href="#about" class="block px-4 py-3 rounded-md text-[#1C1C1C] hover:bg-[#EE4E8B] hover:text-white transition">About</a>
         <a href="#Programs" class="block px-4 py-3 rounded-md text-[#1C1C1C] hover:bg-[#EE4E8B] hover:text-white transition">Programs</a>
         <a href="#Classes" class="block px-4 py-3 rounded-md text-[#1C1C1C] hover:bg-[#EE4E8B] hover:text-white transition">Classes</a>
@@ -912,7 +912,7 @@
           @auth('customer')
             <a href="{{ route('member.packages.index') }}" 
                class="group relative inline-flex items-center justify-center gap-3 px-8 py-4 text-lg font-black text-white bg-gradient-to-r from-[#EE4E8B] to-[#7A2B4A] rounded-full overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-300 ease-out hover:scale-105 hover:-translate-y-1">
-              <span class="relative z-10 tracking-wide">My Packages</span>
+               <span class="relative z-10 tracking-wide">Paket Saya</span>
               <i class="ri-shopping-bag-line text-xl relative z-10 transition-all group-hover:translate-x-2 group-hover:scale-110"></i>
               <div class="absolute inset-0 bg-gradient-to-r from-[#7A2B4A] to-[#EE4E8B] opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
               <div class="absolute inset-0 rounded-full opacity-0 group-hover:opacity-20 bg-white group-hover:scale-150 transition-all duration-500"></div>

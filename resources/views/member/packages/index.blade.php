@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>My Packages - FTM Society</title>
+    <title>Paket Saya - FTM Society</title>
 
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -463,14 +463,14 @@
     {{-- ================= PAGE TITLE ================= --}}
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-            <h1 class="font-nord font-bold text-[30px] md:text-[32px] text-dark leading-tight">My Packages</h1>
+            <h1 class="font-nord font-bold text-[30px] md:text-[32px] text-dark leading-tight">Paket Saya</h1>
             <p class="font-poppins text-dark/45 text-[15px] mt-1.5">Kelola dan pantau paket membership Anda</p>
         </div>
         <button type="button" onclick="openAvailablePackagesModal()"
            class="inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl font-poppins font-medium text-[14px] text-white transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
            style="background: linear-gradient(135deg, #EE4E8B, #C2185B, #7A2B4A); box-shadow: 0 4px 16px rgba(238,78,139,0.3);">
             <i class="fas fa-plus-circle text-sm"></i>
-            Buy New Package
+            Beli Paket Baru
         </button>
     </div>
 
@@ -499,7 +499,7 @@
                             <div class="flex items-center gap-3 mb-1.5">
                                 <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full font-poppins font-semibold text-[11px] uppercase tracking-wider {{ $isExpired ? 'bg-[rgba(238,78,139,0.1)] text-secondary' : 'bg-[rgba(26,122,94,0.1)] text-accent' }}">
                                     <span class="w-1.5 h-1.5 rounded-full {{ $isExpired ? 'bg-secondary' : 'bg-accent' }}"></span>
-                                    {{ $isExpired ? 'Expired' : 'Active' }}
+                                    {{ $isExpired ? 'Kedaluwarsa' : 'Aktif' }}
                                 </span>
                                 <span class="font-poppins text-dark/30 text-[12px] font-mono tracking-wider">#{{ $order->order_code }}</span>
                             </div>
@@ -511,7 +511,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                         {{-- Days Left --}}
                         <div class="bg-cream rounded-xl p-5">
-                            <p class="font-poppins font-semibold text-[11px] uppercase tracking-widest text-dark/45 mb-2">Days Left</p>
+                            <p class="font-poppins font-semibold text-[11px] uppercase tracking-widest text-dark/45 mb-2">Sisa Hari</p>
                             <p class="font-nord font-bold text-[36px] md:text-[40px] leading-none" style="color: {{ $statusColor === 'green' ? '#1A7A5E' : ($statusColor === 'yellow' ? '#1D5A4B' : '#7A2B4A') }}">
                                 {{ $isExpired ? 0 : max($remainingDays, 0) }}
                             </p>
@@ -520,7 +520,7 @@
 
                         {{-- Progress --}}
                         <div class="bg-cream rounded-xl p-5">
-                            <p class="font-poppins font-semibold text-[11px] uppercase tracking-widest text-dark/45 mb-2">Usage Progress</p>
+                            <p class="font-poppins font-semibold text-[11px] uppercase tracking-widest text-dark/45 mb-2">Progress Pemakaian</p>
                             @php
                                 $totalQuota = $pkg->quota ?? 0;
                                 $classesLeft = $order->remaining_classes ?? $order->remaining_sessions ?? $totalQuota;
@@ -532,14 +532,14 @@
                                 <div class="h-full rounded-full bg-gradient-to-r from-primary to-secondary transition-all duration-700 shadow-[inset_0_1px_2px_rgba(255,255,255,0.3)]"
                                      style="width: {{ min($usagePercent, 100) }}%"></div>
                             </div>
-                            <p class="font-poppins text-dark/35 text-[13px] mt-1.5">{{ $classesLeft }} classes remaining</p>
+                            <p class="font-poppins text-dark/35 text-[13px] mt-1.5">{{ $classesLeft }} kelas tersisa</p>
                         </div>
                     </div>
 
                     {{-- Start / Expire Info --}}
                     <div class="flex flex-wrap gap-x-8 gap-y-2 font-poppins text-[14px] text-dark/50 mb-5">
-                        <span><span class="font-medium text-dark">Started:</span> {{ $order->created_at?->format('d M Y') ?? '-' }}</span>
-                        <span><span class="font-medium text-dark">Expires:</span> {{ $order->expired_at ? \Carbon\Carbon::parse($order->expired_at)->format('d M Y') : 'Unlimited' }}</span>
+                        <span><span class="font-medium text-dark">Mulai:</span> {{ $order->created_at?->format('d M Y') ?? '-' }}</span>
+                        <span><span class="font-medium text-dark">Berakhir:</span> {{ $order->expired_at ? \Carbon\Carbon::parse($order->expired_at)->format('d M Y') : 'Tak Terbatas' }}</span>
                     </div>
 
                     {{-- Warning for expiring --}}
@@ -547,8 +547,8 @@
                         <div class="mb-5 p-3.5 bg-[rgba(238,78,139,0.06)] border border-[rgba(238,78,139,0.15)] rounded-xl flex items-start gap-3">
                             <i class="fas fa-exclamation-triangle text-secondary mt-0.5 text-sm"></i>
                             <div>
-                                <p class="font-poppins font-semibold text-[13px] text-secondary">Package expiring soon!</p>
-                                <p class="font-poppins text-[12px] text-secondary/60 mt-0.5">Renew now to continue enjoying access</p>
+                                <p class="font-poppins font-semibold text-[13px] text-secondary">Paket segera berakhir!</p>
+                                <p class="font-poppins text-[12px] text-secondary/60 mt-0.5">Perpanjang sekarang untuk terus menikmati akses</p>
                             </div>
                         </div>
                     @endif
@@ -563,13 +563,13 @@
             <div class="w-20 h-20 rounded-full bg-[rgba(238,78,139,0.08)] flex items-center justify-center mx-auto mb-5">
                 <i class="fas fa-box-open text-3xl text-secondary"></i>
             </div>
-            <h3 class="font-nord font-bold text-[22px] text-dark mb-2">No Active Package</h3>
-            <p class="font-poppins text-dark/45 text-[15px] mb-7">Start your fitness journey by purchasing your first package</p>
+            <h3 class="font-nord font-bold text-[22px] text-dark mb-2">Belum Ada Paket Aktif</h3>
+            <p class="font-poppins text-dark/45 text-[15px] mb-7">Mulai perjalanan fitness-mu dengan membeli paket pertama</p>
             <button type="button" onclick="openAvailablePackagesModal()"
                class="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-xl font-poppins font-medium text-[14px] text-white transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
                style="background: linear-gradient(135deg, #EE4E8B, #C2185B, #7A2B4A); box-shadow: 0 4px 16px rgba(238,78,139,0.3);">
                 <i class="fas fa-plus-circle text-sm"></i>
-                Browse Packages
+                Lihat Paket
             </button>
         </div>
     @endif
@@ -578,8 +578,8 @@
     @if($pastPackages?->count())
     <div class="mt-10">
         <div class="flex items-center justify-between mb-5">
-            <h2 class="font-nord font-semibold text-[22px] text-dark">Recent History</h2>
-            <span class="font-poppins bg-[rgba(238,78,139,0.1)] text-secondary text-[12px] font-semibold px-3.5 py-1.5 rounded-full">{{ $pastPackages->count() }} items</span>
+            <h2 class="font-nord font-semibold text-[22px] text-dark">Riwayat</h2>
+            <span class="font-poppins bg-[rgba(238,78,139,0.1)] text-secondary text-[12px] font-semibold px-3.5 py-1.5 rounded-full">{{ $pastPackages->count() }} item</span>
         </div>
 
         <!-- Desktop Table -->
@@ -587,11 +587,11 @@
             <table class="w-full">
                 <thead>
                     <tr class="bg-[rgba(238,78,139,0.06)]">
-                        <th class="px-6 py-4 text-left font-poppins font-semibold text-[12px] uppercase tracking-wider text-secondary">Package Name</th>
-                        <th class="px-6 py-4 text-center font-poppins font-semibold text-[12px] uppercase tracking-wider text-secondary">Type</th>
-                        <th class="px-6 py-4 text-center font-poppins font-semibold text-[12px] uppercase tracking-wider text-secondary">Date</th>
+                        <th class="px-6 py-4 text-left font-poppins font-semibold text-[12px] uppercase tracking-wider text-secondary">Nama Paket</th>
+                        <th class="px-6 py-4 text-center font-poppins font-semibold text-[12px] uppercase tracking-wider text-secondary">Tipe</th>
+                        <th class="px-6 py-4 text-center font-poppins font-semibold text-[12px] uppercase tracking-wider text-secondary">Tanggal</th>
                         <th class="px-6 py-4 text-center font-poppins font-semibold text-[12px] uppercase tracking-wider text-secondary">Status</th>
-                        <th class="px-6 py-4 text-center font-poppins font-semibold text-[12px] uppercase tracking-wider text-secondary">Action</th>
+                        <th class="px-6 py-4 text-center font-poppins font-semibold text-[12px] uppercase tracking-wider text-secondary">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-[rgba(238,78,139,0.06)]">
@@ -609,19 +609,19 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 text-center font-poppins text-[14px] text-dark">{{ $pkg->is_exclusive ? 'Exclusive' : 'Regular' }}</td>
+                            <td class="px-6 py-4 text-center font-poppins text-[14px] text-dark">{{ $pkg->is_exclusive ? 'Eksklusif' : 'Reguler' }}</td>
                             <td class="px-6 py-4 text-center font-poppins text-[14px] text-dark">{{ $order->created_at?->format('d M Y') ?? '-' }}</td>
                             <td class="px-6 py-4 text-center">
                                 <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-poppins font-semibold text-[11px] bg-[rgba(238,78,139,0.1)] text-secondary">
                                     <i class="fas fa-times-circle text-[10px]"></i>
-                                    Expired
+                                    Kedaluwarsa
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-center">
                                 <button onclick="openPackageModal({{ $order->id }})"
                                    class="font-poppins font-medium text-[13px] text-primary hover:text-secondary transition-colors duration-150 inline-flex items-center gap-1.5">
                                     <i class="fas fa-eye text-[12px]"></i>
-                                    View Package Info
+                                    Lihat Detail
                                 </button>
                             </td>
                         </tr>
@@ -641,13 +641,13 @@
                             <p class="font-poppins text-[12px] text-dark/35 font-mono">{{ $order->order_code }}</p>
                         </div>
                         <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full font-poppins font-semibold text-[11px] bg-[rgba(238,78,139,0.1)] text-secondary">
-                            Expired
+                            Kedaluwarsa
                         </span>
                     </div>
                     <div class="flex items-center justify-between font-poppins text-[12px] text-dark/50 mt-2.5 pt-2.5 border-t border-[rgba(238,78,139,0.06)]">
                         <span>{{ $order->created_at?->format('d M Y') }}</span>
                         <button onclick="openPackageModal({{ $order->id }})" class="text-primary font-medium hover:text-secondary transition-colors">
-                            <i class="fas fa-eye mr-1"></i>View Package
+                            <i class="fas fa-eye mr-1"></i>Lihat Paket
                         </button>
                     </div>
                 </div>
@@ -657,7 +657,7 @@
         @if($pastPackages->count() > 5)
         <div class="text-center mt-5">
             <button class="font-poppins font-medium text-[14px] text-primary hover:text-secondary transition-colors duration-150 inline-flex items-center gap-1.5">
-                View All History
+                Lihat Semua Riwayat
                 <i class="fas fa-arrow-right text-[12px]"></i>
             </button>
         </div>

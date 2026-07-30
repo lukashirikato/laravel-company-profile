@@ -954,7 +954,7 @@
         <i class="fas fa-bars text-lg"></i>
     </button>
 
-    <main class="flex-1 p-6 md:p-10 overflow-y-auto bg-cream">
+    <main class="flex-1 p-6 md:p-10 pb-24 md:pb-28 overflow-y-auto bg-cream">
         
         {{-- MOBILE HAMBURGER --}}
         <button id="hamburger-btn" class="hamburger-btn" onclick="toggleSidebar()">
@@ -965,7 +965,7 @@
         <div class="bg-white rounded-2xl shadow-[0_2px_12px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] p-5 md:p-7 mb-8 mt-14 md:mt-0">
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="font-nord font-bold text-[30px] md:text-[32px] text-dark leading-tight">Book Your Class</h1>
+                    <h1 class="font-nord font-bold text-[30px] md:text-[32px] text-dark leading-tight">Booking Kelas</h1>
                     <div class="flex items-baseline gap-1.5 mt-1.5">
                         <span class="font-poppins text-dark/45 text-[15px]">Assalamu'alaikum,</span>
                         <span class="font-poppins text-dark font-semibold text-[15px]">{{ $customer->name ?? 'Member' }}</span>
@@ -1004,7 +1004,7 @@
                         <i class="fas fa-box text-sm"></i>
                     </div>
                     <div>
-                        <p class="font-poppins text-[11px] text-dark/40 uppercase tracking-wider font-medium">Package</p>
+                        <p class="font-poppins text-[11px] text-dark/40 uppercase tracking-wider font-medium">Paket</p>
                         <p class="font-poppins text-[14px] text-dark font-semibold">{{ $selectedPackage->name ?? '-' }}</p>
                     </div>
                 </div>
@@ -1014,7 +1014,7 @@
                         <i class="fas fa-coins text-sm"></i>
                     </div>
                     <div>
-                        <p class="font-poppins text-[11px] text-dark/40 uppercase tracking-wider font-medium">Credit</p>
+                        <p class="font-poppins text-[11px] text-dark/40 uppercase tracking-wider font-medium">Kredit</p>
                         <p class="font-poppins text-[14px] text-dark font-semibold" id="credit-value-top">{{ $remainingClasses ?? 0 }}</p>
                     </div>
                 </div>
@@ -1023,17 +1023,19 @@
                         <i class="fas fa-calendar text-sm"></i>
                     </div>
                     <div>
-                        <p class="font-poppins text-[11px] text-dark/40 uppercase tracking-wider font-medium">Valid Until</p>
-                        <p class="font-poppins text-[14px] text-dark font-semibold">{{ $activeOrders?->first()?->expired_at ? \Carbon\Carbon::parse($activeOrders->first()->expired_at)->format('d M Y') : ($selectedPackage?->duration_days ? 'After 1st booking' : 'Unlimited') }}</p>
+                        <p class="font-poppins text-[11px] text-dark/40 uppercase tracking-wider font-medium">Berlaku Hingga</p>
+                        <p class="font-poppins text-[14px] text-dark font-semibold">{{ $activeOrders?->first()?->expired_at ? \Carbon\Carbon::parse($activeOrders->first()->expired_at)->format('d M Y') : ($selectedPackage?->duration_days ? 'Setelah booking pertama' : 'Tak Terbatas') }}</p>
                     </div>
                 </div>
                 @if($activeOrders && $activeOrders->count() > 1)
                 <div class="ml-auto">
                     <select id="package-select" onchange="switchPackage(this.value)" class="font-poppins text-[13px] bg-cream border border-[rgba(238,78,139,0.15)] rounded-xl px-4 py-2.5 text-dark font-medium focus:outline-none focus:border-primary focus:ring-2 focus:ring-[rgba(238,78,139,0.1)]">
                         @foreach($activeOrders as $ord)
+                            @if(($ord->remaining_classes ?? 0) > 0)
                             <option value="{{ $ord->id }}" {{ $ord->id == $selectedOrderId ? 'selected' : '' }}>
                                 {{ $ord->package?->name ?? 'Package' }} ({{ $ord->remaining_classes ?? 0 }} credits)
                             </option>
+                            @endif
                         @endforeach
                     </select>
                 </div>
@@ -1044,7 +1046,7 @@
         {{-- DATE SELECTOR --}}
         <div class="date-selector-container mb-8">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="font-nord font-semibold text-[17px] text-dark">SELECT DATE <span id="selected-date-label" class="font-poppins font-normal text-dark/40 text-[15px]">&mdash; {{ \Carbon\Carbon::parse($selectedDate)->format('l, d M Y') }}</span></h2>
+                <h2 class="font-nord font-semibold text-[17px] text-dark">PILIH TANGGAL <span id="selected-date-label" class="font-poppins font-normal text-dark/40 text-[15px]">&mdash; {{ \Carbon\Carbon::parse($selectedDate)->format('l, d M Y') }}</span></h2>
                 <div class="flex items-center gap-2">
                     <button onclick="changeWeek(-1)" class="w-8 h-8 rounded-lg bg-white border border-[rgba(238,78,139,0.15)] flex items-center justify-center text-dark/50 hover:text-primary hover:border-primary transition-all">
                         <i class="fas fa-chevron-left text-xs"></i>
@@ -1068,12 +1070,12 @@
             <div class="relative filter-dropdown" data-filter="class_type">
                 <button onclick="toggleFilterDropdown(this)"
                     class="px-4 py-2 rounded-xl font-poppins font-medium text-[12px] shadow-sm hover:shadow-md transition-all {{ $currentClassType ? 'bg-primary text-white' : 'bg-white border border-[rgba(238,78,139,0.15)] text-dark/60 hover:border-primary/30 hover:text-dark' }}">
-                    Class Type: <span class="font-semibold filter-label">{{ $currentClassType ?: 'ALL' }}</span>
+                    Tipe Kelas: <span class="font-semibold filter-label">{{ $currentClassType ?: 'SEMUA' }}</span>
                     <i class="fas fa-chevron-down ml-1.5 text-[10px]"></i>
                 </button>
                 <div class="absolute top-full left-0 mt-1.5 w-48 bg-white rounded-xl shadow-lg border border-[rgba(238,78,139,0.1)] py-1.5 z-50 hidden" data-filter-options="class_type">
                     <button data-value="" class="w-full text-left px-4 py-2 font-poppins text-[12px] hover:bg-[rgba(238,78,139,0.05)] transition-colors {{ !$currentClassType ? 'text-primary font-semibold' : 'text-dark/60' }}">
-                        All Classes
+                        Semua Kelas
                     </button>
                     @foreach($filterOptions['class_types'] as $type)
                         <button data-value="{{ $type }}"
@@ -1088,12 +1090,12 @@
             <div class="relative filter-dropdown" data-filter="instructor">
                 <button onclick="toggleFilterDropdown(this)"
                     class="px-4 py-2 rounded-xl font-poppins font-medium text-[12px] shadow-sm hover:shadow-md transition-all {{ $currentInstructor ? 'bg-primary text-white' : 'bg-white border border-[rgba(238,78,139,0.15)] text-dark/60 hover:border-primary/30 hover:text-dark' }}">
-                    Instructor: <span class="font-semibold filter-label">{{ $currentInstructor ?: 'ALL' }}</span>
+                    Instruktur: <span class="font-semibold filter-label">{{ $currentInstructor ?: 'SEMUA' }}</span>
                     <i class="fas fa-chevron-down ml-1.5 text-[10px]"></i>
                 </button>
                 <div class="absolute top-full left-0 mt-1.5 w-48 bg-white rounded-xl shadow-lg border border-[rgba(238,78,139,0.1)] py-1.5 z-50 hidden" data-filter-options="instructor">
                     <button data-value="" class="w-full text-left px-4 py-2 font-poppins text-[12px] hover:bg-[rgba(238,78,139,0.05)] transition-colors {{ !$currentInstructor ? 'text-primary font-semibold' : 'text-dark/60' }}">
-                        All Instructors
+                        Semua Instruktur
                     </button>
                     @foreach($filterOptions['instructors'] as $instructor)
                         <button data-value="{{ $instructor }}"
@@ -1108,12 +1110,12 @@
             <div class="relative filter-dropdown" data-filter="time">
                 <button onclick="toggleFilterDropdown(this)"
                     class="px-4 py-2 rounded-xl font-poppins font-medium text-[12px] shadow-sm hover:shadow-md transition-all {{ $currentTime ? 'bg-primary text-white' : 'bg-white border border-[rgba(238,78,139,0.15)] text-dark/60 hover:border-primary/30 hover:text-dark' }}">
-                    Time: <span class="font-semibold filter-label">{{ $currentTime ? ucfirst($currentTime) : 'ALL' }}</span>
+                    Waktu: <span class="font-semibold filter-label">{{ $currentTime ? ucfirst($currentTime) : 'SEMUA' }}</span>
                     <i class="fas fa-chevron-down ml-1.5 text-[10px]"></i>
                 </button>
                 <div class="absolute top-full left-0 mt-1.5 w-52 bg-white rounded-xl shadow-lg border border-[rgba(238,78,139,0.1)] py-1.5 z-50 hidden" data-filter-options="time">
                     <button data-value="" class="w-full text-left px-4 py-2 font-poppins text-[12px] hover:bg-[rgba(238,78,139,0.05)] transition-colors {{ !$currentTime ? 'text-primary font-semibold' : 'text-dark/60' }}">
-                        All Times
+                        Semua Waktu
                     </button>
                     @foreach($filterOptions['time_slots'] as $key => $label)
                         <button data-value="{{ $key }}"
@@ -1154,13 +1156,13 @@
                 <i class="fas fa-times"></i>
             </button>
             <div class="bulk-bar-info">
-                <span class="bulk-bar-label">Selected: <span id="selected-class-count" class="bulk-bar-count">0</span></span>
+                <span class="bulk-bar-label">Dipilih: <span id="selected-class-count" class="bulk-bar-count">0</span></span>
                 <span class="bulk-bar-sep">|</span>
-                <span class="bulk-bar-credits"><span id="credit-display">{{ $remainingClasses ?? 0 }}</span> credits</span>
+                <span class="bulk-bar-credits"><span id="credit-display">{{ $remainingClasses ?? 0 }}</span> kredit</span>
             </div>
             <button id="book-selected-btn" class="bulk-bar-book-btn" onclick="bookSelectedClasses()">
                 <i class="fas fa-calendar-check"></i>
-                Book Now
+                Booking Sekarang
             </button>
         </div>
     </div>
@@ -1172,45 +1174,39 @@
 {{-- ============================================
      BULK BOOKING CONFIRMATION MODAL
      ============================================ --}}
-<div id="bulk-confirm-modal" style="display:none; position:fixed; inset:0; z-index:100; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:1rem;">
-    <div style="background:white; border-radius:16px; max-width:540px; width:100%; max-height:90vh; box-shadow:0 25px 60px rgba(0,0,0,0.2); animation:modalIn 0.25s ease-out; overflow:hidden; display:flex; flex-direction:column;">
-        
+<div id="bulk-confirm-modal" class="bulk-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="bulk-modal-title">
+    <div class="bulk-modal-container" role="document">
+
         {{-- Header --}}
-        <div style="background: linear-gradient(135deg, rgba(241,204,227,0.30) 0%, rgba(244,238,230,1) 100%); padding:1.5rem 2rem; border-bottom:1px solid rgba(238, 78, 139,0.20); text-align:center; flex-shrink:0;">
-            <div style="width:56px; height:56px; background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%); border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 0.75rem; font-size:1.5rem; color:white;">
+        <div class="bulk-modal-header">
+            <div class="bulk-modal-icon">
                 <i class="fas fa-calendar-check"></i>
             </div>
-            <h3 style="font-size:1.15rem; font-weight:700; color:#7A2B4A; margin:0;">Konfirmasi Booking</h3>
-            <p style="font-size:0.825rem; color:#64748b; margin-top:4px;">Anda akan booking <span id="bulk-confirm-count">0</span> kelas sekaligus</p>
+            <h3 id="bulk-modal-title" class="bulk-modal-title">Konfirmasi Booking</h3>
+            <p class="bulk-modal-subtitle">Anda akan booking <span id="bulk-confirm-count">0</span> kelas sekaligus</p>
         </div>
 
-        {{-- Class List (Scrollable) --}}
-        <div style="flex:1; overflow-y:auto; padding:1.5rem 2rem;">
-            <div style="font-size:0.75rem; font-weight:600; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.75rem;">Daftar Kelas:</div>
-            <div id="bulk-confirm-list" style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom:1.25rem;">
-                {{-- Will be populated by JavaScript --}}
+        {{-- Body --}}
+        <div class="bulk-modal-body">
+            <div class="bulk-modal-section-label">Daftar Kelas</div>
+            <div id="bulk-confirm-list" class="bulk-modal-class-list">
+                {{-- Populated by JavaScript --}}
             </div>
 
             {{-- Warning --}}
-            <div style="background:#fef3c7; border-left:3px solid #f59e0b; border-radius:0 8px 8px 0; padding:0.75rem 1rem; font-size:0.8rem; color:#92400e; display:flex; gap:8px; align-items:flex-start;">
-                <i class="fas fa-exclamation-triangle" style="margin-top:2px; flex-shrink:0;"></i>
+            <div class="bulk-modal-warning">
+                <i class="fas fa-exclamation-triangle"></i>
                 <span>Booking ini akan mengurangi kuota kelas Anda sesuai jumlah kelas yang dipilih. Pastikan semua jadwal sudah benar.</span>
             </div>
         </div>
 
-        {{-- Buttons --}}
-        <div style="padding:1.5rem 2rem; border-top:1px solid #e2e8f0; flex-shrink:0; display:flex; gap:0.75rem;">
-            <button onclick="closeBulkConfirm()" 
-                style="flex:1; padding:0.8rem; border:2px solid #e2e8f0; background:white; color:#64748b; border-radius:10px; font-weight:600; font-size:0.875rem; cursor:pointer; transition:all 0.2s; font-family:inherit;"
-                onmouseover="this.style.background='#f8fafc'; this.style.borderColor='#cbd5e1'" 
-                onmouseout="this.style.background='white'; this.style.borderColor='#e2e8f0'">
-                <i class="fas fa-times" style="margin-right:6px;"></i>Batal
+        {{-- Footer --}}
+        <div class="bulk-modal-footer">
+            <button onclick="closeBulkConfirm()" class="bulk-btn bulk-btn-secondary">
+                <i class="fas fa-times"></i> Batal
             </button>
-            <button id="confirm-bulk-book-btn" onclick="confirmBulkBooking()" 
-                style="flex:1; padding:0.8rem; border:none; background:linear-gradient(135deg,#7A2B4A,#EE4E8B); color:white; border-radius:10px; font-weight:600; font-size:0.875rem; cursor:pointer; transition:all 0.2s; font-family:inherit; box-shadow:0 4px 12px rgba(122, 43, 74,0.30);"
-                onmouseover="this.style.background='linear-gradient(135deg,#5A1F3A,#B83863)'" 
-                onmouseout="this.style.background='linear-gradient(135deg,#7A2B4A,#EE4E8B)'">
-                <i class="fas fa-check" style="margin-right:6px;"></i>Ya, Book Semua
+            <button id="confirm-bulk-book-btn" onclick="confirmBulkBooking()" class="bulk-btn bulk-btn-primary">
+                <i class="fas fa-check"></i> Ya, Book Semua
             </button>
         </div>
     </div>
@@ -1248,19 +1244,30 @@
         /* ===== FLOATING BOOKING BAR ===== */
         #bulk-booking-bar {
             position: fixed;
-            left: calc(13.5rem + (100vw - 13.5rem) / 2);
-            transform: translateX(-50%);
+            left: 50%;
+            transform: translateX(-50%) translateY(16px);
             bottom: 24px;
             z-index: 9999;
             width: calc(100% - 32px);
-            max-width: 620px;
+            max-width: 760px;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
         }
         #bulk-booking-bar.visible {
             opacity: 1;
             visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        @media (min-width: 1024px) {
+            #bulk-booking-bar {
+                left: calc(13.5rem + (100vw - 13.5rem) / 2);
+                transform: translateX(-50%) translateY(16px);
+                max-width: 720px;
+            }
+            #bulk-booking-bar.visible {
+                transform: translateX(-50%) translateY(0);
+            }
         }
         .bulk-bar-inner {
             position: relative;
@@ -1268,27 +1275,24 @@
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             color: white;
-            padding: 1rem 1.25rem;
+            padding: 0.75rem 1.25rem;
             border-radius: 20px;
             box-shadow: 0 12px 48px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.06);
             display: flex;
-            flex-wrap: wrap;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             gap: 0.75rem;
         }
         .bulk-bar-close {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.75rem;
             background: none;
             border: none;
             color: rgba(255,255,255,0.3);
             cursor: pointer;
             font-size: 14px;
-            padding: 0.25rem;
+            padding: 0.25rem 0.5rem;
             transition: color 0.2s;
             line-height: 1;
+            flex-shrink: 0;
         }
         .bulk-bar-close:hover {
             color: rgba(255,255,255,0.7);
@@ -1297,7 +1301,8 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            flex: 0 0 auto;
+            flex: 1;
+            min-width: 0;
         }
         .bulk-bar-label {
             font-size: 14px;
@@ -1337,6 +1342,7 @@
             font-family: 'Poppins', sans-serif;
             opacity: 0.5;
             pointer-events: none;
+            flex-shrink: 0;
         }
         .bulk-bar-book-btn:not(:disabled) {
             opacity: 1;
@@ -1352,20 +1358,254 @@
 
         @media (max-width: 768px) {
             #bulk-booking-bar {
-                left: 50%;
-                width: calc(100% - 24px);
-            }
-            .bulk-bar-info {
-                flex: 0 0 100%;
-                justify-content: center;
+                bottom: max(16px, env(safe-area-inset-bottom, 16px));
+                width: calc(100% - 16px);
+                max-width: 100%;
             }
             .bulk-bar-inner {
-                padding: 0.85rem 1rem;
+                padding: 0.75rem 1rem;
                 border-radius: 16px;
+                flex-wrap: wrap;
+            }
+            .bulk-bar-info {
+                flex: 0 0 auto;
+                justify-content: flex-start;
             }
             .bulk-bar-book-btn {
                 flex: 1;
                 justify-content: center;
+                min-width: 0;
+            }
+        }
+
+        /* ===== BULK CONFIRM MODAL ===== */
+        .bulk-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            animation: bulkFadeIn 0.2s ease;
+        }
+        .bulk-modal-container {
+            background: white;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 560px;
+            max-height: 85vh;
+            box-shadow: 0 32px 80px rgba(0,0,0,0.25);
+            display: flex;
+            flex-direction: column;
+            animation: bulkScaleIn 0.2s ease;
+            margin-bottom: 80px;
+        }
+        .bulk-modal-header {
+            background: linear-gradient(135deg, rgba(241,204,227,0.30) 0%, rgba(244,238,230,1) 100%);
+            padding: 1.5rem 2rem 1.25rem;
+            border-bottom: 1px solid rgba(238,78,139,0.20);
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .bulk-modal-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.75rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+        .bulk-modal-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #7A2B4A;
+            margin: 0;
+            font-family: 'Nord', 'Poppins', sans-serif;
+        }
+        .bulk-modal-subtitle {
+            font-size: 0.825rem;
+            color: #64748b;
+            margin-top: 4px;
+            font-family: 'Poppins', sans-serif;
+        }
+        .bulk-modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem 2rem;
+            -webkit-overflow-scrolling: touch;
+        }
+        .bulk-modal-section-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+            font-family: 'Poppins', sans-serif;
+        }
+        .bulk-modal-class-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+        }
+        .bulk-modal-class-list > div {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: #f8fafc;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-family: 'Poppins', sans-serif;
+        }
+        .bulk-class-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #EE4E8B, #7A2B4A);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+            font-size: 14px;
+        }
+        .bulk-class-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .bulk-class-name {
+            font-weight: 600;
+            color: #1C1C1C;
+            font-size: 0.85rem;
+        }
+        .bulk-class-meta {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+        .bulk-modal-warning {
+            background: #fef3c7;
+            border-left: 3px solid #f59e0b;
+            border-radius: 0 8px 8px 0;
+            padding: 0.75rem 1rem;
+            font-size: 0.8rem;
+            color: #92400e;
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+            font-family: 'Poppins', sans-serif;
+        }
+        .bulk-modal-warning i {
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        .bulk-modal-footer {
+            padding: 1.25rem 2rem;
+            border-top: 1px solid #e2e8f0;
+            flex-shrink: 0;
+            display: flex;
+            gap: 0.75rem;
+        }
+        .bulk-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Poppins', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .bulk-btn-secondary {
+            border: 2px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+        }
+        .bulk-btn-secondary:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+        .bulk-btn-primary {
+            border: none;
+            background: linear-gradient(135deg, #7A2B4A, #EE4E8B);
+            color: white;
+            box-shadow: 0 4px 12px rgba(122,43,74,0.30);
+        }
+        .bulk-btn-primary:hover {
+            background: linear-gradient(135deg, #5A1F3A, #B83863);
+            box-shadow: 0 6px 20px rgba(122,43,74,0.40);
+        }
+        .bulk-btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        @keyframes bulkFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes bulkScaleIn {
+            from { opacity: 0; transform: scale(0.95) translateY(8px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .bulk-modal-container {
+                border-radius: 20px;
+                max-height: 90vh;
+                margin-bottom: 72px;
+            }
+            .bulk-modal-header {
+                padding: 1.25rem 1.25rem 1rem;
+            }
+            .bulk-modal-body {
+                padding: 1.25rem;
+            }
+            .bulk-modal-footer {
+                padding: 1rem 1.25rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .bulk-modal-container {
+                border-radius: 16px;
+                max-height: 92vh;
+                margin-bottom: 64px;
+            }
+            .bulk-modal-header {
+                padding: 1rem 1rem 0.85rem;
+            }
+            .bulk-modal-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 1.25rem;
+            }
+            .bulk-modal-title {
+                font-size: 1rem;
+            }
+            .bulk-modal-body {
+                padding: 1rem;
+            }
+            .bulk-modal-footer {
+                padding: 0.85rem 1rem;
+                flex-direction: column;
+            }
+            .bulk-btn {
+                padding: 0.7rem;
             }
         }
     </style>
@@ -1456,14 +1696,11 @@
                 const time = card.dataset.time || '';
                 const instructor = card.dataset.instructor || 'Instructor';
                 const item = document.createElement('div');
-                item.style.cssText = 'display:flex; align-items:center; gap:0.75rem; padding:0.65rem 0.85rem; background:#f8fafc; border-radius:10px; font-size:0.85rem;';
                 item.innerHTML = `
-                    <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#EE4E8B,#7A2B4A);display:flex;align-items:center;justify-content:center;color:white;flex-shrink:0;">
-                        <i class="fas fa-calendar-alt" style="font-size:14px;"></i>
-                    </div>
-                    <div style="flex:1;min-width:0;">
-                        <div style="font-weight:600;color:#1C1C1C;font-size:0.85rem;">${name}</div>
-                        <div style="font-size:0.75rem;color:#94a3b8;margin-top:2px;">${time} &middot; ${instructor}</div>
+                    <div class="bulk-class-icon"><i class="fas fa-calendar-alt"></i></div>
+                    <div class="bulk-class-info">
+                        <div class="bulk-class-name">${name}</div>
+                        <div class="bulk-class-meta">${time} &middot; ${instructor}</div>
                     </div>
                 `;
                 listEl.appendChild(item);
@@ -1473,6 +1710,7 @@
         if (modal) {
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
+            trapFocus(modal);
         }
     }
 
@@ -1555,6 +1793,25 @@
         if (modal) { modal.style.display = 'none'; document.body.style.overflow = ''; }
     }
 
+    function trapFocus(element) {
+        const focusable = element.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        function handler(e) {
+            if (e.key !== 'Tab') return;
+            if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+            else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+        element.addEventListener('keydown', handler);
+        if (first) setTimeout(function() { first.focus(); }, 50);
+    }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('bulk-confirm-modal');
+            if (modal && modal.style.display === 'flex') closeBulkConfirm();
+        }
+    });
+
     function switchPackage(orderId) {
         window.location.href = '{{ route("member.book") }}?order_id=' + orderId;
     }
@@ -1624,7 +1881,7 @@
                     class="rounded-xl p-3 text-center transition-all duration-200 ${isSelected ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-white border border-[rgba(238,78,139,0.1)] text-dark hover:border-primary/30 hover:shadow-sm'}">
                     <p class="font-poppins text-[10px] font-semibold uppercase tracking-wider ${isSelected ? 'text-white/70' : 'text-dark/40'}">${dayName.slice(0, 3)}</p>
                     <p class="font-nord font-bold text-lg leading-tight mt-0.5">${dayNum}</p>
-                    ${isToday ? '<p class="font-poppins text-[9px] mt-0.5 font-semibold today-label ' + (isSelected ? 'text-white/70' : 'text-primary') + '">TODAY</p>' : ''}
+                    ${isToday ? '<p class="font-poppins text-[9px] mt-0.5 font-semibold today-label ' + (isSelected ? 'text-white/70' : 'text-primary') + '">HARI INI</p>' : ''}
                 </button>
             `;
         }
@@ -1658,10 +1915,10 @@
             const isDisabled = s.isBooked || s.isFull;
             const capLabel = s.hasCapacity ? s.bookedCount + '/' + s.capacity : '-/-';
             const statusHtml = s.isBooked
-                ? '<span class="font-poppins text-[11px] font-semibold text-accent bg-[rgba(26,122,94,0.08)] px-3.5 py-1.5 rounded-full flex items-center gap-1.5"><i class="fas fa-check-circle text-[12px]"></i>Booked</span>'
+                ? '<span class="font-poppins text-[11px] font-semibold text-accent bg-[rgba(26,122,94,0.08)] px-3.5 py-1.5 rounded-full flex items-center gap-1.5"><i class="fas fa-check-circle text-[12px]"></i>Terbooking</span>'
                 : s.isFull
-                ? '<span class="font-poppins text-[11px] font-semibold text-dark/30 bg-[rgba(28,28,28,0.05)] px-3.5 py-1.5 rounded-full flex items-center gap-1.5"><i class="fas fa-ban text-[12px]"></i>Full</span>'
-                : '<span class="font-poppins text-[11px] font-semibold text-primary bg-[rgba(238,78,139,0.08)] px-3.5 py-1.5 rounded-full schedule-card-accent flex items-center gap-1.5"><i class="fas fa-plus-circle text-[12px]"></i>Select</span>';
+                ? '<span class="font-poppins text-[11px] font-semibold text-dark/30 bg-[rgba(28,28,28,0.05)] px-3.5 py-1.5 rounded-full flex items-center gap-1.5"><i class="fas fa-ban text-[12px]"></i>Penuh</span>'
+                : '<span class="font-poppins text-[11px] font-semibold text-primary bg-[rgba(238,78,139,0.08)] px-3.5 py-1.5 rounded-full schedule-card-accent flex items-center gap-1.5"><i class="fas fa-plus-circle text-[12px]"></i>Pilih</span>';
 
             cardsHtml += `
                 <div class="bg-white rounded-2xl shadow-[0_2px_12px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 schedule-card ${s.isBooked ? 'is-booked opacity-60' : ''} ${s.isFull ? 'opacity-50' : ''} ${!isDisabled ? 'cursor-pointer' : 'cursor-default'}"
@@ -1718,7 +1975,7 @@
                 <div class="flex items-center gap-3 mb-0 py-3 px-4 rounded-xl">
                     <div class="flex-1 flex items-center gap-3">
                         <h3 id="schedule-heading" class="font-nord font-bold text-[18px] text-dark">${heading}</h3>
-                        <span id="schedule-count" class="font-poppins text-[12px] text-dark/35 bg-white px-3 py-1 rounded-full border border-[rgba(238,78,139,0.08)]">${schedules.length} classes</span>
+                        <span id="schedule-count" class="font-poppins text-[12px] text-dark/35 bg-white px-3 py-1 rounded-full border border-[rgba(238,78,139,0.08)]">${schedules.length} kelas</span>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4">
