@@ -470,6 +470,21 @@ Route::prefix('staff/notifications')
 
 /*
 |--------------------------------------------------------------------------
+| DASHBOARD ANALYTICS API (real-time)
+|--------------------------------------------------------------------------
+| Endpoint JSON untuk dashboard admin FTM Society. Guard `web` sama seperti
+| Filament 2 admin sehingga session admin yang login dianggap valid.
+*/
+Route::prefix('staff/dashboard')
+    ->name('admin.dashboard.')
+    ->middleware(['web', 'auth:web'])
+    ->group(function () {
+        Route::get('/analytics', [\App\Http\Controllers\Admin\DashboardAnalyticsController::class, 'analytics'])->name('analytics');
+        Route::get('/search',    [\App\Http\Controllers\Admin\DashboardAnalyticsController::class, 'search'])->name('search');
+    });
+
+/*
+|--------------------------------------------------------------------------
 | DEBUG & TESTING ROUTES
 |--------------------------------------------------------------------------
 | ⚠️ REMOVE IN PRODUCTION OR PROTECT WITH MIDDLEWARE

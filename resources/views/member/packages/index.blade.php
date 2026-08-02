@@ -16,212 +16,395 @@
         /* ===============================================================
            FTM SOCIETY — FINAL MEMBERSHIP CARD PICKER
            =============================================================== */
+        /* ===============================================================
+           FTM SOCIETY — MEMBERSHIP PACKAGE PICKER
+           Premium SaaS-style pricing modal
+           =============================================================== */
         #availablePackagesModal { z-index: 9999 !important; }
         #availablePackagesModal .apm-backdrop {
             display: flex; align-items: center; justify-content: center;
             position: fixed; inset: 0;
-            background: rgba(0,0,0,0);
-            transition: opacity 0.3s ease; z-index: 9999;
-            padding: 1.5rem; opacity: 0; pointer-events: none;
+            background: rgba(23, 10, 15, 0);
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            transition: opacity 0.35s ease, background 0.35s ease, backdrop-filter 0.35s ease;
+            z-index: 9999; padding: 1.5rem; opacity: 0; pointer-events: none;
         }
         #availablePackagesModal.open-modal .apm-backdrop {
             opacity: 1; pointer-events: auto;
-            background: rgba(28,28,28,0.6);
+            background: rgba(23, 10, 15, 0.55);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
         #availablePackagesModal .apm-container {
-            width: 100%; max-width: 1100px; max-height: 90vh;
-            border-radius: 24px;
-            background-image: linear-gradient(145deg, #1C1C1C, #7A2B4A);
-            filter: drop-shadow(0 30px 60px rgba(0,0,0,0.5));
+            width: 100%; max-width: 1400px; max-height: 90vh;
+            border-radius: 32px;
+            background: #FFFFFF;
+            box-shadow: 0 40px 90px -24px rgba(143, 41, 87, 0.35), 0 12px 32px rgba(23, 10, 15, 0.12);
             overflow: hidden; display: flex; flex-direction: column;
-            margin: auto;
-            transform: translateY(30px) scale(0.97);
-            transition: transform 0.35s ease, opacity 0.35s ease;
-            opacity: 0; position: relative; contain: layout style;
+            margin: auto; position: relative; contain: layout style;
+            transform: translateY(36px) scale(0.96);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+            opacity: 0;
         }
         #availablePackagesModal.open-modal .apm-container {
             transform: translateY(0) scale(1); opacity: 1;
         }
         @media (max-width: 768px) {
+            #availablePackagesModal .apm-backdrop { padding: 0; align-items: flex-end; }
             #availablePackagesModal .apm-container {
-                max-width: 100%; max-height: 95vh;
-                border-radius: 20px 20px 0 0;
+                max-width: 100%; max-height: 96vh;
+                border-radius: 28px 28px 0 0;
                 margin-bottom: 0; margin-top: auto;
             }
-            #availablePackagesModal .apm-backdrop { padding: 0; align-items: flex-end; }
         }
+        /* ---------- Header ---------- */
         #availablePackagesModal .apm-header {
-            background-image: linear-gradient(135deg, #EE4E8B, #7A2B4A);
-            padding: 1.5rem 2rem; flex-shrink: 0;
+            position: relative; flex-shrink: 0;
+            min-height: 96px; padding: 1.4rem 2.25rem;
             display: flex; align-items: center; justify-content: space-between;
+            background-image: linear-gradient(135deg, #D93D7A 0%, #8F2957 100%);
+            overflow: hidden;
         }
-        #availablePackagesModal .apm-header-left { display: flex; align-items: center; gap: 1rem; }
+        #availablePackagesModal .apm-header::before,
+        #availablePackagesModal .apm-header::after {
+            content: ''; position: absolute; border-radius: 50%;
+            background: rgba(255,255,255,0.07); pointer-events: none;
+        }
+        #availablePackagesModal .apm-header::before {
+            width: 240px; height: 240px; top: -120px; right: -60px;
+        }
+        #availablePackagesModal .apm-header::after {
+            width: 150px; height: 150px; bottom: -90px; left: 32%;
+            background: rgba(255,255,255,0.05);
+        }
+        #availablePackagesModal .apm-header-left {
+            display: flex; align-items: center; gap: 1.15rem;
+            position: relative; z-index: 1; min-width: 0;
+        }
         #availablePackagesModal .apm-header-icon {
-            width: 40px; height: 40px; border-radius: 12px;
-            background: rgba(255,255,255,0.18);
+            width: 50px; height: 50px; border-radius: 16px;
+            background: rgba(255,255,255,0.16);
+            border: 1px solid rgba(255,255,255,0.25);
             display: flex; align-items: center; justify-content: center;
-            color: #FFF; font-size: 1.1rem; flex-shrink: 0;
+            color: #FFF; font-size: 1.3rem; flex-shrink: 0;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.22);
         }
-        #availablePackagesModal .apm-header-title {
+        #availablePackagesModal .apm-header-text h2 {
             color: #FFF; font-family: 'Inter','Poppins',sans-serif;
-            font-weight: 800; font-size: 1.25rem; letter-spacing: -0.02em;
+            font-weight: 800; font-size: 1.5rem; letter-spacing: -0.02em; line-height: 1.2;
+            margin: 0;
         }
         #availablePackagesModal .apm-header-sub {
-            color: rgba(255,255,255,0.65); font-family: 'Inter',sans-serif;
-            font-size: 0.75rem; margin-top: 2px;
+            color: rgba(255,255,255,0.75); font-family: 'Inter',sans-serif;
+            font-size: 0.875rem; margin-top: 4px; line-height: 1.5;
         }
         #availablePackagesModal .apm-close-btn {
-            width: 36px; height: 36px; border-radius: 50%;
-            background: rgba(255,255,255,0.15); border: none; color: #FFF;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: background 0.25s ease; font-size: 0.8rem;
+            width: 44px; height: 44px; border-radius: 50%;
+            background: rgba(255,255,255,0.16);
+            border: 1px solid rgba(255,255,255,0.28);
+            color: #FFF; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: transform 0.25s ease, background 0.25s ease;
+            font-size: 1rem; flex-shrink: 0; position: relative; z-index: 1;
         }
-        #availablePackagesModal .apm-close-btn:hover { background: rgba(255,255,255,0.28); }
+        #availablePackagesModal .apm-close-btn:hover {
+            background: rgba(255,255,255,0.32); transform: rotate(90deg);
+        }
+        #availablePackagesModal .apm-close-btn:active { transform: rotate(90deg) scale(0.92); }
+        #availablePackagesModal .apm-close-btn:focus-visible {
+            outline: 2px solid #FFF; outline-offset: 3px;
+        }
+        /* ---------- Body ---------- */
         #availablePackagesModal .apm-body {
             flex: 1; overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             overscroll-behavior: contain; contain: layout style;
-            background: #FCF9F2; padding: 24px;
+            background: #FFF8F8; padding: 32px;
         }
-        #availablePackagesModal .apm-body::-webkit-scrollbar { width: 5px; }
-        #availablePackagesModal .apm-body::-webkit-scrollbar-track { background: #FCF9F2; }
-        #availablePackagesModal .apm-body::-webkit-scrollbar-thumb { background: #F4C9DF; border-radius: 10px; }
+        #availablePackagesModal .apm-body::-webkit-scrollbar { width: 6px; }
+        #availablePackagesModal .apm-body::-webkit-scrollbar-track { background: #FFF8F8; }
+        #availablePackagesModal .apm-body::-webkit-scrollbar-thumb { background: #F0CBDC; border-radius: 10px; }
+        #availablePackagesModal .apm-body::-webkit-scrollbar-thumb:hover { background: #E3A8C6; }
+
+        /* ---------- Grid ---------- */
         #availablePackagesModal .apm-grid {
             display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 24px; background: #FCF9F2;
+            gap: 32px; align-items: stretch;
         }
         @media (max-width: 1024px) { #availablePackagesModal .apm-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 640px) {
-            #availablePackagesModal .apm-grid { grid-template-columns: 1fr; gap: 16px; }
-            #availablePackagesModal .apm-body { padding: 16px; }
-            #availablePackagesModal .apm-header { padding: 1rem 1.25rem; }
+            #availablePackagesModal .apm-grid { grid-template-columns: 1fr; gap: 20px; }
+            #availablePackagesModal .apm-body { padding: 20px; }
+            #availablePackagesModal .apm-header { padding: 1.1rem 1.25rem; min-height: 0; }
             #availablePackagesModal .apm-header-icon { display: none; }
+            #availablePackagesModal .apm-header-text h2 { font-size: 1.25rem; }
         }
+        /* ---------- Cards ---------- */
         #availablePackagesModal .apm-card {
-            background: #FCF9F2;
-            border: 1.5px solid rgba(238,78,139,0.15);
-            border-radius: 16px;
-            filter: drop-shadow(0 4px 12px rgba(122,43,74,0.08));
-            padding: 24px; display: flex; flex-direction: column;
-            height: 100%; transition: transform 0.3s ease;
-            position: relative; overflow: visible;
-            will-change: transform; transform: translateZ(0);
-            backface-visibility: hidden;
+            background: #FFFFFF;
+            border: 1px solid rgba(217, 61, 122, 0.12);
+            border-radius: 28px;
+            box-shadow: 0 2px 10px rgba(143, 41, 87, 0.05);
+            padding: 32px; display: flex; flex-direction: column;
+            height: 100%; position: relative;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
         }
         #availablePackagesModal .apm-card:hover {
-            transform: translateY(-4px) translateZ(0);
+            transform: translateY(-6px);
+            box-shadow: 0 24px 48px -16px rgba(143, 41, 87, 0.18), 0 8px 20px rgba(143, 41, 87, 0.06);
+            border-color: rgba(217, 61, 122, 0.28);
         }
-        #availablePackagesModal .apm-card.is-exclusive { border: 2px solid #EE4E8B; }
-        #availablePackagesModal .apm-card.is-exclusive::after {
-            content: ''; position: absolute; inset: -2px; border-radius: 17px;
-            background-image: linear-gradient(135deg, rgba(238,78,139,0.08) 0%, transparent 60%);
-            pointer-events: none; z-index: 0;
+        /* Stagger entrance */
+        #availablePackagesModal.open-modal .apm-card {
+            animation: apm-card-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
         }
-        #availablePackagesModal .apm-card.is-exclusive > * { position: relative; z-index: 1; }
+        #availablePackagesModal.open-modal .apm-card:nth-child(1) { animation-delay: 0.04s; }
+        #availablePackagesModal.open-modal .apm-card:nth-child(2) { animation-delay: 0.09s; }
+        #availablePackagesModal.open-modal .apm-card:nth-child(3) { animation-delay: 0.14s; }
+        #availablePackagesModal.open-modal .apm-card:nth-child(4) { animation-delay: 0.19s; }
+        #availablePackagesModal.open-modal .apm-card:nth-child(5) { animation-delay: 0.24s; }
+        #availablePackagesModal.open-modal .apm-card:nth-child(6) { animation-delay: 0.29s; }
+        @keyframes apm-card-in {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ---------- Exclusive card ---------- */
+        #availablePackagesModal .apm-card.is-exclusive {
+            border: 2px solid transparent;
+            background:
+                linear-gradient(#FFFFFF, #FFFFFF) padding-box,
+                linear-gradient(135deg, #D93D7A 0%, #C2185B 55%, #8F2957 100%) border-box;
+            box-shadow: 0 4px 24px rgba(217, 61, 122, 0.16);
+            padding-top: 44px;
+        }
+        #availablePackagesModal .apm-card.is-exclusive:hover {
+            box-shadow: 0 28px 56px -16px rgba(217, 61, 122, 0.35), 0 10px 24px rgba(217, 61, 122, 0.12);
+            border-color: transparent;
+        }
+        #availablePackagesModal .apm-ribbon {
+            position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+            display: inline-flex; align-items: center; gap: 7px;
+            padding: 7px 18px; border-radius: 999px;
+            background: linear-gradient(135deg, #D93D7A, #8F2957);
+            color: #FFF; font-family: 'Inter',sans-serif;
+            font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+            text-transform: uppercase; white-space: nowrap;
+            box-shadow: 0 6px 18px rgba(217, 61, 122, 0.4);
+            z-index: 2;
+        }
+
+        /* ---------- Badge ---------- */
         #availablePackagesModal .apm-badge {
-            display: inline-flex; align-items: center; gap: 5px;
-            padding: 5px 14px; border-radius: 999px;
+            display: inline-flex; align-items: center; gap: 7px;
+            padding: 6px 16px; border-radius: 999px;
             font-family: 'Inter',sans-serif; font-size: 11px;
-            font-weight: 700; letter-spacing: 0.08em;
-            text-transform: uppercase; border: none; outline: none;
-            min-height: 32px;
+            font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+            align-self: flex-start; min-height: 30px;
         }
         #availablePackagesModal .apm-badge-exclusive {
-            background-image: linear-gradient(135deg, #EE4E8B, #7A2B4A); color: #FFF;
+            background: linear-gradient(135deg, #D93D7A, #8F2957); color: #FFF;
+            box-shadow: 0 4px 12px rgba(217, 61, 122, 0.3);
         }
-        #availablePackagesModal .apm-badge-regular { background: #F4C9DF; color: #7A2B4A; }
+        #availablePackagesModal .apm-badge-regular { background: #FBE8F0; color: #8F2957; }
+
+        /* ---------- Name ---------- */
         #availablePackagesModal .apm-card-name {
             font-family: 'Inter','Poppins',sans-serif;
-            font-size: 20px; font-weight: 700; color: #1C1C1C;
-            line-height: 1.3; margin: 8px 0;
-            min-height: 64px; display: flex; align-items: flex-start;
+            font-size: 34px; font-weight: 700; color: #2B2B2B;
+            line-height: 1.15; letter-spacing: -0.02em;
+            margin: 20px 0 6px;
             border: none !important; outline: none !important;
             background: transparent !important; box-shadow: none !important; padding: 0 !important;
         }
+
+        /* ---------- Price ---------- */
         .apm-card-price,
         #availablePackagesModal .apm-card-price,
         .apm-card [class*="price"],
         .apm-card [class*="harga"],
         .apm-card [class*="Price"],
         .apm-card [class*="Harga"] {
-            display: flex; align-items: center; gap: 2px;
-            padding: 0 !important; min-height: 56px;
+            display: flex; align-items: baseline; gap: 4px;
+            padding: 0 !important; margin: 8px 0 24px;
             border: none !important; outline: none !important;
             background: transparent !important; box-shadow: none !important;
             border-radius: 0 !important;
         }
         #availablePackagesModal .apm-card-price-currency {
-            font-family: 'Inter',sans-serif; font-size: 13px;
-            font-weight: 600; color: #EE4E8B; vertical-align: super; line-height: 1;
+            font-family: 'Inter',sans-serif; font-size: 20px;
+            font-weight: 600; color: #D93D7A; line-height: 1;
             border: none; outline: none; background: transparent; box-shadow: none;
         }
         #availablePackagesModal .apm-card-price-amount {
             font-family: 'Inter',sans-serif; font-weight: 800;
-            font-size: 38px; letter-spacing: -0.035em; line-height: 1; color: #EE4E8B;
+            font-size: 60px; letter-spacing: -0.04em; line-height: 1; color: #D93D7A;
             border: none; outline: none; background: transparent; box-shadow: none;
         }
-        #availablePackagesModal .apm-stats {
-            display: flex; gap: 10px; margin: 12px 0;
-            min-height: 68px; align-items: center;
+
+        /* ---------- Chips ---------- */
+        #availablePackagesModal .apm-chips {
+            display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px;
         }
-        #availablePackagesModal .apm-stat-item {
-            flex: 1; background: #F4C9DF; border-radius: 10px;
-            padding: 8px 16px; display: flex;
-            flex-direction: column; align-items: center;
-        }
-        #availablePackagesModal .apm-stat-label {
-            font-family: 'Inter',sans-serif; font-size: 10px;
-            font-weight: 600; letter-spacing: 0.06em;
-            text-transform: uppercase; color: #7A2B4A; display: block;
-        }
-        #availablePackagesModal .apm-stat-value {
+        #availablePackagesModal .apm-chip {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 16px; border-radius: 16px;
+            background: #FBEDF3; border: 1px solid rgba(217, 61, 122, 0.1);
             font-family: 'Inter',sans-serif; font-size: 14px;
-            font-weight: 700; color: #1C1C1C; display: block;
+            font-weight: 600; color: #8F2957; min-height: 40px;
         }
+        #availablePackagesModal .apm-chip i { color: #D93D7A; font-size: 14px; }
+
+        /* ---------- Description ---------- */
         #availablePackagesModal .apm-desc {
-            border-left: 3px solid #EE4E8B;
-            background-image: linear-gradient(to right, rgba(244,201,223,0.35), transparent);
-            padding: 10px 14px; border-radius: 0 8px 8px 0;
-            margin: 12px 0; min-height: 72px;
-            display: flex; align-items: flex-start;
+            margin: 0 0 24px; padding: 0;
+            font-family: 'Inter',sans-serif; font-size: 16px;
+            font-weight: 400; color: #6B6B6B; line-height: 1.6;
         }
-        #availablePackagesModal .apm-desc-text {
-            font-family: 'Inter',sans-serif; font-size: 14px;
-            font-weight: 400; font-style: italic; color: #7A2B4A; line-height: 1.5;
+
+        /* ---------- Benefits ---------- */
+        #availablePackagesModal .apm-features { flex: 1; margin-bottom: 28px; }
+        #availablePackagesModal .apm-feature-item {
+            display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
         }
-        #availablePackagesModal .apm-features { flex: 1; margin-bottom: 14px; }
-        #availablePackagesModal .apm-feature-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        #availablePackagesModal .apm-feature-item:last-child { margin-bottom: 0; }
         #availablePackagesModal .apm-feature-icon {
-            width: 18px; height: 18px; background: #1A7A5E;
-            border-radius: 50%; display: flex; align-items: center;
-            justify-content: center; flex-shrink: 0; color: #FFF; font-size: 11px;
+            width: 20px; height: 20px; border-radius: 50%;
+            background: rgba(16, 185, 129, 0.12);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
-        #availablePackagesModal .apm-feature-icon i { color: #FFF; font-size: 11px; }
+        #availablePackagesModal .apm-feature-icon i { color: #10B981; font-size: 11px; }
         #availablePackagesModal .apm-feature-text {
-            font-family: 'Inter',sans-serif; font-size: 14px;
-            font-weight: 400; color: #1C1C1C;
+            font-family: 'Inter',sans-serif; font-size: 15px;
+            font-weight: 400; color: #2B2B2B; line-height: 1.4;
         }
+
+        /* ---------- CTA ---------- */
         #availablePackagesModal .apm-cta {
             display: flex; align-items: center; justify-content: center;
-            gap: 0.5rem; width: 100%; padding: 14px 24px;
-            border-radius: 12px; border: none; cursor: pointer;
+            gap: 10px; width: 100%; height: 58px; padding: 0 24px;
+            border-radius: 18px; border: none; cursor: pointer;
             font-family: 'Inter',sans-serif; font-size: 15px;
-            font-weight: 700; letter-spacing: 0.05em; text-decoration: none;
-            background-image: linear-gradient(135deg, #EE4E8B, #7A2B4A);
+            font-weight: 700; letter-spacing: 0.02em; text-decoration: none;
+            background: linear-gradient(135deg, #D93D7A, #8F2957);
             color: #FFF; margin-top: auto;
-            transition: transform 0.3s ease, filter 0.3s ease;
+            box-shadow: 0 8px 20px rgba(217, 61, 122, 0.3);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
         }
         #availablePackagesModal .apm-cta:hover {
-            transform: scale(1.02) translateZ(0); filter: brightness(1.08);
+            transform: translateY(-2px);
+            box-shadow: 0 14px 28px rgba(217, 61, 122, 0.42);
+            filter: brightness(1.05);
         }
-        #availablePackagesModal .apm-cta:active { transform: scale(0.98); }
-        #availablePackagesModal .apm-cta i { transition: transform 0.3s ease; }
+        #availablePackagesModal .apm-cta:active { transform: translateY(0) scale(0.98); }
+        #availablePackagesModal .apm-cta:focus-visible {
+            outline: 3px solid rgba(217, 61, 122, 0.45); outline-offset: 2px;
+        }
+        #availablePackagesModal .apm-cta i { transition: transform 0.25s ease; }
         #availablePackagesModal .apm-cta:hover i.fa-arrow-right { transform: translateX(4px); }
+
+        /* ---------- Trust footer ---------- */
+        #availablePackagesModal .apm-footer {
+            display: flex; align-items: center; justify-content: center;
+            gap: 10px; padding: 18px 32px 30px;
+            background: #FFF8F8; flex-shrink: 0;
+        }
+        #availablePackagesModal .apm-footer-icon { color: #10B981; font-size: 13px; }
+        #availablePackagesModal .apm-footer-text {
+            font-family: 'Inter',sans-serif; font-size: 13px;
+            color: #6B6B6B; font-weight: 500;
+        }
+        #availablePackagesModal .apm-footer-text strong { color: #2B2B2B; font-weight: 700; }
+
+        /* ---------- Small screens ---------- */
+        @media (max-width: 640px) {
+            #availablePackagesModal .apm-card-name { font-size: 28px; }
+            #availablePackagesModal .apm-card-price-amount { font-size: 44px; }
+            #availablePackagesModal .apm-card-price-currency { font-size: 16px; }
+            #availablePackagesModal .apm-card { padding: 24px; }
+            #availablePackagesModal .apm-card.is-exclusive { padding-top: 44px; }
+            #availablePackagesModal .apm-footer { padding: 16px 20px 24px; }
+        }
+
+        /* ===============================================================
+           DESKTOP REFINEMENT (lg / xl / 2xl) — ~20-25% lebih ringkas
+           Tablet & mobile tidak terpengaruh.
+           =============================================================== */
+        @media (min-width: 1024px) {
+            /* Modal — lebih kecil & proporsional di tengah layar */
+            #availablePackagesModal .apm-container {
+                max-width: 1280px;
+                max-height: 82vh;
+                box-shadow: 0 34px 80px -24px rgba(143, 41, 87, 0.32), 0 10px 28px rgba(23, 10, 15, 0.10);
+            }
+
+            /* Header — lebih ramping */
+            #availablePackagesModal .apm-header {
+                min-height: 88px;
+                padding: 1.1rem 2rem;
+            }
+            #availablePackagesModal .apm-header-left { gap: 0.9rem; }
+            #availablePackagesModal .apm-header-icon {
+                width: 42px; height: 42px; border-radius: 13px; font-size: 1.05rem;
+            }
+            #availablePackagesModal .apm-header-text h2 { font-size: 1.3rem; }
+            #availablePackagesModal .apm-header-sub { font-size: 0.8rem; margin-top: 2px; }
+            #availablePackagesModal .apm-close-btn { width: 38px; height: 38px; font-size: 0.9rem; }
+
+            /* Body & grid — ruang napas di sisi kanan-kiri */
+            #availablePackagesModal .apm-body { padding: 28px 32px; }
+            #availablePackagesModal .apm-grid { gap: 26px; }
+
+            /* Card — lebih ramping */
+            #availablePackagesModal .apm-card { padding: 26px; border-radius: 24px; }
+            #availablePackagesModal .apm-card.is-exclusive { padding-top: 38px; }
+
+            /* Badge & ribbon */
+            #availablePackagesModal .apm-badge {
+                padding: 4px 14px; font-size: 10px; min-height: 26px; gap: 5px;
+            }
+            #availablePackagesModal .apm-badge i { font-size: 10px; }
+            #availablePackagesModal .apm-ribbon {
+                top: -12px; padding: 5px 15px; font-size: 10px; gap: 6px;
+            }
+
+            /* Nama paket */
+            #availablePackagesModal .apm-card-name { font-size: 31px; margin: 16px 0 4px; }
+
+            /* Harga */
+            #availablePackagesModal .apm-card-price { margin: 6px 0 18px; gap: 3px; }
+            #availablePackagesModal .apm-card-price-amount { font-size: 52px; }
+            #availablePackagesModal .apm-card-price-currency { font-size: 18px; }
+
+            /* Chip info */
+            #availablePackagesModal .apm-chips { gap: 10px; margin-bottom: 18px; }
+            #availablePackagesModal .apm-chip {
+                min-height: 40px; padding: 8px 14px; font-size: 13px; border-radius: 14px;
+            }
+
+            /* Deskripsi — maksimal 2 baris */
+            #availablePackagesModal .apm-desc { font-size: 15px; margin: 0 0 16px; line-height: 1.6; }
+
+            /* Benefit */
+            #availablePackagesModal .apm-features { margin-bottom: 18px; }
+            #availablePackagesModal .apm-feature-item { gap: 11px; margin-bottom: 12px; }
+            #availablePackagesModal .apm-feature-icon { width: 18px; height: 18px; }
+            #availablePackagesModal .apm-feature-icon i { font-size: 10px; }
+            #availablePackagesModal .apm-feature-text { font-size: 14px; }
+
+            /* Tombol */
+            #availablePackagesModal .apm-cta { height: 52px; border-radius: 16px; font-size: 14px; }
+
+            /* Footer trust */
+            #availablePackagesModal .apm-footer { padding: 14px 28px 24px; }
+        }
+
+        /* ---------- Reduced motion ---------- */
         @media (prefers-reduced-motion: reduce) {
             #availablePackagesModal *,
             #availablePackagesModal *::before,
             #availablePackagesModal *::after {
-                transition: none !important; will-change: auto !important;
+                transition: none !important; animation: none !important;
             }
         }
 
@@ -671,27 +854,28 @@
 @if(isset($availablePackages) && $availablePackages->count() > 0)
 <div id="availablePackagesModal" class="fixed inset-0 z-[9999] hidden">
     <div class="apm-backdrop" onclick="closeAvailablePackagesModal(event)">
-        <div class="apm-container" onclick="event.stopPropagation()">
-            <div class="apm-header">
+        <div class="apm-container" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-label="Pilih Paket Membership">
+            <header class="apm-header">
                 <div class="apm-header-left">
-                    <div class="apm-header-icon"><i class="fas fa-crown"></i></div>
-                    <div>
-                        <h2 class="apm-header-title">Pilih Paket Membership</h2>
-                        <p class="apm-header-sub">Mulai perjalanan sehatmu bersama FTM Society</p>
+                    <div class="apm-header-icon" aria-hidden="true"><i class="fas fa-crown"></i></div>
+                    <div class="apm-header-text">
+                        <h2>Membership Packages</h2>
+                        <p class="apm-header-sub">Pilih paket membership yang paling sesuai untuk perjalanan fitness Anda.</p>
                     </div>
                 </div>
-                <button onclick="closeAvailablePackagesModal()" class="apm-close-btn" title="Tutup">
+                <button onclick="closeAvailablePackagesModal()" class="apm-close-btn" title="Tutup" aria-label="Tutup">
                     <i class="fas fa-times"></i>
                 </button>
-            </div>
+            </header>
             <div class="apm-body">
                 <div class="apm-grid">
                     @foreach($availablePackages as $package)
-                    <div class="apm-card {{ $package->is_exclusive ? 'is-exclusive' : '' }}">
+                    <article class="apm-card {{ $package->is_exclusive ? 'is-exclusive' : '' }}">
                         @if($package->is_exclusive)
-                        <span class="apm-badge apm-badge-exclusive"><i class="fas fa-crown" style="font-size:0.5rem"></i> Eksklusif</span>
+                        <span class="apm-ribbon" aria-hidden="true"><i class="fas fa-star"></i> Most Popular</span>
+                        <span class="apm-badge apm-badge-exclusive"><i class="fas fa-crown" aria-hidden="true"></i> Eksklusif</span>
                         @else
-                        <span class="apm-badge apm-badge-regular"><i class="fas fa-heart" style="font-size:0.5rem"></i> Reguler</span>
+                        <span class="apm-badge apm-badge-regular"><i class="fas fa-heart" aria-hidden="true"></i> Reguler</span>
                         @endif
                         <h3 class="apm-card-name">{{ $package->name }}</h3>
                         <div class="apm-card-price">
@@ -699,52 +883,48 @@
                             <span class="apm-card-price-amount">{{ number_format($package->price, 0, ',', '.') }}</span>
                         </div>
                         @if($package->duration_days || $package->quota)
-                        <div class="apm-stats">
+                        <div class="apm-chips">
                             @if($package->duration_days)
-                            <div class="apm-stat-item">
-                                <span class="apm-stat-label">Durasi</span>
-                                <span class="apm-stat-value">{{ $package->duration_days }} hari</span>
-                            </div>
+                            <span class="apm-chip"><i class="fas fa-calendar" aria-hidden="true"></i> {{ $package->duration_days }} Hari</span>
                             @endif
                             @if($package->quota)
-                            <div class="apm-stat-item">
-                                <span class="apm-stat-label">Sesi</span>
-                                <span class="apm-stat-value">{{ $package->quota }} kelas</span>
-                            </div>
+                            <span class="apm-chip"><i class="fas fa-dumbbell" aria-hidden="true"></i> {{ $package->quota }} Sesi</span>
                             @endif
                         </div>
                         @endif
                         @if($package->description)
-                        <div class="apm-desc">
-                            <span class="apm-desc-text">{{ $package->description }}</span>
-                        </div>
+                        <p class="apm-desc">{{ $package->description }}</p>
                         @endif
                         <div class="apm-features">
                             @if($package->quota)
                             <div class="apm-feature-item">
-                                <div class="apm-feature-icon"><i class="fas fa-check"></i></div>
-                                <span class="apm-feature-text">{{ $package->quota }} sessions tersedia</span>
+                                <span class="apm-feature-icon" aria-hidden="true"><i class="fas fa-check"></i></span>
+                                <span class="apm-feature-text">{{ $package->quota }} sesi tersedia</span>
                             </div>
                             @endif
                             @if($package->duration_days)
                             <div class="apm-feature-item">
-                                <div class="apm-feature-icon"><i class="fas fa-check"></i></div>
+                                <span class="apm-feature-icon" aria-hidden="true"><i class="fas fa-check"></i></span>
                                 <span class="apm-feature-text">Valid {{ $package->duration_days }} hari</span>
                             </div>
                             @endif
                             <div class="apm-feature-item">
-                                <div class="apm-feature-icon"><i class="fas fa-check"></i></div>
+                                <span class="apm-feature-icon" aria-hidden="true"><i class="fas fa-check"></i></span>
                                 <span class="apm-feature-text">Akses ke semua fasilitas</span>
                             </div>
                         </div>
                         <a href="{{ route('join.package', ['package' => $package->slug ?? $package->id]) }}" class="apm-cta">
                             <span>Beli Sekarang</span>
-                            <i class="fas fa-arrow-right"></i>
+                            <i class="fas fa-arrow-right" aria-hidden="true"></i>
                         </a>
-                    </div>
+                    </article>
                     @endforeach
                 </div>
             </div>
+            <footer class="apm-footer">
+                <i class="fas fa-lock apm-footer-icon" aria-hidden="true"></i>
+                <span class="apm-footer-text"><strong>Pembayaran Aman</strong> · Didukung Midtrans</span>
+            </footer>
         </div>
     </div>
 </div>
@@ -906,6 +1086,8 @@ function openAvailablePackagesModal() {
     document.body.style.overflow = 'hidden';
     document.body.classList.add('modal-open');
     requestAnimationFrame(() => { modal.classList.add('open-modal'); });
+    const closeBtn = modal.querySelector('.apm-close-btn');
+    if (closeBtn) closeBtn.focus();
 }
 function closeAvailablePackagesModal(event) {
     if (event && event.target !== event.currentTarget) return;
