@@ -9,6 +9,7 @@ use App\Http\Controllers\MemberAuthController;
 
 // Tampilkan form login
 Route::get('/member/login', [MemberAuthController::class, 'showLoginForm'])->name('member.login');
+Route::get('/member/login-alias', [MemberAuthController::class, 'showLoginForm'])->name('member.login.form');
 
 // Proses login
 Route::post('/member/login', [MemberAuthController::class, 'login']);

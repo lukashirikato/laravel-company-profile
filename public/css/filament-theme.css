@@ -76,6 +76,33 @@ aside {
 }
 
 /* ================================================================
+   SIDEBAR COLLAPSE / EXPAND TOGGLE BUTTONS
+   ================================================================ */
+.filament-sidebar-collapse-button,
+.filament-sidebar-close-button,
+.filament-sidebar-open-button {
+    color: var(--ftm-rising) !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
+}
+
+.filament-sidebar-collapse-button:hover,
+.filament-sidebar-close-button:hover,
+.filament-sidebar-open-button:hover {
+    background: var(--ftm-pink) !important;
+    color: #FFFFFF !important;
+    transform: scale(1.05);
+}
+
+.filament-sidebar-collapse-button svg,
+.filament-sidebar-close-button svg,
+.filament-sidebar-open-button svg {
+    color: inherit !important;
+}
+
+/* ================================================================
    SIDEBAR HEADER — "FTMAdmin" wordmark
    FIXED: same height as topbar (64px), same Cherry bg, no border bottom
    so it forms a continuous bar with the topbar.

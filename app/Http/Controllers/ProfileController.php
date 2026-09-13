@@ -152,7 +152,7 @@ class ProfileController extends Controller
     {
         $request->validate([
             'current_password' => 'required',
-            'new_password' => 'required|confirmed|min:6',
+            'new_password' => 'required|confirmed|min:8',
         ]);
 
         /** @var Customer $customer */

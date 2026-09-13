@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\OtpVerification;
+use App\Http\Controllers\OtpVerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -26,46 +28,64 @@ class MemberAuthController extends Controller
         return view('member.register');
     }
 
-    public function register(Request $request)
+    public function register(Request $request, OtpVerificationController $otpController)
     {
         $request->validate([
             'name'         => 'required|string|max:255',
             'email'        => 'required|email|unique:customers,email',
             'phone_number' => 'required|string|unique:customers,phone_number',
-            'password'     => 'required|string|min:6|confirmed',
+            'password'     => 'required|string|min:8|confirmed',
         ]);
 
+        $phoneNumber = preg_replace('/\s+/', '', $request->phone_number);
+
         // Buat akun member
-        Customer::create([
+        $customer = Customer::create([
             'name'           => strip_tags($request->name),
             'email'          => strtolower(trim($request->email)),
-            'phone_number'   => $request->phone_number,
+            'phone_number'   => $phoneNumber,
             'password'       => Hash::make($request->password),
             'is_verified'    => false,
             'credit_balance' => 0,
         ]);
 
-        // Jika register karena ingin membeli paket
-        if (session('after_register_package')) {
-            $package = session('after_register_package');
-            session()->forget('after_register_package');
+        // Generate dan simpan OTP
+        $code = OtpVerification::generateCode();
 
-            return redirect()->route('member.login.form')
-                ->with('success', 'Pendaftaran berhasil. Silakan login untuk melanjutkan pembayaran.')
-                ->with('redirect_after_login', route('guest.checkout.show', [
-                    'package' => $package
-                ]));
+        OtpVerification::create([
+            'customer_id'  => $customer->id,
+            'phone_number' => $customer->phone_number,
+            'code'         => $code,
+            'purpose'      => 'registration',
+            'expires_at'   => now()->addMinutes(OtpVerification::VALIDITY_MINUTES),
+            'last_sent_at' => now(),
+        ]);
+
+        // Kirim OTP via WhatsApp
+        $sent = $otpController->sendOtpViaWhatsApp($customer, $code);
+
+        // Simpan customer_id ke session untuk halaman verifikasi OTP
+        session(['otp_customer_id' => $customer->id]);
+
+        if (!$sent['success']) {
+            Log::warning('[MemberRegister] Customer dibuat tapi OTP gagal terkirim', [
+                'customer_id' => $customer->id,
+                'reason'      => $sent['message'] ?? 'unknown',
+            ]);
+
+            return redirect()->route('member.otp.form')
+                ->with('warning', 'Akun berhasil dibuat tapi OTP gagal terkirim ke WhatsApp. Silakan klik "Kirim Ulang" pada halaman verifikasi.');
         }
 
-        return redirect()->route('member.login.form')
-            ->with('success', 'Pendaftaran berhasil. Silakan menunggu verifikasi admin.');
+        return redirect()->route('member.otp.form')
+            ->with('success', 'Pendaftaran berhasil. Kode OTP telah dikirim ke nomor WhatsApp Anda.');
     }
 
     public function login(Request $request)
     {
         $request->validate([
             'login'    => 'required|string',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string',
         ]);
 
         // Bisa login pakai email atau no HP
@@ -488,7 +508,7 @@ class MemberAuthController extends Controller
             'reset_password_otp_verified',
         ]);
 
-        return redirect()->route('member.login.form')
+            return redirect()->route('member.login')
             ->with('success', 'Password berhasil direset. Silakan login menggunakan password baru Anda.');
     }
 
@@ -527,7 +547,8 @@ class MemberAuthController extends Controller
         $customer = Customer::findOrFail($id);
         Log::info("[sendLogin] Customer ditemukan: {$customer->name}");
 
-        $plainPassword = '69kfqymY';
+        // Generate password acak (bukan hardcoded) agar tidak ada kredensial statis yang bocor
+        $plainPassword = \Illuminate\Support\Str::random(12);
         $customer->password = Hash::make($plainPassword);
         $customer->is_verified = true;
         $customer->save();

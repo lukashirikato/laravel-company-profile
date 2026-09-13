@@ -44,7 +44,7 @@ class LatestOrders extends BaseWidget
                     'success' => 'completed',
                 ]),
 
-            Tables\Columns\TextColumn::make('total_amount')
+            Tables\Columns\TextColumn::make('amount')
                 ->money('IDR')
                 ->label('Amount'),
 

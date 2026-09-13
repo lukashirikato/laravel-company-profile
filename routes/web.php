@@ -155,11 +155,6 @@ Route::middleware('guest:customer')->group(function () {
     Route::post('/login', [MemberAuthController::class, 'login'])
         ->name('login.submit');
     
-    Route::get('/login-member', [MemberAuthController::class, 'showLoginForm'])
-        ->name('member.login.form');
-    Route::post('/login-member', [MemberAuthController::class, 'login'])
-        ->name('member.login.submit');
-    
     // Registration Routes
     Route::get('/member/register', [MemberAuthController::class, 'showRegisterForm'])
         ->name('member.register');
@@ -443,7 +438,7 @@ Route::prefix('member')
 |--------------------------------------------------------------------------
 | Scanner untuk check-in member - accessible oleh authenticated users
 */
-Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['web', 'auth:web', 'admin:web'])->group(function () {
     // Scanner Interface
     Route::get('/scanner', function () {
         return view('admin.scanner');
@@ -460,7 +455,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 */
 Route::prefix('staff/notifications')
     ->name('admin.notifications.')
-    ->middleware(['web', 'auth:web'])
+    ->middleware(['web', 'auth:web', 'admin:web'])
     ->group(function () {
         Route::get('/feed',         [\App\Http\Controllers\Admin\NotificationController::class, 'feed'])->name('feed');
         Route::post('/{id}/read',   [\App\Http\Controllers\Admin\NotificationController::class, 'markAsRead'])->name('read')->whereNumber('id');
@@ -477,136 +472,17 @@ Route::prefix('staff/notifications')
 */
 Route::prefix('staff/dashboard')
     ->name('admin.dashboard.')
-    ->middleware(['web', 'auth:web'])
+    ->middleware(['web', 'auth:web', 'admin:web'])
     ->group(function () {
         Route::get('/analytics', [\App\Http\Controllers\Admin\DashboardAnalyticsController::class, 'analytics'])->name('analytics');
         Route::get('/search',    [\App\Http\Controllers\Admin\DashboardAnalyticsController::class, 'search'])->name('search');
+        Route::get('/customers', [\App\Http\Controllers\Api\CustomerApiController::class, 'getList'])->name('customers');
     });
 
 /*
 |--------------------------------------------------------------------------
 | DEBUG & TESTING ROUTES
 |--------------------------------------------------------------------------
-| ⚠️ REMOVE IN PRODUCTION OR PROTECT WITH MIDDLEWARE
+| Dihapus demi keamanan. Endpoint /api/customers dipindah ke grup
+| staff/dashboard (dilindungi auth + role admin) di atas.
 */
-if (config('app.debug')) {
-    
-    // Test transaction data
-    Route::get('/test-transaction', function () {
-        $trx = \App\Models\Transaction::with('customer')->latest()->first();
-        
-        if (!$trx) {
-            return response()->json([
-                'message' => 'No transactions found',
-                'total_transactions' => \App\Models\Transaction::count(),
-            ]);
-        }
-        
-        return response()->json([
-            'transaction_id' => $trx->id,
-            'order_id' => $trx->order_id,
-            'customer_id' => $trx->customer_id,
-            'customer_name' => $trx->customer->name ?? 'NO NAME',
-            'package_id' => $trx->package_id,
-            'amount' => $trx->amount,
-            'status' => $trx->status,
-            'created_at' => $trx->created_at->format('d M Y H:i'),
-        ]);
-    })->name('test.transaction');
-    
-    // Test package data
-    Route::get('/test-packages', function () {
-        $customer = auth('customer')->user();
-        
-        if (!$customer) {
-            return response()->json(['error' => 'Not authenticated']);
-        }
-        
-        $activePackages = \App\Models\Order::with(['package', 'transaction'])
-            ->where('customer_id', $customer->id)
-            ->whereIn('status', ['paid', 'success', 'settlement', 'active'])
-            ->where(function($query) {
-                $query->where('expired_at', '>', now())
-                      ->orWhereNull('expired_at');
-            })
-            ->get();
-        
-        return response()->json([
-            'customer' => $customer->name,
-            'active_packages_count' => $activePackages->count(),
-            'packages' => $activePackages->map(function($order) {
-                return [
-                    'package_name' => $order->package->name,
-                    'order_code' => $order->order_code,
-                    'remaining_sessions' => $order->remaining_sessions ?? 'N/A',
-                    'expired_at' => $order->expired_at 
-                        ? $order->expired_at->format('Y-m-d H:i:s') 
-                        : 'Unlimited',
-                ];
-            }),
-        ]);
-    })->name('test.packages');
-    
-    // Test Midtrans notification (simulate webhook)
-    Route::get('/test-notification/{order_code}', function($order_code) {
-        $order = \App\Models\Order::where('order_code', $order_code)->first();
-        
-        if (!$order) {
-            return response()->json(['error' => 'Order not found']);
-        }
-        
-        return response()->json([
-            'order' => $order->toArray(),
-            'webhook_url' => route('midtrans.notification'),
-            'status_check_url' => route('checkout.status.get', $order_code),
-            'success_url' => route('payment.success', $order_code),
-        ]);
-    })->name('test.notification');
-    
-    // Test WhatsApp Notification
-    Route::get('/test-whatsapp', function () {
-        try {
-            $whatsapp = new \App\Services\WhatsAppService();
-            
-            // Test 1: Simple message
-            $result1 = $whatsapp->send(
-                '6288219775687',  // Sender number (test)
-                'Halo! Ini test WhatsApp dari FTM Society. Sistem notifikasi berhasil! 🎉'
-            );
-            
-            // Test 2: Payment success simulation
-            $result2 = $whatsapp->sendPaymentSuccessNotification(
-                '6288219775698',
-                [
-                    'customer_name' => 'Admin Test',
-                    'package_name' => 'Test Package',
-                    'amount' => 100000,
-                    'order_code' => 'TEST-001',
-                    'package_days' => 30,
-                ]
-            );
-            
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Test WhatsApp terkirim!',
-                'simple_test' => $result1,
-                'payment_test' => $result2,
-                'config' => [
-                    'token_exists' => !empty(config('fonnte.api_token')),
-                    'enabled' => config('fonnte.enabled'),
-                    'api_url' => config('fonnte.api_url'),
-                ]
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ], 500);
-        }
-    })->name('test.whatsapp');
-    
-    // API endpoint untuk customer list (untuk dashboard admin)
-    Route::get('/api/customers', [\App\Http\Controllers\Api\CustomerApiController::class, 'getList'])
-        ->name('api.customers.list');
-}

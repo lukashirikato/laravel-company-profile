@@ -86,13 +86,22 @@ class OrderResource extends Resource
                     ->schema([
                         Forms\Components\Select::make('payment_type')
                             ->options([
-                                'cash' => 'Cash',
-                                'bank_transfer' => 'Bank Transfer',
+                                'qris' => 'QRIS / GoPay / ShopeePay',
+                                'gopay' => 'GoPay',
+                                'shopeepay' => 'ShopeePay',
+                                'bca_va' => 'BCA Virtual Account',
+                                'bni_va' => 'BNI Virtual Account',
+                                'bri_va' => 'BRI Virtual Account',
+                                'mandiri_bill' => 'Mandiri Bill Payment',
+                                'permata_va' => 'Permata VA',
+                                'bank_transfer' => 'Bank Transfer (Other)',
                                 'credit_card' => 'Credit Card',
-                                'e_wallet' => 'E-Wallet',
+                                'cstore' => 'Indomaret / Alfamart',
+                                'cash' => 'Cash',
                             ])
-                            ->required()
-                            ->label('Payment Type'),
+                            ->searchable()
+                            ->nullable()
+                            ->label('Payment Method'),
                         
                         Forms\Components\TextInput::make('voucher_code')
                             ->label('Voucher Code')
@@ -201,13 +210,28 @@ class OrderResource extends Resource
                     ->sortable(),
                 
                 Tables\Columns\BadgeColumn::make('payment_type')
+                    ->label('Payment Method')
+                    ->formatStateUsing(fn ($state) => match (strtolower((string) $state)) {
+                        'qris' => 'QRIS',
+                        'gopay' => 'GoPay',
+                        'shopeepay' => 'ShopeePay',
+                        'bca_va' => 'BCA VA',
+                        'bni_va' => 'BNI VA',
+                        'bri_va' => 'BRI VA',
+                        'mandiri_bill' => 'Mandiri Bill',
+                        'permata_va' => 'Permata VA',
+                        'bank_transfer' => 'Bank Transfer',
+                        'credit_card' => 'Credit Card',
+                        'cstore', 'indomaret', 'alfamart' => 'Retail Store',
+                        'cash' => 'Cash',
+                        default => strtoupper(str_replace('_', ' ', $state ?: 'Pending Method')),
+                    })
                     ->colors([
-                        'info' => 'cash',
-                        'warning' => 'bank_transfer',
-                        'success' => 'credit_card',
-                        'primary' => 'e_wallet',
-                    ])
-                    ->label('Payment'),
+                        'success' => fn ($state) => in_array(strtolower((string) $state), ['qris', 'gopay', 'shopeepay']),
+                        'warning' => fn ($state) => str_contains(strtolower((string) $state), 'va') || str_contains(strtolower((string) $state), 'bank') || str_contains(strtolower((string) $state), 'bill'),
+                        'info' => fn ($state) => in_array(strtolower((string) $state), ['cash', 'credit_card', 'cstore', 'indomaret', 'alfamart']),
+                        'secondary' => fn ($state) => empty($state),
+                    ]),
                 
                 Tables\Columns\BadgeColumn::make('status')
                     ->colors([
@@ -235,18 +259,88 @@ class OrderResource extends Resource
                     ->label('Status'),
                 
                 Tables\Filters\SelectFilter::make('payment_type')
+                    ->label('Payment Method')
                     ->options([
-                        'cash' => 'Cash',
+                        'qris' => 'QRIS',
+                        'gopay' => 'GoPay',
+                        'shopeepay' => 'ShopeePay',
+                        'bca_va' => 'BCA Virtual Account',
+                        'bni_va' => 'BNI Virtual Account',
+                        'bri_va' => 'BRI Virtual Account',
+                        'mandiri_bill' => 'Mandiri Bill',
+                        'permata_va' => 'Permata VA',
                         'bank_transfer' => 'Bank Transfer',
                         'credit_card' => 'Credit Card',
-                        'e_wallet' => 'E-Wallet',
-                    ])
-                    ->label('Payment Type'),
+                        'cstore' => 'Convenience Store',
+                        'cash' => 'Cash',
+                    ]),
                 
                 Tables\Filters\TernaryFilter::make('quota_applied')
                     ->label('Quota Applied'),
             ])
             ->actions([
+                Tables\Actions\Action::make('sync_midtrans')
+                    ->label('Sync Midtrans')
+                    ->icon('heroicon-o-refresh')
+                    ->color('info')
+                    ->action(function ($record) {
+                        try {
+                            app(\App\Http\Controllers\CheckoutController::class)->status($record->order_code);
+                            $record->refresh();
+                            \Filament\Facades\Filament::notify('success', "Order {$record->order_code} disinkronkan. Status: {$record->status}");
+                        } catch (\Exception $e) {
+                            \Filament\Facades\Filament::notify('danger', "Gagal sync Midtrans: " . $e->getMessage());
+                        }
+                    }),
+                Tables\Actions\Action::make('mark_paid')
+                    ->label('Konfirmasi Lunas')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->visible(fn ($record) => in_array($record->status, ['pending', 'processing', 'failed']))
+                    ->requiresConfirmation()
+                    ->modalHeading('Konfirmasi Pembayaran Lunas')
+                    ->modalSubheading('Tindakan ini akan mengonfirmasi order sebagai LUNAS (paid) dan otomatis menambahkan sisa kuota & kelas ke akun member.')
+                    ->action(function ($record) {
+                        try {
+                            $record->update([
+                                'status' => 'paid',
+                                'payment_type' => $record->payment_type ?? 'transfer',
+                            ]);
+
+                            $transaction = \App\Models\Transaction::where('order_id', $record->id)
+                                ->orWhere('transaction_id', $record->order_code)
+                                ->first();
+
+                            if ($transaction) {
+                                $transaction->update([
+                                    'status' => 'success',
+                                    'payment_type' => $record->payment_type ?? 'transfer',
+                                ]);
+                            }
+
+                            if ($record->package) {
+                                $packageQuota = (int) ($record->package->quota ?? 0);
+                                $record->update([
+                                    'remaining_quota' => $packageQuota,
+                                    'remaining_classes' => $packageQuota,
+                                    'total_quota' => $packageQuota,
+                                    'total_classes' => $packageQuota,
+                                    'quota_applied' => true,
+                                ]);
+
+                                if ($record->customer) {
+                                    $record->customer->update([
+                                        'package_id' => $record->package_id,
+                                        'quota' => $record->customer->quota + $packageQuota,
+                                    ]);
+                                }
+                            }
+
+                            \Filament\Facades\Filament::notify('success', "Order {$record->order_code} berhasil dikonfirmasi LUNAS dan kuota telah diaktifkan!");
+                        } catch (\Exception $e) {
+                            \Filament\Facades\Filament::notify('danger', "Gagal mengonfirmasi lunas: " . $e->getMessage());
+                        }
+                    }),
                 Tables\Actions\Action::make('adjust_classes')
                     ->label('Adjust Classes')
                     ->icon('heroicon-o-adjustments')

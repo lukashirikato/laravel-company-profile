@@ -10,11 +10,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('schedules', function (Blueprint $table) {
-            $table->foreignId('class_group_id')
-                ->nullable()
-                ->constrained('class_groups')
-                ->nullOnDelete()
-                ->after('class_id');
+            if (!Schema::hasColumn('schedules', 'class_group_id')) {
+                $table->foreignId('class_group_id')
+                    ->nullable()
+                    ->constrained('class_groups')
+                    ->nullOnDelete()
+                    ->after('class_id');
+            }
         });
 
         // Auto-link existing schedules to class groups by matching label
@@ -33,8 +35,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('schedules', function (Blueprint $table) {
-            $table->dropForeign(['class_group_id']);
-            $table->dropColumn('class_group_id');
+            if (Schema::hasColumn('schedules', 'class_group_id')) {
+                $table->dropForeign(['class_group_id']);
+                $table->dropColumn('class_group_id');
+            }
         });
     }
 };

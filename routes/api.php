@@ -37,7 +37,7 @@ Route::post('/midtrans/callback', [MidtransCallbackController::class, 'handle'])
 |--------------------------------------------------------------------------
 */
 
-Route::middleware('auth:customer:sanctum')->group(function () {
+Route::middleware('auth:customer')->group(function () {
     Route::namespace('App\Http\Controllers\Api\Member')->group(function () {
         // QR Scanning
         Route::post('/member/scan-qr', 'ScanQRController@scanQR')

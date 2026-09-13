@@ -11,16 +11,17 @@ return new class extends Migration
      *
      * @return void
      */
-public function up()
-{
-    Schema::table('customers', function (Blueprint $table) {
-        $table->date('birth_date')->nullable();
-    });
-}
-public function down()
-{
-    Schema::table('customers', function (Blueprint $table) {
-        $table->dropColumn('birth_date');
-    });
-}
+public function up(): void
+    {
+        Schema::table('customers', function (Blueprint $table) {
+            $table->date('birth_date')->nullable();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('customers', function (Blueprint $table) {
+            $table->dropColumn('birth_date');
+        });
+    }
 };

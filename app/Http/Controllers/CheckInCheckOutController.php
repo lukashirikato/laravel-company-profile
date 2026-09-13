@@ -21,6 +21,15 @@ class CheckInCheckOutController extends Controller
             return back()->with('error', 'Anda masih dalam sesi latihan.');
         }
 
+        // Cegah check-in ganda di hari yang sama
+        $alreadyToday = Attendance::where('customer_id', $customer->id)
+            ->whereDate('check_in_at', now()->toDateString())
+            ->first();
+
+        if ($alreadyToday) {
+            return back()->with('error', 'Anda sudah check-in hari ini.');
+        }
+
         Attendance::create([
             'customer_id' => $customer->id,
             'program' => $customer->program, // atau pilihan program jika ada dropdown

@@ -12,8 +12,7 @@ class Dashboard extends BaseDashboard
     
     protected static string $view = 'filament.pages.dashboard';
     
-    protected static bool $shouldRegisterNavigation = false; // ← UBAH jadi FALSE
-protected ?string $heading = ''; // ← TAMBAHKAN ini
+    protected static bool $shouldRegisterNavigation = false; // False agar tidak duplikat dengan dashboard bawaan Filament
     
     public static function getNavigationLabel(): string
     {
@@ -42,6 +41,8 @@ protected ?string $heading = ''; // ← TAMBAHKAN ini
     
     protected function getWidgets(): array
     {
-        return [];
+        return [
+            // Anda bisa menambahkan widget lain di sini jika diperlukan
+        ];
     }
 }

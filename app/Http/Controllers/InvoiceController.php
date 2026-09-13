@@ -371,7 +371,7 @@ class InvoiceController extends Controller
                     'payment' => [
                         'method' => $order->payment_method ?? '-',
                         'status' => $order->status,
-                        'amount' => $order->total_amount,
+                        'amount' => $order->amount,
                         'paid_at' => $order->paid_at 
                             ? \Carbon\Carbon::parse($order->paid_at)->format('d F Y, H:i')
                             : null

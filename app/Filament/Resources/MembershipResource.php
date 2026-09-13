@@ -9,6 +9,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Support\Facades\Schema;
 
 class MembershipResource extends Resource
 {
@@ -25,6 +26,11 @@ class MembershipResource extends Resource
     protected static ?string $slug = 'memberships';
 
     protected static ?int $navigationSort = 11;
+
+    public static function canViewAny(): bool
+    {
+        return Schema::hasTable('memberships');
+    }
 
     public static function form(Form $form): Form
     {

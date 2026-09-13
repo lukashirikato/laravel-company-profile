@@ -490,6 +490,60 @@
             background: var(--cherry);
         }
 
+        /* Status Tabs (Upcoming vs Riwayat) */
+        .class-status-tabs {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #E8C0D4;
+            padding-bottom: 0.5rem;
+        }
+
+        .status-tab-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.25rem;
+            border-radius: 999px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--caption);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .status-tab-btn:hover {
+            color: var(--cherry);
+            background: var(--section-bg);
+        }
+
+        .status-tab-btn.active {
+            color: #FFFFFF;
+            background: var(--pink);
+            box-shadow: 0 4px 12px rgba(238,78,139,0.3);
+        }
+
+        .status-tab-btn .badge-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.15rem 0.5rem;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            background: rgba(255,255,255,0.25);
+            color: currentColor;
+        }
+
+        .status-tab-btn:not(.active) .badge-count {
+            background: #E8C0D4;
+            color: var(--cherry);
+        }
+
         @media (max-width: 768px) {
             .main-content {
                 padding: 1.25rem;

@@ -188,6 +188,15 @@ class QRScannerController extends Controller
 
             $attendance = Attendance::findOrFail($validated['attendance_id']);
 
+            // Cegah IDOR: hanya pemilik attendance yang boleh check-out
+            if (auth('customer')->id() && $attendance->customer_id !== auth('customer')->id()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda tidak berhak check-out atas kehadiran ini.',
+                    'type' => 'forbidden',
+                ], 403);
+            }
+
             if ($attendance->check_out_at !== null) {
                 return response()->json([
                     'success' => false,
@@ -277,9 +286,11 @@ class QRScannerController extends Controller
      */
     public function getActiveAttendance()
     {
+        // Batasi ke attendance milik customer yang sedang login (cegah kebocoran data lintas member)
         $today = Carbon::today();
         $activeAttendances = Attendance::whereDate('check_in_at', $today)
             ->whereNull('check_out_at')
+            ->where('customer_id', auth('customer')->id())
             ->with(['customer', 'schedule.classModel'])
             ->orderByDesc('check_in_at')
             ->get()

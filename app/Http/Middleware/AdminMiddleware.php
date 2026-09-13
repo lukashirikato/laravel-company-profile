@@ -11,10 +11,12 @@ class AdminMiddleware
     /**
      * Handle an incoming request.
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next, $guard = 'web')
     {
+        $user = Auth::guard($guard)->user();
+
         // Jika user tidak login atau bukan admin
-        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        if (!$user || $user->role !== 'admin') {
             abort(403, 'Akses ditolak. Hanya admin yang dapat mengakses halaman ini.');
         }
 

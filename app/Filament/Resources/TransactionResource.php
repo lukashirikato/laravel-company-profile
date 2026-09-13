@@ -128,8 +128,29 @@ class TransactionResource extends Resource
                     ])
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('payment_type')
-                    ->label('Payment Type')
+                Tables\Columns\BadgeColumn::make('payment_type')
+                    ->label('Payment Method')
+                    ->formatStateUsing(fn ($state) => match (strtolower((string) $state)) {
+                        'qris' => 'QRIS',
+                        'gopay' => 'GoPay',
+                        'shopeepay' => 'ShopeePay',
+                        'bca_va' => 'BCA VA',
+                        'bni_va' => 'BNI VA',
+                        'bri_va' => 'BRI VA',
+                        'mandiri_bill' => 'Mandiri Bill',
+                        'permata_va' => 'Permata VA',
+                        'bank_transfer' => 'Bank Transfer',
+                        'credit_card' => 'Credit Card',
+                        'cstore', 'indomaret', 'alfamart' => 'Retail Store',
+                        'cash' => 'Cash',
+                        default => strtoupper(str_replace('_', ' ', $state ?: 'Pending Method')),
+                    })
+                    ->colors([
+                        'success' => fn ($state) => in_array(strtolower((string) $state), ['qris', 'gopay', 'shopeepay']),
+                        'warning' => fn ($state) => str_contains(strtolower((string) $state), 'va') || str_contains(strtolower((string) $state), 'bank') || str_contains(strtolower((string) $state), 'bill'),
+                        'info' => fn ($state) => in_array(strtolower((string) $state), ['cash', 'credit_card', 'cstore', 'indomaret', 'alfamart']),
+                        'secondary' => fn ($state) => empty($state),
+                    ])
                     ->toggleable(),
 
                 Tables\Columns\TextColumn::make('transaction_id')

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 
 use App\Models\Package;
 use App\Models\Order;
@@ -96,6 +97,11 @@ class CheckoutController extends Controller
         $order = Order::where('order_code', $order_code)
             ->with(['package', 'transaction'])
             ->firstOrFail();
+
+        // Cegah IDOR: hanya pemilik order yang boleh melihat halaman ini
+        if (auth('customer')->id() && $order->customer_id !== auth('customer')->id()) {
+            abort(403, 'Anda tidak berhak mengakses pesanan ini.');
+        }
 
         // Wait for webhook to process (sometimes webhook is faster than redirect)
         sleep(self::WEBHOOK_WAIT_SECONDS);
@@ -231,6 +237,25 @@ class CheckoutController extends Controller
         try {
             $notif = new MidtransNotification();
 
+            // Verifikasi signature key (defense-in-depth; status/amount sudah di-re-fetch dari Midtrans)
+            $expectedSignature = hash(
+                'sha512',
+                ($notif->order_id ?? '') .
+                ($notif->status_code ?? '') .
+                ($notif->gross_amount ?? '') .
+                config('midtrans.server_key')
+            );
+
+            $givenSignature = $notif->signature_key ?? $request->input('signature_key');
+
+            if ($givenSignature === null || !hash_equals($expectedSignature, (string) $givenSignature)) {
+                Log::error('❌ Invalid Midtrans notification signature', [
+                    'order_id' => $notif->order_id ?? 'N/A',
+                    'expected_signature' => $expectedSignature,
+                ]);
+                return response()->json(['error' => 'Invalid signature'], 403);
+            }
+
             Log::info('📦 Notification Details', [
                 'order_code' => $notif->order_id,
                 'status' => $notif->transaction_status,
@@ -299,6 +324,19 @@ class CheckoutController extends Controller
     {
         $customer = $order->customer;
         $package = $order->package;
+
+        // Verifikasi nominal pembayaran cocok dengan harga order (cegah manipulasi / salah nominal)
+        $grossAmount = (int) data_get($notif, 'gross_amount');
+        if ($grossAmount > 0 && $grossAmount !== (int) $order->amount) {
+            \Illuminate\Support\Facades\Log::warning('⚠️ Nominal pembayaran tidak cocok dengan order, pembayaran TIDAK diterapkan', [
+                'order_code' => $order->order_code,
+                'expected_amount' => $order->amount,
+                'received_gross_amount' => $grossAmount,
+            ]);
+
+            $order->update(['status' => 'pending']);
+            return;
+        }
 
         // ✅ ALWAYS initialize remaining_quota and remaining_classes for new orders
         // This ensures each order tracks its own quota/classes separately
@@ -705,6 +743,11 @@ class CheckoutController extends Controller
             return response()->json(['error' => 'Order not found'], 404);
         }
 
+        // Cegah IDOR: hanya pemilik order yang boleh membaca status
+        if (auth('customer')->id() && $order->customer_id !== auth('customer')->id()) {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
+
         // Fallback sync for AJAX polling when webhook is delayed/missed
         if ($order->status === self::STATUS_PENDING) {
             $this->syncOrderStatusFromMidtrans($order);
@@ -1099,10 +1142,14 @@ class CheckoutController extends Controller
 
     private function getPosterExclusiveClassOptions(): array
     {
-        $dbLabels = ScheduleLabelMapping::query()
-            ->orderBy('label')
-            ->pluck('label')
-            ->toArray();
+        if (Schema::hasTable('schedule_label_mappings')) {
+            $dbLabels = ScheduleLabelMapping::query()
+                ->orderBy('label')
+                ->pluck('label')
+                ->toArray();
+        } else {
+            $dbLabels = [];
+        }
 
         if (!empty($dbLabels)) {
             $result = [];
@@ -1265,9 +1312,11 @@ class CheckoutController extends Controller
         }
 
         // ✅ Cek apakah label terdaftar di database (Management → Schedule Labels)
-        $mapping = ScheduleLabelMapping::where('label', $rawLabel)->first();
-        if ($mapping) {
-            return $mapping->label;
+        if (Schema::hasTable('schedule_label_mappings')) {
+            $mapping = ScheduleLabelMapping::where('label', $rawLabel)->first();
+            if ($mapping) {
+                return $mapping->label;
+            }
         }
 
         // ⚠️ Fallback: alias legacy untuk label lama yang belum di-migrasi

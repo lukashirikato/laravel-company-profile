@@ -38,6 +38,17 @@ class MidtransCallbackController extends Controller
             return response()->json(['message' => 'Order not found'], 404);
         }
 
+        // Verifikasi nominal hanya untuk status pembayaran sukses (cegah salah nominal / manipulasi)
+        $isPaidStatus = in_array($request->transaction_status, ['capture', 'settlement']);
+        if ($isPaidStatus && (int) $request->gross_amount !== (int) $order->amount) {
+            Log::error('Nominal pembayaran tidak cocok dengan order', [
+                'order_code'    => $order->order_code,
+                'order_amount'  => $order->amount,
+                'gross_amount'  => $request->gross_amount,
+            ]);
+            return response()->json(['message' => 'Amount mismatch'], 400);
+        }
+
         // Ambil customer
         $customer = Customer::find($order->customer_id);
 

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Models\CustomerSchedule;
 use App\Models\Order;
+use Carbon\Carbon;
 
 class MyClassesController extends Controller
 {
@@ -18,39 +19,48 @@ class MyClassesController extends Controller
             'customer_id' => $customer->id,
         ]);
 
-        // ✅ QUERY customer_schedules dengan eager loading untuk relasi order & schedule
-        $myClasses = CustomerSchedule::with([
+        $today = Carbon::today()->toDateString();
+        $currentTime = Carbon::now()->format('H:i:s');
+
+        // ✅ QUERY SEMUA customer_schedules (confirmed) milik user
+        $allCustomerSchedules = CustomerSchedule::with([
                 'schedule.classModel',  // Untuk nama class & instructor
-                'order.package'         // ✅ DIRECT RELATION ke order & package
+                'order.package'         // DIRECT RELATION ke order & package
             ])
             ->where('customer_schedules.customer_id', $customer->id)
             ->where('customer_schedules.status', 'confirmed')
             ->join('schedules', 'schedules.id', '=', 'customer_schedules.schedule_id')
             ->select('customer_schedules.*')
-            ->orderByRaw("
-                FIELD(schedules.day,
-                    'Monday','Tuesday','Wednesday',
-                    'Thursday','Friday','Saturday','Sunday'
-                )
-            ")
-            ->orderBy('schedules.class_time')
             ->get();
 
-        // ✅ GET CUSTOMER'S ACTIVE ORDERS/PACKAGES untuk stats
+        // ✅ GET CUSTOMER'S ORDERS untuk fallback matching & stats
         $customerOrders = Order::with('package')
             ->where('customer_id', $customer->id)
             ->whereIn('status', ['paid', 'active', 'settlement', 'success'])
-            ->where(function($query) {
-                $query->whereNull('expired_at')
-                      ->orWhere('expired_at', '>', now());
-            })
             ->get();
 
-        // ✅ MAP package info ke setiap class
-        // PERFECT SOLUTION: Langsung ambil dari order_id yang sudah ada di customer_schedules
-        $myClasses = $myClasses->map(function($item) use ($customerOrders, $customer) {
-            
-            // ✅ PERFECT MATCH: Langsung dari relasi order
+        $activeOrders = $customerOrders->filter(function($order) {
+            return is_null($order->expired_at) || $order->expired_at > now();
+        });
+
+        // ✅ MAP package info & status kadaluarsa jadwal ke setiap schedule
+        $processedSchedules = $allCustomerSchedules->map(function($item) use ($customerOrders, $activeOrders, $customer, $today, $currentTime) {
+            // Cek apakah jadwal sudah lewat (Past / Selesai)
+            $scheduleDate = $item->schedule->schedule_date ? Carbon::parse($item->schedule->schedule_date)->toDateString() : null;
+            $classTime = $item->schedule->class_time ? Carbon::parse($item->schedule->class_time)->format('H:i:s') : '23:59:59';
+
+            $isPast = false;
+            if ($scheduleDate) {
+                if ($scheduleDate < $today) {
+                    $isPast = true;
+                } elseif ($scheduleDate === $today && $classTime < $currentTime) {
+                    $isPast = true;
+                }
+            }
+
+            $item->is_past = $isPast;
+
+            // Matching order & package info
             if ($item->order && $item->order->package) {
                 $item->package_info = [
                     'id' => $item->order->package_id,
@@ -61,69 +71,64 @@ class MyClassesController extends Controller
                     'status' => $item->order->status,
                 ];
             } else {
-                // ⚠️ FALLBACK: Jika order_id null atau order sudah dihapus
-                // Cari order yang aktif sebagai fallback
-                $fallbackOrder = $customerOrders->first();
-                
+                $fallbackOrder = $activeOrders->first() ?? $customerOrders->first();
                 if ($fallbackOrder) {
                     $item->package_info = [
                         'id' => $fallbackOrder->package_id,
-                        'name' => $fallbackOrder->package->name ?? 'Unknown Package',
+                        'name' => $fallbackOrder->package->name ?? 'Membership',
                         'order_id' => $fallbackOrder->id,
                         'order_code' => $fallbackOrder->order_code,
                         'expired_at' => $fallbackOrder->expired_at,
                         'status' => $fallbackOrder->status,
                     ];
-                    
-                    Log::warning('⚠️ Using fallback order for customer_schedule', [
-                        'customer_schedule_id' => $item->id,
-                        'schedule_id' => $item->schedule_id,
-                        'order_id_in_db' => $item->order_id,
-                        'fallback_order_id' => $fallbackOrder->id,
-                    ]);
                 } else {
-                    // Tidak ada order aktif sama sekali
                     $item->package_info = [
                         'id' => null,
-                        'name' => 'No Active Package',
+                        'name' => 'Membership',
                         'order_id' => null,
                         'order_code' => null,
                         'expired_at' => null,
                         'status' => null,
                     ];
-                    
-                    Log::error('❌ No active order found for customer_schedule', [
-                        'customer_schedule_id' => $item->id,
-                        'schedule_id' => $item->schedule_id,
-                        'customer_id' => $customer->id,  // ✅ FIX: Gunakan $customer dari use()
-                    ]);
                 }
             }
 
             return $item;
         });
 
+        // ✅ Pisahkan kelas aktif (Upcoming) dan kelas lewat (Past)
+        // 1. Upcoming Classes: Urutkan dari tanggal terdekat ke depan
+        $myClasses = $processedSchedules->filter(fn($item) => !$item->is_past)->sortBy(function($item) {
+            $date = $item->schedule->schedule_date ? Carbon::parse($item->schedule->schedule_date)->format('Y-m-d') : '9999-12-31';
+            $time = $item->schedule->class_time ?? '00:00:00';
+            return $date . ' ' . $time;
+        })->values();
+
+        // 2. Past Classes: Urutkan dari yang paling baru lewat ke yang lama
+        $pastClasses = $processedSchedules->filter(fn($item) => $item->is_past)->sortByDesc(function($item) {
+            $date = $item->schedule->schedule_date ? Carbon::parse($item->schedule->schedule_date)->format('Y-m-d') : '1970-01-01';
+            $time = $item->schedule->class_time ?? '00:00:00';
+            return $date . ' ' . $time;
+        })->values();
+
         // ✅ STATS
         $stats = [
             'total_classes' => $myClasses->count(),
+            'past_classes_count' => $pastClasses->count(),
             'unique_packages' => $customerOrders->pluck('package_id')->unique()->count(),
         ];
 
-        // ✅ FIX: Tambahkan null check sebelum toArray()
-        $packageBreakdown = $myClasses->groupBy('package_info.name')->map(function($group) {
-            return $group->count();
-        });
-
         Log::info('📊 My Classes - Results', [
-            'total_classes' => $stats['total_classes'],
+            'upcoming_classes' => $stats['total_classes'],
+            'past_classes' => $stats['past_classes_count'],
             'unique_packages' => $stats['unique_packages'],
-            'package_breakdown' => $packageBreakdown->toArray(),  // ✅ FIX: Sudah dipastikan Collection
         ]);
 
         return view('member.my-classes', [
             'myClasses' => $myClasses,
+            'pastClasses' => $pastClasses,
             'stats' => $stats,
-            'activePackages' => $customerOrders,
+            'activePackages' => $activeOrders,
         ]);
     }
 }

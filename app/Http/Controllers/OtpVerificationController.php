@@ -36,7 +36,7 @@ class OtpVerificationController extends Controller
         // Kalau sudah verified, langsung redirect ke login
         if ($customer->is_verified) {
             $request->session()->forget('otp_customer_id');
-            return redirect()->route('member.login.form')
+            return redirect()->route('member.login')
                 ->with('success', 'Akun Anda sudah aktif. Silakan login.');
         }
 
@@ -117,7 +117,7 @@ class OtpVerificationController extends Controller
 
         $request->session()->forget('otp_customer_id');
 
-        return redirect()->route('member.login.form', [
+        return redirect()->route('member.login', [
                 'welcome' => 1,
                 'name'    => $customer->name,
                 'email'   => $customer->email,
@@ -212,7 +212,7 @@ class OtpVerificationController extends Controller
 
         if ($customer->is_verified) {
             $request->session()->forget('otp_customer_id');
-            return redirect()->route('member.login.form')
+            return redirect()->route('member.login')
                 ->with('success', 'Akun Anda sudah aktif. Silakan login.');
         }
 

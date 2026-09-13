@@ -26,7 +26,7 @@ class CustomerAuthController extends Controller
         // Validasi input
         $request->validate([
             'login'    => 'required|string',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string',
         ]);
 
         // Tentukan field login (email atau no. HP)
@@ -49,8 +49,7 @@ class CustomerAuthController extends Controller
         $customer = Customer::where($field, $request->login)->first();
         if ($customer) {
             if (!Hash::check($request->password, $customer->password)) {
-                Log::info("[LOGIN GAGAL] Input password: {$request->password}");
-                Log::info("[LOGIN GAGAL] Hash di DB: {$customer->password}");
+                Log::warning("[LOGIN GAGAL] Password salah untuk {$field}: {$request->login}");
             }
         } else {
             Log::warning("[LOGIN GAGAL] Tidak ditemukan customer dengan {$field}: {$request->login}");

@@ -18,7 +18,7 @@ class PackageStatsOverview extends BaseWidget
         $stats = Cache::remember('filament.dashboard.package_stats', 180, function () {
             $totalPackages = Package::count();
             $activePackages = Package::has('orders')->count();
-            $totalRevenue = Order::whereNotNull('package_id')->sum('total_price');
+            $totalRevenue = Order::whereNotNull('package_id')->sum('amount');
             $totalOrders = Order::whereNotNull('package_id')->count();
             $avgPrice = Package::avg('price');
             $popularPackage = Package::withCount('orders')
@@ -116,7 +116,7 @@ class PackageStatsOverview extends BaseWidget
         $rows = Cache::remember('filament.trends.packages.revenue_last_7_days', 180, function () use ($start) {
             return Order::where('created_at', '>=', $start)
                 ->whereNotNull('package_id')
-                ->select(DB::raw('DATE(created_at) as date'), DB::raw('sum(total_price) as revenue'))
+                ->select(DB::raw('DATE(created_at) as date'), DB::raw('sum(amount) as revenue'))
                 ->groupBy('date')
                 ->orderBy('date')
                 ->pluck('revenue', 'date')
