@@ -75,6 +75,7 @@ class QrScanner extends Page
 
         if (empty($this->qrToken)) {
             $this->errorMessage = 'Member ID harus diisi';
+            $this->dispatchBrowserEvent('scanner-focus');
             return;
         }
 
@@ -85,6 +86,7 @@ class QrScanner extends Page
             if (!$customerId) {
                 $this->errorMessage = 'Member ID, QR, atau kode order tidak valid';
                 $this->qrToken = '';
+                $this->dispatchBrowserEvent('scanner-focus');
                 return;
             }
 
@@ -100,6 +102,12 @@ class QrScanner extends Page
                 if ($result['type'] === 'multiple_bookings_found') {
                     // Member has multiple bookings today - show selector
                     $this->todaySchedules = $data['bookings'] ?? [];
+
+                    // Kelas yang sedang dalam time window didahulukan
+                    usort($this->todaySchedules, fn ($a, $b) =>
+                        ((int) ($b['is_within_window'] ?? false)) <=> ((int) ($a['is_within_window'] ?? false))
+                    );
+
                     $this->showScheduleSelector = true;
 
                     \Filament\Notifications\Notification::make()
@@ -202,6 +210,7 @@ class QrScanner extends Page
             $this->qrToken = '';
             $this->loadStats();
             $this->loadRecentScans();
+            $this->dispatchBrowserEvent('scanner-focus');
 
         } catch (\Exception $e) {
             $this->errorMessage = 'Error: ' . $e->getMessage();
@@ -211,6 +220,7 @@ class QrScanner extends Page
                 ->danger()
                 ->send();
             $this->qrToken = '';
+            $this->dispatchBrowserEvent('scanner-focus');
         }
     }
 
@@ -229,6 +239,7 @@ class QrScanner extends Page
             if (!$customerId) {
                 $this->errorMessage = 'Member ID, QR, atau kode order tidak valid';
                 $this->qrToken = '';
+                $this->dispatchBrowserEvent('scanner-focus');
                 return;
             }
 
@@ -243,6 +254,7 @@ class QrScanner extends Page
             if (!$order) {
                 $this->errorMessage = 'Sesi berakhir. Silakan scan ulang.';
                 $this->qrToken = '';
+                $this->dispatchBrowserEvent('scanner-focus');
                 return;
             }
 
@@ -256,6 +268,7 @@ class QrScanner extends Page
             if (!$booking) {
                 $this->errorMessage = 'Booking tidak ditemukan untuk kelas yang dipilih.';
                 $this->qrToken = '';
+                $this->dispatchBrowserEvent('scanner-focus');
                 return;
             }
 
@@ -268,6 +281,7 @@ class QrScanner extends Page
                 ->body($e->getMessage())
                 ->danger()
                 ->send();
+            $this->dispatchBrowserEvent('scanner-focus');
         }
     }
 
@@ -438,6 +452,10 @@ class QrScanner extends Page
             $this->todaySchedules     = [];
             $this->loadStats();
             $this->loadRecentScans();
+
+            if (!$this->showScheduleSelector) {
+                $this->dispatchBrowserEvent('scanner-focus');
+            }
         }
     }
 
@@ -451,6 +469,7 @@ class QrScanner extends Page
 
         if (empty($this->qrToken)) {
             $this->errorMessage = 'Member ID harus diisi';
+            $this->dispatchBrowserEvent('scanner-focus');
             return;
         }
 
@@ -461,6 +480,7 @@ class QrScanner extends Page
             if (!$customerId) {
                 $this->errorMessage = 'Member ID, QR, atau kode order tidak valid';
                 $this->qrToken = '';
+                $this->dispatchBrowserEvent('scanner-focus');
                 return;
             }
 
@@ -474,6 +494,7 @@ class QrScanner extends Page
             if (!$activeAttendance) {
                 $this->errorMessage = 'Member tidak memiliki check-in aktif hari ini atau sudah check-out';
                 $this->qrToken = '';
+                $this->dispatchBrowserEvent('scanner-focus');
                 return;
             }
 
@@ -524,6 +545,7 @@ class QrScanner extends Page
             $this->qrToken = '';
             $this->loadStats();
             $this->loadRecentScans();
+            $this->dispatchBrowserEvent('scanner-focus');
 
         } catch (\Exception $e) {
             $this->errorMessage = 'Error: ' . $e->getMessage();
@@ -533,6 +555,7 @@ class QrScanner extends Page
                 ->danger()
                 ->send();
             $this->qrToken = '';
+            $this->dispatchBrowserEvent('scanner-focus');
         }
     }
 
@@ -617,7 +640,22 @@ class QrScanner extends Page
      */
     public function toggleCheckOutMode(): void
     {
-        $this->isCheckOutMode       = !$this->isCheckOutMode;
+        $this->setMode($this->isCheckOutMode ? 'in' : 'out');
+    }
+
+    /**
+     * Pilih mode scan secara langsung ('in' = check-in, 'out' = check-out).
+     */
+    public function setMode(string $mode): void
+    {
+        $target = $mode === 'out';
+
+        if ($this->isCheckOutMode === $target) {
+            $this->dispatchBrowserEvent('scanner-focus');
+            return;
+        }
+
+        $this->isCheckOutMode       = $target;
         $this->qrToken              = '';
         $this->errorMessage         = null;
         $this->scanResults          = [];
@@ -625,6 +663,20 @@ class QrScanner extends Page
         $this->todaySchedules       = [];
         $this->selectedScheduleId   = null;
         $this->showScheduleSelector = false;
+
+        $this->dispatchBrowserEvent('scanner-focus');
+    }
+
+    /**
+     * Tutup kartu hasil scan dan siapkan input untuk scan berikutnya.
+     */
+    public function dismissResults(): void
+    {
+        $this->scanResults     = [];
+        $this->checkOutResults = [];
+        $this->errorMessage    = null;
+
+        $this->dispatchBrowserEvent('scanner-focus');
     }
 
     /**
@@ -642,6 +694,8 @@ class QrScanner extends Page
         $this->todaySchedules       = [];
         $this->selectedScheduleId   = null;
         $this->showScheduleSelector = false;
+
+        $this->dispatchBrowserEvent('scanner-focus');
     }
 
     /**
@@ -722,10 +776,13 @@ class QrScanner extends Page
 
     private function loadStats(): void
     {
+        // Pertahankan penghitung error sesi (tidak di-reset setiap load)
+        $sessionErrors = $this->todayStats['error'] ?? 0;
+
         $this->todayStats = [
             'total' => Attendance::whereDate('created_at', today())->count(),
             'success' => Attendance::whereDate('created_at', today())->where('attendance_status', 'present')->count(),
-            'error' => 0,
+            'error' => $sessionErrors,
         ];
     }
 

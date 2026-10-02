@@ -971,13 +971,6 @@
                         <span class="font-poppins text-dark font-semibold text-[15px]">{{ $customer->name ?? 'Member' }}</span>
                     </div>
                 </div>
-                <div class="flex items-center gap-4">
-
-                    @php $initial = strtoupper(substr($customer->name ?? 'M', 0, 1)); @endphp
-                    <div class="w-11 h-11 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-nord font-bold text-sm shadow-md border-2 border-white flex-shrink-0">
-                        {{ $initial }}
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -1067,13 +1060,13 @@
         @endphp
         <div class="flex flex-wrap items-center gap-3 mb-8">
             {{-- CLASS TYPE FILTER --}}
-            <div class="relative filter-dropdown" data-filter="class_type">
+            <div class="relative filter-dropdown flex-1 min-w-[180px]" data-filter="class_type">
                 <button onclick="toggleFilterDropdown(this)"
-                    class="px-4 py-2 rounded-xl font-poppins font-medium text-[12px] shadow-sm hover:shadow-md transition-all {{ $currentClassType ? 'bg-primary text-white' : 'bg-white border border-[rgba(238,78,139,0.15)] text-dark/60 hover:border-primary/30 hover:text-dark' }}">
-                    Tipe Kelas: <span class="font-semibold filter-label">{{ $currentClassType ?: 'SEMUA' }}</span>
-                    <i class="fas fa-chevron-down ml-1.5 text-[10px]"></i>
+                    class="w-full flex items-center justify-between gap-2 px-4 py-2 rounded-xl font-poppins font-medium text-[12px] shadow-sm hover:shadow-md transition-all {{ $currentClassType ? 'bg-primary text-white' : 'bg-white border border-[rgba(238,78,139,0.15)] text-dark/60 hover:border-primary/30 hover:text-dark' }}">
+                    <span>Tipe Kelas: <span class="font-semibold filter-label">{{ $currentClassType ?: 'SEMUA' }}</span></span>
+                    <i class="fas fa-chevron-down ml-auto text-[10px] flex-shrink-0"></i>
                 </button>
-                <div class="absolute top-full left-0 mt-1.5 w-48 bg-white rounded-xl shadow-lg border border-[rgba(238,78,139,0.1)] py-1.5 z-50 hidden" data-filter-options="class_type">
+                <div class="absolute top-full left-0 mt-1.5 w-full min-w-[200px] bg-white rounded-xl shadow-lg border border-[rgba(238,78,139,0.1)] py-1.5 z-50 hidden" data-filter-options="class_type">
                     <button data-value="" class="w-full text-left px-4 py-2 font-poppins text-[12px] hover:bg-[rgba(238,78,139,0.05)] transition-colors {{ !$currentClassType ? 'text-primary font-semibold' : 'text-dark/60' }}">
                         Semua Kelas
                     </button>

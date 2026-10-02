@@ -13,7 +13,9 @@ class DatabaseSeeder extends Seeder
     {
         // Panggil seeder yang kamu buat
         $this->call([
-            CustomerSeeder::class, VoucherSeeder::class
+            CustomerSeeder::class,
+            VoucherSeeder::class,
+            WhatsAppTemplateSeeder::class,
         ]);
 
         // Jika ada seeder lain di masa depan, tinggal tambahkan di sini

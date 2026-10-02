@@ -39,6 +39,17 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--ftm-cherry) !important;
 }
 
+/* Modal headers sit on dark cherry gradients — their headings must stay white.
+   Higher specificity than the global heading color so #FFFFFF wins. */
+#availablePackagesModal header h1,
+#availablePackagesModal header h2,
+#availablePackagesModal header h3,
+#packageModal [class*="bg-gradient"] h1,
+#packageModal [class*="bg-gradient"] h2,
+#packageModal [class*="bg-gradient"] h3 {
+    color: #FFFFFF !important;
+}
+
 /* ================================================================
    UNIFIED SIDEBAR — semua halaman member pakai struktur ini
    ================================================================ */
@@ -398,12 +409,17 @@ main [class*="bg-accent"]:not([class*="bg-accent/"]),
     font-weight: 700 !important;
 }
 
-/* Kill all gradients in main */
-main [class*="bg-gradient"],
+/* Kill gradients in the page main only — never inside modal scroll areas.
+   #availablePackagesModal renders its own <main class="apm-scroll">, and its
+   "Beli Sekarang" CTA relies on a gradient; flattening it made white text
+   disappear on the near-white modal shell. */
+main:not(.apm-scroll) [class*="bg-gradient"],
 .main-content [class*="bg-gradient"] {
     background-image: none !important;
 }
-main [class*="from-"], main [class*="via-"], main [class*="to-"] {
+main:not(.apm-scroll) [class*="from-"],
+main:not(.apm-scroll) [class*="via-"],
+main:not(.apm-scroll) [class*="to-"] {
     background-image: none !important;
 }
 

@@ -32,15 +32,20 @@ return [
     ],
 
     'twilio' => [
-        'sid' => env('TWILIO_ACCOUNT_SID'),
-        'token' => env('TWILIO_AUTH_TOKEN'),
+        'sid'           => env('TWILIO_ACCOUNT_SID'),
+        'token'         => env('TWILIO_AUTH_TOKEN'),
         'whatsapp_from' => env('TWILIO_WHATSAPP_FROM'),
     ],
 
-    'twilio' => [
-    'sid'           => env('TWILIO_ACCOUNT_SID'),
-    'token'         => env('TWILIO_AUTH_TOKEN'),
-    'whatsapp_from' => env('TWILIO_WHATSAPP_FROM'),
-],
+    /*
+    |--------------------------------------------------------------------------
+    | FTM Society — Admin Contact
+    |--------------------------------------------------------------------------
+    | Nomor WhatsApp admin untuk paket tanpa harga (Private Program,
+    | Private Group Program) yang dibeli lewat konsultasi.
+    */
+    'ftm' => [
+        'admin_whatsapp' => env('FTM_ADMIN_WHATSAPP', '6287785767395'),
+    ],
 
 ];

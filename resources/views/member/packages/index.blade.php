@@ -14,399 +14,89 @@
     
     <style>
         /* ===============================================================
-           FTM SOCIETY — FINAL MEMBERSHIP CARD PICKER
-           =============================================================== */
-        /* ===============================================================
-           FTM SOCIETY — MEMBERSHIP PACKAGE PICKER
-           Premium SaaS-style pricing modal
-           =============================================================== */
-        #availablePackagesModal { z-index: 9999 !important; }
-        #availablePackagesModal .apm-backdrop {
-            display: flex; align-items: center; justify-content: center;
-            position: fixed; inset: 0;
-            background: rgba(23, 10, 15, 0);
-            backdrop-filter: blur(0px);
-            -webkit-backdrop-filter: blur(0px);
-            transition: opacity 0.35s ease, background 0.35s ease, backdrop-filter 0.35s ease;
-            z-index: 9999; padding: 1.5rem; opacity: 0; pointer-events: none;
-        }
-        #availablePackagesModal.open-modal .apm-backdrop {
-            opacity: 1; pointer-events: auto;
-            background: rgba(23, 10, 15, 0.55);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-        #availablePackagesModal .apm-container {
-            width: 100%; max-width: 1400px; max-height: 90vh;
-            border-radius: 32px;
-            background: #FFFFFF;
-            box-shadow: 0 40px 90px -24px rgba(143, 41, 87, 0.35), 0 12px 32px rgba(23, 10, 15, 0.12);
-            overflow: hidden; display: flex; flex-direction: column;
-            margin: auto; position: relative; contain: layout style;
-            transform: translateY(36px) scale(0.96);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
-            opacity: 0;
-        }
-        #availablePackagesModal.open-modal .apm-container {
-            transform: translateY(0) scale(1); opacity: 1;
-        }
-        @media (max-width: 768px) {
-            #availablePackagesModal .apm-backdrop { padding: 0; align-items: flex-end; }
-            #availablePackagesModal .apm-container {
-                max-width: 100%; max-height: 96vh;
-                border-radius: 28px 28px 0 0;
-                margin-bottom: 0; margin-top: auto;
-            }
-        }
-        /* ---------- Header ---------- */
-        #availablePackagesModal .apm-header {
-            position: relative; flex-shrink: 0;
-            min-height: 96px; padding: 1.4rem 2.25rem;
-            display: flex; align-items: center; justify-content: space-between;
-            background-image: linear-gradient(135deg, #D93D7A 0%, #8F2957 100%);
-            overflow: hidden;
-        }
-        #availablePackagesModal .apm-header::before,
-        #availablePackagesModal .apm-header::after {
-            content: ''; position: absolute; border-radius: 50%;
-            background: rgba(255,255,255,0.07); pointer-events: none;
-        }
-        #availablePackagesModal .apm-header::before {
-            width: 240px; height: 240px; top: -120px; right: -60px;
-        }
-        #availablePackagesModal .apm-header::after {
-            width: 150px; height: 150px; bottom: -90px; left: 32%;
-            background: rgba(255,255,255,0.05);
-        }
-        #availablePackagesModal .apm-header-left {
-            display: flex; align-items: center; gap: 1.15rem;
-            position: relative; z-index: 1; min-width: 0;
-        }
-        #availablePackagesModal .apm-header-icon {
-            width: 50px; height: 50px; border-radius: 16px;
-            background: rgba(255,255,255,0.16);
-            border: 1px solid rgba(255,255,255,0.25);
-            display: flex; align-items: center; justify-content: center;
-            color: #FFF; font-size: 1.3rem; flex-shrink: 0;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.22);
-        }
-        #availablePackagesModal .apm-header-text h2 {
-            color: #FFF; font-family: 'Inter','Poppins',sans-serif;
-            font-weight: 800; font-size: 1.5rem; letter-spacing: -0.02em; line-height: 1.2;
-            margin: 0;
-        }
-        #availablePackagesModal .apm-header-sub {
-            color: rgba(255,255,255,0.75); font-family: 'Inter',sans-serif;
-            font-size: 0.875rem; margin-top: 4px; line-height: 1.5;
-        }
-        #availablePackagesModal .apm-close-btn {
-            width: 44px; height: 44px; border-radius: 50%;
-            background: rgba(255,255,255,0.16);
-            border: 1px solid rgba(255,255,255,0.28);
-            color: #FFF; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: transform 0.25s ease, background 0.25s ease;
-            font-size: 1rem; flex-shrink: 0; position: relative; z-index: 1;
-        }
-        #availablePackagesModal .apm-close-btn:hover {
-            background: rgba(255,255,255,0.32); transform: rotate(90deg);
-        }
-        #availablePackagesModal .apm-close-btn:active { transform: rotate(90deg) scale(0.92); }
-        #availablePackagesModal .apm-close-btn:focus-visible {
-            outline: 2px solid #FFF; outline-offset: 3px;
-        }
-        /* ---------- Body ---------- */
-        #availablePackagesModal .apm-body {
-            flex: 1; overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            overscroll-behavior: contain; contain: layout style;
-            background: #FFF8F8; padding: 32px;
-        }
-        #availablePackagesModal .apm-body::-webkit-scrollbar { width: 6px; }
-        #availablePackagesModal .apm-body::-webkit-scrollbar-track { background: #FFF8F8; }
-        #availablePackagesModal .apm-body::-webkit-scrollbar-thumb { background: #F0CBDC; border-radius: 10px; }
-        #availablePackagesModal .apm-body::-webkit-scrollbar-thumb:hover { background: #E3A8C6; }
-
-        /* ---------- Grid ---------- */
-        #availablePackagesModal .apm-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 32px; align-items: stretch;
-        }
-        @media (max-width: 1024px) { #availablePackagesModal .apm-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 640px) {
-            #availablePackagesModal .apm-grid { grid-template-columns: 1fr; gap: 20px; }
-            #availablePackagesModal .apm-body { padding: 20px; }
-            #availablePackagesModal .apm-header { padding: 1.1rem 1.25rem; min-height: 0; }
-            #availablePackagesModal .apm-header-icon { display: none; }
-            #availablePackagesModal .apm-header-text h2 { font-size: 1.25rem; }
-        }
-        /* ---------- Cards ---------- */
-        #availablePackagesModal .apm-card {
-            background: #FFFFFF;
-            border: 1px solid rgba(217, 61, 122, 0.12);
-            border-radius: 28px;
-            box-shadow: 0 2px 10px rgba(143, 41, 87, 0.05);
-            padding: 32px; display: flex; flex-direction: column;
-            height: 100%; position: relative;
-            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-        }
-        #availablePackagesModal .apm-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 24px 48px -16px rgba(143, 41, 87, 0.18), 0 8px 20px rgba(143, 41, 87, 0.06);
-            border-color: rgba(217, 61, 122, 0.28);
-        }
-        /* Stagger entrance */
-        #availablePackagesModal.open-modal .apm-card {
-            animation: apm-card-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-        }
-        #availablePackagesModal.open-modal .apm-card:nth-child(1) { animation-delay: 0.04s; }
-        #availablePackagesModal.open-modal .apm-card:nth-child(2) { animation-delay: 0.09s; }
-        #availablePackagesModal.open-modal .apm-card:nth-child(3) { animation-delay: 0.14s; }
-        #availablePackagesModal.open-modal .apm-card:nth-child(4) { animation-delay: 0.19s; }
-        #availablePackagesModal.open-modal .apm-card:nth-child(5) { animation-delay: 0.24s; }
-        #availablePackagesModal.open-modal .apm-card:nth-child(6) { animation-delay: 0.29s; }
-        @keyframes apm-card-in {
-            from { opacity: 0; transform: translateY(24px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ---------- Exclusive card ---------- */
-        #availablePackagesModal .apm-card.is-exclusive {
-            border: 2px solid transparent;
-            background:
-                linear-gradient(#FFFFFF, #FFFFFF) padding-box,
-                linear-gradient(135deg, #D93D7A 0%, #C2185B 55%, #8F2957 100%) border-box;
-            box-shadow: 0 4px 24px rgba(217, 61, 122, 0.16);
-            padding-top: 44px;
-        }
-        #availablePackagesModal .apm-card.is-exclusive:hover {
-            box-shadow: 0 28px 56px -16px rgba(217, 61, 122, 0.35), 0 10px 24px rgba(217, 61, 122, 0.12);
-            border-color: transparent;
-        }
-        #availablePackagesModal .apm-ribbon {
-            position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
-            display: inline-flex; align-items: center; gap: 7px;
-            padding: 7px 18px; border-radius: 999px;
-            background: linear-gradient(135deg, #D93D7A, #8F2957);
-            color: #FFF; font-family: 'Inter',sans-serif;
-            font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
-            text-transform: uppercase; white-space: nowrap;
-            box-shadow: 0 6px 18px rgba(217, 61, 122, 0.4);
-            z-index: 2;
-        }
-
-        /* ---------- Badge ---------- */
-        #availablePackagesModal .apm-badge {
-            display: inline-flex; align-items: center; gap: 7px;
-            padding: 6px 16px; border-radius: 999px;
-            font-family: 'Inter',sans-serif; font-size: 11px;
-            font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-            align-self: flex-start; min-height: 30px;
-        }
-        #availablePackagesModal .apm-badge-exclusive {
-            background: linear-gradient(135deg, #D93D7A, #8F2957); color: #FFF;
-            box-shadow: 0 4px 12px rgba(217, 61, 122, 0.3);
-        }
-        #availablePackagesModal .apm-badge-regular { background: #FBE8F0; color: #8F2957; }
-
-        /* ---------- Name ---------- */
-        #availablePackagesModal .apm-card-name {
-            font-family: 'Inter','Poppins',sans-serif;
-            font-size: 34px; font-weight: 700; color: #2B2B2B;
-            line-height: 1.15; letter-spacing: -0.02em;
-            margin: 20px 0 6px;
-            border: none !important; outline: none !important;
-            background: transparent !important; box-shadow: none !important; padding: 0 !important;
-        }
-
-        /* ---------- Price ---------- */
-        .apm-card-price,
-        #availablePackagesModal .apm-card-price,
-        .apm-card [class*="price"],
-        .apm-card [class*="harga"],
-        .apm-card [class*="Price"],
-        .apm-card [class*="Harga"] {
-            display: flex; align-items: baseline; gap: 4px;
-            padding: 0 !important; margin: 8px 0 24px;
-            border: none !important; outline: none !important;
-            background: transparent !important; box-shadow: none !important;
-            border-radius: 0 !important;
-        }
-        #availablePackagesModal .apm-card-price-currency {
-            font-family: 'Inter',sans-serif; font-size: 20px;
-            font-weight: 600; color: #D93D7A; line-height: 1;
-            border: none; outline: none; background: transparent; box-shadow: none;
-        }
-        #availablePackagesModal .apm-card-price-amount {
-            font-family: 'Inter',sans-serif; font-weight: 800;
-            font-size: 60px; letter-spacing: -0.04em; line-height: 1; color: #D93D7A;
-            border: none; outline: none; background: transparent; box-shadow: none;
-        }
-
-        /* ---------- Chips ---------- */
-        #availablePackagesModal .apm-chips {
-            display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px;
-        }
-        #availablePackagesModal .apm-chip {
-            display: inline-flex; align-items: center; gap: 8px;
-            padding: 10px 16px; border-radius: 16px;
-            background: #FBEDF3; border: 1px solid rgba(217, 61, 122, 0.1);
-            font-family: 'Inter',sans-serif; font-size: 14px;
-            font-weight: 600; color: #8F2957; min-height: 40px;
-        }
-        #availablePackagesModal .apm-chip i { color: #D93D7A; font-size: 14px; }
-
-        /* ---------- Description ---------- */
-        #availablePackagesModal .apm-desc {
-            margin: 0 0 24px; padding: 0;
-            font-family: 'Inter',sans-serif; font-size: 16px;
-            font-weight: 400; color: #6B6B6B; line-height: 1.6;
-        }
-
-        /* ---------- Benefits ---------- */
-        #availablePackagesModal .apm-features { flex: 1; margin-bottom: 28px; }
-        #availablePackagesModal .apm-feature-item {
-            display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
-        }
-        #availablePackagesModal .apm-feature-item:last-child { margin-bottom: 0; }
-        #availablePackagesModal .apm-feature-icon {
-            width: 20px; height: 20px; border-radius: 50%;
-            background: rgba(16, 185, 129, 0.12);
-            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-        }
-        #availablePackagesModal .apm-feature-icon i { color: #10B981; font-size: 11px; }
-        #availablePackagesModal .apm-feature-text {
-            font-family: 'Inter',sans-serif; font-size: 15px;
-            font-weight: 400; color: #2B2B2B; line-height: 1.4;
-        }
-
-        /* ---------- CTA ---------- */
-        #availablePackagesModal .apm-cta {
-            display: flex; align-items: center; justify-content: center;
-            gap: 10px; width: 100%; height: 58px; padding: 0 24px;
-            border-radius: 18px; border: none; cursor: pointer;
-            font-family: 'Inter',sans-serif; font-size: 15px;
-            font-weight: 700; letter-spacing: 0.02em; text-decoration: none;
-            background: linear-gradient(135deg, #D93D7A, #8F2957);
-            color: #FFF; margin-top: auto;
-            box-shadow: 0 8px 20px rgba(217, 61, 122, 0.3);
-            transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
-        }
-        #availablePackagesModal .apm-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 14px 28px rgba(217, 61, 122, 0.42);
-            filter: brightness(1.05);
-        }
-        #availablePackagesModal .apm-cta:active { transform: translateY(0) scale(0.98); }
-        #availablePackagesModal .apm-cta:focus-visible {
-            outline: 3px solid rgba(217, 61, 122, 0.45); outline-offset: 2px;
-        }
-        #availablePackagesModal .apm-cta i { transition: transform 0.25s ease; }
-        #availablePackagesModal .apm-cta:hover i.fa-arrow-right { transform: translateX(4px); }
-
-        /* ---------- Trust footer ---------- */
-        #availablePackagesModal .apm-footer {
-            display: flex; align-items: center; justify-content: center;
-            gap: 10px; padding: 18px 32px 30px;
-            background: #FFF8F8; flex-shrink: 0;
-        }
-        #availablePackagesModal .apm-footer-icon { color: #10B981; font-size: 13px; }
-        #availablePackagesModal .apm-footer-text {
-            font-family: 'Inter',sans-serif; font-size: 13px;
-            color: #6B6B6B; font-weight: 500;
-        }
-        #availablePackagesModal .apm-footer-text strong { color: #2B2B2B; font-weight: 700; }
-
-        /* ---------- Small screens ---------- */
-        @media (max-width: 640px) {
-            #availablePackagesModal .apm-card-name { font-size: 28px; }
-            #availablePackagesModal .apm-card-price-amount { font-size: 44px; }
-            #availablePackagesModal .apm-card-price-currency { font-size: 16px; }
-            #availablePackagesModal .apm-card { padding: 24px; }
-            #availablePackagesModal .apm-card.is-exclusive { padding-top: 44px; }
-            #availablePackagesModal .apm-footer { padding: 16px 20px 24px; }
-        }
-
-        /* ===============================================================
-           DESKTOP REFINEMENT (lg / xl / 2xl) — ~20-25% lebih ringkas
-           Tablet & mobile tidak terpengaruh.
-           =============================================================== */
-        @media (min-width: 1024px) {
-            /* Modal — lebih kecil & proporsional di tengah layar */
-            #availablePackagesModal .apm-container {
-                max-width: 1280px;
-                max-height: 82vh;
-                box-shadow: 0 34px 80px -24px rgba(143, 41, 87, 0.32), 0 10px 28px rgba(23, 10, 15, 0.10);
-            }
-
-            /* Header — lebih ramping */
-            #availablePackagesModal .apm-header {
-                min-height: 88px;
-                padding: 1.1rem 2rem;
-            }
-            #availablePackagesModal .apm-header-left { gap: 0.9rem; }
-            #availablePackagesModal .apm-header-icon {
-                width: 42px; height: 42px; border-radius: 13px; font-size: 1.05rem;
-            }
-            #availablePackagesModal .apm-header-text h2 { font-size: 1.3rem; }
-            #availablePackagesModal .apm-header-sub { font-size: 0.8rem; margin-top: 2px; }
-            #availablePackagesModal .apm-close-btn { width: 38px; height: 38px; font-size: 0.9rem; }
-
-            /* Body & grid — ruang napas di sisi kanan-kiri */
-            #availablePackagesModal .apm-body { padding: 28px 32px; }
-            #availablePackagesModal .apm-grid { gap: 26px; }
-
-            /* Card — lebih ramping */
-            #availablePackagesModal .apm-card { padding: 26px; border-radius: 24px; }
-            #availablePackagesModal .apm-card.is-exclusive { padding-top: 38px; }
-
-            /* Badge & ribbon */
-            #availablePackagesModal .apm-badge {
-                padding: 4px 14px; font-size: 10px; min-height: 26px; gap: 5px;
-            }
-            #availablePackagesModal .apm-badge i { font-size: 10px; }
-            #availablePackagesModal .apm-ribbon {
-                top: -12px; padding: 5px 15px; font-size: 10px; gap: 6px;
-            }
-
-            /* Nama paket */
-            #availablePackagesModal .apm-card-name { font-size: 31px; margin: 16px 0 4px; }
-
-            /* Harga */
-            #availablePackagesModal .apm-card-price { margin: 6px 0 18px; gap: 3px; }
-            #availablePackagesModal .apm-card-price-amount { font-size: 52px; }
-            #availablePackagesModal .apm-card-price-currency { font-size: 18px; }
-
-            /* Chip info */
-            #availablePackagesModal .apm-chips { gap: 10px; margin-bottom: 18px; }
-            #availablePackagesModal .apm-chip {
-                min-height: 40px; padding: 8px 14px; font-size: 13px; border-radius: 14px;
-            }
-
-            /* Deskripsi — maksimal 2 baris */
-            #availablePackagesModal .apm-desc { font-size: 15px; margin: 0 0 16px; line-height: 1.6; }
-
-            /* Benefit */
-            #availablePackagesModal .apm-features { margin-bottom: 18px; }
-            #availablePackagesModal .apm-feature-item { gap: 11px; margin-bottom: 12px; }
-            #availablePackagesModal .apm-feature-icon { width: 18px; height: 18px; }
-            #availablePackagesModal .apm-feature-icon i { font-size: 10px; }
-            #availablePackagesModal .apm-feature-text { font-size: 14px; }
-
-            /* Tombol */
-            #availablePackagesModal .apm-cta { height: 52px; border-radius: 16px; font-size: 14px; }
-
-            /* Footer trust */
-            #availablePackagesModal .apm-footer { padding: 14px 28px 24px; }
-        }
-
-        /* ---------- Reduced motion ---------- */
-        @media (prefers-reduced-motion: reduce) {
-            #availablePackagesModal *,
-            #availablePackagesModal *::before,
-            #availablePackagesModal *::after {
-                transition: none !important; animation: none !important;
-            }
-        }
+   FTM SOCIETY — MEMBERSHIP PACKAGE PICKER (Tailwind-based shell)
+   Warna: maroon #4a041f / brand-800 #7A2B4A / rose accents
+   =============================================================== */
+#availablePackagesModal { z-index: 9999 !important; }
+#availablePackagesModal .apm-backdrop {
+    display: flex; align-items: center; justify-content: center;
+    position: fixed; inset: 0;
+    background: rgba(15, 5, 10, 0);
+    transition: opacity 0.3s ease, background 0.3s ease;
+    z-index: 9999; padding: 1rem; opacity: 0; pointer-events: none;
+}
+#availablePackagesModal.open-modal .apm-backdrop {
+    opacity: 1; pointer-events: auto;
+    background: rgba(15, 5, 10, 0.55);
+}
+#availablePackagesModal .apm-shell {
+    width: 100%; max-width: 64rem; /* max-w-5xl */
+    height: auto; max-height: min(92vh, 960px);
+    display: flex; flex-direction: column;
+    background: #faf7f8;
+    border: 1px solid #ffe4e6; /* rose-100 */
+    border-radius: 1.5rem;
+    box-shadow: 0 25px 50px -12px rgba(15, 5, 10, 0.35);
+    overflow: hidden; position: relative; margin: auto;
+    opacity: 0;
+    /* Tanpa scale — scale menyebabkan text buram (GPU raster) */
+    transform: translateY(12px);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+#availablePackagesModal.open-modal .apm-shell {
+    transform: none; /* none, bukan scale(1) — sharp text */
+    opacity: 1;
+}
+#availablePackagesModal .apm-handle {
+    display: none; position: absolute; top: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 40px; height: 4px; border-radius: 999px;
+    background: rgba(255,255,255,0.45); z-index: 5; pointer-events: none;
+}
+#availablePackagesModal .apm-scroll {
+    flex: 1; min-height: 0; overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding: 1rem; padding-bottom: 5.5rem; /* space for sticky footer */
+}
+#availablePackagesModal .apm-scroll::-webkit-scrollbar { width: 6px; }
+#availablePackagesModal .apm-scroll::-webkit-scrollbar-track { background: transparent; }
+#availablePackagesModal .apm-scroll::-webkit-scrollbar-thumb {
+    background-color: #fbcfe8; border-radius: 9999px;
+}
+#availablePackagesModal .pb-safe {
+    padding-bottom: calc(0.875rem + env(safe-area-inset-bottom, 0px));
+}
+/* Mobile: full-height sheet */
+@media (max-width: 639px) {
+    #availablePackagesModal .apm-backdrop { padding: 0; align-items: flex-end; justify-content: stretch; }
+    #availablePackagesModal .apm-shell {
+        max-width: 100%;
+        height: 100dvh; max-height: 100dvh;
+        border-radius: 0; border: none;
+        margin: 0; margin-top: auto;
+    }
+    #availablePackagesModal .apm-handle { display: block; }
+    #availablePackagesModal .apm-scroll { padding: 1rem; padding-bottom: 5.5rem; }
+}
+@media (min-width: 640px) {
+    #availablePackagesModal .apm-backdrop { padding: 1rem; }
+    #availablePackagesModal .apm-scroll { padding: 1.5rem; padding-bottom: 5.5rem; }
+}
+@media (min-width: 1024px) {
+    #availablePackagesModal .apm-scroll { padding: 2rem; padding-bottom: 5.5rem; }
+}
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+    #availablePackagesModal *,
+    #availablePackagesModal *::before,
+    #availablePackagesModal *::after {
+        transition: none !important; animation: none !important;
+    }
+}
 
         .progress-ring {
             transform: rotate(-90deg);
@@ -484,11 +174,8 @@
             background: rgba(0, 0, 0, 0.75) !important;
         }
         
-        /* Hide page content when modal is open */
-        body.modal-open main > *:not(#packageModal) {
-            filter: blur(4px);
-            pointer-events: none;
-        }
+        /* Page dimming is handled by each modal backdrop; do NOT blur main content
+           (previously caused the whole page to go blurry when a modal opened). */
         .modal-content {
             transform: translateY(40px) scale(0.95);
             opacity: 0;
@@ -632,13 +319,6 @@
                 </div>
                 <p class="font-poppins text-dark/45 text-sm leading-relaxed">"Setiap langkah kecil membawamu lebih dekat ke versi terbaik dirimu."</p>
                 <p class="font-poppins text-dark/25 text-xs mt-1">{{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM YYYY') }}</p>
-            </div>
-            <div class="flex items-center gap-4">
-
-                @php $initial = strtoupper(substr(auth('customer')->user()->name ?? 'M', 0, 1)); @endphp
-                <div class="w-11 h-11 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-nord font-bold text-sm shadow-md border-2 border-white flex-shrink-0">
-                    {{ $initial }}
-                </div>
             </div>
         </div>
     </div>
@@ -851,84 +531,162 @@
 </main>
 </div>
 
-@if(isset($availablePackages) && $availablePackages->count() > 0)
 <div id="availablePackagesModal" class="fixed inset-0 z-[9999] hidden">
     <div class="apm-backdrop" onclick="closeAvailablePackagesModal(event)">
-        <div class="apm-container" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-label="Pilih Paket Membership">
-            <header class="apm-header">
-                <div class="apm-header-left">
-                    <div class="apm-header-icon" aria-hidden="true"><i class="fas fa-crown"></i></div>
-                    <div class="apm-header-text">
-                        <h2>Membership Packages</h2>
-                        <p class="apm-header-sub">Pilih paket membership yang paling sesuai untuk perjalanan fitness Anda.</p>
+        <div class="apm-shell" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-label="Pilih Paket Membership">
+            <span class="apm-handle" aria-hidden="true"></span>
+
+            <!-- ===== HEADER ===== -->
+            <header class="relative flex-shrink-0 bg-gradient-to-r from-[#9d174d] via-[#831843] to-[#4a041f] text-white px-5 py-4 sm:px-8 sm:py-6 shadow-md overflow-hidden">
+                <div class="absolute -right-12 -top-12 w-48 h-48 rounded-full bg-white/5 blur-xl pointer-events-none"></div>
+                <div class="absolute right-32 -bottom-8 w-36 h-36 rounded-full bg-rose-400/10 blur-lg pointer-events-none"></div>
+                <div class="relative flex items-center justify-between gap-4">
+                    <div class="flex items-center gap-3 sm:gap-4 min-w-0">
+                        <div class="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-white/15 flex items-center justify-center border border-white/20">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-rose-100" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M2.5 19h19a1 1 0 0 0 1-1V9a1 1 0 0 0-1.6-.8l-4.4 3.3-3.9-6.5a1 1 0 0 0-1.7 0l-3.9 6.5-4.4-3.3A1 1 0 0 0 2.5 9v9a1 1 0 0 0 1 1zM4.5 17v-5.2l3 2.25a1 1 0 0 0 1.4-.25L12 8.3l3.1 5.2a1 1 0 0 0 1.4.25l3-2.25V17h-15zM3 21h18a1 1 0 0 0 0-2H3a1 1 0 0 0 0 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="min-w-0">
+                            <h2 class="text-base sm:text-2xl font-bold tracking-tight text-white leading-tight">Pilih Paket Membership</h2>
+                            <p class="text-xs sm:text-sm text-rose-100/90 mt-0.5 font-normal leading-snug">Pilih paket sesuai kebutuhanmu.</p>
+                        </div>
+                    </div>
+                    <button onclick="closeAvailablePackagesModal()" type="button" title="Tutup" aria-label="Tutup"
+                        class="apm-close-btn flex-shrink-0 w-11 h-11 rounded-full flex items-center justify-center bg-white/10 hover:bg-white/20 active:scale-95 transition-all text-white border border-white/15 focus:outline-none focus:ring-2 focus:ring-rose-300">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- ===== SCROLLABLE BODY ===== -->
+            <main class="apm-scroll" id="apmBody">
+                @if(isset($availablePackages) && $availablePackages->count() > 0)
+                @php
+                    $sortedPackages = $availablePackages->sortByDesc('is_exclusive')->values();
+                    $featuredPackage = $sortedPackages->first(fn ($p) => !empty($p->is_exclusive));
+                    $regularPackages = $sortedPackages->filter(fn ($p) => empty($p->is_exclusive))->values();
+                @endphp
+
+                @if($featuredPackage)
+                @php
+                    $fp = $featuredPackage;
+                    $fpPrice = (int) ($fp->price ?? 0);
+                @endphp
+                <!-- EXCLUSIVE PACKAGE -->
+                <section class="relative bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-7 border-2 border-rose-300/80 shadow-lg shadow-rose-900/5 transition-all duration-200" aria-label="Paket unggulan">
+                    <div class="flex flex-wrap items-center gap-2 mb-3 sm:mb-4">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#831843] text-white shadow-sm">
+                            <svg class="w-3.5 h-3.5 fill-amber-300" viewBox="0 0 20 20" aria-hidden="true">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            Paling Populer
+                        </span>
+                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-rose-50 text-[#9d174d] border border-rose-200">
+                            Eksklusif
+                        </span>
+                    </div>
+
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                        <!-- Left -->
+                        <div class="flex-1 space-y-3.5">
+                            <h3 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#4a041f] tracking-tight leading-tight">{{ $fp->name }}</h3>
+                            @if($fp->description)
+                            <p class="text-sm sm:text-base text-slate-600 leading-relaxed max-w-xl">{{ $fp->description }}</p>
+                            @endif
+                            @if($fp->duration_days || $fp->quota)
+                            <div class="flex flex-wrap items-center gap-2.5 pt-1">
+                                @if($fp->duration_days)
+                                <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-rose-50/80 border border-rose-100 text-xs sm:text-sm font-medium text-[#831843]">
+                                    <span aria-hidden="true">📅</span> {{ $fp->duration_days }} Hari
+                                </span>
+                                @endif
+                                @if($fp->quota)
+                                <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-rose-50/80 border border-rose-100 text-xs sm:text-sm font-medium text-[#831843]">
+                                    <span aria-hidden="true">🏋️</span> {{ $fp->quota }} Sesi
+                                </span>
+                                @endif
+                            </div>
+                            @endif
+                        </div>
+
+                        <!-- Right: price + CTA -->
+                        <div class="flex flex-col sm:flex-row lg:flex-col items-start sm:items-center lg:items-end justify-between lg:justify-center gap-4 pt-4 lg:pt-0 border-t lg:border-t-0 border-rose-100 lg:min-w-[270px]">
+                            <div class="w-full sm:w-auto lg:w-full bg-[#fdf8fa] p-4 sm:p-5 rounded-2xl border border-rose-100 text-left lg:text-right">
+                                <span class="text-xs font-semibold tracking-wider uppercase text-slate-500 block mb-0.5">Mulai Dari</span>
+                                @if($fpPrice > 0)
+                                <div class="flex items-baseline gap-1 lg:justify-end">
+                                    <span class="text-sm font-semibold text-[#831843]">Rp</span>
+                                    <span class="text-3xl sm:text-4xl font-extrabold text-[#9d174d] tracking-tight">{{ number_format($fpPrice, 0, ',', '.') }}</span>
+                                </div>
+                                <span class="text-[11px] text-slate-400 block mt-0.5">Sudah termasuk pajak</span>
+                                @else
+                                <div class="flex items-baseline gap-1 lg:justify-end">
+                                    <span class="text-2xl sm:text-3xl font-extrabold text-[#9d174d] tracking-tight">Hubungi Kami</span>
+                                </div>
+                                <span class="text-[11px] text-slate-400 block mt-0.5">Harga menyesuaikan kebutuhanmu</span>
+                                @endif
+                            </div>
+                            @if($fpPrice > 0)
+                            <a href="{{ route('join.package', ['package' => $fp->slug ?? $fp->id]) }}"
+                               class="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-gradient-to-r from-[#9d174d] to-[#831843] hover:from-[#b01e5a] hover:to-[#9d174d] active:scale-[0.98] text-white font-semibold text-sm sm:text-base tracking-wide shadow-md shadow-[#500724]/20 hover:shadow-lg transition duration-200 min-h-[48px]">
+                                <span>Beli Sekarang</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+                                </svg>
+                            </a>
+                            @else
+                            <a href="{{ $fp->whatsapp_inquiry_url }}" target="_blank" rel="noopener"
+                               class="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-gradient-to-r from-[#128C7E] to-[#075E54] hover:from-[#1DAE9E] hover:to-[#128C7E] active:scale-[0.98] text-white font-semibold text-sm sm:text-base tracking-wide shadow-md shadow-[#075E54]/20 hover:shadow-lg transition duration-200 min-h-[48px]">
+                                <i class="fab fa-whatsapp text-lg" aria-hidden="true"></i>
+                                <span>Hubungi Kami via WhatsApp</span>
+                            </a>
+                            @endif
+                        </div>
+                    </div>
+                </section>
+                @endif
+
+                @if($regularPackages->count())
+                <!-- REGULAR SECTION -->
+                <div class="pt-2 mt-6" role="region" aria-labelledby="apm-regular-label">
+                    <div class="flex items-center gap-3 mb-4">
+                        <h3 class="text-base sm:text-lg font-extrabold uppercase tracking-wider text-[#4a041f] flex-shrink-0" id="apm-regular-label">Paket Reguler</h3>
+                        <div class="h-px bg-rose-200 flex-1" aria-hidden="true"></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+                        @foreach($regularPackages as $package)
+                            @include('member.packages.partials.modal-card', ['package' => $package])
+                        @endforeach
                     </div>
                 </div>
-                <button onclick="closeAvailablePackagesModal()" class="apm-close-btn" title="Tutup" aria-label="Tutup">
-                    <i class="fas fa-times"></i>
-                </button>
-            </header>
-            <div class="apm-body">
-                <div class="apm-grid">
-                    @foreach($availablePackages as $package)
-                    <article class="apm-card {{ $package->is_exclusive ? 'is-exclusive' : '' }}">
-                        @if($package->is_exclusive)
-                        <span class="apm-ribbon" aria-hidden="true"><i class="fas fa-star"></i> Most Popular</span>
-                        <span class="apm-badge apm-badge-exclusive"><i class="fas fa-crown" aria-hidden="true"></i> Eksklusif</span>
-                        @else
-                        <span class="apm-badge apm-badge-regular"><i class="fas fa-heart" aria-hidden="true"></i> Reguler</span>
-                        @endif
-                        <h3 class="apm-card-name">{{ $package->name }}</h3>
-                        <div class="apm-card-price">
-                            <span class="apm-card-price-currency">Rp</span>
-                            <span class="apm-card-price-amount">{{ number_format($package->price, 0, ',', '.') }}</span>
-                        </div>
-                        @if($package->duration_days || $package->quota)
-                        <div class="apm-chips">
-                            @if($package->duration_days)
-                            <span class="apm-chip"><i class="fas fa-calendar" aria-hidden="true"></i> {{ $package->duration_days }} Hari</span>
-                            @endif
-                            @if($package->quota)
-                            <span class="apm-chip"><i class="fas fa-dumbbell" aria-hidden="true"></i> {{ $package->quota }} Sesi</span>
-                            @endif
-                        </div>
-                        @endif
-                        @if($package->description)
-                        <p class="apm-desc">{{ $package->description }}</p>
-                        @endif
-                        <div class="apm-features">
-                            @if($package->quota)
-                            <div class="apm-feature-item">
-                                <span class="apm-feature-icon" aria-hidden="true"><i class="fas fa-check"></i></span>
-                                <span class="apm-feature-text">{{ $package->quota }} sesi tersedia</span>
-                            </div>
-                            @endif
-                            @if($package->duration_days)
-                            <div class="apm-feature-item">
-                                <span class="apm-feature-icon" aria-hidden="true"><i class="fas fa-check"></i></span>
-                                <span class="apm-feature-text">Valid {{ $package->duration_days }} hari</span>
-                            </div>
-                            @endif
-                            <div class="apm-feature-item">
-                                <span class="apm-feature-icon" aria-hidden="true"><i class="fas fa-check"></i></span>
-                                <span class="apm-feature-text">Akses ke semua fasilitas</span>
-                            </div>
-                        </div>
-                        <a href="{{ route('join.package', ['package' => $package->slug ?? $package->id]) }}" class="apm-cta">
-                            <span>Beli Sekarang</span>
-                            <i class="fas fa-arrow-right" aria-hidden="true"></i>
-                        </a>
-                    </article>
-                    @endforeach
+                @endif
+
+                @else
+                <div class="text-center py-12">
+                    <div class="w-16 h-16 rounded-full bg-rose-50 flex items-center justify-center mx-auto mb-4 border border-rose-100">
+                        <i class="fas fa-box-open text-2xl text-[#9d174d]"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-[#4a041f] mb-2">Belum Ada Paket Tersedia</h3>
+                    <p class="text-slate-500 text-sm">Saat ini belum ada paket membership yang dapat dibeli.</p>
                 </div>
-            </div>
-            <footer class="apm-footer">
-                <i class="fas fa-lock apm-footer-icon" aria-hidden="true"></i>
-                <span class="apm-footer-text"><strong>Pembayaran Aman</strong> · Didukung Midtrans</span>
+                @endif
+            </main>
+
+            <!-- ===== STICKY SECURITY FOOTER ===== -->
+            <footer class="absolute inset-x-0 bottom-0 bg-white border-t border-rose-100/80 py-3.5 px-4 pb-safe flex items-center justify-center shadow-lg z-10">
+                <div class="flex items-center gap-2 text-xs sm:text-sm text-slate-600 font-medium">
+                    <span class="text-emerald-600 text-sm" aria-hidden="true">🔒</span>
+                    <span><strong class="font-semibold text-slate-700">Pembayaran Aman</strong></span>
+                    <span class="w-1 h-1 rounded-full bg-slate-300" aria-hidden="true"></span>
+                    <span class="text-slate-500 font-normal">Didukung Midtrans</span>
+                </div>
             </footer>
         </div>
     </div>
 </div>
-@endif
 
 <!-- ========================================
      PACKAGE DETAIL MODAL - PROFESSIONAL DESIGN
@@ -944,9 +702,7 @@
                         <i class="fas fa-arrow-left text-white"></i>
                     </button>
                     <h2 class="text-white font-bold text-lg">Detail Paket</h2>
-                    <button class="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition">
-                        <i class="fas fa-share-alt text-white"></i>
-                    </button>
+                    <div class="w-10 h-10"></div>
                 </div>
             </div>
 
@@ -1079,9 +835,11 @@
 
 <script>
 // ===== AVAILABLE PACKAGES MODAL =====
+let apmTriggerEl = null;
 function openAvailablePackagesModal() {
     const modal = document.getElementById('availablePackagesModal');
     if (!modal) return;
+    apmTriggerEl = document.activeElement;
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
     document.body.classList.add('modal-open');
@@ -1095,7 +853,14 @@ function closeAvailablePackagesModal(event) {
     if (!modal) return;
     modal.classList.remove('open-modal');
     document.body.classList.remove('modal-open');
-    setTimeout(() => { modal.classList.add('hidden'); document.body.style.overflow = ''; }, 350);
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+        if (apmTriggerEl && typeof apmTriggerEl.focus === 'function') {
+            apmTriggerEl.focus();
+        }
+        apmTriggerEl = null;
+    }, 350);
 }
 
 // ===== MODAL LOGIC =====

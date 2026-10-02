@@ -110,6 +110,12 @@ Route::get('/join/{package}', function ($package) {
         return redirect()->route('home')->with('error', 'Package not found');
     }
 
+    // Paket tanpa harga (Private Program, Private Group Program) tidak untuk
+    // checkout — arahkan ke WhatsApp admin untuk konsultasi.
+    if (empty($pkg->price) || (float) $pkg->price <= 0) {
+        return redirect()->away($pkg->whatsapp_inquiry_url);
+    }
+
     // Not logged in → redirect to signup
     if (!auth('customer')->check()) {
         session(['after_register_package' => $pkg->slug]);

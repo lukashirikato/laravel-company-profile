@@ -170,8 +170,16 @@
     .qr-attendance-placeholder { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:rgba(233,70,131,.35); }
     .qr-attendance-placeholder svg { width:5rem; height:5rem; }
     .qr-attendance-box img { position:relative; z-index:1; width:100%; max-width:260px; height:auto; margin:0 auto; display:block; border-radius:1rem; background:#fff; }
-    .attendance-empty-icon { background:linear-gradient(135deg, #fff8ee 0%, #ffe5f0 100%); box-shadow:0 18px 42px rgba(233,70,131,.16); }
-    .attendance-empty-icon i { display:block; color:#e94683; }
+    /* Empty state illustration */
+    .attendance-empty-art { width:210px; max-width:78%; height:auto; display:block; filter:drop-shadow(0 20px 38px rgba(233,70,131,.18)); }
+    .attendance-empty-art .att-scan { transform-box:fill-box; transform-origin:center; animation:attScanSweep 2.6s ease-in-out infinite; }
+    @keyframes attScanSweep {
+        0%, 100% { transform:translateY(-14px); opacity:.25; }
+        50%      { transform:translateY(14px);  opacity:.9;  }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .attendance-empty-art .att-scan { animation:none; opacity:.6; }
+    }
     .qr-close-button { border:1px solid rgba(118,38,69,.12); box-shadow:0 10px 24px rgba(118,38,69,.10); }
     .qr-close-button:hover { background:#762645; color:#fff; transform:translateY(-1px); }
     .qr-close-icon { color:currentColor; font-size:1.85rem; font-weight:900; line-height:1; }
@@ -470,9 +478,46 @@
                 @else
                     {{-- Empty state --}}
                     <div class="px-6 py-14 sm:py-20 text-center">
-                        <div class="attendance-empty-icon mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-[1.75rem]">
-                            <i class="ri-qr-code-line text-4xl"></i>
-                        </div>
+                        <svg class="attendance-empty-art mx-auto mb-5" viewBox="0 0 240 180" role="img" aria-labelledby="attEmptyTitle" xmlns="http://www.w3.org/2000/svg">
+                            <title id="attEmptyTitle">Kartu member dengan QR yang siap dipindai di meja resepsionis</title>
+
+                            <circle cx="120" cy="90" r="74" fill="#FFF0F6"/>
+
+                            {{-- Kartu member --}}
+                            <rect x="68" y="28" width="104" height="124" rx="16" fill="#FFFFFF" stroke="#F7DCE8" stroke-width="2"/>
+                            <path d="M84 28 H156 A16 16 0 0 1 172 44 V50 H68 V44 A16 16 0 0 1 84 28 Z" fill="#EE4E8B"/>
+                            <text x="120" y="45" text-anchor="middle" font-family="Nord, Poppins, sans-serif" font-size="10" font-weight="800" letter-spacing="1.6" fill="#FFFFFF">FTM SOCIETY</text>
+
+                            {{-- Modul QR --}}
+                            <rect x="88" y="62" width="64" height="64" rx="9" fill="#FFFFFF" stroke="#F0D3E0" stroke-width="1.5"/>
+                            <rect x="94" y="68" width="18" height="18" rx="3" fill="#7A2B4A"/>
+                            <rect x="99" y="73" width="8" height="8" rx="2" fill="#FFFFFF"/>
+                            <rect x="128" y="68" width="18" height="18" rx="3" fill="#7A2B4A"/>
+                            <rect x="133" y="73" width="8" height="8" rx="2" fill="#FFFFFF"/>
+                            <rect x="94" y="102" width="18" height="18" rx="3" fill="#7A2B4A"/>
+                            <rect x="99" y="107" width="8" height="8" rx="2" fill="#FFFFFF"/>
+                            <rect x="128" y="102" width="6" height="6" rx="1.5" fill="#7A2B4A"/>
+                            <rect x="138" y="102" width="6" height="6" rx="1.5" fill="#7A2B4A"/>
+                            <rect x="128" y="112" width="6" height="6" rx="1.5" fill="#7A2B4A"/>
+                            <rect x="137" y="111" width="5" height="5" rx="1.5" fill="#7A2B4A"/>
+                            <rect x="129" y="119" width="6" height="6" rx="1.5" fill="#7A2B4A"/>
+
+                            {{-- Sinar pemindai --}}
+                            <rect class="att-scan" x="82" y="90" width="76" height="6" rx="3" fill="#EE4E8B" opacity=".9"/>
+
+                            {{-- Garis nama pada kartu --}}
+                            <rect x="88" y="134" width="64" height="7" rx="3.5" fill="#E9C7D6"/>
+
+                            {{-- Bracket pemindai --}}
+                            <path d="M80 66 V54 H92" fill="none" stroke="#EE4E8B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M160 66 V54 H148" fill="none" stroke="#EE4E8B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M80 122 V134 H92" fill="none" stroke="#EE4E8B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M160 122 V134 H148" fill="none" stroke="#EE4E8B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+                            {{-- Lencana terverifikasi --}}
+                            <circle cx="172" cy="126" r="16" fill="#1A7A5E" stroke="#FFFFFF" stroke-width="3"/>
+                            <path d="M165 126 l5 5 l9 -10" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
                         <h3 class="att-h3 text-dark">Belum ada attendance</h3>
                         <p class="att-desc mx-auto mt-2 max-w-md text-dark/55">Tampilkan QR member Anda ke staff untuk check-in. Setelah dipindai, aktivitas latihan akan tersimpan otomatis di sini.</p>
                         @if($memberQrData)

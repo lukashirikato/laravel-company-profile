@@ -62,6 +62,18 @@ class Package extends Model
         return $this->variant_label ?: (($this->participant_count ?: 1) . ' Pax');
     }
 
+    /**
+     * Paket tanpa harga (contoh: Private Program, Private Group Program)
+     * tidak bisa checkout. Tautan "Hubungi Kami" diarahkan ke WhatsApp admin.
+     */
+    public function getWhatsappInquiryUrlAttribute()
+    {
+        $number = config('services.ftm.admin_whatsapp', '6287785767395');
+        $message = "Halo Admin FTM Society, saya tertarik dengan paket \"{$this->name}\". Mohon info harga dan detailnya.";
+
+        return 'https://wa.me/' . $number . '?text=' . rawurlencode($message);
+    }
+
     public function getCapacityLabelAttribute()
     {
         $count = max(1, (int) ($this->participant_count ?: 1));

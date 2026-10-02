@@ -222,7 +222,7 @@ class CustomerPackageController extends Controller
     {
         try {
             // Get all active packages yang bisa dibeli
-            $packages = Package::where('status', 'active')
+            $packages = Package::active()
                 ->orderBy('price', 'asc')
                 ->get()
                 ->map(function($package) {

@@ -74,6 +74,15 @@
             .sidebar-overlay.active { display: block; }
             .main-content { margin-left: 0 !important; }
             .hamburger-btn { display: flex !important; }
+
+            /* Dashboard: keep the hamburger inside the header flow so it
+               never floats over the greeting text on phones. */
+            #hamburger-btn.hamburger-btn {
+                position: static !important;
+                top: auto !important;
+                left: auto !important;
+                z-index: auto !important;
+            }
         }
         @media (min-width: 769px) {
             .sidebar { position: relative; }
@@ -115,20 +124,20 @@
          =========================================================== --}}
     <main class="main-content flex-1 overflow-y-auto bg-[#FCF9F2]">
 
-        {{-- Mobile Hamburger --}}
-        <button id="hamburger-btn" class="hamburger-btn hidden fixed top-4 left-4 z-30 w-10 h-10 rounded-lg items-center justify-center"
-                style="background: var(--pink); color: var(--rising); box-shadow: 0 4px 12px rgba(238, 78, 139, 0.3);"
-                onclick="toggleSidebar()">
-            <i class="fas fa-bars"></i>
-        </button>
-
         {{-- ===========================================================
              TOP HEADER — Greeting + Notif & Avatar
              =========================================================== --}}
         <div class="px-6 md:px-10 pt-6 md:pt-10 pb-4">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h1 class="font-nord text-2xl md:text-[28px] font-bold text-[#7A2B4A]">
+            <div class="flex items-center gap-3 md:gap-4">
+                {{-- Mobile Hamburger — inline in header flow so it never overlaps the greeting --}}
+                <button id="hamburger-btn" class="hamburger-btn hidden flex-shrink-0 w-10 h-10 rounded-lg items-center justify-center"
+                        style="background: var(--pink); color: var(--rising); box-shadow: 0 4px 12px rgba(238, 78, 139, 0.3);"
+                        onclick="toggleSidebar()" aria-label="Buka menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div class="flex-1 min-w-0">
+                    <h1 class="font-nord text-xl sm:text-2xl md:text-[28px] font-bold text-[#7A2B4A] break-words">
                         Assalamu'alaikum, {{ $customer->name }}
                     </h1>
                     <p class="text-sm text-[#1C1C1C]/55 mt-1 leading-relaxed max-w-lg">
@@ -136,7 +145,7 @@
                         <span class="text-xs text-[#1C1C1C]/40">{{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM YYYY') }}</span>
                     </p>
                 </div>
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-3 flex-shrink-0">
 
                     <a href="{{ route('member.account') }}" class="block group">
                         <div class="w-12 h-12 rounded-full flex items-center justify-center text-white font-nord font-bold text-base shadow-lg border-2 border-white/80 transition-transform duration-200 group-hover:scale-105 group-hover:shadow-xl"
@@ -151,6 +160,22 @@
         <div class="px-6 md:px-10 pb-8 space-y-6">
 
             {{-- MEMBERSHIP CARD --}}
+            @php
+                $hasActiveOrder = ($activeOrders ?? collect())->isNotEmpty() && !empty($activeOrder);
+            @endphp
+
+            @if($hasActiveOrder)
+            @php
+                $activePkg = $activeOrder->package;
+                $pkgName = $activePkg->name ?? 'Paket Membership';
+                $pkgIsExclusive = (bool) ($activePkg->is_exclusive ?? false);
+                $pkgTotalQuota = (int) ($totalQuota ?? ($activePkg->quota ?? 0));
+                $pkgRemaining = (int) ($remainingQuota ?? 0);
+                $pkgProgress = $pkgTotalQuota > 0 ? min(($pkgRemaining / $pkgTotalQuota) * 100, 100) : 0;
+                $pkgExpiry = $activeOrder->expired_at
+                    ? \Carbon\Carbon::parse($activeOrder->expired_at)->isoFormat('D MMMM YYYY')
+                    : 'Belum diaktifkan';
+            @endphp
             <div class="rounded-2xl overflow-hidden relative animate-fade-up delay-1"
                  style="background: linear-gradient(135deg, #EE4E8B 0%, #7A2B4A 100%);">
                 <div class="absolute top-0 right-0 w-48 h-48 rounded-full bg-white/5 -mr-16 -mt-16"></div>
@@ -158,8 +183,8 @@
                 <div class="relative z-10 p-5 md:p-6">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
                         <div>
-                            <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/70">MEMBER EKSKLUSIF</span>
-                            <h3 class="font-nord text-lg md:text-xl font-black tracking-tight text-white mt-0.5">EXCLUSIVE ELITE</h3>
+                            <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/70">MEMBER {{ $pkgIsExclusive ? 'EKSKLUSIF' : 'REGULER' }}</span>
+                            <h3 class="font-nord text-lg md:text-xl font-black tracking-tight text-white mt-0.5">{{ $pkgName }}</h3>
                         </div>
                         <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C5D79B]/30 text-white text-[10px] font-bold uppercase tracking-[0.12em] border border-[#C5D79B]/40 w-fit">
                             <span class="w-1.5 h-1.5 rounded-full bg-[#C5D79B] animate-pulse"></span>
@@ -170,14 +195,14 @@
                         <div class="flex items-center gap-6">
                             <div>
                                 <p class="text-[10px] uppercase tracking-[0.2em] text-white/60">Sisa Sesi</p>
-                                <p class="font-nord text-3xl md:text-4xl font-black leading-none mt-1 text-white">{{ $remainingQuota }}</p>
+                                <p class="font-nord text-3xl md:text-4xl font-black leading-none mt-1 text-white">{{ $pkgRemaining }}</p>
                             </div>
                             <div class="max-w-[180px] w-full">
                                 <div class="w-full h-2 rounded-full bg-white/20 overflow-hidden">
                                     <div class="h-full rounded-full bg-white/80 transition-all duration-700"
-                                         style="width: {{ min(($remainingQuota / 12) * 100, 100) }}%"></div>
+                                         style="width: {{ $pkgProgress }}%"></div>
                                 </div>
-                                <p class="text-[11px] text-white/60 mt-1">Berakhir: {{ \Carbon\Carbon::now()->addDays(30)->isoFormat('D MMMM YYYY') }}</p>
+                                <p class="text-[11px] text-white/60 mt-1">Berakhir: {{ $pkgExpiry }}</p>
                             </div>
                         </div>
                         <a href="{{ route('member.packages.index') }}"
@@ -187,6 +212,31 @@
                     </div>
                 </div>
             </div>
+            @else
+            <div class="rounded-2xl overflow-hidden relative animate-fade-up delay-1"
+                 style="background: linear-gradient(135deg, #EE4E8B 0%, #7A2B4A 100%);">
+                <div class="absolute top-0 right-0 w-48 h-48 rounded-full bg-white/5 -mr-16 -mt-16"></div>
+                <div class="absolute bottom-0 left-0 w-32 h-32 rounded-full bg-white/5 -ml-12 -mb-12"></div>
+                <div class="relative z-10 p-5 md:p-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex items-center gap-4 min-w-0">
+                            <div class="w-12 h-12 rounded-2xl bg-white/15 border border-white/20 flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-box-open text-white text-lg"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/70">MEMBER</span>
+                                <h3 class="font-nord text-lg md:text-xl font-black tracking-tight text-white mt-0.5">Belum Ada Paket Aktif</h3>
+                                <p class="text-[12px] text-white/70 mt-0.5">Beli paket untuk mulai booking kelas dan absensi.</p>
+                            </div>
+                        </div>
+                        <a href="{{ route('member.packages.index') }}"
+                           class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white text-[#7A2B4A] font-nord font-bold text-xs hover:bg-[#FCF9F2] transition-all shadow-lg hover:shadow-xl w-fit flex-shrink-0">
+                            Lihat Paket <i class="fas fa-arrow-right text-[10px]"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @endif
 
             {{-- QUICK ACTION CARDS --}}
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 animate-fade-up delay-2">
