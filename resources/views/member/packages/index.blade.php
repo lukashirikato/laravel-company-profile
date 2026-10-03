@@ -309,22 +309,8 @@
         <i class="fas fa-bars"></i>
     </button>
 
-    {{-- ================= HEADER (Greeting) ================= --}}
-    <div class="bg-white rounded-2xl shadow-[0_2px_12px_rgba(122,43,74,0.06)] border border-light-pink/20 p-5 md:p-7 mb-8 mt-14 md:mt-0">
-        <div class="flex items-center justify-between">
-            <div>
-                <div class="flex items-baseline gap-1.5 mb-1">
-                    <span class="font-nord font-black text-primary text-xl md:text-2xl">Assalamu'alaikum</span>
-                    <span class="font-poppins text-dark font-semibold text-base md:text-lg">, {{ auth('customer')->user()->name ?? 'Member' }}</span>
-                </div>
-                <p class="font-poppins text-dark/45 text-sm leading-relaxed">"Setiap langkah kecil membawamu lebih dekat ke versi terbaik dirimu."</p>
-                <p class="font-poppins text-dark/25 text-xs mt-1">{{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM YYYY') }}</p>
-            </div>
-        </div>
-    </div>
-
     {{-- ================= PAGE TITLE ================= --}}
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 mt-14 md:mt-0">
         <div>
             <h1 class="font-nord font-bold text-[30px] md:text-[32px] text-dark leading-tight">Paket Saya</h1>
             <p class="font-poppins text-dark/45 text-[15px] mt-1.5">Kelola dan pantau paket membership Anda</p>

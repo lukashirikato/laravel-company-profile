@@ -966,10 +966,6 @@
             <div class="flex items-center justify-between">
                 <div>
                     <h1 class="font-nord font-bold text-[30px] md:text-[32px] text-dark leading-tight">Booking Kelas</h1>
-                    <div class="flex items-baseline gap-1.5 mt-1.5">
-                        <span class="font-poppins text-dark/45 text-[15px]">Assalamu'alaikum,</span>
-                        <span class="font-poppins text-dark font-semibold text-[15px]">{{ $customer->name ?? 'Member' }}</span>
-                    </div>
                 </div>
             </div>
         </div>

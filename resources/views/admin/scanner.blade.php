@@ -135,6 +135,9 @@
 </div>
 
 <script>
+    const successAudio = new Audio('/audio/tithuh-powerup-success-523645.mp3');
+    const errorAudio = new Audio('/audio/soundshelfstudio-ui-error-pop-515668.mp3');
+
     let successCount = 0;
     let errorCount = 0;
     const scansLog = [];
@@ -210,6 +213,12 @@
     }
 
     function showSuccessResult(data) {
+        // Play audio feedack
+        try {
+            successAudio.currentTime = 0;
+            successAudio.play().catch(e => console.warn('Audio play error:', e));
+        } catch(e) {}
+
         const resultArea = document.getElementById('result-area');
         const resultMsg = document.getElementById('result-message');
 
@@ -218,6 +227,7 @@
             <div class="text-center">
                 <div class="text-6xl mb-4 animate-pulse">✅</div>
                 <h3 class="text-3xl font-bold text-green-400 mb-2">CHECK-IN BERHASIL!</h3>
+
                 
                 <div class="bg-green-900/40 rounded-lg p-6 my-6 space-y-3 text-left max-w-md mx-auto">
                     <div class="border-l-4 border-green-500 pl-3">
@@ -259,6 +269,12 @@
     }
 
     function showErrorResult(message) {
+        // Play audio feedback
+        try {
+            errorAudio.currentTime = 0;
+            errorAudio.play().catch(e => console.warn('Audio play error:', e));
+        } catch(e) {}
+
         const resultArea = document.getElementById('result-area');
         const resultMsg = document.getElementById('result-message');
 
@@ -267,6 +283,7 @@
             <div class="text-center">
                 <div class="text-6xl mb-4">⚠️</div>
                 <h3 class="text-3xl font-bold text-red-400 mb-2">CHECK-IN GAGAL</h3>
+
                 <p class="text-red-300 text-lg bg-red-900/40 rounded-lg p-4 inline-block">${message}</p>
             </div>
         `;
