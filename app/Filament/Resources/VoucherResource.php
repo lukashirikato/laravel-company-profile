@@ -6,6 +6,7 @@ use App\Filament\Resources\VoucherResource\Pages;
 use App\Filament\Resources\VoucherResource\RelationManagers;
 use App\Models\Voucher;
 use App\Models\Package;
+use App\Support\UserPermission;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -220,6 +221,7 @@ class VoucherResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
+                    ->visible(fn () => \Filament\Facades\Filament::auth()->user()?->hasPermission(\App\Support\UserPermission::VOUCHERS_DELETE))
                     ->requiresConfirmation()
                     ->modalHeading('Konfirmasi Hapus Voucher')
                     ->modalSubheading('Anda yakin ingin menghapus data voucher ini? Tindakan ini tidak dapat dibatalkan.')
@@ -227,6 +229,7 @@ class VoucherResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make()
+                    ->visible(fn () => \Filament\Facades\Filament::auth()->user()?->hasPermission(\App\Support\UserPermission::VOUCHERS_DELETE))
                     ->requiresConfirmation()
                     ->modalHeading('Konfirmasi Hapus Voucher Terpilih')
                     ->modalSubheading('Semua data voucher yang dipilih akan dihapus permanen.')
@@ -235,6 +238,12 @@ class VoucherResource extends Resource
             ->defaultSort('created_at', 'desc');
     }
     
+    public static function canCreate(): bool
+    {
+        return parent::canCreate()
+            && (\Filament\Facades\Filament::auth()->user()?->hasPermission(UserPermission::VOUCHERS_CREATE) ?? false);
+    }
+
     public static function getRelations(): array
     {
         return [

@@ -26,6 +26,16 @@ class WhatsAppTemplateResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return \Filament\Facades\Filament::auth()->user()?->hasPermission(\App\Support\UserPermission::WA_TEMPLATES_MANAGE) ?? false;
+    }
+
+    public static function canViewAny(): bool
+    {
+        return \Filament\Facades\Filament::auth()->user()?->hasPermission(\App\Support\UserPermission::WA_TEMPLATES_MANAGE) ?? false;
+    }
+
     public static function form(Form $form): Form
     {
         return $form

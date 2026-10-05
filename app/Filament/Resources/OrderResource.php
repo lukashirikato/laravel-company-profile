@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\OrderResource\Pages;
 use App\Filament\Resources\OrderResource\RelationManagers;
 use App\Models\Order;
+use App\Support\UserPermission;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -378,6 +379,7 @@ class OrderResource extends Resource
                     ->modalSubheading('Perubahan ini akan langsung mempengaruhi kemampuan member untuk booking kelas dan check-in.'),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
+                    ->visible(fn () => \Filament\Facades\Filament::auth()->user()?->hasPermission(\App\Support\UserPermission::ORDERS_DELETE))
                     ->requiresConfirmation()
                     ->modalHeading('Konfirmasi Hapus Order')
                     ->modalSubheading('Anda yakin ingin menghapus data order ini? Tindakan ini tidak dapat dibatalkan.')
@@ -385,6 +387,7 @@ class OrderResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make()
+                    ->visible(fn () => \Filament\Facades\Filament::auth()->user()?->hasPermission(\App\Support\UserPermission::ORDERS_DELETE))
                     ->requiresConfirmation()
                     ->modalHeading('Konfirmasi Hapus Order Terpilih')
                     ->modalSubheading('Semua data order yang dipilih akan dihapus permanen.')
@@ -393,6 +396,12 @@ class OrderResource extends Resource
             ->defaultSort('created_at', 'desc');
     }
     
+    public static function canCreate(): bool
+    {
+        return parent::canCreate()
+            && (\Filament\Facades\Filament::auth()->user()?->hasPermission(UserPermission::ORDERS_CREATE) ?? false);
+    }
+
     public static function getRelations(): array
     {
         return [

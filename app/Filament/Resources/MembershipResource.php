@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\MembershipResource\Pages;
 use App\Models\Membership;
+use App\Support\UserPermission;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -119,6 +120,12 @@ class MembershipResource extends Resource
     public static function getRelations(): array
     {
         return [];
+    }
+
+    public static function canCreate(): bool
+    {
+        return parent::canCreate()
+            && (\Filament\Facades\Filament::auth()->user()?->hasPermission(UserPermission::PACKAGES_CREATE) ?? false);
     }
 
     public static function getPages(): array

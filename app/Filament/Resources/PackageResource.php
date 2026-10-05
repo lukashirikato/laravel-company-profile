@@ -6,6 +6,7 @@ use App\Filament\Resources\PackageResource\Pages;
 use App\Models\Package;
 use App\Models\ClassModel;
 use App\Models\Schedule;
+use App\Support\UserPermission;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Resources\Form;
@@ -347,6 +348,7 @@ class PackageResource extends Resource
             Tables\Actions\ViewAction::make(),
             Tables\Actions\EditAction::make(),
             Tables\Actions\DeleteAction::make()
+                ->visible(fn () => \Filament\Facades\Filament::auth()->user()?->hasPermission(\App\Support\UserPermission::PACKAGES_DELETE))
                 ->requiresConfirmation()
                 ->modalHeading('Konfirmasi Hapus Package')
                 ->modalSubheading('Anda yakin ingin menghapus data package ini? Tindakan ini tidak dapat dibatalkan.')
@@ -355,6 +357,7 @@ class PackageResource extends Resource
 
         ->bulkActions([
             Tables\Actions\DeleteBulkAction::make()
+                ->visible(fn () => \Filament\Facades\Filament::auth()->user()?->hasPermission(\App\Support\UserPermission::PACKAGES_DELETE))
                 ->requiresConfirmation()
                 ->modalHeading('Konfirmasi Hapus Package Terpilih')
                 ->modalSubheading('Semua data package yang dipilih akan dihapus permanen.')
@@ -364,6 +367,12 @@ class PackageResource extends Resource
         ->defaultSort('created_at', 'desc');
 }
 
+
+    public static function canCreate(): bool
+    {
+        return parent::canCreate()
+            && (\Filament\Facades\Filament::auth()->user()?->hasPermission(UserPermission::PACKAGES_CREATE) ?? false);
+    }
 
     public static function getPages(): array
     {

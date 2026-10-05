@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\AttendanceResource\Pages;
 use App\Models\Attendance;
+use App\Support\UserPermission;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -195,10 +196,12 @@ class AttendanceResource extends Resource
                             ->success()
                             ->send();
                     }),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->visible(fn () => \Filament\Facades\Filament::auth()->user()?->hasPermission(\App\Support\UserPermission::ATTENDANCE_DELETE)),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()
+                    ->visible(fn () => \Filament\Facades\Filament::auth()->user()?->hasPermission(\App\Support\UserPermission::ATTENDANCE_DELETE)),
                 BulkAction::make('export_csv')
                     ->label('Export CSV')
                     ->icon('heroicon-o-download')
@@ -224,6 +227,12 @@ class AttendanceResource extends Resource
                         ]);
                     }),
             ]);
+    }
+
+    public static function canCreate(): bool
+    {
+        return parent::canCreate()
+            && (\Filament\Facades\Filament::auth()->user()?->hasPermission(UserPermission::ATTENDANCE_CREATE) ?? false);
     }
 
     public static function getRelations(): array

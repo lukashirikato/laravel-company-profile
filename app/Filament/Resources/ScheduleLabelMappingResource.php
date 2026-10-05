@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ScheduleLabelMappingResource\Pages;
 use App\Models\ScheduleLabelMapping;
+use App\Support\UserPermission;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -70,6 +71,12 @@ class ScheduleLabelMappingResource extends Resource
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
+    }
+
+    public static function canCreate(): bool
+    {
+        return parent::canCreate()
+            && (\Filament\Facades\Filament::auth()->user()?->hasPermission(UserPermission::SCHEDULES_CREATE) ?? false);
     }
 
     public static function getRelations(): array

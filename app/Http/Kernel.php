@@ -52,7 +52,10 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
-        // ✅ Tambahkan ini untuk middleware admin
+        // ✅ Tambahkan ini untuk middleware admin (admin & owner)
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
+
+        // ✅ Middleware role dengan hierarki: role:admin | role:owner | role:user
+        'role' => \App\Http\Middleware\CheckRole::class,
     ];
 }

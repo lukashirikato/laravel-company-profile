@@ -4,8 +4,11 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CustomerResource\Pages;
 use App\Filament\Resources\CustomerResource\RelationManagers;
+use App\Http\Controllers\OtpVerificationController;
 use App\Models\Customer;
+use App\Models\OtpVerification;
 use App\Models\Package;
+use App\Support\UserPermission;
 use Filament\Forms;
 use Illuminate\Support\Str;
 use Filament\Resources\Resource;
@@ -444,15 +447,78 @@ class CustomerResource extends Resource
                             ->send();
                     }),
 
-                /* KIRIM LOGIN WA */
-                Tables\Actions\Action::make('send_login')
-                    ->label('Verifikasi & Kirim Login')
-                    ->icon('heroicon-o-paper-airplane')
+                /* OTP TIDAK MASUK — KIRIM ULANG OTP KE WA MEMBER */
+                Tables\Actions\Action::make('resend_otp')
+                    ->label('Kirim Ulang OTP')
+                    ->icon('heroicon-o-key')
                     ->color('success')
                     ->visible(fn($record) => !$record->is_verified)
                     ->requiresConfirmation()
-                    ->modalHeading('Verifikasi & Kirim Login')
-                    ->modalSubheading(fn($record) => "Kirim kredensial login ke {$record->name}?")
+                    ->modalHeading('Kirim Ulang OTP ke WhatsApp')
+                    ->modalSubheading(fn($record) => "Generate kode OTP baru dan kirim ke {$record->name} ({$record->phone_number}). Pastikan member masih membuka halaman verifikasi OTP untuk memasukkan kode.")
+                    ->action(function (Customer $record) {
+                        if (!$record->phone_number) {
+                            Notification::make()
+                                ->title('Nomor WhatsApp tidak tersedia')
+                                ->body('Update nomor HP member terlebih dahulu.')
+                                ->warning()
+                                ->send();
+                            return;
+                        }
+
+                        $otp = OtpVerification::where('customer_id', $record->id)
+                            ->where('purpose', 'registration')
+                            ->whereNull('verified_at')
+                            ->latest()
+                            ->first();
+
+                        $code = OtpVerification::generateCode();
+
+                        if ($otp) {
+                            $otp->update([
+                                'code'         => $code,
+                                'attempts'     => 0,
+                                'expires_at'   => now()->addMinutes(OtpVerification::VALIDITY_MINUTES),
+                                'last_sent_at' => now(),
+                                'resend_count' => $otp->resend_count + 1,
+                            ]);
+                        } else {
+                            OtpVerification::create([
+                                'customer_id'  => $record->id,
+                                'phone_number' => $record->phone_number,
+                                'code'         => $code,
+                                'purpose'      => 'registration',
+                                'expires_at'   => now()->addMinutes(OtpVerification::VALIDITY_MINUTES),
+                                'last_sent_at' => now(),
+                            ]);
+                        }
+
+                        $result = app(OtpVerificationController::class)->sendOtpViaWhatsApp($record, $code);
+
+                        if ($result['success'] ?? false) {
+                            Notification::make()
+                                ->title('OTP baru dikirim ke WA ' . $record->name)
+                                ->body('Berlaku ' . OtpVerification::VALIDITY_MINUTES . ' menit. Kode hanya dikirim ke member, tidak ditampilkan di panel admin.')
+                                ->success()
+                                ->send();
+                        } else {
+                            Notification::make()
+                                ->title('Gagal mengirim OTP')
+                                ->body($result['message'] ?? 'Silakan coba lagi.')
+                                ->danger()
+                                ->send();
+                        }
+                    }),
+
+                /* AKTIVASI MANUAL — UNTUK KASUS SESSION OTP MEMBER SUDAH HABIS */
+                Tables\Actions\Action::make('activate_manual')
+                    ->label('Aktivasi Manual')
+                    ->icon('heroicon-o-lock-open')
+                    ->color('warning')
+                    ->visible(fn($record) => !$record->is_verified)
+                    ->requiresConfirmation()
+                    ->modalHeading('Aktivasi Manual (Lewati OTP)')
+                    ->modalSubheading(fn($record) => "Gunakan jika member sudah tidak berada di halaman OTP (session habis). Akun {$record->name} langsung diverifikasi dan kredensial login dikirim via WhatsApp.")
                     ->action(function (Customer $record) {
 
                         /* generate password acak */
@@ -551,6 +617,7 @@ class CustomerResource extends Resource
                 Tables\Actions\EditAction::make(),
                 
                 Tables\Actions\DeleteAction::make()
+                    ->visible(fn () => \Filament\Facades\Filament::auth()->user()?->hasPermission(\App\Support\UserPermission::CUSTOMERS_DELETE))
                     ->requiresConfirmation()
                     ->modalHeading('Konfirmasi Hapus Customer')
                     ->modalSubheading(fn($record) => "Anda yakin ingin menghapus data {$record->name}? Tindakan ini tidak dapat dibatalkan.")
@@ -559,6 +626,7 @@ class CustomerResource extends Resource
 
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make()
+                    ->visible(fn () => \Filament\Facades\Filament::auth()->user()?->hasPermission(\App\Support\UserPermission::CUSTOMERS_DELETE))
                     ->requiresConfirmation()
                     ->modalHeading('Konfirmasi Hapus Customer Terpilih')
                     ->modalSubheading('Semua data customer yang dipilih akan dihapus permanen.')
@@ -587,6 +655,12 @@ class CustomerResource extends Resource
                         ]);
                     }),
             ]);
+    }
+
+    public static function canCreate(): bool
+    {
+        return parent::canCreate()
+            && (\Filament\Facades\Filament::auth()->user()?->hasPermission(UserPermission::CUSTOMERS_CREATE) ?? false);
     }
 
     public static function getRelations(): array

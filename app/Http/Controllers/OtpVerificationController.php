@@ -16,21 +16,23 @@ class OtpVerificationController extends Controller
     /**
      * Tampilkan halaman input OTP.
      * Customer ID disimpan di session setelah signup.
+     * Jika session habis (member keluar dari halaman OTP), tampilkan
+     * form resume — member cukup memasukkan nomor HP terdaftar.
      */
     public function show(Request $request): View|RedirectResponse
     {
         $customerId = $request->session()->get('otp_customer_id');
 
         if (!$customerId) {
-            return redirect()->route('home')
-                ->with('error', 'Sesi verifikasi tidak ditemukan. Silakan daftar kembali.');
+            return view('member.resume-otp');
         }
 
         $customer = Customer::find($customerId);
         if (!$customer) {
             $request->session()->forget('otp_customer_id');
-            return redirect()->route('home')
-                ->with('error', 'Akun tidak ditemukan. Silakan daftar kembali.');
+            return view('member.resume-otp', [
+                'notice' => 'Akun tidak ditemukan. Silakan masukkan nomor WhatsApp Anda untuk melanjutkan verifikasi.',
+            ]);
         }
 
         // Kalau sudah verified, langsung redirect ke login
@@ -55,6 +57,46 @@ class OtpVerificationController extends Controller
     }
 
     /**
+     * Resume verifikasi — buka ulang session OTP berdasarkan nomor HP.
+     * Dipakai saat session browser member habis (halaman ditutup / kadaluarsa).
+     */
+    public function resume(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'phone_number' => [
+                'required',
+                'string',
+                'max:20',
+                'regex:/^[0-9+\-\s()]+$/',
+            ],
+        ], [
+            'phone_number.required' => 'Nomor WhatsApp wajib diisi.',
+            'phone_number.regex'    => 'Format nomor WhatsApp tidak valid.',
+        ]);
+
+        $phone = preg_replace('/\s+/', '', $validated['phone_number']);
+
+        $customer = Customer::where('phone_number', $phone)->first();
+
+        if (!$customer) {
+            return back()
+                ->withErrors(['phone_number' => 'Nomor WhatsApp tidak terdaftar.'])
+                ->withInput();
+        }
+
+        if ($customer->is_verified) {
+            return redirect()->route('member.login')
+                ->with('success', 'Akun Anda sudah aktif. Silakan login.');
+        }
+
+        // Buka ulang session verifikasi — verifikasi tetap butuh kode OTP
+        $request->session()->put('otp_customer_id', $customer->id);
+
+        return redirect()->route('member.otp.form')
+            ->with('success', 'Sesi verifikasi dibuka kembali. Silakan masukkan kode OTP Anda.');
+    }
+
+    /**
      * Verifikasi kode OTP yang diinput user.
      */
     public function verify(Request $request): RedirectResponse
@@ -67,8 +109,8 @@ class OtpVerificationController extends Controller
 
         $customerId = $request->session()->get('otp_customer_id');
         if (!$customerId) {
-            return redirect()->route('home')
-                ->with('error', 'Sesi verifikasi tidak ditemukan.');
+            return redirect()->route('member.otp.form')
+                ->with('warning', 'Sesi verifikasi telah berakhir. Silakan masukkan nomor WhatsApp Anda untuk melanjutkan.');
         }
 
         $otp = OtpVerification::where('customer_id', $customerId)
@@ -135,8 +177,8 @@ class OtpVerificationController extends Controller
     {
         $customerId = $request->session()->get('otp_customer_id');
         if (!$customerId) {
-            return redirect()->route('home')
-                ->with('error', 'Sesi verifikasi tidak ditemukan.');
+            return redirect()->route('member.otp.form')
+                ->with('warning', 'Sesi verifikasi telah berakhir. Silakan masukkan nomor WhatsApp Anda untuk melanjutkan.');
         }
 
         $customer = Customer::find($customerId);
@@ -199,8 +241,8 @@ class OtpVerificationController extends Controller
     {
         $customerId = $request->session()->get('otp_customer_id');
         if (!$customerId) {
-            return redirect()->route('home')
-                ->with('error', 'Sesi verifikasi tidak ditemukan. Silakan daftar kembali.');
+            return redirect()->route('member.otp.form')
+                ->with('warning', 'Sesi verifikasi telah berakhir. Silakan masukkan nomor WhatsApp Anda untuk melanjutkan.');
         }
 
         $customer = Customer::find($customerId);

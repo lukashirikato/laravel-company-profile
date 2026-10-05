@@ -449,10 +449,38 @@
         </div>
 
         {{-- ════════════ HERO BANNER ════════════ --}}
+        <style>
+            .ftm-role-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                margin-left: 10px;
+                padding: 4px 12px;
+                border-radius: 999px;
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: .4px;
+                text-transform: uppercase;
+                vertical-align: middle;
+                background: var(--c-petal);
+                color: var(--c-cherry);
+            }
+            .ftm-role-badge.owner { background: var(--c-green-soft); color: var(--c-green); }
+            .ftm-role-badge.admin { background: #FDECC8; color: #8A5A00; }
+        </style>
         <div class="ftm-hero">
             <div class="ftm-hero-text">
-                <h2>Selamat datang kembali, {{ $user->name ?? 'Admin' }}! 👋</h2>
-                <p>Kelola data anggota, paket kelas, jadwal harian, serta konfirmasi pembayaran dan presensi dengan mudah dari satu tempat.</p>
+                <h2>
+                    Selamat datang kembali, {{ $user->name ?? 'Admin' }}! 👋
+                    @if($user)
+                        <span class="ftm-role-badge {{ strtolower($user->roleLabel()) }}">{{ $user->roleLabel() }}</span>
+                    @endif
+                </h2>
+                @if($user && $user->isOwner())
+                    <p><strong>Akses Owner (Penuh):</strong> Kelola data finansial, staf & role, pengaturan sistem, paket, jadwal, serta seluruh operasional gym.</p>
+                @else
+                    <p><strong>Akses Admin (Operasional):</strong> Kelola data anggota, verifikasi pembayaran, scan presensi QR, jadwal kelas, dan follow-up member.</p>
+                @endif
             </div>
             <div class="ftm-hero-actions">
                 <a href="{{ \App\Filament\Resources\CustomerResource::getUrl('index') }}" class="ftm-hero-btn primary">
@@ -534,6 +562,19 @@
                     <p>Buat kode voucher diskon dan batasan masa berlaku.</p>
                 </div>
             </a>
+
+            {{-- Manajemen User & Role (hanya admin & owner) --}}
+            @if(\App\Filament\Resources\UserResource::can('viewAny'))
+            <a href="{{ \App\Filament\Resources\UserResource::getUrl('index') }}" class="ftm-nav-card">
+                <div class="ftm-nav-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <div class="ftm-nav-content">
+                    <h3>Manajemen User</h3>
+                    <p>Tambah akun staff dan atur role User, Admin, atau Owner.</p>
+                </div>
+            </a>
+            @endif
         </div>
     </div>
 

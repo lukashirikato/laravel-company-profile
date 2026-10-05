@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CustomerScheduleResource\Pages;
 use App\Models\CustomerSchedule;
+use App\Support\UserPermission;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Resources\Form;
@@ -239,6 +240,12 @@ class CustomerScheduleResource extends Resource
                     ->successNotificationTitle('Data berhasil dihapus.'),
             ])
             ->defaultSort('created_at', 'desc');
+    }
+
+    public static function canCreate(): bool
+    {
+        return parent::canCreate()
+            && (\Filament\Facades\Filament::auth()->user()?->hasPermission(UserPermission::CUSTOMERS_CREATE) ?? false);
     }
 
     public static function getPages(): array

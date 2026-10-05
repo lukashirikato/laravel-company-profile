@@ -9,6 +9,7 @@ use App\Models\ClassGroup;
 use App\Models\ClassModel;
 use App\Models\ScheduleLabelMapping;
 use App\Services\ScheduleExpansionService;
+use App\Support\UserPermission;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Resources\Form;
@@ -342,6 +343,7 @@ class ScheduleResource extends Resource
                     }),
 
                 Tables\Actions\DeleteAction::make()
+                    ->visible(fn () => \Filament\Facades\Filament::auth()->user()?->hasPermission(\App\Support\UserPermission::SCHEDULES_DELETE))
                     ->requiresConfirmation()
                     ->modalHeading('Konfirmasi Hapus Schedule')
                     ->modalSubheading('Anda yakin ingin menghapus data schedule ini? Tindakan ini tidak dapat dibatalkan.')
@@ -390,12 +392,19 @@ class ScheduleResource extends Resource
                     ->deselectRecordsAfterCompletion(),
 
                 Tables\Actions\DeleteBulkAction::make()
+                    ->visible(fn () => \Filament\Facades\Filament::auth()->user()?->hasPermission(\App\Support\UserPermission::SCHEDULES_DELETE))
                     ->requiresConfirmation()
                     ->modalHeading('Konfirmasi Hapus Schedule Terpilih')
                     ->modalSubheading('Semua data schedule yang dipilih akan dihapus permanen.')
                     ->successNotificationTitle('Data berhasil dihapus.'),
             ])
             ->defaultSort('day', 'asc');
+    }
+
+    public static function canCreate(): bool
+    {
+        return parent::canCreate()
+            && (\Filament\Facades\Filament::auth()->user()?->hasPermission(UserPermission::SCHEDULES_CREATE) ?? false);
     }
 
     public static function getPages(): array

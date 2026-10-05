@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ClassGroupResource\Pages;
 use App\Models\ClassGroup;
+use App\Support\UserPermission;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -82,6 +83,12 @@ class ClassGroupResource extends Resource
     public static function getRelations(): array
     {
         return [];
+    }
+
+    public static function canCreate(): bool
+    {
+        return parent::canCreate()
+            && (\Filament\Facades\Filament::auth()->user()?->hasPermission(UserPermission::SCHEDULES_CREATE) ?? false);
     }
 
     public static function getPages(): array

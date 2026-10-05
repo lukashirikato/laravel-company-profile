@@ -10,32 +10,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use App\Helpers\WhatsAppHelper;
 use Carbon\Carbon;
 
 class CustomerController extends Controller
 {
-    // ✅ METHOD VERIFIKASI CUSTOMER
-    public function verifyCustomer($id)
-    {
-        /** @var Customer $customer */
-        $customer = Customer::findOrFail($id);
-
-        if ($customer->is_verified) {
-            return back()->with('info', 'Customer sudah diverifikasi.');
-        }
-
-        $password = Str::random(8);
-        $customer->password = Hash::make($password);
-        $customer->is_verified = true;
-        $customer->save();
-
-        $message = "Assalamu'alaikum, {$customer->name}.\n\nAkun Anda telah diaktifkan.\n\n📧 Email: {$customer->email}\n🔑 Password: {$password}\n\nLogin: " . url('/login');
-        WhatsAppHelper::send($customer->phone_number, $message);
-
-        return back()->with('success', 'Customer berhasil diverifikasi dan info login dikirim via WhatsApp.');
-    }
-
     // 🔑 CHANGE PASSWORD
     public function changePassword(Request $request)
     {

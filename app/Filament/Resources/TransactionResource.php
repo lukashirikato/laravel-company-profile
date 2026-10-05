@@ -6,6 +6,7 @@ use App\Filament\Resources\TransactionResource\Pages;
 use App\Models\Transaction;
 use App\Models\Customer;
 use App\Models\Package;
+use App\Support\UserPermission;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Resources\Form;
@@ -197,6 +198,7 @@ class TransactionResource extends Resource
 
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
+                    ->visible(fn () => \Filament\Facades\Filament::auth()->user()?->hasPermission(\App\Support\UserPermission::TRANSACTIONS_DELETE))
                     ->requiresConfirmation()
                     ->modalHeading('Konfirmasi Hapus Transaction')
                     ->modalSubheading(fn($record) => "Anda yakin ingin menghapus transaction {$record->transaction_id}? Tindakan ini tidak dapat dibatalkan.")
@@ -204,12 +206,19 @@ class TransactionResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make()
+                    ->visible(fn () => \Filament\Facades\Filament::auth()->user()?->hasPermission(\App\Support\UserPermission::TRANSACTIONS_DELETE))
                     ->requiresConfirmation()
                     ->modalHeading('Konfirmasi Hapus Transaction Terpilih')
                     ->modalSubheading('Semua data transaction yang dipilih akan dihapus permanen.')
                     ->successNotificationTitle('Data berhasil dihapus.'),
             ])
             ->defaultSort('created_at', 'desc');
+    }
+
+    public static function canCreate(): bool
+    {
+        return parent::canCreate()
+            && (\Filament\Facades\Filament::auth()->user()?->hasPermission(UserPermission::TRANSACTIONS_CREATE) ?? false);
     }
 
     public static function getPages(): array

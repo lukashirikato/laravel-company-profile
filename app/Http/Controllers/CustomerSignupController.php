@@ -27,8 +27,8 @@ class CustomerSignupController extends Controller
             'voucher'               => 'nullable|string|max:50',
             'agree'                 => 'nullable',
         ], [
-            'phone_number.unique'   => 'Nomor HP ini sudah terdaftar.',
-            'email.unique'          => 'Email ini sudah terdaftar.',
+            'phone_number.unique'   => 'Nomor HP ini sudah terdaftar. Jika Anda belum menyelesaikan verifikasi OTP, buka halaman verifikasi (/verify-otp).',
+            'email.unique'          => 'Email ini sudah terdaftar. Jika Anda belum menyelesaikan verifikasi OTP, buka halaman verifikasi (/verify-otp).',
             'password.min'          => 'Password minimal 8 karakter.',
             'password.confirmed'    => 'Konfirmasi password tidak cocok.',
         ]);

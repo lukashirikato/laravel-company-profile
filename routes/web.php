@@ -21,7 +21,6 @@ use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\AdminRegisterController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\MemberAuthController;
-use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CheckInCheckOutController;
 use App\Http\Controllers\MemberTransactionController;
@@ -33,7 +32,6 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CustomerSignupController;
-use App\Http\Livewire\AdminDashboard;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\MemberBookingController;
 use App\Http\Controllers\Member\MyClassesController;
@@ -91,6 +89,9 @@ use App\Http\Controllers\OtpVerificationController;
 
 Route::get('/verify-otp',  [OtpVerificationController::class, 'show'])->name('member.otp.form');
 Route::post('/verify-otp', [OtpVerificationController::class, 'verify'])->name('member.otp.verify');
+Route::post('/verify-otp/resume', [OtpVerificationController::class, 'resume'])
+    ->middleware('throttle:10,1')
+    ->name('member.otp.resume');
 Route::post('/verify-otp/resend', [OtpVerificationController::class, 'resend'])->name('member.otp.resend');
 Route::post('/verify-otp/change-phone', [OtpVerificationController::class, 'changePhone'])->name('member.otp.change-phone');
 

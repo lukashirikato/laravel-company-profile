@@ -104,7 +104,7 @@ class MemberAuthController extends Controller
         }
 
         if (!$customer->is_verified) {
-            return back()->withErrors(['login' => 'Akun Anda belum diverifikasi admin'])->withInput();
+            return back()->withErrors(['login' => 'Akun Anda belum diverifikasi. Buka halaman verifikasi (/verify-otp) untuk melanjutkan, atau hubungi admin.'])->withInput();
         }
 
         Auth::guard('customer')->login($customer);

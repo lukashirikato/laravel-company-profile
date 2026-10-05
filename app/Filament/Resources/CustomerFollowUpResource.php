@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CustomerFollowUpResource\Pages;
 use App\Models\CustomerFollowUp;
+use App\Support\UserPermission;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -269,6 +270,12 @@ class CustomerFollowUpResource extends Resource
                         ]);
                     }),
             ]);
+    }
+
+    public static function canCreate(): bool
+    {
+        return parent::canCreate()
+            && (\Filament\Facades\Filament::auth()->user()?->hasPermission(UserPermission::CUSTOMERS_CREATE) ?? false);
     }
 
     public static function getRelations(): array
