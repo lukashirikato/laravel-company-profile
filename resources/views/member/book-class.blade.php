@@ -1130,6 +1130,13 @@
             <div id="schedule-content" class="transition-opacity duration-300 opacity-100">
                 {{-- JS writes filtered schedule cards here --}}
             </div>
+            <div id="no-schedule-message" class="hidden bg-white rounded-2xl shadow-[0_2px_12px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] p-10 text-center">
+                <div class="w-16 h-16 rounded-full bg-[rgba(238,78,139,0.08)] flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-calendar-alt text-2xl text-secondary"></i>
+                </div>
+                <h3 class="font-nord font-bold text-[20px] text-dark mb-1">Tidak Ada Kelas</h3>
+                <p class="font-poppins text-dark/45 text-[14px]">Belum ada kelas terjadwal di tanggal ini. Cek tanggal lain di minggu ini.</p>
+            </div>
         </div>
 
         {{-- PROMO BANNER --}}
@@ -1881,17 +1888,18 @@
         const content = document.getElementById('schedule-content');
         if (!content) return;
 
+        const noScheduleMessage = document.getElementById('no-schedule-message');
+
         if (schedules.length === 0) {
-            content.innerHTML = `
-                <div class="bg-white rounded-2xl shadow-[0_2px_12px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] p-10 text-center">
-                    <div class="w-16 h-16 rounded-full bg-[rgba(238,78,139,0.08)] flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-calendar-times text-2xl text-secondary"></i>
-                    </div>
-                    <h3 class="font-nord font-bold text-[20px] text-dark mb-1">Belum Ada Kelas</h3>
-                    <p class="font-poppins text-dark/45 text-[14px]">Belum ada kelas terjadwal di tanggal ini</p>
-                </div>
-            `;
+            if (noScheduleMessage) {
+                noScheduleMessage.classList.remove('hidden');
+            }
+            content.innerHTML = ''; // Clear previous content
             return;
+        } else {
+            if (noScheduleMessage) {
+                noScheduleMessage.classList.add('hidden');
+            }
         }
 
         const d = new Date(selectedDate + 'T12:00:00');
@@ -1902,7 +1910,7 @@
         let cardsHtml = '';
         schedules.forEach(function(s) {
             const isDisabled = s.isBooked || s.isFull;
-            const capLabel = s.hasCapacity ? s.bookedCount + '/' + s.capacity : '-/-';
+            const capLabel = s.hasCapacity ? s.bookedCount + '/' + s.capacity + ' terbook · ' + s.remaining + ' sisa' : 'Tanpa Batas';
             const statusHtml = s.isBooked
                 ? '<span class="font-poppins text-[11px] font-semibold text-accent bg-[rgba(26,122,94,0.08)] px-3.5 py-1.5 rounded-full flex items-center gap-1.5"><i class="fas fa-check-circle text-[12px]"></i>Terbooking</span>'
                 : s.isFull

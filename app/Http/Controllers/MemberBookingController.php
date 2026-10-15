@@ -140,11 +140,11 @@ class MemberBookingController extends Controller
                     : ($dayIdx !== false ? $weekStart->copy()->addDays($dayIdx) : null);
 
                 $isBooked = in_array($schedule->id, $bookedScheduleIds ?? []);
-                $capacity = $schedule->capacity ?? null;
-                $bookedCount = $schedule->booked_count ?? null;
-                $hasCapacity = !is_null($capacity) && !is_null($bookedCount);
-                $remaining = $hasCapacity ? $capacity - $bookedCount : null;
-                $isFull = $hasCapacity ? $remaining <= 0 : false;
+                $capacity = (int) ($schedule->capacity ?? 5);
+                $bookedCount = (int) ($schedule->booked_count ?? 0);
+                $hasCapacity = $capacity > 0;
+                $remaining = $hasCapacity ? max(0, $capacity - $bookedCount) : null;
+                $isFull = $hasCapacity && $bookedCount >= $capacity;
 
                 $classIcon = 'fa-dumbbell';
                 $iconGradient = 'linear-gradient(135deg, #EE4E8B, #7A2B4A)';
@@ -279,12 +279,31 @@ class MemberBookingController extends Controller
                 ->exists();
 
             if ($alreadyBooked) {
-                Log::info('ℹ️ Customer already booked this schedule', [
+                Log::info('i️ Customer already booked this schedule', [
                     'customer_id' => $customer->id,
                     'schedule_id' => $validated['schedule_id'],
                 ]);
 
                 return $this->bookingResponse($request, false, 'Kamu sudah booking kelas ini');
+            }
+
+            // ✅ CEK KAPASITAS KELAS
+            $capacity = (int) ($schedule->capacity ?? 5);
+            if ($capacity > 0) {
+                $bookedCount = CustomerSchedule::where('schedule_id', $validated['schedule_id'])
+                    ->where('status', 'confirmed')
+                    ->count();
+
+                if ($bookedCount >= $capacity) {
+                    Log::warning('⚠️ Schedule is full', [
+                        'customer_id' => $customer->id,
+                        'schedule_id' => $validated['schedule_id'],
+                        'capacity' => $capacity,
+                        'booked_count' => $bookedCount,
+                    ]);
+
+                    return $this->bookingResponse($request, false, 'Maaf, kelas ini sudah penuh.');
+                }
             }
 
             // ✅ TRANSACTION BOOKING
@@ -443,6 +462,7 @@ class MemberBookingController extends Controller
 
         $schedules = Schedule::whereIn('id', $assignedScheduleIds)
             ->with('classModel')
+            ->withCount(['customerSchedules' => fn ($q) => $q->where('status', 'confirmed')])
             ->get();
 
         Log::info('✅ Loaded exclusive class schedules', [
@@ -471,7 +491,8 @@ class MemberBookingController extends Controller
         $query = Schedule::whereHas('packages', function ($query) use ($schedulePackageIds) {
             $query->whereIn('packages.id', $schedulePackageIds);
         })
-        ->with(['classModel', 'packages']);
+        ->with(['classModel', 'packages'])
+        ->withCount(['customerSchedules' => fn ($q) => $q->where('status', 'confirmed')]);
 
         // ✅ FILTER BY DAY (dari SELECT DATE)
         if (!empty($filters['day'])) {

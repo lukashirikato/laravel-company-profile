@@ -545,6 +545,26 @@ class CheckoutController extends Controller
                 );
             }
 
+            // ✅ CEK KAPASITAS KELAS untuk exclusive class
+            $capacity = (int) ($schedule->capacity ?? 5);
+            if ($capacity > 0) {
+                $currentBooked = CustomerSchedule::where('schedule_id', $schedule->id)
+                    ->where('status', 'confirmed')
+                    ->count();
+
+                if ($currentBooked >= $capacity) {
+                    Log::warning('⚠️ Exclusive class is full', [
+                        'order_id' => $order->id,
+                        'schedule_id' => $schedule->id,
+                        'capacity' => $capacity,
+                        'booked_count' => $currentBooked,
+                    ]);
+                    throw new \Exception(
+                        "Jadwal sudah penuh: {$scheduleData['day']} {$scheduleData['time']}"
+                    );
+                }
+            }
+
             // Check if customer is already assigned to this schedule
             $customerSchedule = CustomerSchedule::where('customer_id', $customer->id)
                 ->where('schedule_id', $schedule->id)
@@ -600,6 +620,16 @@ class CheckoutController extends Controller
 
             if ($firstScheduleDate) {
                 $expiredAt = Carbon::parse($firstScheduleDate)->addDays($package->duration_days);
+
+                // Jika expired_at hasil hitungan sudah lewat, gunakan now + duration_days sebagai gantinya
+                if ($expiredAt->isPast()) {
+                    $expiredAt = Carbon::now()->addDays($package->duration_days);
+                    Log::warning('⚠️ expired_at dihitung di masa lalu, menggunakan tanggal hari ini + durasi', [
+                        'order_id' => $order->id,
+                        'original_expired_at' => Carbon::parse($firstScheduleDate)->addDays($package->duration_days)->toDateTimeString(),
+                        'new_expired_at' => $expiredAt->toDateTimeString(),
+                    ]);
+                }
 
                 // Set quota_expired_at di customer
                 $customer->update([
@@ -698,15 +728,8 @@ class CheckoutController extends Controller
             ->orderBy('id', 'desc')
             ->first();
 
-        if ($latestDated) {
-            return $latestDated;
-        }
-
-        // Last fallback for legacy data without schedule_date.
-        return (clone $query)
-            ->where('class_id', $scheduleData['class_id'])
-            ->orderBy('id', 'desc')
-            ->first();
+        // Jika tidak ada jadwal mendatang, throw error
+        throw new \Exception("Tidak ada jadwal mendatang untuk kelas ini: {$selectedLabel} {$scheduleData['day']} {$scheduleData['time']}");
     }
 
     /**

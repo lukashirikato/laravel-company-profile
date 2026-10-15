@@ -45,6 +45,7 @@ class Schedule extends Model
         'day',
         'schedule_date',
         'class_time',
+        'capacity',
         'instructor',
         'show_on_landing',
         'series_id',
@@ -274,6 +275,51 @@ class Schedule extends Model
         )
         ->withPivot(['order_id', 'status', 'joined_at'])
         ->withTimestamps();
+    }
+
+    /**
+     * Relasi ke customer_schedules (bookings per jadwal).
+     */
+    public function customerSchedules(): HasMany
+    {
+        return $this->hasMany(CustomerSchedule::class, 'schedule_id');
+    }
+
+    /**
+     * Jumlah member yang sudah booking jadwal ini.
+     */
+    public function getBookedCountAttribute(): int
+    {
+        if ($this->relationLoaded('customerSchedules')) {
+            return $this->customerSchedules
+                ->filter(fn ($cs) => $cs->status === 'confirmed')
+                ->count();
+        }
+
+        $aggregate = $this->attributes['customer_schedules_count'] ?? null;
+        if ($aggregate !== null) {
+            return (int) $aggregate;
+        }
+
+        return $this->customerSchedules()->where('status', 'confirmed')->count();
+    }
+
+    /**
+     * Sisa slot kosong = capacity - bookedCount.
+     */
+    public function getRemainingSlotsAttribute(): int
+    {
+        $capacity = (int) ($this->capacity ?? 0);
+
+        return max(0, $capacity - $this->booked_count);
+    }
+
+    /**
+     * Apakah jadwal sudah penuh.
+     */
+    public function getIsFullAttribute(): bool
+    {
+        return $this->booked_count >= (int) ($this->capacity ?? 0);
     }
 
     /**

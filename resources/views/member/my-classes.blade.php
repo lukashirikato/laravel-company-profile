@@ -597,7 +597,7 @@
                 <p>Kelola jadwal kelas Anda</p>
             </div>
 
-            @if(!$myClasses->isEmpty())
+            @if(!$myClasses->isEmpty() || !$pastClasses->isEmpty())
                 <div class="stats-row">
                     <div class="stat-card">
                         <div class="stat-icon pink">
@@ -620,7 +620,7 @@
                 </div>
             @endif
 
-            @if($myClasses->isEmpty())
+            @if($myClasses->isEmpty() && $pastClasses->isEmpty())
                 <div class="empty-card">
                     <div class="eicon">
                         <i class="fas fa-calendar-xmark"></i>
@@ -632,6 +632,7 @@
                     </a>
                 </div>
             @else
+                @if(!$myClasses->isEmpty())
                 <div class="section-title">Sesi Terjadwal</div>
 
                 @php
@@ -760,6 +761,100 @@
                         <p>Ganti ke paket lain untuk melihat jadwalnya.</p>
                     </div>
                 </div>
+                @endif
+
+                @if(!$pastClasses->isEmpty())
+                <div class="section-title">Riwayat Kelas</div>
+
+                <div class="classes-grid" style="margin-top: 0;">
+                    @foreach($pastClasses as $item)
+                        @php
+                            $className = $item->schedule->classModel->class_name ?? 'Class';
+                            $classNameLower = strtolower($className);
+                            $classIcon = 'fa-dumbbell';
+                            $classType = 'Fitness';
+
+                            if (str_contains($classNameLower, 'reformer pilates')) {
+                                $classIcon = 'fa-dumbbell'; $classType = 'Reformer Pilates';
+                            } elseif (str_contains($classNameLower, 'mat pilates')) {
+                                $classIcon = 'fa-person-praying'; $classType = 'Mat Pilates';
+                            } elseif (str_contains($classNameLower, 'pilates')) {
+                                $classIcon = 'fa-spa'; $classType = 'Pilates';
+                            } elseif (str_contains($classNameLower, 'muaythai')) {
+                                $classIcon = 'fa-hand-fist'; $classType = 'Muaythai';
+                            } elseif (str_contains($classNameLower, 'boxing')) {
+                                $classIcon = 'fa-fire'; $classType = 'Boxing';
+                            } elseif (str_contains($classNameLower, 'body shaping')) {
+                                $classIcon = 'fa-heart-pulse'; $classType = 'Body Shaping';
+                            } elseif (str_contains($classNameLower, 'mix')) {
+                                $classIcon = 'fa-layer-group'; $classType = 'Mix Class';
+                            } elseif (str_contains($classNameLower, 'yoga')) {
+                                $classIcon = 'fa-person-praying'; $classType = 'Yoga';
+                            } elseif (str_contains($classNameLower, 'private')) {
+                                $classIcon = 'fa-crown'; $classType = 'Private';
+                            } elseif (str_contains($classNameLower, 'single') || str_contains($classNameLower, 'visit')) {
+                                $classIcon = 'fa-ticket'; $classType = 'Single Visit';
+                            } elseif (str_contains($classNameLower, 'exclusive')) {
+                                $classIcon = 'fa-gem'; $classType = 'Exclusive';
+                            }
+
+                            $instructor = $item->schedule->instructor ?? 'FTM Coach';
+                            $words = explode(' ', $instructor);
+                            $initials = '';
+                            foreach ($words as $word) { $initials .= strtoupper(substr($word, 0, 1)); }
+                            if (strlen($initials) > 2) $initials = substr($initials, 0, 2);
+
+                            $pkgInfo = $item->package_info ?? [];
+                            $pkgName = $pkgInfo['name'] ?? 'Membership';
+                            $pkgSlug = Str::slug($pkgName);
+                        @endphp
+
+                        <div class="class-card" data-package="{{ $pkgSlug }}">
+                            <div class="card-body">
+                                <div class="card-header-row">
+                                    <div class="class-icon-badge" style="background: var(--cherry); opacity: 0.75;">
+                                        <i class="fas {{ $classIcon }}"></i>
+                                    </div>
+                                    <div class="card-title-area">
+                                        <div class="card-class-name">{{ $className }}</div>
+                                        <div class="card-subtitle">
+                                            <i class="fas fa-box-open" style="font-size: 11px; margin-right: 0.25rem; color: var(--pink);"></i> {{ $pkgName }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="schedule-grid">
+                                    <div class="sched-cell">
+                                        <span class="s-label">Hari</span>
+                                        <span class="s-value"><i class="fas fa-calendar-alt"></i>{{ $item->schedule->day }}</span>
+                                    </div>
+                                    <div class="sched-cell">
+                                        <span class="s-label">Tanggal</span>
+                                        <span class="s-value"><i class="fas fa-calendar-day"></i>{{ $item->schedule->schedule_date_formatted }}</span>
+                                    </div>
+                                    <div class="sched-cell">
+                                        <span class="s-label">Waktu</span>
+                                        <span class="s-value"><i class="fas fa-clock"></i>{{ \Carbon\Carbon::parse($item->schedule->class_time)->format('H:i') }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="card-footer">
+                                    <div class="instructor-group">
+                                        <div class="iavatar">{{ $initials }}</div>
+                                        <div class="iinfo">
+                                            <div class="ilabel">Instruktur</div>
+                                            <div class="iname">{{ $instructor }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="status-pill" style="background: var(--caption); color: #fff;">
+                                        <span class="sdot"></span> Selesai
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                @endif
             @endif
         </div>
     </main>

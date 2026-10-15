@@ -120,12 +120,27 @@ class ScheduleResource extends Resource
                         ->label('Tanggal Jadwal')
                         ->displayFormat('d/M/Y')
                         ->helperText('Otomatis terisi dari Day, atau pilih tanggal manual')
-                        ->nullable(),
+                        ->nullable()
+                        ->rules(['after_or_equal:today']),
 
                     Forms\Components\TextInput::make('class_time')
                         ->label('Class Time')
                         ->type('time')
                         ->nullable(),
+
+                    Forms\Components\TextInput::make('capacity')
+                        ->label('Kapasitas Member')
+                        ->type('number')
+                        ->default(5)
+                        ->minValue(0)
+                        ->integer()
+                        ->helperText('Maksimal jumlah member yang bisa booking kelas ini. Kosongkan atau isi 0 untuk tanpa batas.')
+                        ->placeholder('5')
+                        ->afterStateHydrated(function (callable $set, $state) {
+                            if ($state === null || $state === '') {
+                                $set('capacity', 5);
+                            }
+                        }),
 
                     Forms\Components\TextInput::make('instructor')
                         ->label('Instructor')
@@ -242,6 +257,15 @@ class ScheduleResource extends Resource
                         : '-'
                     )
                     ->sortable(),
+                
+                Tables\Columns\TextColumn::make('capacity')
+                    ->label('Kapasitas')
+                    ->formatStateUsing(fn($state) => $state ? $state . ' Member' : 'Tanpa Batas')
+                    ->sortable(),
+                
+                Tables\Columns\TextColumn::make('customer_schedules_count')
+                    ->label('Terbooking')
+                    ->formatStateUsing(fn($state, $record) => $state . ' / ' . ($record->capacity && $record->capacity > 0 ? $record->capacity : '∞')),
 
                 Tables\Columns\TextColumn::make('instructor')
                     ->label('Instructor')
@@ -420,9 +444,9 @@ class ScheduleResource extends Resource
     {
             // ✅ Tampilkan SEMUA jadwal dari database (tidak ada filter)
             // Eager load packages untuk display
+            // NOTE: select() HARUS dipanggil SEBELUM withCount(), jika tidak kolom
+            // customer_schedules_count akan hilang dan kolom "Terbooking" tampil salah.
             return parent::getEloquentQuery()
-                ->with(['packages', 'classModel', 'classGroup'])
-                ->withCount('children')
                 ->select([
                     'schedules.id',
                     'schedules.class_group_id',
@@ -431,6 +455,7 @@ class ScheduleResource extends Resource
                     'schedules.day',
                     'schedules.schedule_date',
                     'schedules.class_time',
+                    'schedules.capacity',
                     'schedules.instructor',
                     'schedules.show_on_landing',
                     'schedules.series_id',
@@ -440,6 +465,9 @@ class ScheduleResource extends Resource
                     'schedules.created_at',
                     'schedules.updated_at',
                 ])
+                ->with(['packages', 'classModel', 'classGroup'])
+                ->withCount('children')
+                ->withCount(['customerSchedules' => fn ($q) => $q->where('status', 'confirmed')])
                 ->orderByDesc('created_at'); // Jadwal terbaru di atas
     }
 }
