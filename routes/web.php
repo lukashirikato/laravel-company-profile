@@ -358,6 +358,8 @@ Route::prefix('member')
         */
         Route::get('/attendance', [MemberAttendanceController::class, 'index'])
             ->name('attendance');
+        Route::get('/attendance/status', [MemberAttendanceController::class, 'status'])
+            ->name('attendance.status');
         
         Route::post('/check-in', [CheckInCheckOutController::class, 'checkIn'])
             ->name('checkin');

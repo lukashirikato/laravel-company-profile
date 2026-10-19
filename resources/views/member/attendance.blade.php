@@ -190,6 +190,21 @@
     @keyframes attendanceRise { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
     .attendance-animate { animation: attendanceRise .42s ease both; }
 
+    /* ── Live scan feedback: toast + konfeti (polling admin scan) ── */
+    #scanToastHost { position: fixed; right: 1rem; bottom: 1rem; z-index: 120; display: flex; flex-direction: column; gap: .65rem; width: min(92vw, 22rem); pointer-events: none; }
+    .scan-toast { pointer-events: auto; display: flex; gap: .75rem; align-items: flex-start; background: #fff; border-radius: 1.1rem; padding: .9rem 1rem; box-shadow: 0 18px 46px rgba(25,21,23,.22); border: 1px solid rgba(118,38,69,.12); transform: translateY(14px); opacity: 0; transition: transform .32s cubic-bezier(.2,.8,.2,1), opacity .32s; }
+    .scan-toast.show { transform: translateY(0); opacity: 1; }
+    .scan-toast.hide { transform: translateY(14px); opacity: 0; }
+    .scan-toast .st-icon { flex: 0 0 auto; width: 2.1rem; height: 2.1rem; border-radius: .8rem; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 14px; }
+    .scan-toast.t-in .st-icon { background: #176a54; }
+    .scan-toast.t-out .st-icon { background: #762645; }
+    .scan-toast.t-info .st-icon { background: #E94683; }
+    .scan-toast .st-title { font-size: 14px; font-weight: 700; color: #1C1C1C; }
+    .scan-toast .st-msg { font-size: 13px; color: rgba(28,28,28,.62); margin-top: 2px; }
+    .scan-toast .st-close { margin-left: auto; background: none; border: 0; color: rgba(28,28,28,.4); cursor: pointer; font-size: 16px; line-height: 1; padding: 2px; }
+    .confetti-piece { position: fixed; z-index: 130; width: 9px; height: 14px; top: 38%; left: 50%; border-radius: 2px; pointer-events: none; opacity: 0; animation: confettiBurst 2.2s cubic-bezier(.15,.6,.3,1) forwards; }
+    @keyframes confettiBurst { 0% { opacity: 1; transform: translate(0,0) rotate(0deg); } 100% { opacity: 0; transform: translate(var(--cx, 0), 68vh) rotate(var(--cr, 360deg)); } }
+
     @media (max-width: 768px) {
         .hamburger-btn { display:flex !important; }
         .attendance-page main { width:100%; }
@@ -305,9 +320,34 @@
             {{-- ================================================
                  ACTIVE ATTENDANCE BANNER
             ================================================ --}}
-            @if($activeAttendance)
-                @php $activeProgram = $activeAttendance->program ?? $activeAttendance->schedule?->classModel?->name ?? 'General Fitness'; @endphp
-                <section class="rounded-[1.5rem] bg-[#176a54] p-4 sm:p-5 text-white shadow-xl shadow-green-900/10 attendance-animate">
+            <div id="activeAttendanceSlot">
+                @if($activeAttendance)
+                    @php $activeProgram = $activeAttendance->program ?? $activeAttendance->schedule?->classModel?->name ?? 'General Fitness'; @endphp
+                    <section id="activeAttendanceBanner" class="rounded-[1.5rem] bg-[#176a54] p-4 sm:p-5 text-white shadow-xl shadow-green-900/10 attendance-animate">
+                        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                            <div class="flex gap-3">
+                                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/15">
+                                    <span class="relative flex h-3 w-3">
+                                        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-70"></span>
+                                        <span class="relative inline-flex h-3 w-3 rounded-full bg-white"></span>
+                                    </span>
+                                </div>
+                                <div>
+                                    <p class="att-caption-upper text-white/60">Sedang check-in</p>
+                                    {{-- H2 untuk nama program aktif --}}
+                                    <h2 class="att-h2 !text-white">{{ $activeProgram }}</h2>
+                                    <p class="att-desc mt-1 text-white/75">Masuk {{ $activeAttendance->check_in_at?->format('H:i') ?? '-' }}. Scan QR untuk check-out.</p>
+                                </div>
+                            </div>
+                            {{-- Tombol: 14px, weight 500 --}}
+                            <button type="button" onclick="openAttendanceQR()" class="att-btn inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-accent transition hover:bg-cream">Check-out <i class="ri-arrow-right-line"></i></button>
+                        </div>
+                    </section>
+                @endif
+            </div>
+
+            <template id="activeBannerTpl">
+                <section id="activeAttendanceBanner" class="rounded-[1.5rem] bg-[#176a54] p-4 sm:p-5 text-white shadow-xl shadow-green-900/10 attendance-animate">
                     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                         <div class="flex gap-3">
                             <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/15">
@@ -318,16 +358,14 @@
                             </div>
                             <div>
                                 <p class="att-caption-upper text-white/60">Sedang check-in</p>
-                                {{-- H2 untuk nama program aktif --}}
-                                <h2 class="att-h2 !text-white">{{ $activeProgram }}</h2>
-                                <p class="att-desc mt-1 text-white/75">Masuk {{ $activeAttendance->check_in_at?->format('H:i') ?? '-' }}. Scan QR untuk check-out.</p>
+                                <h2 class="att-h2 !text-white" data-banner-program>__PROGRAM__</h2>
+                                <p class="att-desc mt-1 text-white/75" data-banner-time>Masuk __TIME__. Scan QR untuk check-out.</p>
                             </div>
                         </div>
-                        {{-- Tombol: 14px, weight 500 --}}
                         <button type="button" onclick="openAttendanceQR()" class="att-btn inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-accent transition hover:bg-cream">Check-out <i class="ri-arrow-right-line"></i></button>
                     </div>
                 </section>
-            @endif
+            </template>
 
             {{-- ================================================
                  METRIC CARDS
@@ -601,5 +639,90 @@
         });
         empty?.classList.toggle('hidden', visible !== 0 || keyword === '');
     });
+
+    /* ── Live scan feedback: poll status tiap 3 detik, reaksi saat admin scan QR ── */
+    const ATT_STATUS_URL = @json(route('member.attendance.status'));
+    let attState = { activeId: @json($activeAttendance?->id) };
+
+    function showScanToast(type, title, msg) {
+        let host = document.getElementById('scanToastHost');
+        if (!host) {
+            host = document.createElement('div');
+            host.id = 'scanToastHost';
+            host.setAttribute('aria-live', 'polite');
+            document.body.appendChild(host);
+        }
+        const el = document.createElement('div');
+        el.className = 'scan-toast t-' + type;
+        el.innerHTML = '<div class="st-icon">' + (type === 'in' ? '&#10003;' : type === 'out' ? '&#8595;' : 'i') + '</div>'
+            + '<div><p class="st-title"></p><p class="st-msg"></p></div>'
+            + '<button class="st-close" aria-label="Tutup notifikasi">&times;</button>';
+        el.querySelector('.st-title').textContent = title;
+        el.querySelector('.st-msg').textContent = msg;
+        host.appendChild(el);
+        requestAnimationFrame(() => el.classList.add('show'));
+        const remove = () => { el.classList.add('hide'); setTimeout(() => el.remove(), 380); };
+        el.querySelector('.st-close').addEventListener('click', remove);
+        setTimeout(remove, 4500);
+        while (host.children.length > 3) host.firstElementChild.remove();
+    }
+
+    function burstConfetti() {
+        const colors = ['#E94683', '#176A54', '#F6E7DC', '#762645', '#EE4E8B'];
+        for (let i = 0; i < 24; i++) {
+            const p = document.createElement('div');
+            p.className = 'confetti-piece';
+            p.style.background = colors[i % colors.length];
+            p.style.setProperty('--cx', ((Math.random() * 2 - 1) * 42) + 'vw');
+            p.style.setProperty('--cr', ((Math.random() * 2 - 1) * 540) + 'deg');
+            p.style.animationDelay = (Math.random() * 0.25) + 's';
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 2700);
+        }
+    }
+
+    function renderActiveBanner(active) {
+        const slot = document.getElementById('activeAttendanceSlot');
+        const tpl = document.getElementById('activeBannerTpl');
+        if (!slot || !tpl) return;
+        let banner = document.getElementById('activeAttendanceBanner');
+        if (!active) { banner?.remove(); return; }
+        if (!banner) {
+            banner = tpl.content.firstElementChild.cloneNode(true);
+            slot.appendChild(banner);
+        }
+        const prog = banner.querySelector('[data-banner-program]');
+        const time = banner.querySelector('[data-banner-time]');
+        if (prog) prog.textContent = active.program || 'General Fitness';
+        if (time) time.textContent = 'Masuk ' + String(active.check_in_at || '').slice(11, 16) + '. Scan QR untuk check-out.';
+    }
+
+    async function syncAttStatus() {
+        if (document.hidden) return;
+        try {
+            const res = await fetch(ATT_STATUS_URL, { headers: { 'Accept': 'application/json' }, credentials: 'same-origin' });
+            if (!res.ok) return;
+            const data = await res.json();
+            const prev = attState.activeId;
+            const cur = data.active ? data.active.id : null;
+
+            if (cur && cur !== prev) {
+                showScanToast('in', 'Check-in tercatat', (data.active.program || 'Kelas') + ' · masuk ' + String(data.active.check_in_at || '').slice(11, 16));
+                burstConfetti();
+                renderActiveBanner(data.active);
+            } else if (!cur && prev) {
+                const dur = data.latest && data.latest.check_out_at ? Number(data.latest.duration_minutes || 0) : 0;
+                showScanToast('out', 'Check-out tercatat', dur > 0 ? 'Durasi latihan ' + dur + ' menit. Sampai jumpa!' : 'Sesi latihan selesai. Sampai jumpa!');
+                renderActiveBanner(null);
+            }
+
+            attState.activeId = cur;
+        } catch (e) {
+            /* offline / sesi berakhir — abaikan, coba lagi periode berikutnya */
+        }
+    }
+
+    setInterval(syncAttStatus, 3000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) syncAttStatus(); });
 </script>
 @endsection

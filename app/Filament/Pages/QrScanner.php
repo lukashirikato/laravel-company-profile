@@ -55,6 +55,8 @@ class QrScanner extends Page
 
     public ?string $autoCheckoutMessage = null;
 
+    public ?string $scanCooldownUntil = null;
+
     public function __construct()
     {
         parent::__construct();
@@ -69,6 +71,12 @@ class QrScanner extends Page
 
     public function submitScan(): void
     {
+        if ($this->inScanCooldown()) {
+            $this->qrToken = '';
+            $this->dispatchBrowserEvent('scanner-focus');
+            return;
+        }
+
         $this->errorMessage = null;
         $this->scanResults = [];
         $this->showScheduleSelector = false;
@@ -96,6 +104,8 @@ class QrScanner extends Page
 
             // Handle hasil scan
             if ($result['success']) {
+                $this->scanCooldownUntil = now()->addSeconds(5)->toDateTimeString();
+
                 // ✅ SUCCESS CASES
                 $data = $result['data'] ?? [];
 
@@ -408,6 +418,7 @@ class QrScanner extends Page
             ];
 
             $this->recordScan($order, true, 'Check-in berhasil - ' . $className);
+            $this->scanCooldownUntil = now()->addSeconds(5)->toDateTimeString();
             $this->sendCheckInWhatsAppNotification($order, $customer);
 
             \Filament\Notifications\Notification::make()
@@ -464,6 +475,12 @@ class QrScanner extends Page
      */
     public function submitCheckOut(): void
     {
+        if ($this->inScanCooldown()) {
+            $this->qrToken = '';
+            $this->dispatchBrowserEvent('scanner-focus');
+            return;
+        }
+
         $this->errorMessage = null;
         $this->checkOutResults = [];
 
@@ -503,6 +520,8 @@ class QrScanner extends Page
             $result = $controller->scanCheckOut($activeAttendance->id);
 
             if ($result['success']) {
+                $this->scanCooldownUntil = now()->addSeconds(5)->toDateTimeString();
+
                 // ✅ SUCCESS - Manual checkout
                 $data = $result['data'] ?? [];
 
@@ -663,6 +682,7 @@ class QrScanner extends Page
         $this->todaySchedules       = [];
         $this->selectedScheduleId   = null;
         $this->showScheduleSelector = false;
+        $this->scanCooldownUntil    = null;
 
         $this->dispatchBrowserEvent('scanner-focus');
     }
@@ -694,8 +714,15 @@ class QrScanner extends Page
         $this->todaySchedules       = [];
         $this->selectedScheduleId   = null;
         $this->showScheduleSelector = false;
+        $this->scanCooldownUntil    = null;
 
         $this->dispatchBrowserEvent('scanner-focus');
+    }
+
+    private function inScanCooldown(): bool
+    {
+        return $this->scanCooldownUntil !== null
+            && now()->lt(Carbon::parse($this->scanCooldownUntil));
     }
 
     /**

@@ -51,6 +51,60 @@ class MemberAttendanceController extends Controller
         ]);
     }
 
+    public function status()
+    {
+        $customer = auth('customer')->user();
+
+        if (!$customer) {
+            return response()->json(['error' => 'unauthenticated'], 401);
+        }
+
+        $active = $customer->attendances()
+            ->with(['schedule.classModel'])
+            ->whereNull('check_out_at')
+            ->latest('check_in_at')
+            ->first();
+
+        $latest = $customer->attendances()
+            ->with(['schedule.classModel'])
+            ->latest('check_in_at')
+            ->first();
+
+        $activePayload = null;
+        if ($active) {
+            $activePayload = [
+                'id' => $active->id,
+                'program' => $active->program
+                    ?? $active->schedule?->classModel?->name
+                    ?? $active->schedule?->classModel?->class_name
+                    ?? 'General Fitness',
+                'check_in_at' => $active->check_in_at
+                    ? Carbon::parse($active->check_in_at)->format('Y-m-d H:i:s')
+                    : null,
+            ];
+        }
+
+        $latestPayload = null;
+        if ($latest) {
+            $latestPayload = [
+                'id' => $latest->id,
+                'check_in_at' => $latest->check_in_at
+                    ? Carbon::parse($latest->check_in_at)->format('Y-m-d H:i:s')
+                    : null,
+                'check_out_at' => $latest->check_out_at
+                    ? Carbon::parse($latest->check_out_at)->format('Y-m-d H:i:s')
+                    : null,
+                'duration_minutes' => (int) ($latest->duration_minutes ?? 0),
+            ];
+        }
+
+        return response()->json([
+            'active' => $activePayload,
+            'latest' => $latestPayload,
+            'total' => $customer->attendances()->count(),
+        ]);
+    }
+
     private function formatMinutes(int $minutes): string
     {
         if ($minutes <= 0) {

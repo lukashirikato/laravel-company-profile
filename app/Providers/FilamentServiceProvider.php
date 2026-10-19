@@ -16,16 +16,6 @@ class FilamentServiceProvider extends ServiceProvider
             Filament::registerPages([
                 QrScanner::class,
             ]);
-
-
-            // Use filemtime directly for cache busting so CSS changes reflect immediately.
-            $themePath = public_path('css/filament-theme.css');
-            $version = file_exists($themePath) ? filemtime($themePath) : time();
-
-            Filament::registerStyles([
-                asset('css/filament-theme.css') . '?v=' . $version,
-            ]);
-
         });
     }
 }

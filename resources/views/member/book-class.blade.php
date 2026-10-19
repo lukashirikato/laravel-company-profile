@@ -1016,15 +1016,13 @@
                         <p class="font-poppins text-[14px] text-dark font-semibold">{{ $activeOrders?->first()?->expired_at ? \Carbon\Carbon::parse($activeOrders->first()->expired_at)->format('d M Y') : ($selectedPackage?->duration_days ? 'Setelah booking pertama' : 'Tak Terbatas') }}</p>
                     </div>
                 </div>
-                @if($activeOrders && $activeOrders->count() > 1)
+                @if($activeOrders)
                 <div class="ml-auto">
                     <select id="package-select" onchange="switchPackage(this.value)" class="font-poppins text-[13px] bg-cream border border-[rgba(238,78,139,0.15)] rounded-xl px-4 py-2.5 text-dark font-medium focus:outline-none focus:border-primary focus:ring-2 focus:ring-[rgba(238,78,139,0.1)]">
                         @foreach($activeOrders as $ord)
-                            @if(($ord->remaining_classes ?? 0) > 0)
                             <option value="{{ $ord->id }}" {{ $ord->id == $selectedOrderId ? 'selected' : '' }}>
                                 {{ $ord->package?->name ?? 'Package' }} ({{ $ord->remaining_classes ?? 0 }} credits)
                             </option>
-                            @endif
                         @endforeach
                     </select>
                 </div>

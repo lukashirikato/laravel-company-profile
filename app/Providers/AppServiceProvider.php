@@ -50,12 +50,7 @@ class AppServiceProvider extends ServiceProvider
         Config::$isSanitized   = true;
         Config::$is3ds         = true;
 
-        // FTM Society — Filament v2 Custom Theme
-        Filament::serving(function () {
-            Filament::registerStyles([
-                asset('css/ftm-filament-v2-theme.css'),
-            ]);
-        });
+        
 
         // ─────────────────────────────────────────────
         // Admin Notification Observers

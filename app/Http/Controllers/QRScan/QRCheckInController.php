@@ -99,7 +99,7 @@ class QRCheckInController extends Controller
             // ── STEP 4: Find Bookings Hari Ini ─────────────────────────
             $todayBookings = CustomerSchedule::where('customer_id', $customer->id)
                 ->whereHas('schedule', fn($q) => $q->whereDate('schedule_date', Carbon::now()->toDateString()))
-                ->with(['schedule.classModel.instructor', 'order.package'])
+                ->with(['schedule.classModel', 'order.package'])
                 ->get();
 
             if ($todayBookings->isEmpty()) {
@@ -128,7 +128,7 @@ class QRCheckInController extends Controller
                             'class_name' => $classModel->name ?? $classModel->class_name ?? 'Kelas',
                             'class_time' => $this->safeFormatTime($booking->schedule->class_time),
                             'location' => $booking->schedule->location ?? 'FTM SOCIETY',
-                            'instructor' => $classModel->instructor->name ?? '-',
+                            'instructor' => $booking->schedule->instructor ?? '-',
                             'capacity' => $booking->schedule->capacity ?? 0,
                             'booked' => $booking->schedule->customerSchedules()->count(),
                             'is_within_window' => $booking->schedule->isWithinTimeWindow(),

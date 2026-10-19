@@ -632,38 +632,24 @@
                     </a>
                 </div>
             @else
-                @if(!$myClasses->isEmpty())
-                <div class="section-title">Sesi Terjadwal</div>
-
                 @php
-                    $hasMulti = $activePackages->count() > 1;
                     $allPkgs = $activePackages->pluck('package.name')->unique()->filter()->values();
-                    if ($hasMulti && $allPkgs->count() < 2) $hasMulti = false;
                 @endphp
 
-                @if($hasMulti)
-                <div class="package-tabs" id="packageTabs">
-                    <button class="package-tab active" data-package="all">
-                        <i class="fas fa-th-large tab-icon"></i> Semua Kelas
-                        <span class="tab-count">{{ $myClasses->count() }}</span>
-                    </button>
-                    @foreach($allPkgs as $pkgName)
-                        @php
-                            $pkgSlug = Str::slug($pkgName);
-                            $pkgCount = $myClasses->filter(function($c) use ($pkgName) {
-                                $info = $c->package_info ?? [];
-                                return ($info['name'] ?? '') === $pkgName;
-                            })->count();
-                        @endphp
-                        @if($pkgCount > 0)
-                            <button class="package-tab" data-package="{{ $pkgSlug }}">
-                                <i class="fas fa-box-open tab-icon"></i> {{ $pkgName }}
-                                <span class="tab-count">{{ $pkgCount }}</span>
-                            </button>
-                        @endif
-                    @endforeach
+                <div class="relative mb-6" style="max-width: 460px;">
+                    <select id="package-filter-select" onchange="applyFilter(this.value)" style="width:100%; appearance:none; -webkit-appearance:none; background:#FFFFFF; border:1px solid #E8C0D4; border-radius:12px; padding:0.65rem 2.5rem 0.65rem 1.1rem; font-family:'Poppins',sans-serif; font-size:13px; font-weight:500; color:#1C1C1C; cursor:pointer; outline:none; box-shadow:0 2px 8px rgba(122,43,74,0.06);">
+                        <option value="all" selected>Semua Kelas ({{ $myClasses->count() + $pastClasses->count() }})</option>
+                        @foreach($allPkgs as $pkgName)
+                            <option value="{{ Str::slug($pkgName) }}">{{ $pkgName }}</option>
+                        @endforeach
+                    </select>
+                    <div style="pointer-events:none; position:absolute; right:14px; top:50%; transform:translateY(-50%); color:#7A2B4A;">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
                 </div>
-                @endif
+
+                @if(!$myClasses->isEmpty())
+                <div class="section-title">Sesi Terjadwal</div>
 
                 <div class="classes-grid" id="classesGrid">
                     @foreach($myClasses as $item)
@@ -766,7 +752,7 @@
                 @if(!$pastClasses->isEmpty())
                 <div class="section-title">Riwayat Kelas</div>
 
-                <div class="classes-grid" style="margin-top: 0;">
+                <div class="classes-grid" id="pastClassesGrid" style="margin-top: 0;">
                     @foreach($pastClasses as $item)
                         @php
                             $className = $item->schedule->classModel->class_name ?? 'Class';
@@ -891,43 +877,38 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 // Package filter — professional filtering with transitions
-(function() {
-    var tabs = document.querySelectorAll('.package-tab');
-    var grid = document.getElementById('classesGrid');
-    var cards = grid ? grid.querySelectorAll('.class-card') : [];
+function applyFilter(pkg) {
+    var cards = document.querySelectorAll('.classes-grid .class-card');
     var emptyMsg = document.getElementById('filterEmpty');
-    if (!tabs.length || !cards.length) return;
 
-    function applyFilter(pkg) {
-        var visibleCount = 0;
-        cards.forEach(function(card) {
-            var match = pkg === 'all' || card.getAttribute('data-package') === pkg;
-            if (match) {
-                card.style.display = '';
-                card.style.opacity = '0';
-                requestAnimationFrame(function() {
-                    card.style.opacity = '1';
-                });
-                visibleCount++;
-            } else {
-                card.style.display = 'none';
-                card.style.opacity = '0';
-            }
-        });
-
-        if (emptyMsg) {
-            emptyMsg.classList.toggle('visible', visibleCount === 0);
+    var visibleCount = 0;
+    cards.forEach(function(card) {
+        var match = pkg === 'all' || card.getAttribute('data-package') === pkg;
+        if (match) {
+            card.style.display = '';
+            card.style.opacity = '0';
+            requestAnimationFrame(function() {
+                card.style.opacity = '1';
+            });
+            visibleCount++;
+        } else {
+            card.style.display = 'none';
+            card.style.opacity = '0';
         }
-    }
-
-    tabs.forEach(function(tab) {
-        tab.addEventListener('click', function(e) {
-            tabs.forEach(function(t) { t.classList.remove('active'); });
-            tab.classList.add('active');
-            applyFilter(tab.getAttribute('data-package'));
-        });
     });
-})();
+
+    if (emptyMsg) {
+        emptyMsg.classList.toggle('visible', visibleCount === 0);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initial filter application for the dropdown
+    const selectElement = document.getElementById('package-filter-select');
+    if (selectElement) {
+        applyFilter(selectElement.value);
+    }
+});
 
 window.addEventListener('resize', function() {
     const sidebar = document.getElementById('sidebar');
