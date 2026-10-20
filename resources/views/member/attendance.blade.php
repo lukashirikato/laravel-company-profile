@@ -14,154 +14,268 @@
 @endphp
 
 <style>
-    /* =====================================================
-       ATTENDANCE PAGE � GLOBAL TYPOGRAPHY RULES (desain.md)
-       H1  : 30px / weight 700   ? desktop: 34px
-       H2  : 24px / weight 600   ? desktop: 28px
-       H3  : 20px / weight 600   ? desktop: 24px
-       Body: 16px / weight 400
-       Desc: 15px / weight 400
-       Btn : 14px / weight 500
-       Label (form): 14px / weight 500
-       Input: 16px / weight 400
-       Table text: 14px / weight 400
-       Table header: 14px / weight 600
-       Caption: 12px / weight 400
-       line-height: 1.5�1.6
-    ===================================================== */
-
-    /* Base line-height for readability */
-    .attendance-page { line-height: 1.55; }
-
-    /* H1 � Judul utama halaman */
-    .att-h1 {
-        font-size: 30px;
-        font-weight: 700;
-        line-height: 1.15;
-    }
-    @media (min-width: 768px) {
-        .att-h1 { font-size: 34px; }
-    }
-
-    /* H2 � Judul section */
-    .att-h2 {
-        font-size: 24px;
-        font-weight: 600;
-        line-height: 1.25;
-    }
-    @media (min-width: 768px) {
-        .att-h2 { font-size: 28px; }
-    }
-
-    /* H3 � Judul card / sub-section */
-    .att-h3 {
-        font-size: 20px;
-        font-weight: 600;
-        line-height: 1.3;
-    }
-    @media (min-width: 768px) {
-        .att-h3 { font-size: 24px; }
-    }
-
-    /* Body utama */
-    .att-body {
-        font-size: 16px;
-        font-weight: 400;
+.attendance-page {
+        --att-plum:  #762645;
+        --att-rose:  #E94683;
+        --att-cherry:#7A2B4A;
+        --att-pink:  #EE4E8B;
+        --att-petal: #F4C9DF;
+        --att-sage:  #C5D79B;
+        --att-green: #1A7A5E;
+        --att-ink:   #1C1C1C;
         line-height: 1.55;
+        background:
+            radial-gradient(circle at 6% 4%, rgba(238,78,139,.10), transparent 20rem),
+            radial-gradient(circle at 97% 10%, rgba(197,215,155,.5), transparent 24rem),
+            linear-gradient(180deg, #FCF9F2 0%, #FAF3EA 46%, #FFFFFF 100%);
+        overflow-x: hidden;
+    }
+    .attendance-shell { width:100%; max-width: 1220px; margin:0 auto; box-sizing:border-box; }
+
+    /* ===================== TYPOGRAPHY ===================== */
+    .att-h1 { font-size:30px; font-weight:700; line-height:1.15; }
+    @media (min-width:768px){ .att-h1{ font-size:34px; } }
+    .att-h2 { font-size:24px; font-weight:600; line-height:1.25; }
+    @media (min-width:768px){ .att-h2{ font-size:28px; } }
+    .att-h3 { font-size:20px; font-weight:600; line-height:1.3; }
+    @media (min-width:768px){ .att-h3{ font-size:24px; } }
+    .att-body { font-size:16px; font-weight:400; line-height:1.55; }
+    .att-desc { font-size:15px; font-weight:400; line-height:1.55; }
+    .att-btn  { font-size:14px; font-weight:500; line-height:1.5; }
+    .att-label{ font-size:14px; font-weight:500; }
+    .att-caption { font-size:12px; font-weight:400; line-height:1.5; letter-spacing:0.06em; }
+    .att-caption-upper { font-size:11px; font-weight:600; line-height:1.4; letter-spacing:0.14em; text-transform:uppercase; }
+    .att-metric-num { font-size:32px; font-weight:700; line-height:1.1; }
+    @media (min-width:768px){ .att-metric-num{ font-size:38px; } }
+    .att-quick-num { font-size:24px; font-weight:700; line-height:1.1; }
+    .att-input { font-size:15px; font-weight:400; }
+    .att-th { font-size:13px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; }
+    .att-td { font-size:14px; font-weight:400; }
+    .att-chip-val { font-size:15px; font-weight:600; line-height:1.4; }
+    .att-muted { color: rgba(28,28,28,.55) !important; }
+    .att-eyebrow { font-size:11px; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:var(--att-cherry); }
+
+    /* ===================== MASTHEAD ===================== */
+    .att-masthead {
+        position:relative;
+        display:flex;
+        align-items:flex-end;
+        justify-content:space-between;
+        gap:1.25rem;
+        flex-wrap:wrap;
+        padding:.25rem 0 1.1rem;
+    }
+    .att-masthead:after {
+        content:'';
+        position:absolute;
+        left:0; right:0; bottom:0;
+        height:1px;
+        background:linear-gradient(90deg, rgba(122,43,74,.25), rgba(238,78,139,.12), transparent 70%);
+    }
+    .att-today-chip {
+        display:inline-flex;
+        align-items:center;
+        gap:.6rem;
+        padding:.55rem 1rem;
+        border-radius:999px;
+        border:1px solid rgba(122,43,74,.16);
+        background:rgba(255,255,255,.8);
+        box-shadow:0 8px 20px rgba(122,43,74,.06);
+        white-space:nowrap;
+    }
+    .att-today-dot { width:.6rem; height:.6rem; border-radius:999px; background:var(--att-pink); box-shadow:0 0 0 4px rgba(238,78,139,.15); }
+    .att-today-label{ color:rgba(28,28,28,.45); }
+    .att-today-value{ color:var(--att-ink); font-weight:600; }
+
+    /* ===================== HERO / SCAN CTA ===================== */
+    .att-hero {
+        position:relative;
+        overflow:hidden;
+        margin-top:1.25rem;
+        border-radius:1.75rem;
+        padding:1.6rem 1.6rem;
+        background:
+            radial-gradient(circle at 6% 10%, rgba(255,255,255,.18), transparent 12rem),
+            linear-gradient(120deg, rgba(122,43,74,.97) 0%, rgba(160,48,92,.97) 52%, rgba(238,78,139,.96) 100%);
+        color:#fff;
+        box-shadow:0 24px 64px rgba(118,38,69,.22);
+    }
+    .att-hero:after { content:''; position:absolute; right:-4rem; bottom:-7rem; width:18rem; height:18rem; border-radius:999px; background:rgba(255,255,255,.09); }
+    .att-hero:before { content:''; position:absolute; right:7rem; bottom:-9rem; width:12rem; height:12rem; border-radius:999px; border:1.5rem solid rgba(255,255,255,.07); }
+    .att-hero-inner { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; gap:1.5rem; flex-wrap:wrap; }
+    .att-hero-eyebrow { font-size:11px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,.8); }
+    .att-hero h1 { color:#fff !important; }
+    .att-hero-desc { font-size:15px; line-height:1.55; color:rgba(255,255,255,.78); max-width:32rem; }
+    .att-scan-btn {
+        display:inline-flex;
+        align-items:center;
+        gap:.6rem;
+        padding:.95rem 1.75rem;
+        border-radius:1.1rem;
+        background:#fff;
+        color:var(--att-cherry);
+        font-weight:700;
+        font-size:15px;
+        box-shadow:0 12px 32px rgba(28,28,28,.25);
+        transition:transform .18s ease, box-shadow .18s ease;
+        cursor:pointer;
+    }
+    .att-scan-btn:hover { transform:translateY(-2px); box-shadow:0 16px 40px rgba(28,28,28,.3); }
+    .att-scan-btn i { font-size:1.15rem; color:var(--att-pink); }
+    .att-ghost-btn {
+        display:inline-flex;
+        align-items:center;
+        gap:.5rem;
+        padding:.85rem 1.35rem;
+        border-radius:1rem;
+        border:1px solid rgba(255,255,255,.32);
+        background:rgba(255,255,255,.12);
+        color:#fff;
+        font-weight:600;
+        font-size:14px;
+        transition:background .18s ease;
+        cursor:pointer;
+    }
+    .att-ghost-btn:hover { background:rgba(255,255,255,.22); }
+
+    /* ===================== LIVE SESSION ===================== */
+    .att-live {
+        margin-top:1.25rem;
+        border-radius:1.4rem;
+        padding:1rem 1.25rem;
+        background:linear-gradient(120deg, rgba(26,122,94,.96), rgba(29,90,75,.96));
+        color:#fff;
+        box-shadow:0 18px 44px rgba(26,122,94,.2);
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:1rem;
+        flex-wrap:wrap;
+    }
+    .att-live-ping { width:.7rem; height:.7rem; border-radius:999px; background:#fff; box-shadow:0 0 0 0 rgba(255,255,255,.7); animation:attPing 1.4s infinite; }
+    @keyframes attPing { 0%{ box-shadow:0 0 0 0 rgba(255,255,255,.55);} 70%{ box-shadow:0 0 0 9px rgba(255,255,255,0);} 100%{ box-shadow:0 0 0 0 rgba(255,255,255,0);} }
+    .att-live-btn {
+        padding:.7rem 1.35rem;
+        border-radius:1rem;
+        background:#fff;
+        color:var(--att-green);
+        font-weight:700;
+        font-size:14px;
+        cursor:pointer;
+        transition:transform .18s ease;
+    }
+    .att-live-btn:hover { transform:translateY(-1px); }
+
+    /* ===================== STATS TILES ===================== */
+    .att-stats { margin-top:1.25rem; display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:1rem; }
+    @media (min-width:1024px){ .att-stats{ grid-template-columns:repeat(4, minmax(0,1fr)); } }
+    .att-tile {
+        position:relative;
+        border-radius:1.35rem;
+        padding:1.1rem 1.25rem;
+        background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(255,250,244,.92));
+        border:1px solid rgba(122,43,74,.10);
+        overflow:hidden;
+        transition:transform .18s ease, box-shadow .18s ease;
+    }
+    .att-tile:hover { transform:translateY(-3px); box-shadow:0 18px 44px rgba(118,38,69,.10); }
+    .att-tile .att-tile-accent { position:absolute; left:0; top:0; bottom:0; width:4px; border-radius:4px; }
+    .att-tile .att-tile-ic { width:2.6rem; height:2.6rem; border-radius:.85rem; display:flex; align-items:center; justify-content:center; font-size:1.15rem; }
+    .att-tile .att-tile-ic i { font-size:1.15rem; }
+    .att-tile-caption { margin-top:.85rem; }
+    .att-tile-num { margin-top:.15rem; }
+
+    /* ===================== LAYOUT ===================== */
+    .att-layout { margin-top:1.5rem; display:grid; grid-template-columns:minmax(0,1fr); gap:1.5rem; }
+    @media (min-width:1024px){ .att-layout{ grid-template-columns:minmax(0,1fr) 22rem; align-items:start; } }
+    .att-rail { display:flex; flex-direction:column; gap:1.25rem; }
+    @media (min-width:1024px){ .att-rail{ position:sticky; top:1.5rem; } }
+
+    .att-card {
+        border:1px solid rgba(122,43,74,.11);
+        background:rgba(255,255,255,.9);
+        box-shadow:0 18px 58px rgba(118,38,69,.08);
+        backdrop-filter:blur(18px);
+        border-radius:1.6rem;
+        overflow:hidden;
     }
 
-    /* Deskripsi / teks sekunder */
-    .att-desc {
-        font-size: 15px;
-        font-weight: 400;
-        line-height: 1.55;
+    /* ===================== LOG PANEL ===================== */
+    .att-log-head {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:1rem;
+        flex-wrap:wrap;
+        padding:1.25rem 1.4rem;
+        border-bottom:1px solid rgba(244,201,223,.6);
     }
+    .att-search-wrap { position:relative; width:100%; }
+    @media (min-width:640px){ .att-search-wrap{ width:20rem; } }
+    .att-search-wrap i { position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:rgba(28,28,28,.32); }
+    .att-search { width:100%; border:1px solid rgba(244,201,223,.9); background:#fff; border-radius:1rem; padding:.8rem 1rem .8rem 2.6rem; color:var(--att-ink); }
+    .att-search:focus { outline:none; border-color:var(--att-pink); box-shadow:0 0 0 4px rgba(238,78,139,.12); }
 
-    /* Tombol */
-    .att-btn {
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 1.5;
+    .att-rowlist { padding:.9rem; display:flex; flex-direction:column; gap:.75rem; }
+    @media (min-width:640px){ .att-rowlist{ padding:1.25rem; gap:1rem; } }
+    .attendance-row {
+        border-radius:1.25rem;
+        border:1px solid rgba(244,201,223,.65);
+        background:#fff;
+        padding:.95rem 1rem;
+        position:relative;
+        overflow:hidden;
+        transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
     }
+    .attendance-row:before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px; }
+    .attendance-row.is-done:before { background:linear-gradient(180deg, var(--att-sage), var(--att-green)); }
+    .attendance-row.is-active:before { background:linear-gradient(180deg, var(--att-pink), var(--att-cherry)); }
+    .attendance-row:hover { transform:translateY(-2px); border-color:rgba(238,78,139,.4); box-shadow:0 18px 44px rgba(118,38,69,.09); }
+    @media (min-width:640px){ .attendance-row{ display:grid; grid-template-columns:7.5rem minmax(0,1fr); gap:1.1rem; align-items:flex-start; } }
+    .att-row-date { padding-left:.5rem; }
+    @media (min-width:640px){ .att-row-date{ padding-left:0; border-right:1px dashed rgba(122,43,74,.15); } }
+    .att-row-time { font-weight:700; font-size:15px; color:var(--att-ink); }
+    .att-row-checkin small { display:block; color:rgba(28,28,28,.45); font-size:11.5px; }
+    .att-row-checkin-date { font-weight:500; font-size:13px !important; color:rgba(28,28,28,.6) !important; text-transform:capitalize; letter-spacing:0; }
+    .att-row-body { min-width:0; }
+    .att-row-title { display:flex; align-items:flex-start; justify-content:space-between; gap:.75rem; flex-wrap:wrap; }
+    .att-badge { display:inline-flex; align-items:center; gap:.4rem; border-radius:999px; padding:.4rem .85rem; font-size:11.5px; font-weight:700; letter-spacing:.02em; }
+    .att-badge-done { background:rgba(26,122,94,.12); color:var(--att-green); }
+    .att-badge-active{ background:rgba(238,78,139,.14); color:var(--att-rose); }
+    .att-chipgrid { margin-top:.9rem; display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:.55rem; }
+    @media (min-width:480px){ .att-chipgrid{ grid-template-columns:repeat(4, minmax(0,1fr)); } }
+    .att-chip { border-radius:.9rem; padding:.65rem .8rem; background:rgba(252,249,242,.85); border:1px solid rgba(122,43,74,.08); min-width:0; }
+    .att-chip .att-caption-upper { color:rgba(28,28,28,.42); font-size:10px; }
+    .att-chip .att-chip-val { font-size:14.5px; font-weight:600; color:var(--att-ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-    /* Label (chip, badge) */
-    .att-label {
-        font-size: 14px;
-        font-weight: 500;
-    }
+    /* ===================== RAIL CARDS ===================== */
+    .att-rail-card { border:1px solid rgba(122,43,74,.11); background:rgba(255,255,255,.9); box-shadow:0 18px 58px rgba(118,38,69,.08); backdrop-filter:blur(18px); border-radius:1.5rem; padding:1.25rem; }
+    .att-qr-mini { display:flex; align-items:center; gap:1rem; }
+    .att-qr-box { width:3.4rem; height:3.4rem; flex-shrink:0; border-radius:1rem; background:linear-gradient(135deg, var(--att-cherry), var(--att-pink)); display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.4rem; }
+    .att-qr-mini-btn { margin-top:1rem; width:100%; display:inline-flex; align-items:center; justify-content:center; gap:.5rem; padding:.85rem 1rem; border-radius:1rem; background:linear-gradient(120deg, var(--att-cherry), var(--att-rose)); color:#fff; font-weight:700; font-size:14px; box-shadow:0 10px 26px rgba(118,38,69,.24); cursor:pointer; transition:transform .18s ease; }
+    .att-qr-mini-btn:hover { transform:translateY(-1px); }
 
-    /* Caption / info kecil � minimum 12px */
-    .att-caption {
-        font-size: 12px;
-        font-weight: 400;
-        line-height: 1.5;
-        letter-spacing: 0.06em;
-    }
+    /* ---- Weekly rhythm ---- */
+    .att-rhythm-head { display:flex; align-items:center; justify-content:space-between; gap:.75rem; margin-bottom:1rem; }
+    .att-rhythm-grid { display:flex; align-items:flex-end; gap:.5rem; height:11rem; }
+    .att-rhythm-col { flex:1 1 0; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:.55rem; height:100%; }
+    .att-rhythm-bar-wrap { width:100%; max-width:2rem; height:8.5rem; display:flex; align-items:flex-end; justify-content:center; border-radius:.55rem; background:rgba(122,43,74,.05); overflow:hidden; }
+    .att-rhythm-bar { width:100%; border-radius:.55rem; background:linear-gradient(180deg, var(--att-pink), var(--att-cherry)); transition:height .5s ease; }
+    .att-rhythm-bar.hot { background:linear-gradient(180deg, var(--att-sage), var(--att-green)); }
+    .att-rhythm-bar.empty { background:rgba(122,43,74,.14); height:4px !important; }
+    .att-rhythm-day { font-size:10.5px; font-weight:700; letter-spacing:.04em; color:rgba(28,28,28,.5); text-transform:uppercase; }
+    .att-rhythm-day.today { color:var(--att-rose); }
+    .att-rhythm-day .att-rhythm-d { display:block; font-weight:400; font-size:10px; color:rgba(28,28,28,.38); }
 
-    /* Caption uppercase untuk label kecil */
-    .att-caption-upper {
-        font-size: 12px;
-        font-weight: 600;
-        line-height: 1.4;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-    }
+    /* ---- Last activity ---- */
+    .att-last-ic { width:2.8rem; height:2.8rem; flex-shrink:0; border-radius:1rem; background:rgba(244,201,223,.6); color:var(--att-cherry); display:flex; align-items:center; justify-content:center; font-size:1.2rem; }
 
-    /* Angka metrik besar pada stat cards */
-    .att-metric-num {
-        font-size: 32px;
-        font-weight: 700;
-        line-height: 1.1;
-    }
-    @media (min-width: 768px) {
-        .att-metric-num { font-size: 36px; }
-    }
+    /* ---- Empty state ---- */
+    .att-empty { padding:2.5rem 1.4rem; text-align:center; }
+    .att-empty .att-empty-ic { width:4rem; height:4rem; margin:0 auto 1rem; border-radius:1.25rem; background:rgba(244,201,223,.45); display:flex; align-items:center; justify-content:center; color:var(--att-cherry); font-size:1.5rem; }
+    .att-table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
 
-    /* Angka kecil di hero quick-stats */
-    .att-quick-num {
-        font-size: 24px;
-        font-weight: 700;
-        line-height: 1.1;
-    }
-
-    /* Input teks */
-    .att-input {
-        font-size: 16px;
-        font-weight: 400;
-    }
-
-    /* Table header */
-    .att-th {
-        font-size: 14px;
-        font-weight: 600;
-    }
-
-    /* Table body text */
-    .att-td {
-        font-size: 14px;
-        font-weight: 400;
-    }
-
-    /* Chip value (check-in, check-out, durasi, metode) */
-    .att-chip-val {
-        font-size: 15px;
-        font-weight: 600;
-        line-height: 1.4;
-    }
-
-    /* =====================================================
-       LAYOUT & VISUAL STYLES (unchanged from original)
-    ===================================================== */
-    .attendance-page { --att-plum:#762645; --att-rose:#e94683; background: radial-gradient(circle at 9% 6%, rgba(233,70,131,.18), transparent 18rem), radial-gradient(circle at 96% 1%, rgba(220,233,189,.58), transparent 22rem), linear-gradient(180deg, #fffaf7 0%, #fff6ef 46%, #ffffff 100%); overflow-x:hidden; }
-    .attendance-shell { width:100%; max-width: 1180px; margin: 0 auto; box-sizing:border-box; }
-    .attendance-hero { background: linear-gradient(135deg, rgba(118,38,69,.98) 0%, rgba(160,48,92,.98) 56%, rgba(233,70,131,.96) 100%); box-shadow: 0 24px 64px rgba(118,38,69,.22); }
-    .attendance-hero:after { content:''; position:absolute; right:-5rem; bottom:-8rem; width:20rem; height:20rem; border-radius:999px; background:rgba(255,255,255,.12); }
-    .attendance-panel { border:1px solid rgba(118,38,69,.11); background:rgba(255,255,255,.86); box-shadow:0 18px 58px rgba(118,38,69,.09); backdrop-filter:blur(18px); }
-    .attendance-metric { background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,248,242,.9)); border:1px solid rgba(118,38,69,.10); }
-    .attendance-quick { border:1px solid rgba(255,255,255,.24); background:rgba(255,255,255,.13); }
-    .attendance-chip { border:1px solid rgba(118,38,69,.10); background:rgba(255,255,255,.74); }
-    .attendance-row { transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
-    .attendance-row:hover { transform: translateY(-2px); border-color: rgba(233,70,131,.30); box-shadow: 0 18px 44px rgba(118,38,69,.09); }
+    /* ===================== QR MODAL ===================== */
     .qr-attendance-modal { position:fixed; inset:0; z-index:80; display:none; align-items:center; justify-content:center; padding:1rem; background:rgba(25,21,23,.72); backdrop-filter:blur(14px); }
     .qr-attendance-modal.open { display:flex; }
     .qr-attendance-card { width:min(92vw,25rem); background:#fffaf2; border-radius:2rem; padding:1.25rem; box-shadow:0 28px 90px rgba(25,21,23,.35); }
@@ -185,8 +299,6 @@
     .qr-close-icon { color:currentColor; font-size:1.85rem; font-weight:900; line-height:1; }
     .attendance-menu-lines { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; }
     .attendance-menu-lines span { width:18px; height:3px; border-radius:999px; background:#fff; box-shadow:0 0 0 1px rgba(255,255,255,.08); }
-    .attendance-timeline:before { content:''; position:absolute; left:1.15rem; top:3rem; bottom:-1.25rem; width:1px; background:linear-gradient(180deg, rgba(233,70,131,.36), rgba(233,70,131,0)); }
-    .attendance-row:last-child .attendance-timeline:before { display:none; }
     @keyframes attendanceRise { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
     .attendance-animate { animation: attendanceRise .42s ease both; }
 
@@ -208,10 +320,10 @@
     @media (max-width: 768px) {
         .hamburger-btn { display:flex !important; }
         .attendance-page main { width:100%; }
-        .attendance-hero { border-radius:1.65rem; }
-        .attendance-hero:after { width:12rem; height:12rem; right:-4rem; bottom:-5rem; }
-        .attendance-mobile-tight { padding-top:4.25rem; }
-        .attendance-timeline:before { left:1rem; }
+        .att-hero { border-radius:1.5rem; }
+        .att-hero:after { width:12rem; height:12rem; right:-3rem; bottom:-5rem; }
+        .att-hero:before { display:none; }
+        .attendance-mobile-tight { padding-top:4.5rem; }
     }
 
     /* Desktop layout */
@@ -231,7 +343,7 @@
             padding-left:2.25rem !important;
             padding-right:2.25rem !important;
         }
-        .attendance-hero {
+        .att-hero {
             position:relative;
             top:auto;
             z-index:1;
@@ -243,10 +355,10 @@
     }
 
     /* Standarisasi spacing antar section utama */
-    .attendance-shell > section {
-        margin-top: 2.5rem;
+    .attendance-shell > .att-section {
+        margin-top: 1.5rem;
     }
-    .attendance-shell > section:first-child {
+    .attendance-shell > .att-section:first-child {
         margin-top: 0;
     }
 </style>
@@ -261,57 +373,44 @@
 <main class="main-content">
         <div class="attendance-shell mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-10">
 
-            {{-- ================================================
-                 HERO SECTION
+{{-- ================================================
+                 MASTHEAD
             ================================================ --}}
-            <section class="attendance-hero attendance-mobile-tight relative overflow-hidden p-5 sm:p-8 lg:p-10 text-white attendance-animate">
-                <div class="relative z-10 grid gap-5 lg:grid-cols-[1fr_21rem] lg:items-end">
+            <section class="att-section attendance-mobile-tight">
+                <div class="att-masthead">
                     <div>
-                        {{-- Badge label --}}
-                        <div class="inline-flex items-center gap-2 rounded-full bg-white/14 px-3 py-1.5 ring-1 ring-white/20" style="font-size:12px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:rgba(255,255,255,0.88);">
-                            <i class="ri-calendar-check-line"></i> Pusat Absensi
-                        </div>
-
-                        {{-- H1 � Judul utama halaman: 30px mobile, 34px desktop, weight 700 --}}
-                        <h1 class="att-h1 mt-3 max-w-2xl !text-white">Pusat kehadiran latihan member.</h1>
-
-                        {{-- Deskripsi: 15px, weight 400 --}}
-                        <p class="att-desc mt-2 max-w-xl text-white/78">Pantau check-in, check-out, durasi, dan riwayat scan QR setiap sesi latihan Anda.</p>
-
-                        {{-- Quick stats grid --}}
-                        <div class="mt-5 grid grid-cols-3 gap-2 sm:max-w-xl sm:gap-3">
-                            <div class="attendance-quick rounded-2xl p-3">
-                                <p class="att-caption-upper text-white/58">Total</p>
-                                <p class="att-quick-num mt-1 text-white">{{ $totalAttendances }}</p>
-                            </div>
-                            <div class="attendance-quick rounded-2xl p-3">
-                                <p class="att-caption-upper text-white/58">Bulan</p>
-                                <p class="att-quick-num mt-1 text-white">{{ $monthAttendances }}</p>
-                            </div>
-                            <div class="attendance-quick rounded-2xl p-3">
-                                <p class="att-caption-upper text-white/58">Minggu</p>
-                                <p class="att-quick-num mt-1 text-white">{{ $weekAttendances }}</p>
-                            </div>
-                        </div>
+                        <p class="att-eyebrow flex items-center gap-2"><i class="fa-solid fa-calendar-check"></i> Log Kehadiran Member</p>
+                        <h1 class="att-h1 mt-2 text-dark">Riwayat Latihan &amp; Consistensi</h1>
+                        <p class="att-desc att-caption mt-2 text-dark">Pantau check-in, check-out, durasi, dan ritme latihan Anda di FTM Society.</p>
                     </div>
+                    <div class="att-today-chip">
+                        <span class="att-today-dot"></span>
+                        <span class="att-today-label">Hari ini</span>
+                        <span class="att-today-value">{{ \Carbon\Carbon::now()->format('d M Y') }}</span>
+                    </div>
+                </div>
+            </section>
 
-                    {{-- Right card: aktivitas terakhir --}}
-                    <div class="rounded-[1.35rem] bg-white p-3 text-dark shadow-2xl shadow-black/10 sm:p-4">
-                        <div class="flex items-start gap-3">
-                            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-light-pink text-secondary">
-                                <i class="fas fa-barcode text-xl"></i>
-                            </div>
-                            <div class="min-w-0 flex-1">
-                                <p class="att-caption-upper text-dark/45">Aktivitas terakhir</p>
-                                {{-- H3 style untuk nama aktivitas --}}
-                                <p class="att-h3 mt-1 truncate text-dark">{{ $lastAttendanceLabel }}</p>
-                                <p class="att-caption mt-1 text-dark/50">Rata-rata durasi {{ $averageDurationLabel }}</p>
-                            </div>
+            {{-- ================================================
+                 HERO / SCAN CTA
+            ================================================ --}}
+            <section class="att-section">
+                <div class="att-hero attendance-animate">
+                    <div class="att-hero-inner">
+                        <div>
+                            <p class="att-hero-eyebrow">FTM SOCIETY &middot; MEMBER</p>
+                            <h1 class="att-h1">{{ $activeAttendance ? 'Sedang berlatih sekarang' : 'Siap mulai latihan?' }}</h1>
+                            <p class="att-hero-desc mt-2">
+                                @if($activeAttendance)
+                                    Total <strong>{{ $totalAttendances }}</strong> sesi sudah tercatat. Tunjukkan QR untuk <strong>check-out</strong>.
+                                @else
+                                    Total <strong>{{ $totalAttendances }}</strong> sesi sudah tercatat. Tunjukkan QR member untuk <strong>check-in</strong> di resepsionis.
+                                @endif
+                            </p>
                         </div>
-                        <div class="mt-3 grid grid-cols-2 gap-2">
-                            {{-- Tombol: 14px, weight 500 --}}
-                            <button type="button" onclick="openAttendanceQR()" class="att-btn inline-flex items-center justify-center gap-2 rounded-2xl bg-secondary px-3 py-3 text-white transition hover:bg-dark"><i class="ri-qr-scan-2-line"></i> Scan QR</button>
-                            <a href="{{ route('member.dashboard') }}" class="att-btn inline-flex items-center justify-center gap-2 rounded-2xl bg-cream px-3 py-3 text-secondary transition hover:bg-light-pink"><i class="ri-home-5-line"></i> Beranda</a>
+                        <div class="flex flex-wrap items-center gap-3">
+                            <a href="{{ route('member.dashboard') }}" class="att-ghost-btn"><i class="fa-solid fa-house"></i> Beranda</a>
+                            <button type="button" onclick="openAttendanceQR()" class="att-scan-btn"><i class="fa-solid fa-qrcode"></i> Scan QR</button>
                         </div>
                     </div>
                 </div>
@@ -320,252 +419,248 @@
             {{-- ================================================
                  ACTIVE ATTENDANCE BANNER
             ================================================ --}}
-            <div id="activeAttendanceSlot">
+            <div id="activeAttendanceSlot" class="att-section">
                 @if($activeAttendance)
                     @php $activeProgram = $activeAttendance->program ?? $activeAttendance->schedule?->classModel?->name ?? 'General Fitness'; @endphp
-                    <section id="activeAttendanceBanner" class="rounded-[1.5rem] bg-[#176a54] p-4 sm:p-5 text-white shadow-xl shadow-green-900/10 attendance-animate">
-                        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                            <div class="flex gap-3">
-                                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/15">
-                                    <span class="relative flex h-3 w-3">
-                                        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-70"></span>
-                                        <span class="relative inline-flex h-3 w-3 rounded-full bg-white"></span>
-                                    </span>
-                                </div>
-                                <div>
-                                    <p class="att-caption-upper text-white/60">Sedang check-in</p>
-                                    {{-- H2 untuk nama program aktif --}}
-                                    <h2 class="att-h2 !text-white">{{ $activeProgram }}</h2>
-                                    <p class="att-desc mt-1 text-white/75">Masuk {{ $activeAttendance->check_in_at?->format('H:i') ?? '-' }}. Scan QR untuk check-out.</p>
-                                </div>
+                    <section id="activeAttendanceBanner" class="att-live attendance-animate">
+                        <div class="flex items-center gap-3">
+                            <span class="att-live-ping"></span>
+                            <div>
+                                <p class="att-caption-upper text-white/70">Sedang check-in</p>
+                                <h2 class="att-h2 !text-white">{{ $activeProgram }}</h2>
+                                <p class="att-desc mt-1 text-white/80">Masuk {{ $activeAttendance->check_in_at?->format('H:i') ?? '-' }}. Scan QR untuk check-out.</p>
                             </div>
-                            {{-- Tombol: 14px, weight 500 --}}
-                            <button type="button" onclick="openAttendanceQR()" class="att-btn inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-accent transition hover:bg-cream">Check-out <i class="ri-arrow-right-line"></i></button>
                         </div>
+                        <button type="button" onclick="openAttendanceQR()" class="att-live-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Check-out</button>
                     </section>
                 @endif
             </div>
 
             <template id="activeBannerTpl">
-                <section id="activeAttendanceBanner" class="rounded-[1.5rem] bg-[#176a54] p-4 sm:p-5 text-white shadow-xl shadow-green-900/10 attendance-animate">
-                    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                        <div class="flex gap-3">
-                            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/15">
-                                <span class="relative flex h-3 w-3">
-                                    <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-70"></span>
-                                    <span class="relative inline-flex h-3 w-3 rounded-full bg-white"></span>
-                                </span>
-                            </div>
-                            <div>
-                                <p class="att-caption-upper text-white/60">Sedang check-in</p>
-                                <h2 class="att-h2 !text-white" data-banner-program>__PROGRAM__</h2>
-                                <p class="att-desc mt-1 text-white/75" data-banner-time>Masuk __TIME__. Scan QR untuk check-out.</p>
-                            </div>
+                <section id="activeAttendanceBanner" class="att-live attendance-animate">
+                    <div class="flex items-center gap-3">
+                        <span class="att-live-ping"></span>
+                        <div>
+                            <p class="att-caption-upper text-white/70">Sedang check-in</p>
+                            <h2 class="att-h2 !text-white" data-banner-program>__PROGRAM__</h2>
+                            <p class="att-desc mt-1 text-white/80" data-banner-time>Masuk __TIME__. Scan QR untuk check-out.</p>
                         </div>
-                        <button type="button" onclick="openAttendanceQR()" class="att-btn inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-accent transition hover:bg-cream">Check-out <i class="ri-arrow-right-line"></i></button>
                     </div>
+                    <button type="button" onclick="openAttendanceQR()" class="att-live-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Check-out</button>
                 </section>
             </template>
 
-            {{-- ================================================
-                 METRIC CARDS
+                        {{-- ================================================
+                 STATS TILES
             ================================================ --}}
-            <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
-                <div class="attendance-metric rounded-[1.35rem] p-4 sm:p-5 attendance-animate" style="animation-delay:.04s">
-                    <div class="flex items-center justify-between gap-3">
-                        <p class="att-caption-upper text-dark/45">Total Kunjungan</p>
-                        <i class="ri-footprint-line text-secondary/70"></i>
+            <section class="att-stats">
+                    <div class="att-tile attendance-animate" style="animation-delay:.05s">
+                        <span class="att-tile-accent" style="background:linear-gradient(180deg,#EE4E8B,#762645);"></span>
+                        <div class="att-tile-ic" style="background:rgba(238,78,139,.12); color:var(--att-pink);"><i class="fa-solid fa-shoe-prints"></i></div>
+                        <p class="att-tile-caption att-caption-upper text-dark/45">Total Sesi</p>
+                        <p class="att-tile-num att-metric-num">{{ $totalAttendances }}</p>
+                        <p class="att-caption mt-1 text-dark/50">Semua kunjungan tercatat</p>
                     </div>
-                    <p class="att-metric-num mt-2 text-dark">{{ $totalAttendances }}</p>
-                    <p class="att-caption mt-1 text-dark/55">Semua sesi tercatat</p>
-                </div>
-                <div class="attendance-metric rounded-[1.35rem] p-4 sm:p-5 attendance-animate" style="animation-delay:.08s">
-                    <div class="flex items-center justify-between gap-3">
-                        <p class="att-caption-upper text-dark/45">Bulan Ini</p>
-                        <i class="ri-calendar-event-line text-secondary/70"></i>
+                    <div class="att-tile attendance-animate" style="animation-delay:.1s">
+                        <span class="att-tile-accent" style="background:linear-gradient(180deg,#F4C9DF,#762645);"></span>
+                        <div class="att-tile-ic" style="background:rgba(244,201,223,.55); color:var(--att-cherry);"><i class="fa-solid fa-calendar-days"></i></div>
+                        <p class="att-tile-caption att-caption-upper text-dark/45">Bulan Ini</p>
+                        <p class="att-tile-num att-metric-num">{{ $monthAttendances }}</p>
+                        <p class="att-caption mt-1 text-dark/50">Konsistensi bulanan</p>
                     </div>
-                    <p class="att-metric-num mt-2 text-secondary">{{ $monthAttendances }}</p>
-                    <p class="att-caption mt-1 text-dark/55">Konsistensi bulanan</p>
-                </div>
-                <div class="attendance-metric rounded-[1.35rem] p-4 sm:p-5 attendance-animate" style="animation-delay:.12s">
-                    <div class="flex items-center justify-between gap-3">
-                        <p class="att-caption-upper text-dark/45">Minggu Ini</p>
-                        <i class="ri-fire-line text-secondary/70"></i>
+                    <div class="att-tile attendance-animate" style="animation-delay:.15s">
+                        <span class="att-tile-accent" style="background:linear-gradient(180deg,#1A7A5E,#1D5A4B);"></span>
+                        <div class="att-tile-ic" style="background:rgba(26,122,94,.12); color:var(--att-green);"><i class="fa-solid fa-fire-flame-curved"></i></div>
+                        <p class="att-tile-caption att-caption-upper text-dark/45">Minggu Ini</p>
+                        <p class="att-tile-num att-metric-num">{{ $weekAttendances }}</p>
+                        <p class="att-caption mt-1 text-dark/50">Progress mingguan</p>
                     </div>
-                    <p class="att-metric-num mt-2 text-accent">{{ $weekAttendances }}</p>
-                    <p class="att-caption mt-1 text-dark/55">Progress mingguan</p>
-                </div>
-                <div class="attendance-metric rounded-[1.35rem] p-4 sm:p-5 attendance-animate" style="animation-delay:.16s">
-                    <div class="flex items-center justify-between gap-3">
-                        <p class="att-caption-upper text-dark/45">Durasi</p>
-                        <i class="ri-timer-flash-line text-secondary/70"></i>
+                    <div class="att-tile attendance-animate" style="animation-delay:.2s">
+                        <span class="att-tile-accent" style="background:linear-gradient(180deg,#C5D79B,#1A7A5E);"></span>
+                        <div class="att-tile-ic" style="background:rgba(197,215,155,.55); color:#5A7C1F;"><i class="fa-solid fa-stopwatch"></i></div>
+                        <p class="att-tile-caption att-caption-upper text-dark/45">Durasi Rata-rata</p>
+                        <p class="att-tile-num att-metric-num">{{ $averageDurationLabel }}</p>
+                        <p class="att-caption mt-1 text-dark/50">Total {{ $totalDurationLabel }} berlatih</p>
                     </div>
-                    <p class="att-metric-num mt-2 text-dark">{{ $totalDurationLabel }}</p>
-                    <p class="att-caption mt-1 text-dark/55">Rata-rata {{ $averageDurationLabel }}</p>
-                </div>
-            </section>
+                </section>
 
-            {{-- ================================================
-                 ATTENDANCE LOG PANEL
+{{-- ================================================
+                 MAIN GRID: LOG + RAIL
             ================================================ --}}
-            <section class="attendance-panel rounded-[1.75rem] overflow-hidden attendance-animate" style="animation-delay:.2s">
+            <div class="att-layout">
 
-                {{-- Panel header --}}
-                <div class="border-b border-light-pink/60 bg-white/76 p-4 sm:p-6">
-                    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                {{-- LEFT: ACTIVITY LOG --}}
+                <section class="att-card attendance-animate" style="animation-delay:.25s">
+
+                    <div class="att-log-head">
                         <div>
-                            {{-- Caption label --}}
-                            <p class="att-caption-upper text-secondary/70">Log Absensi</p>
-                            {{-- H2 � Judul section --}}
-                            <h2 class="att-h2 mt-1 text-dark">Riwayat Absensi</h2>
-                            {{-- Deskripsi: 15px, weight 400 --}}
-                            <p class="att-desc mt-1 text-dark/55">Filter kelas, tanggal, status, paket, atau metode scan.</p>
+                            <p class="att-eyebrow flex items-center gap-2"><i class="fa-solid fa-list-check"></i> Log Absensi</p>
+                            <h2 class="att-h2 mt-1 text-dark">Riwayat Kehadiran</h2>
                         </div>
-                        {{-- Search input: 16px, weight 400 --}}
-                        <div class="relative w-full lg:w-96">
-                            <i class="ri-search-line absolute left-4 top-1/2 -translate-y-1/2 text-dark/35"></i>
+                        <div class="att-search-wrap">
+                            <i class="fa-solid fa-magnifying-glass"></i>
                             <input
                                 id="attendanceSearch"
                                 type="search"
-                                placeholder="Cari attendance..."
-                                class="att-input w-full rounded-2xl border border-light-pink/80 bg-white py-3.5 pl-11 pr-4 text-dark placeholder:text-dark/35 focus:border-secondary focus:outline-none focus:ring-4 focus:ring-light-pink/40"
-                                style="font-size:16px; font-weight:400;"
+                                placeholder="Cari kelas, paket, tanggal..."
+                                class="att-input att-search"
                             >
                         </div>
                     </div>
-                </div>
 
-                @if($attendances->count())
-                    <div class="p-3 sm:p-6 space-y-3 sm:space-y-4">
-                        @foreach($attendances as $attendance)
-                            @php
-                                $isActive = is_null($attendance->check_out_at);
-                                $program = $attendance->program ?? $attendance->schedule?->classModel?->name ?? 'General Fitness';
-                                $date = $attendance->check_in_at ?? $attendance->created_at;
-                                $status = $isActive ? 'Aktif' : ucfirst($attendance->attendance_status ?? 'Selesai');
-                                $duration = $isActive ? 'Berjalan' : $attendance->getShortDuration();
-                                $method = strtoupper($attendance->check_in_type ?? 'SYS');
-                                $package = $attendance->order?->package?->name ?? 'Paket tidak tersedia';
-                            @endphp
-                            <article
-                                class="attendance-row rounded-[1.35rem] border border-light-pink/60 bg-white p-4 sm:p-5"
-                                data-search="{{ strtolower($program.' '.$status.' '.$method.' '.$package.' '.$date?->format('d M Y l')) }}"
-                            >
-                                <div class="flex gap-3 sm:gap-4">
-                                    {{-- Status icon --}}
-                                    <div class="attendance-timeline relative shrink-0">
-                                        <div class="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-2xl {{ $isActive ? 'bg-secondary text-white' : 'bg-grounded-green/40 text-accent' }}">
-                                            <i class="{{ $isActive ? 'ri-loader-4-line' : 'ri-check-line' }} text-lg"></i>
+                    @if($attendances->count())
+                        <div class="att-rowlist">
+                            @foreach($attendances as $attendance)
+                                @php
+                                    $isActive = is_null($attendance->check_out_at);
+                                    $program = $attendance->program ?? $attendance->schedule?->classModel?->name ?? 'General Fitness';
+                                    $date = $attendance->check_in_at ?? $attendance->created_at;
+                                    $status = $isActive ? 'Aktif' : ucfirst($attendance->attendance_status ?? 'Selesai');
+                                    $duration = $isActive ? 'Berjalan' : $attendance->getShortDuration();
+                                    $method = strtoupper($attendance->check_in_type ?? 'SYS');
+                                    $package = $attendance->order?->package?->name ?? 'Paket tidak tersedia';
+                                @endphp
+                                <article
+                                    class="attendance-row {{ $isActive ? 'is-active' : 'is-done' }}"
+                                    data-search="{{ strtolower($program.' '.$status.' '.$method.' '.$package.' '.$date?->format('d M Y l')) }}"
+                                >
+                                    {{-- Date/time column --}}
+                                    <div class="att-row-date">
+                                        <div class="att-row-time">{{ $date?->format('H:i') ?? '-' }}</div>
+                                        <div class="att-row-checkin mt-0.5">
+                                            <small class="att-caption-upper">{{ $date?->format('D') ?? '' }}</small>
+                                            <small class="att-row-checkin-date mt-0.5">{{ $date?->format('d M Y') ?? '-' }}</small>
                                         </div>
                                     </div>
 
-                                    <div class="min-w-0 flex-1">
-                                        {{-- Row header: tanggal + nama kelas + badge status --}}
-                                        <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                                    {{-- Body --}}
+                                    <div class="att-row-body">
+                                        <div class="att-row-title">
                                             <div class="min-w-0">
-                                                {{-- Tanggal: caption 12px --}}
-                                                <p class="att-caption-upper text-dark/42">{{ $date?->format('l, d M Y') ?? '-' }}</p>
-                                                {{-- H3 � Nama kelas: 20px mobile, 24px desktop --}}
-                                                <h3 class="att-h3 mt-1 truncate text-dark">{{ $program }}</h3>
-                                                {{-- Nama paket: desc 15px --}}
-                                                <p class="att-desc mt-1 truncate text-dark/50">{{ $package }}</p>
+                                                <h3 class="att-h3 text-dark">{{ $program }}</h3>
+                                                <p class="att-desc mt-0.5 truncate text-dark/50">{{ $package }}</p>
                                             </div>
-                                            {{-- Status badge: 12px, weight 600 --}}
-                                            <span class="inline-flex w-fit items-center gap-2 rounded-full px-3 py-1.5 {{ $isActive ? 'bg-light-pink text-secondary' : 'bg-grounded-green/40 text-accent' }}" style="font-size:12px; font-weight:600;">
-                                                <i class="{{ $isActive ? 'ri-time-line' : 'ri-checkbox-circle-line' }}"></i>{{ $status }}
+                                            <span class="att-badge {{ $isActive ? 'att-badge-active' : 'att-badge-done' }}">
+                                                <i class="fa-solid {{ $isActive ? 'fa-bolt' : 'fa-circle-check' }}"></i>{{ $status }}
                                             </span>
                                         </div>
 
-                                        {{-- Detail chips: check-in, check-out, durasi, metode --}}
-                                        <div class="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
-                                            <div class="attendance-chip rounded-2xl p-3">
-                                                <p class="att-caption-upper text-dark/40">Check-in</p>
-                                                <p class="att-chip-val mt-1 text-dark">{{ $attendance->check_in_at?->format('H:i') ?? '-' }}</p>
+                                        <div class="att-chipgrid">
+                                            <div class="att-chip">
+                                                <p class="att-caption-upper">Check-in</p>
+                                                <p class="att-chip-val mt-0.5">{{ $attendance->check_in_at?->format('H:i') ?? '-' }}</p>
                                             </div>
-                                            <div class="attendance-chip rounded-2xl p-3">
-                                                <p class="att-caption-upper text-dark/40">Check-out</p>
-                                                <p class="att-chip-val mt-1 {{ $isActive ? 'text-secondary' : 'text-dark' }}">{{ $attendance->check_out_at?->format('H:i') ?? 'Aktif' }}</p>
+                                            <div class="att-chip">
+                                                <p class="att-caption-upper">Check-out</p>
+                                                <p class="att-chip-val mt-0.5">{{ $attendance->check_out_at?->format('H:i') ?? 'Aktif' }}</p>
                                             </div>
-                                            <div class="attendance-chip rounded-2xl p-3">
-                                                <p class="att-caption-upper text-dark/40">Durasi</p>
-                                                <p class="att-chip-val mt-1 text-dark">{{ $duration }}</p>
+                                            <div class="att-chip">
+                                                <p class="att-caption-upper">Durasi</p>
+                                                <p class="att-chip-val mt-0.5">{{ $duration }}</p>
                                             </div>
-                                            <div class="attendance-chip rounded-2xl p-3">
-                                                <p class="att-caption-upper text-dark/40">Metode</p>
-                                                <p class="att-chip-val mt-1 text-dark">{{ $method }}</p>
+                                            <div class="att-chip">
+                                                <p class="att-caption-upper">Metode</p>
+                                                <p class="att-chip-val mt-0.5">{{ $method }}</p>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </article>
-                        @endforeach
-                    </div>
-
-                    {{-- Empty search state --}}
-                    <div id="attendanceEmptySearch" class="hidden px-6 py-14 text-center">
-                        <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-cream text-secondary">
-                            <i class="ri-search-eye-line text-3xl"></i>
+                                </article>
+                            @endforeach
                         </div>
-                        <h3 class="att-h3 text-dark">Data tidak ditemukan</h3>
-                        <p class="att-desc mt-2 text-dark/55">Coba kata kunci lain, misalnya nama kelas atau tanggal.</p>
+
+                        {{-- Empty search state --}}
+                        <div id="attendanceEmptySearch" class="hidden px-6 py-14 text-center">
+                            <div class="att-empty-ic"><i class="fa-solid fa-magnifying-glass"></i></div>
+                            <h3 class="att-h3 text-dark">Data tidak ditemukan</h3>
+                            <p class="att-desc mt-2 text-dark/55">Coba kata kunci lain, misalnya nama kelas atau tanggal.</p>
+                        </div>
+
+                        {{-- Pagination --}}
+                        <div class="border-t border-[rgba(244,201,223,.6)] bg-[rgba(252,249,242,.6)] px-4 py-4 sm:px-6 sm:py-5">{{ $attendances->links() }}</div>
+
+                    @else
+                        {{-- Empty state --}}
+                        <div class="att-empty">
+                            <svg class="attendance-empty-art mx-auto mb-5" viewBox="0 0 240 180" role="img" aria-labelledby="attEmptyTitle" xmlns="http://www.w3.org/2000/svg">
+                                <title id="attEmptyTitle">Kartu member dengan QR yang siap dipindai di meja resepsionis</title>
+
+                                <circle cx="120" cy="90" r="74" fill="#FFF0F6"/>
+
+                                {{-- Kartu member --}}
+                                <rect x="68" y="28" width="104" height="124" rx="16" fill="#FFFFFF" stroke="#F7DCE8" stroke-width="2"/>
+                                <path d="M84 28 H156 A16 16 0 0 1 172 44 V50 H68 V44 A16 16 0 0 1 84 28 Z" fill="#EE4E8B"/>
+                                <text x="120" y="45" text-anchor="middle" font-family="Nord, Poppins, sans-serif" font-size="10" font-weight="800" letter-spacing="1.6" fill="#FFFFFF">FTM SOCIETY</text>
+
+                                {{-- Modul QR --}}
+                                <rect x="88" y="62" width="64" height="64" rx="9" fill="#FFFFFF" stroke="#F0D3E0" stroke-width="1.5"/>
+                                <rect x="94" y="68" width="18" height="18" rx="3" fill="#7A2B4A"/>
+                                <rect x="99" y="73" width="8" height="8" rx="2" fill="#FFFFFF"/>
+                                <rect x="128" y="68" width="18" height="18" rx="3" fill="#7A2B4A"/>
+                                <rect x="133" y="73" width="8" height="8" rx="2" fill="#FFFFFF"/>
+                                <rect x="94" y="102" width="18" height="18" rx="3" fill="#7A2B4A"/>
+                                <rect x="99" y="107" width="8" height="8" rx="2" fill="#FFFFFF"/>
+                                <rect x="128" y="102" width="6" height="6" rx="1.5" fill="#7A2B4A"/>
+                                <rect x="138" y="102" width="6" height="6" rx="1.5" fill="#7A2B4A"/>
+                                <rect x="128" y="112" width="6" height="6" rx="1.5" fill="#7A2B4A"/>
+                                <rect x="137" y="111" width="5" height="5" rx="1.5" fill="#7A2B4A"/>
+                                <rect x="129" y="119" width="6" height="6" rx="1.5" fill="#7A2B4A"/>
+
+                                {{-- Sinar pemindai --}}
+                                <rect class="att-scan" x="82" y="90" width="76" height="6" rx="3" fill="#EE4E8B" opacity=".9"/>
+
+                                {{-- Garis nama pada kartu --}}
+                                <rect x="88" y="134" width="64" height="7" rx="3.5" fill="#E9C7D6"/>
+
+                                {{-- Bracket pemindai --}}
+                                <path d="M80 66 V54 H92" fill="none" stroke="#EE4E8B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M160 66 V54 H148" fill="none" stroke="#EE4E8B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M80 122 V134 H92" fill="none" stroke="#EE4E8B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M160 122 V134 H148" fill="none" stroke="#EE4E8B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+                                {{-- Lencana terverifikasi --}}
+                                <circle cx="172" cy="126" r="16" fill="#1A7A5E" stroke="#FFFFFF" stroke-width="3"/>
+                                <path d="M165 126 l5 5 l9 -10" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <h3 class="att-h3 text-dark">Belum ada attendance</h3>
+                            <p class="att-desc mx-auto mt-2 max-w-md text-dark/55">Tampilkan QR member Anda ke staff untuk check-in. Setelah dipindai, aktivitas latihan akan tersimpan otomatis di sini.</p>
+                            @if($memberQrData)
+                                <button type="button" onclick="openAttendanceQR()" class="att-btn mt-6 inline-flex items-center gap-2 rounded-2xl bg-secondary px-6 py-3 text-white transition hover:bg-dark">Mulai Check-in <i class="fa-solid fa-qrcode"></i></button>
+                            @else
+                                <a href="{{ route('member.account') }}" class="att-btn mt-6 inline-flex items-center gap-2 rounded-2xl bg-secondary px-6 py-3 text-white transition hover:bg-dark">Aktifkan QR Member <i class="fa-solid fa-arrow-right"></i></a>
+                            @endif
+                        </div>
+                    @endif
+                </section>
+
+                {{-- RIGHT: RAIL --}}
+                <aside class="att-rail attendance-animate" style="animation-delay:.3s">
+
+                    {{-- QR shortcut --}}
+                    <div class="att-rail-card">
+                        <div class="att-qr-mini">
+                            <div class="att-qr-box"><i class="fa-solid fa-qrcode"></i></div>
+                            <div class="min-w-0">
+                                <p class="att-caption-upper text-dark/45">QR Member</p>
+                                <p class="att-h3 mt-0.5 text-dark">{{ $member?->name }}</p>
+                                <p class="att-caption mt-0.5 text-dark/45">{{ $memberQrData ? 'QR aktif — siap dipindai' : 'Aktifkan QR dari menu profil' }}</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="openAttendanceQR()" class="att-qr-mini-btn"><i class="fa-solid fa-qrcode"></i> Buka QR Member</button>
                     </div>
 
-                    {{-- Pagination --}}
-                    <div class="border-t border-light-pink/60 bg-cream/50 px-4 py-4 sm:px-6 sm:py-5">{{ $attendances->links() }}</div>
-
-                @else
-                    {{-- Empty state --}}
-                    <div class="px-6 py-14 sm:py-20 text-center">
-                        <svg class="attendance-empty-art mx-auto mb-5" viewBox="0 0 240 180" role="img" aria-labelledby="attEmptyTitle" xmlns="http://www.w3.org/2000/svg">
-                            <title id="attEmptyTitle">Kartu member dengan QR yang siap dipindai di meja resepsionis</title>
-
-                            <circle cx="120" cy="90" r="74" fill="#FFF0F6"/>
-
-                            {{-- Kartu member --}}
-                            <rect x="68" y="28" width="104" height="124" rx="16" fill="#FFFFFF" stroke="#F7DCE8" stroke-width="2"/>
-                            <path d="M84 28 H156 A16 16 0 0 1 172 44 V50 H68 V44 A16 16 0 0 1 84 28 Z" fill="#EE4E8B"/>
-                            <text x="120" y="45" text-anchor="middle" font-family="Nord, Poppins, sans-serif" font-size="10" font-weight="800" letter-spacing="1.6" fill="#FFFFFF">FTM SOCIETY</text>
-
-                            {{-- Modul QR --}}
-                            <rect x="88" y="62" width="64" height="64" rx="9" fill="#FFFFFF" stroke="#F0D3E0" stroke-width="1.5"/>
-                            <rect x="94" y="68" width="18" height="18" rx="3" fill="#7A2B4A"/>
-                            <rect x="99" y="73" width="8" height="8" rx="2" fill="#FFFFFF"/>
-                            <rect x="128" y="68" width="18" height="18" rx="3" fill="#7A2B4A"/>
-                            <rect x="133" y="73" width="8" height="8" rx="2" fill="#FFFFFF"/>
-                            <rect x="94" y="102" width="18" height="18" rx="3" fill="#7A2B4A"/>
-                            <rect x="99" y="107" width="8" height="8" rx="2" fill="#FFFFFF"/>
-                            <rect x="128" y="102" width="6" height="6" rx="1.5" fill="#7A2B4A"/>
-                            <rect x="138" y="102" width="6" height="6" rx="1.5" fill="#7A2B4A"/>
-                            <rect x="128" y="112" width="6" height="6" rx="1.5" fill="#7A2B4A"/>
-                            <rect x="137" y="111" width="5" height="5" rx="1.5" fill="#7A2B4A"/>
-                            <rect x="129" y="119" width="6" height="6" rx="1.5" fill="#7A2B4A"/>
-
-                            {{-- Sinar pemindai --}}
-                            <rect class="att-scan" x="82" y="90" width="76" height="6" rx="3" fill="#EE4E8B" opacity=".9"/>
-
-                            {{-- Garis nama pada kartu --}}
-                            <rect x="88" y="134" width="64" height="7" rx="3.5" fill="#E9C7D6"/>
-
-                            {{-- Bracket pemindai --}}
-                            <path d="M80 66 V54 H92" fill="none" stroke="#EE4E8B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M160 66 V54 H148" fill="none" stroke="#EE4E8B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M80 122 V134 H92" fill="none" stroke="#EE4E8B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M160 122 V134 H148" fill="none" stroke="#EE4E8B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-
-                            {{-- Lencana terverifikasi --}}
-                            <circle cx="172" cy="126" r="16" fill="#1A7A5E" stroke="#FFFFFF" stroke-width="3"/>
-                            <path d="M165 126 l5 5 l9 -10" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        <h3 class="att-h3 text-dark">Belum ada attendance</h3>
-                        <p class="att-desc mx-auto mt-2 max-w-md text-dark/55">Tampilkan QR member Anda ke staff untuk check-in. Setelah dipindai, aktivitas latihan akan tersimpan otomatis di sini.</p>
-                        @if($memberQrData)
-                            <button type="button" onclick="openAttendanceQR()" class="att-btn mt-6 inline-flex items-center gap-2 rounded-2xl bg-secondary px-6 py-3 text-white transition hover:bg-dark">Mulai Check-in <i class="ri-qr-code-line"></i></button>
-                        @else
-                            <a href="{{ route('member.account') }}" class="att-btn mt-6 inline-flex items-center gap-2 rounded-2xl bg-secondary px-6 py-3 text-white transition hover:bg-dark">Aktifkan QR Member <i class="ri-arrow-right-line"></i></a>
-                        @endif
+                    {{-- Last activity --}}
+                    <div class="att-rail-card">
+                        <div class="flex items-center gap-3">
+                            <div class="att-last-ic"><i class="fa-solid fa-bolt"></i></div>
+                            <div class="min-w-0">
+                                <p class="att-caption-upper text-dark/45">Aktivitas Terakhir</p>
+                                <p class="att-body mt-0.5 font-semibold text-dark">{{ $lastAttendanceLabel }}</p>
+                                <p class="att-caption mt-0.5 text-dark/50">Rata-rata durasi {{ $averageDurationLabel }}</p>
+                            </div>
+                        </div>
                     </div>
-                @endif
-            </section>
+                </aside>
+            </div>
         </div>
     </main>
 </div>

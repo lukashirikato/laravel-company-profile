@@ -30,6 +30,17 @@ class MemberAttendanceController extends Controller
         $averageDurationMinutes = (int) round((clone $completedQuery)->avg('duration_minutes') ?? 0);
         $lastAttendance = (clone $baseQuery)->latest('check_in_at')->first();
 
+        $dayShort = [1 => 'Sen', 2 => 'Sel', 3 => 'Rab', 4 => 'Kam', 5 => 'Jum', 6 => 'Sab', 7 => 'Min'];
+        $weekTrend = collect(range(6, 0))->map(function ($daysAgo) use ($baseQuery, $dayShort) {
+            $day = now()->subDays($daysAgo);
+            return [
+                'label' => $dayShort[(int) $day->dayOfWeekIso] ?? $day->format('D'),
+                'date' => (int) $day->format('d'),
+                'is_today' => $daysAgo === 0,
+                'count' => (clone $baseQuery)->whereDate('check_in_at', $day)->count(),
+            ];
+        });
+
         $attendances = (clone $baseQuery)
             ->latest('check_in_at')
             ->latest()
@@ -37,6 +48,7 @@ class MemberAttendanceController extends Controller
             ->withQueryString();
 
         return view('member.attendance', [
+            'weekTrend' => $weekTrend,
             'customer' => $customer,
             'attendances' => $attendances,
             'totalAttendances' => $totalAttendances,

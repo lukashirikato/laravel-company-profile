@@ -21,10 +21,10 @@
 
 <style>
     /* ============================================================
-       FTM SOCIETY � MY PROFILE PAGE
-       Brand: Burnt Cherry #7A2B4A � Power Pink #EE4E8B
-              Soft Petals #F4C9DF � Rising #FCF9F2 � Layl #1C1C1C
-              Patina Green #1A7A5E � Grounded #C5D79B
+       FTM SOCIETY · MY PROFILE PAGE
+       Brand: Burnt Cherry #7A2B4A · Power Pink #EE4E8B
+              Soft Petals #F4C9DF · Rising #FCF9F2 · Layl #1C1C1C
+              Patina Green #1A7A5E · Grounded #C5D79B
        ============================================================ */
 
     .acct-main { background: #FCF9F2; min-height: 100vh; font-family: 'Poppins', system-ui, sans-serif; overflow-x: hidden; box-sizing: border-box; }
@@ -34,17 +34,7 @@
     }
     .acct-container { max-width: 1100px; margin: 0 auto; }
 
-    .acct-header { margin-bottom: 1.5rem; }
-    .acct-header h1 {
-        font-family: 'Nord', 'Poppins', sans-serif;
-        font-size: 1.6rem;
-        font-weight: 800;
-        color: #7A2B4A;
-        letter-spacing: -0.01em;
-    }
-    .acct-header p { font-size: 0.85rem; color: rgba(28,28,28,0.6); margin-top: 4px; }
-
-    /* -- HERO (member card) � Brand Burnt Cherry -- */
+    /* -- HERO (member card) · Brand Burnt Cherry -- */
     .member-hero {
         background: linear-gradient(135deg, #7A2B4A 0%, #5A1F37 60%, #1C1C1C 100%);
         border-radius: 22px;
@@ -272,85 +262,6 @@
     }
     .renewal-banner .rb-cta:hover { background: #7A2B4A; transform: translateY(-1px); color: #fff; }
 
-    /* -- Stats cards -- */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
-        margin-bottom: 1.25rem;
-    }
-    .stat-card {
-        background: #FFFFFF;
-        border: 1px solid rgba(244, 201, 223, 0.6);
-        border-radius: 16px;
-        padding: 1.25rem;
-        position: relative;
-        overflow: hidden;
-        transition: transform .2s, box-shadow .2s;
-        box-shadow: 0 2px 8px rgba(122, 43, 74, 0.05);
-    }
-    .stat-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 22px rgba(122, 43, 74, 0.10);
-    }
-    .stat-card::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0;
-        height: 3px;
-    }
-    .stat-card.sc-pink::before  { background: #EE4E8B; }
-    .stat-card.sc-green::before { background: #1A7A5E; }
-    .stat-card.sc-amber::before { background: #C5D79B; }
-
-    .stat-card .sc-icon {
-        width: 42px; height: 42px;
-        border-radius: 12px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.05rem;
-        margin-bottom: 0.85rem;
-    }
-    .stat-card.sc-pink  .sc-icon { background: rgba(238, 78, 139, 0.12); color: #EE4E8B; }
-    .stat-card.sc-green .sc-icon { background: rgba(26, 122, 94, 0.12); color: #1A7A5E; }
-    .stat-card.sc-amber .sc-icon { background: rgba(197, 215, 155, 0.30); color: #1D5A4B; }
-
-    .stat-card .sc-label {
-        font-family: 'Nord','Poppins',sans-serif;
-        font-size: 0.7rem;
-        font-weight: 700;
-        color: rgba(28,28,28,0.55);
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        margin-bottom: 0.4rem;
-    }
-    .stat-card .sc-value {
-        font-family: 'Nord','Poppins',sans-serif;
-        font-size: 1.65rem;
-        font-weight: 800;
-        color: #1C1C1C;
-        line-height: 1;
-        letter-spacing: -0.01em;
-    }
-    .stat-card .sc-sub {
-        font-size: 0.75rem;
-        color: rgba(28,28,28,0.55);
-        margin-top: 0.5rem;
-    }
-    .stat-card .quota-bar {
-        height: 6px;
-        background: #F4C9DF;
-        border-radius: 999px;
-        margin-top: 0.85rem;
-        overflow: hidden;
-    }
-    .stat-card .quota-bar-fill {
-        height: 100%;
-        border-radius: 999px;
-        transition: width .6s ease;
-    }
-
     /* -- Content cards -- */
     .content-card {
         background: #FFFFFF;
@@ -372,7 +283,6 @@
     .cc-title i { font-size: 1rem; color: #EE4E8B; }
 
     /* -- Quick links -- */
-    .quick-links { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
     .quick-link {
         display: flex;
         align-items: center;
@@ -719,7 +629,6 @@
         .hamburger-btn { display: flex !important; }
         body.sidebar-open { overflow: hidden; }
         .acct-main { margin-top: 3rem; padding: 1.25rem !important; overflow-x: hidden; }
-        .acct-header h1 { font-size: 1.35rem !important; }
         .member-hero {
             grid-template-columns: 1fr !important;
             gap: 1.5rem !important;
@@ -731,13 +640,187 @@
         .member-avatar-wrap { margin: 0 auto 1rem !important; }
         .member-info .name { font-size: 1.4rem !important; }
         .member-info .detail-grid { grid-template-columns: 1fr !important; }
-        .stats-grid { grid-template-columns: 1fr !important; }
-        .quick-links { grid-template-columns: 1fr !important; }
     }
 
     @keyframes spin { to { transform: rotate(360deg); } }
     .spin { animation: spin 1s linear infinite; }
 
+    /* ============================================================
+       FTM SOCIETY - ACCOUNT REDESIGN (masthead + split layout)
+       ============================================================ */
+
+    .acct-masthead {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 1.25rem;
+        flex-wrap: wrap;
+        padding: .25rem 0 1.05rem;
+        position: relative;
+    }
+    .acct-masthead:after {
+        content: '';
+        position: absolute;
+        left: 0; right: 0; bottom: 0;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(122,43,74,.25), rgba(238,78,139,.12), transparent 70%);
+    }
+    .acct-eyebrow {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: #7A2B4A;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+    }
+    .acct-eyebrow i { color: #EE4E8B; font-size: .85rem; }
+    .acct-masthead h1 {
+        font-family: 'Nord','Poppins',sans-serif;
+        font-size: 1.65rem;
+        font-weight: 800;
+        color: #7A2B4A;
+        letter-spacing: -0.01em;
+        margin-top: .35rem;
+    }
+    .acct-masthead .am-sub {
+        font-size: .85rem;
+        color: rgba(28,28,28,.6);
+        margin-top: 4px;
+    }
+    .acct-today-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: .6rem;
+        padding: .55rem 1rem;
+        border-radius: 999px;
+        border: 1px solid rgba(122,43,74,.16);
+        background: rgba(255,255,255,.85);
+        box-shadow: 0 8px 20px rgba(122,43,74,.06);
+        white-space: nowrap;
+    }
+    .acct-today-dot {
+        width: .6rem; height: .6rem;
+        border-radius: 999px;
+        background: #EE4E8B;
+        box-shadow: 0 0 0 4px rgba(238,78,139,.15);
+    }
+    .acct-today-label { color: rgba(28,28,28,.45); font-size: .75rem; }
+    .acct-today-value { color: #1C1C1C; font-weight: 600; font-size: .78rem; }
+
+    .acct-layout {
+        margin-top: 1.4rem;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1.5rem;
+    }
+    @media (min-width: 1024px) {
+        .acct-layout { grid-template-columns: minmax(0, 1fr) 20rem; align-items: start; }
+    }
+    .acct-col-main { min-width: 0; display: flex; flex-direction: column; gap: 1.4rem; }
+    .acct-col-main .member-hero,
+    .acct-col-main .content-card { margin-bottom: 0; }
+    .acct-rail { display: flex; flex-direction: column; gap: 1.25rem; }
+    @media (min-width: 1024px) { .acct-rail { position: sticky; top: 1.5rem; } }
+
+    /* Stat band - ruled separators instead of 3 floating cards */
+    .acct-statband {
+        background: #FFFFFF;
+        border: 1px solid rgba(244,201,223,.6);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(122,43,74,.05);
+    }
+    .sb-grid { display: grid; grid-template-columns: 1fr; }
+    @media (min-width: 640px) { .sb-grid { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+    .sb-item { padding: 1.2rem 1.35rem; min-width: 0; }
+    .sb-item + .sb-item { border-top: 1px solid rgba(244,201,223,.55); }
+    @media (min-width: 640px) {
+        .sb-item + .sb-item { border-top: none; border-left: 1px solid rgba(244,201,223,.55); }
+    }
+    .sb-head { display: flex; align-items: center; justify-content: space-between; gap: .6rem; margin-bottom: .85rem; }
+    .sb-head .sb-label {
+        font-family: 'Nord','Poppins',sans-serif;
+        font-size: .7rem; font-weight: 700;
+        color: rgba(28,28,28,.55);
+        text-transform: uppercase;
+        letter-spacing: .08em;
+    }
+    .sb-head .sb-ic { width: 2.5rem; height: 2.5rem; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .sb-value { font-family: 'Nord','Poppins',sans-serif; font-size: 1.7rem; font-weight: 800; color: #1C1C1C; line-height: 1.05; letter-spacing: -0.01em; }
+    .sb-value small { font-size: .95rem; color: rgba(28,28,28,.5); font-weight: 600; }
+    .sb-sub { font-size: .75rem; color: rgba(28,28,28,.55); margin-top: .45rem; }
+    .sb-quota { height: 6px; background: #F4C9DF; border-radius: 999px; margin-top: .7rem; overflow: hidden; }
+    .sb-quota span { display: block; height: 100%; border-radius: 999px; }
+
+    /* Rail cards */
+    .rail-card {
+        background: #FFFFFF;
+        border: 1px solid rgba(244,201,223,.6);
+        border-radius: 16px;
+        padding: 1.25rem 1.35rem;
+        box-shadow: 0 2px 8px rgba(122,43,74,.05);
+    }
+    .rail-card .rc-title {
+        font-family: 'Nord','Poppins',sans-serif;
+        font-size: .92rem; font-weight: 700;
+        color: #7A2B4A;
+        display: flex; align-items: center; gap: 8px;
+        margin-bottom: 1rem;
+    }
+    .rail-card .rc-title i { color: #EE4E8B; font-size: .95rem; }
+    .rail-qr { display: flex; align-items: center; gap: 1rem; }
+    .rail-qr-ic { width: 3.2rem; height: 3.2rem; border-radius: 14px; flex-shrink: 0; background: linear-gradient(135deg,#7A2B4A,#EE4E8B); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; box-shadow: 0 8px 20px rgba(122,43,74,.25); }
+    .rail-qr .rq-id { font-family: 'JetBrains Mono',monospace; font-size: 1rem; font-weight: 800; color: #7A2B4A; }
+    .rail-qr .rq-label { font-size: .72rem; color: rgba(28,28,28,.5); margin-top: 2px; }
+    .rail-btn {
+        margin-top: 1rem;
+        width: 100%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+        padding: .8rem 1rem;
+        border-radius: 12px;
+        background: linear-gradient(120deg,#7A2B4A,#EE4E8B);
+        color: #fff;
+        font-family: 'Nord','Poppins',sans-serif;
+        font-weight: 700;
+        font-size: .8rem;
+        letter-spacing: .03em;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 10px 24px rgba(122,43,74,.24);
+        transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .rail-btn:hover { transform: translateY(-1px); box-shadow: 0 14px 30px rgba(122,43,74,.3); }
+    .rail-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: .75rem .85rem;
+        background: #FCF9F2;
+        border: 1px solid #F4C9DF;
+        border-radius: 12px;
+        text-decoration: none;
+        color: #1C1C1C;
+        transition: background .15s, border-color .15s, transform .15s;
+        font-size: .82rem;
+        font-weight: 600;
+        margin-bottom: .55rem;
+    }
+    .rail-link:last-child { margin-bottom: 0; }
+    .rail-link:hover { background: #F4C9DF; border-color: #EE4E8B; transform: translateX(2px); color: #7A2B4A; }
+    .rail-link .rl-ic { width: 32px; height: 32px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .rail-link .rl-ic i { font-size: .9rem; }
+    .rail-link .rl-arrow { margin-left: auto; color: rgba(28,28,28,.4); font-size: .75rem; }
+
+    @media (max-width: 768px) {
+        .acct-masthead h1 { font-size: 1.4rem !important; }
+        .acct-col-main { gap: 1.1rem; }
+        .acct-layout { gap: 1.1rem; }
+    }
 </style>
 
 <div style="display:flex; min-height:100vh; overflow-x:hidden;">
@@ -751,16 +834,24 @@
     <main class="acct-main" style="flex:1; overflow-y:auto; overflow-x:hidden; padding: 2rem 2.5rem; min-width:0; box-sizing:border-box;">
         <div class="acct-container">
 
-            {{-- -- Page header -- --}}
-            <div class="acct-header">
-                <h1><i class="fas fa-user-circle" style="color:#EE4E8B; margin-right:8px;"></i>Profil Saya</h1>
-                <p>Kelola informasi akun, QR code, dan preferensi notifikasi</p>
-            </div>
+{{-- -- Masthead -- --}}
+            <section class="acct-masthead">
+                <div>
+                    <p class="acct-eyebrow"><i class="fas fa-user-circle"></i> Member Area &middot; Profil</p>
+                    <h1>Profil Saya</h1>
+                    <p class="am-sub">Kelola informasi akun, kartu member QR, dan preferensi notifikasi.</p>
+                </div>
+                <div class="acct-today-chip">
+                    <span class="acct-today-dot"></span>
+                    <span class="acct-today-label">Hari ini</span>
+                    <span class="acct-today-value">{{ \Carbon\Carbon::now()->format('d M Y') }}</span>
+                </div>
+            </section>
 
             {{-- -- Renewal banner kalau paket mau expire dalam 7 hari -- --}}
             @if($activeOrder && $activeOrder->expired_at && \Carbon\Carbon::parse($activeOrder->expired_at)->diffInDays(now(), false) >= -7 && \Carbon\Carbon::parse($activeOrder->expired_at)->isFuture())
                 @php $daysLeft = (int) now()->diffInDays(\Carbon\Carbon::parse($activeOrder->expired_at), false); @endphp
-                <div class="renewal-banner">
+                <div class="renewal-banner" style="margin-top:1.25rem;">
                     <div class="rb-text">
                         <i class="fas fa-clock" style="margin-right:6px;color:#EE4E8B;"></i>
                         Paket Anda akan berakhir dalam <strong>{{ $daysLeft }} hari</strong>. Perpanjang sekarang untuk lanjut tanpa jeda.
@@ -770,175 +861,237 @@
             @endif
 
             {{-- --------------------------------------
-                 HERO MEMBER CARD
+                 MAIN LAYOUT: LEFT + RAIL
             -------------------------------------- --}}
-            <div class="member-hero">
-                {{-- QR Card --}}
-                <div class="qr-card" onclick="openQRPreview()" title="Click to enlarge">
-                    <div id="qr-container">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data={{ urlencode($qrData) }}&bgcolor=ffffff&color=7A2B4A"
-                             alt="QR Code" style="width:180px; height:180px;">
-                    </div>
-                    <div class="qr-card-id">
-                        <div class="label">ID Member</div>
-                        <div class="value">#{{ $memberId }}</div>
-                    </div>
-                    <div class="qr-tap-hint"><i class="fas fa-expand-alt" style="margin-right:3px;"></i>Ketuk untuk perbesar</div>
-                </div>
+            <div class="acct-layout">
+                <div class="acct-col-main">
 
-                {{-- Member info --}}
-                <div class="member-info">
-                    <div class="member-avatar-wrap">
-                        <div class="member-avatar" id="memberAvatar">
-                            @if($hasAvatar)
-                                <img src="{{ $avatarUrl }}" alt="Avatar" id="memberAvatarImg">
+                    {{-- ----------------------------------
+                         HERO MEMBER CARD
+                    ---------------------------------- --}}
+                    <div class="member-hero">
+                        {{-- QR Card --}}
+                        <div class="qr-card" onclick="openQRPreview()" title="Click to enlarge">
+                            <div id="qr-container">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data={{ urlencode($qrData) }}&bgcolor=ffffff&color=7A2B4A"
+                                     alt="QR Code" style="width:180px; height:180px;">
+                            </div>
+                            <div class="qr-card-id">
+                                <div class="label">ID Member</div>
+                                <div class="value">#{{ $memberId }}</div>
+                            </div>
+                            <div class="qr-tap-hint"><i class="fas fa-expand-alt" style="margin-right:3px;"></i>Ketuk untuk perbesar</div>
+                        </div>
+
+                        {{-- Member info --}}
+                        <div class="member-info">
+                            <div class="member-avatar-wrap">
+                                <div class="member-avatar" id="memberAvatar">
+                                    @if($hasAvatar)
+                                        <img src="{{ $avatarUrl }}" alt="Avatar" id="memberAvatarImg">
+                                    @else
+                                        <span id="memberAvatarLetter">{{ strtoupper(substr($member->name, 0, 1)) }}</span>
+                                    @endif
+                                </div>
+                                <button type="button" class="avatar-edit-btn" onclick="document.getElementById('avatarInput').click()" title="Ganti foto">
+                                    <i class="fas fa-camera"></i>
+                                </button>
+                                <input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="uploadAvatar(this)">
+                            </div>
+
+                            <div class="name" id="memberNameLabel">{{ $member->name }}</div>
+                            <div class="email">{{ $member->email }}</div>
+
+                            <div class="detail-grid">
+                                <div class="detail-item">
+                                    <div class="dlabel"><i class="fas fa-phone"></i> No. HP</div>
+                                    <div class="dvalue" id="memberPhoneLabel">{{ $member->phone_number ?? '-' }}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="dlabel"><i class="fas fa-calendar"></i> Member Sejak</div>
+                                    <div class="dvalue">{{ $member->created_at->format('d M Y') }}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="dlabel"><i class="fas fa-id-badge"></i> ID Member</div>
+                                    <div class="dvalue" style="font-family:'JetBrains Mono',monospace;">#{{ $memberId }}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="dlabel"><i class="fas fa-qrcode"></i> Status QR</div>
+                                    <div class="dvalue">{{ $member->qr_active ? 'Aktif' : 'Tidak Aktif' }}</div>
+                                </div>
+                            </div>
+
+                            @if($member->qr_active)
+                                <span class="qr-badge active"><span class="dot"></span> QR Aktif</span>
                             @else
-                                <span id="memberAvatarLetter">{{ strtoupper(substr($member->name, 0, 1)) }}</span>
+                                <span class="qr-badge inactive"><span class="dot"></span> QR Tidak Aktif</span>
                             @endif
                         </div>
-                        <button type="button" class="avatar-edit-btn" onclick="document.getElementById('avatarInput').click()" title="Ganti foto">
-                            <i class="fas fa-camera"></i>
+                    </div>
+
+                    {{-- ----------------------------------
+                         STAT BAND
+                    ---------------------------------- --}}
+                    <div class="acct-statband">
+                        <div class="sb-grid">
+                            <div class="sb-item">
+                                <div class="sb-head">
+                                    <div class="sb-label">Paket Aktif</div>
+                                    <div class="sb-ic" style="background:rgba(238,78,139,.12); color:#EE4E8B;"><i class="fas fa-box-open"></i></div>
+                                </div>
+                                <div class="sb-value">{{ $member->orders()->whereIn('status', ['active', 'paid'])->count() }}</div>
+                                <div class="sb-sub">Jumlah paket berjalan</div>
+                            </div>
+                            <div class="sb-item">
+                                <div class="sb-head">
+                                    <div class="sb-label">Total Absensi</div>
+                                    <div class="sb-ic" style="background:rgba(26,122,94,.12); color:#1A7A5E;"><i class="fas fa-calendar-check"></i></div>
+                                </div>
+                                <div class="sb-value">{{ $member->attendances()->count() }}</div>
+                                <div class="sb-sub">Sesi latihan tercatat</div>
+                            </div>
+                            <div class="sb-item">
+                                <div class="sb-head">
+                                    <div class="sb-label">Sisa Kuota</div>
+                                    <div class="sb-ic" style="background:rgba(197,215,155,.45); color:#1D5A4B;"><i class="fas fa-ticket-alt"></i></div>
+                                </div>
+                                @if($activeOrder)
+                                    @php
+                                        $remaining = $activeOrder->remaining_quota ?? 0;
+                                        $total = $activeOrder->package->quota ?? 0;
+                                        $pct = $total > 0 ? round(($remaining / $total) * 100) : 0;
+                                        $barColor = $pct > 50 ? '#1A7A5E' : ($pct > 20 ? '#EE4E8B' : '#B22336');
+                                    @endphp
+                                    <div class="sb-value">{{ $remaining }} <small>/ {{ $total }}</small></div>
+                                    <div class="sb-quota"><span style="width:{{ $pct }}%; background:{{ $barColor }};"></span></div>
+                                    <div class="sb-sub">{{ $pct }}% dari paket {{ $activeOrder->package->name ?? 'aktif' }}</div>
+                                @else
+                                    <div class="sb-value"><small>Tidak ada paket</small></div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- ----------------------------------
+                         ACCOUNT SETTINGS
+                    ---------------------------------- --}}
+                    <div class="content-card">
+                        <div class="cc-title"><i class="fas fa-user-cog"></i> Pengaturan Akun</div>
+
+                        <div class="setting-row">
+                            <div class="setting-row-info">
+                                <div class="sr-title">Edit Profil</div>
+                                <div class="sr-sub">Ubah nama dan nomor HP</div>
+                            </div>
+                            <button class="btn-cancel" style="flex:0; padding: 0.5rem 0.85rem;" onclick="openModal('editProfileModal')" type="button">
+                                Edit
+                            </button>
+                        </div>
+
+                        <div class="setting-row">
+                            <div class="setting-row-info">
+                                <div class="sr-title">Ubah Password</div>
+                                <div class="sr-sub">Update password akun secara berkala</div>
+                            </div>
+                            <button class="btn-cancel" style="flex:0; padding: 0.5rem 0.85rem;" onclick="openModal('changePasswordModal')" type="button">
+                                Ubah
+                            </button>
+                        </div>
+
+                        <div class="setting-row">
+                            <div class="setting-row-info">
+                                <div class="sr-title">Foto Profil</div>
+                                <div class="sr-sub">{{ $hasAvatar ? 'Foto sudah diunggah' : 'Belum ada foto' }}</div>
+                            </div>
+                            @if($hasAvatar)
+                                <button class="btn-cancel" style="flex:0; padding: 0.5rem 0.85rem; color:#B22336; border-color:#FAD0D5;" onclick="removeAvatar()" type="button">
+                                    Hapus
+                                </button>
+                            @else
+                                <button class="btn-cancel" style="flex:0; padding: 0.5rem 0.85rem;" onclick="document.getElementById('avatarInput').click()" type="button">
+                                    Unggah
+                                </button>
+                            @endif
+                        </div>
+
+                        <div class="cc-title" style="margin-top: 1.25rem; margin-bottom: 0.85rem;">Notifikasi</div>
+
+                        <div class="setting-row">
+                            <div class="setting-row-info">
+                                <div class="sr-title">WhatsApp &mdash; Booking</div>
+                                <div class="sr-sub">Konfirmasi booking kelas via WhatsApp</div>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="notifWaBooking" {{ ($member->notify_whatsapp_booking ?? true) ? 'checked' : '' }} onchange="saveNotifications()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-row">
+                            <div class="setting-row-info">
+                                <div class="sr-title">WhatsApp &mdash; Pembayaran</div>
+                                <div class="sr-sub">Notifikasi pembayaran berhasil/gagal</div>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="notifWaPayment" {{ ($member->notify_whatsapp_payment ?? true) ? 'checked' : '' }} onchange="saveNotifications()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-row">
+                            <div class="setting-row-info">
+                                <div class="sr-title">Email &mdash; Promo & Newsletter</div>
+                                <div class="sr-sub">Penawaran dan info terbaru via email</div>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="notifEmailMarketing" {{ ($member->notify_email_marketing ?? false) ? 'checked' : '' }} onchange="saveNotifications()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- ----------------------------------
+                     RIGHT RAIL
+                ---------------------------------- --}}
+                <aside class="acct-rail">
+
+                    <div class="rail-card">
+                        <div class="rc-title"><i class="fas fa-qrcode"></i> Kartu Member</div>
+                        <div class="rail-qr">
+                            <div class="rail-qr-ic"><i class="fas fa-qrcode"></i></div>
+                            <div class="min-w-0">
+                                <div class="rq-id">#{{ $memberId }}</div>
+                                <div class="rq-label">{{ $member->qr_active ? 'QR aktif &mdash; siap dipindai' : 'QR belum aktif' }}</div>
+                            </div>
+                        </div>
+                        <button type="button" onclick="openQRPreview()" class="rail-btn">
+                            <i class="fas fa-expand"></i> Perbesar QR
                         </button>
-                        <input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="uploadAvatar(this)">
                     </div>
 
-                    <div class="name" id="memberNameLabel">{{ $member->name }}</div>
-                    <div class="email">{{ $member->email }}</div>
-
-                    <div class="detail-grid">
-                        <div class="detail-item">
-                            <div class="dlabel"><i class="fas fa-phone"></i> No. HP</div>
-                            <div class="dvalue" id="memberPhoneLabel">{{ $member->phone_number ?? '�' }}</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="dlabel"><i class="fas fa-calendar"></i> Member Sejak</div>
-                            <div class="dvalue">{{ $member->created_at->format('d M Y') }}</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="dlabel"><i class="fas fa-id-badge"></i> ID Member</div>
-                            <div class="dvalue" style="font-family:'JetBrains Mono',monospace;">#{{ $memberId }}</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="dlabel"><i class="fas fa-qrcode"></i> Status QR</div>
-                            <div class="dvalue">{{ $member->qr_active ? 'Aktif' : 'Tidak Aktif' }}</div>
-                        </div>
+                    <div class="rail-card">
+                        <div class="rc-title"><i class="fas fa-compass"></i> Menu Cepat</div>
+                        <a href="{{ route('member.book') }}" class="rail-link">
+                            <span class="rl-ic" style="background:rgba(238,78,139,.12); color:#EE4E8B;"><i class="fas fa-calendar-plus"></i></span>
+                            Booking Kelas
+                            <i class="fas fa-chevron-right rl-arrow"></i>
+                        </a>
+                        <a href="{{ route('member.my-classes') }}" class="rail-link">
+                            <span class="rl-ic" style="background:rgba(26,122,94,.12); color:#1A7A5E;"><i class="fas fa-dumbbell"></i></span>
+                            Kelas Saya
+                            <i class="fas fa-chevron-right rl-arrow"></i>
+                        </a>
+                        <a href="{{ route('member.attendance') }}" class="rail-link">
+                            <span class="rl-ic" style="background:rgba(197,215,155,.45); color:#1D5A4B;"><i class="fas fa-calendar-check"></i></span>
+                            Absensi
+                            <i class="fas fa-chevron-right rl-arrow"></i>
+                        </a>
+                        <a href="{{ route('member.transactions') }}" class="rail-link">
+                            <span class="rl-ic" style="background:rgba(244,201,223,.6); color:#7A2B4A;"><i class="fas fa-receipt"></i></span>
+                            Transaksi
+                            <i class="fas fa-chevron-right rl-arrow"></i>
+                        </a>
                     </div>
-
-                    @if($member->qr_active)
-                        <span class="qr-badge active"><span class="dot"></span> QR Aktif</span>
-                    @else
-                        <span class="qr-badge inactive"><span class="dot"></span> QR Tidak Aktif</span>
-                    @endif
-                </div>
-            </div>
-
-            {{-- --------------------------------------
-                 STATS
-            -------------------------------------- --}}
-            <div class="stats-grid">
-                <div class="stat-card sc-pink">
-                    <div class="sc-icon"><i class="fas fa-box-open"></i></div>
-                    <div class="sc-label">Paket Aktif</div>
-                    <div class="sc-value">{{ $member->orders()->whereIn('status', ['active', 'paid'])->count() }}</div>
-                </div>
-                <div class="stat-card sc-green">
-                    <div class="sc-icon"><i class="fas fa-calendar-check"></i></div>
-                    <div class="sc-label">Total Absensi</div>
-                    <div class="sc-value">{{ $member->attendances()->count() }}</div>
-                </div>
-                <div class="stat-card sc-amber">
-                    <div class="sc-icon"><i class="fas fa-ticket-alt"></i></div>
-                    <div class="sc-label">Sisa Kuota</div>
-                    @if($activeOrder)
-                        @php
-                            $remaining = $activeOrder->remaining_quota ?? 0;
-                            $total = $activeOrder->package->quota ?? 0;
-                            $pct = $total > 0 ? round(($remaining / $total) * 100) : 0;
-                            $barColor = $pct > 50 ? '#1A7A5E' : ($pct > 20 ? '#EE4E8B' : '#B22336');
-                        @endphp
-                        <div class="sc-value">{{ $remaining }}</div>
-                        <div class="sc-sub">dari {{ $total }} total</div>
-                        <div class="quota-bar"><div class="quota-bar-fill" style="width:{{ $pct }}%; background:{{ $barColor }};"></div></div>
-                    @else
-                        <div class="sc-value" style="font-size:1rem; color:rgba(28,28,28,0.5);">Tidak ada paket</div>
-                    @endif
-                </div>
-            </div>
-
-            {{-- --------------------------------------
-                 ACCOUNT SETTINGS
-            -------------------------------------- --}}
-            <div class="content-card">
-                <div class="cc-title"><i class="fas fa-user-cog"></i> Pengaturan Akun</div>
-
-                <div class="setting-row">
-                    <div class="setting-row-info">
-                        <div class="sr-title">Edit Profil</div>
-                        <div class="sr-sub">Ubah nama dan nomor HP</div>
-                    </div>
-                    <button class="btn-cancel" style="flex:0; padding: 0.5rem 0.85rem;" onclick="openModal('editProfileModal')" type="button">
-                        Edit
-                    </button>
-                </div>
-
-                <div class="setting-row">
-                    <div class="setting-row-info">
-                        <div class="sr-title">Ubah Password</div>
-                        <div class="sr-sub">Update password akun secara berkala</div>
-                    </div>
-                    <button class="btn-cancel" style="flex:0; padding: 0.5rem 0.85rem;" onclick="openModal('changePasswordModal')" type="button">
-                        Ubah
-                    </button>
-                </div>
-
-                <div class="setting-row">
-                    <div class="setting-row-info">
-                        <div class="sr-title">Foto Profil</div>
-                        <div class="sr-sub">{{ $hasAvatar ? 'Foto sudah diunggah' : 'Belum ada foto' }}</div>
-                    </div>
-                    @if($hasAvatar)
-                        <button class="btn-cancel" style="flex:0; padding: 0.5rem 0.85rem; color:#B22336; border-color:#FAD0D5;" onclick="removeAvatar()" type="button">
-                            Hapus
-                        </button>
-                    @else
-                        <button class="btn-cancel" style="flex:0; padding: 0.5rem 0.85rem;" onclick="document.getElementById('avatarInput').click()" type="button">
-                            Unggah
-                        </button>
-                    @endif
-                </div>
-
-                <div class="cc-title" style="margin-top: 1.25rem; margin-bottom: 0.85rem;">Notifikasi</div>
-
-                <div class="setting-row">
-                    <div class="setting-row-info">
-                        <div class="sr-title">WhatsApp &mdash; Booking</div>
-                        <div class="sr-sub">Konfirmasi booking kelas via WhatsApp</div>
-                    </div>
-                    <label class="toggle">
-                        <input type="checkbox" id="notifWaBooking" {{ ($member->notify_whatsapp_booking ?? true) ? 'checked' : '' }} onchange="saveNotifications()">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div class="setting-row">
-                    <div class="setting-row-info">
-                        <div class="sr-title">WhatsApp &mdash; Pembayaran</div>
-                        <div class="sr-sub">Notifikasi pembayaran berhasil/gagal</div>
-                    </div>
-                    <label class="toggle">
-                        <input type="checkbox" id="notifWaPayment" {{ ($member->notify_whatsapp_payment ?? true) ? 'checked' : '' }} onchange="saveNotifications()">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div class="setting-row">
-                    <div class="setting-row-info">
-                        <div class="sr-title">Email &mdash; Promo & Newsletter</div>
-                        <div class="sr-sub">Penawaran dan info terbaru via email</div>
-                    </div>
-                    <label class="toggle">
-                        <input type="checkbox" id="notifEmailMarketing" {{ ($member->notify_email_marketing ?? false) ? 'checked' : '' }} onchange="saveNotifications()">
-                        <span class="slider"></span>
-                    </label>
-                </div>
+                </aside>
             </div>
 
         </div>
@@ -1018,7 +1171,7 @@
                 <div class="qp-id">Member ID: #{{ $memberId }}</div>
             </div>
             <div class="qp-status">
-                <span class="qp-status-badge"><span class="qp-dot"></span> QR Active � Ready to Scan</span>
+                <span class="qp-status-badge"><span class="qp-dot"></span> QR Active &mdash; Ready to Scan</span>
             </div>
         </div>
     </div>
@@ -1123,7 +1276,7 @@ async function saveProfile(ev) {
     if (r.ok && r.data.success) {
         toast('Profil tersimpan', r.data.message, 'success');
         document.getElementById('memberNameLabel').textContent = payload.name;
-        document.getElementById('memberPhoneLabel').textContent = payload.phone_number || '�';
+        document.getElementById('memberPhoneLabel').textContent = payload.phone_number || '-';
         // Update inisial avatar kalau belum ada foto
         const letterEl = document.getElementById('memberAvatarLetter');
         if (letterEl) letterEl.textContent = payload.name.charAt(0).toUpperCase();
@@ -1242,3 +1395,4 @@ window.addEventListener('resize', () => {
 });
 </script>
 @endsection
+

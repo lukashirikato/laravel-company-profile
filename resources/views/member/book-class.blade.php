@@ -33,252 +33,177 @@
             --rising: #FCF9F2;
         }
 
-        h1, h2, h3, .brand-label, .day-pill, .schedule-action, .schedule-status {
+        h1, h2, h3 {
             font-family: 'Nord', 'Arial Narrow', sans-serif;
         }
-        
+
         /* ============================================
-           LAYOUT WRAPPER
+           MASTHEAD (konsisten dgn halaman member lain)
            ============================================ */
-        .page-wrapper {
+        .bc-masthead {
             display: flex;
-            height: 100vh;
-            overflow: hidden;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+            padding: .25rem 0 1.05rem;
+            position: relative;
+            margin-bottom: 1.75rem;
+            animation: bcIn .45s ease both;
         }
-        
-        /* Note: Sidebar menggunakan Tailwind classes langsung dari dashboard */
-        
-        /* ============================================
-           MAIN CONTAINER
-           ============================================ */
-        .main-content {
-            flex: 1;
-            padding: 2rem;
-            overflow-y: auto;
+
+        .bc-masthead::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(122, 43, 74, .25), rgba(238, 78, 139, .12), transparent 70%);
         }
-        
-        /* ============================================
-           BREADCRUMB
-           ============================================ */
-        .breadcrumb {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-            font-size: 0.875rem;
-            color: #64748b;
-        }
-        
-        .breadcrumb a {
+
+        .bc-eyebrow {
+            font-family: 'Poppins', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .2em;
+            text-transform: uppercase;
             color: #7A2B4A;
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        
-        .breadcrumb a:hover {
-            color: #EE4E8B;
-        }
-        
-        /* ============================================
-           PAGE HEADER
-           ============================================ */
-        .page-header {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        
-        .page-header h1 {
-            font-size: 2rem;
-            font-weight: 600;
-            color: #7A2B4A;
-            margin-bottom: 0.5rem;
-        }
-        
-        .page-header p {
-            color: #64748b;
-            font-size: 1rem;
-        }
-        
-        /* ============================================
-           PACKAGE STATUS CARD
-           ============================================ */
-        .status-card {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            border-left: 4px solid #EE4E8B;
-        }
-        
-        .status-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-        }
-        
-        .status-item {
             display: flex;
-            align-items: start;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .bc-eyebrow i { color: #EE4E8B; font-size: .85rem; }
+
+        .bc-masthead h1 {
+            font-family: 'Nord', 'Poppins', sans-serif;
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: #7A2B4A;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+            margin-top: .35rem;
+        }
+
+        .bc-masthead .bc-sub {
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            color: #64748b;
+            line-height: 1.5;
+            margin-top: 4px;
+        }
+
+        .bc-today-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem;
+            padding: .55rem 1rem;
+            border-radius: 999px;
+            border: 1px solid rgba(122, 43, 74, .16);
+            background: rgba(255, 255, 255, .85);
+            box-shadow: 0 8px 20px rgba(122, 43, 74, .06);
+            white-space: nowrap;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .bc-today-dot {
+            width: .6rem;
+            height: .6rem;
+            border-radius: 999px;
+            background: #EE4E8B;
+            box-shadow: 0 0 0 4px rgba(238, 78, 139, .15);
+        }
+
+        .bc-today-label { color: rgba(28, 28, 28, .45); font-size: .75rem; }
+        .bc-today-value { color: #1C1C1C; font-weight: 600; font-size: .78rem; }
+
+        /* ============================================
+           SIGNATURE: KARTU PITA MINGGUAN
+           ============================================ */
+        .bc-week-card {
+            background: #fff;
+            border-radius: 16px;
+            border: 1px solid rgba(238, 78, 139, .1);
+            box-shadow: 0 2px 12px rgba(122, 43, 74, .06);
+            padding: 1.25rem 1.35rem 1.35rem;
+            margin-bottom: 1.75rem;
+            animation: bcIn .5s ease .08s both;
+        }
+
+        .bc-week-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             gap: 1rem;
+            margin-bottom: 1rem;
         }
-        
-        .status-icon {
-            width: 48px;
-            height: 48px;
-            background: rgba(241,204,227,0.35);
-            border-radius: 10px;
+
+        .bc-sec-label {
+            font-family: 'Nord', 'Poppins', sans-serif;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            color: #7A2B4A;
+        }
+
+        .bc-week-date {
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            color: rgba(28, 28, 28, .5);
+            margin-top: 2px;
+        }
+
+        .bc-week-nav { display: flex; align-items: center; gap: .5rem; }
+
+        .bc-week-nav button {
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: .75rem;
+            background: #fff;
+            border: 1px solid rgba(238, 78, 139, .15);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            flex-shrink: 0;
-        }
-        
-        .status-info {
-            flex: 1;
-        }
-        
-        .status-label {
-            font-size: 0.875rem;
-            color: #64748b;
-            margin-bottom: 0.25rem;
-            font-weight: 500;
-        }
-        
-        .status-value {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #7A2B4A;
-            line-height: 1.2;
-        }
-        
-        .status-meta {
-            font-size: 0.75rem;
-            color: #94a3b8;
-            margin-top: 0.25rem;
-        }
-        
-        /* ============================================
-           PACKAGE SELECTOR
-           ============================================ */
-        .package-selector {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        
-        .package-selector label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            color: #7A2B4A;
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .package-selector select {
-            width: 100%;
-            padding: 0.875rem 1rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-family: inherit;
-            background: white;
+            color: rgba(28, 28, 28, .5);
             cursor: pointer;
-            transition: all 0.2s;
-            color: #2d3748;
-            font-weight: 500;
-        }
-        
-        .package-selector select:hover {
-            border-color: #EE4E8B;
-        }
-        
-        .package-selector select:focus {
-            outline: none;
-            border-color: #EE4E8B;
-            box-shadow: 0 0 0 3px rgba(238, 78, 139, 0.15);
-        }
-        
-        /* ============================================
-           ALERTS
-           ============================================ */
-        .alert {
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
-        
-        .alert-success {
-            background: #d1fae5;
-            color: #047857;
-            border-left: 4px solid #10b981;
-        }
-        
-        .alert-error {
-            background: #fee2e2;
-            color: #dc2626;
-            border-left: 4px solid #ef4444;
-        }
-        
-        .alert-warning {
-            background: #fef3c7;
-            color: #92400e;
-            border-left: 4px solid #f59e0b;
-        }
-        
-        .alert-icon {
-            font-size: 1.25rem;
-        }
-        
-        /* ============================================
-           SCHEDULE SECTION
-           ============================================ */
-        .schedule-section {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        
-        .day-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding-bottom: 1rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid #e2e8f0;
-        }
-        
-        .day-badge {
-            background: #7A2B4A;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .day-count {
-            color: #64748b;
-            font-size: 0.875rem;
-            font-weight: 500;
+            transition: color .2s ease, border-color .2s ease, background .2s ease;
         }
 
+        .bc-week-nav button:hover {
+            color: #EE4E8B;
+            border-color: #EE4E8B;
+            background: #FFF7FB;
+        }
+
+        /* Pitu hari — override utilitas Tailwind pada pill hasil render JS */
+        #week-dates button {
+            border-radius: 14px;
+            border: 1px solid rgba(238, 78, 139, .12);
+            transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+        }
+
+        #week-dates button:not(.bg-primary):hover {
+            border-color: rgba(238, 78, 139, .45);
+            box-shadow: 0 6px 16px rgba(122, 43, 74, .08);
+            transform: translateY(-1px);
+        }
+
+        #week-dates button.bg-primary {
+            background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%) !important;
+            border-color: transparent !important;
+            box-shadow: 0 10px 22px rgba(238, 78, 139, .3) !important;
+        }
+
+        @keyframes bcIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+        @media (prefers-reduced-motion: reduce) {
+            .bc-masthead,
+            .bc-week-card,
+            #week-dates button { animation: none; transition: none; }
+        }
+        
         .schedule-card.is-selected > div {
             border-color: #EE4E8B;
             background: #FFF7FB;
@@ -301,497 +226,20 @@
             border-color: #EE4E8B;
         }
 
-        .booking-card {
-            position: relative;
-            overflow: hidden;
-            border-radius: 22px;
-            border: 1.5px solid rgba(244, 201, 223, 0.95);
-            background:
-                radial-gradient(circle at 92% 0%, rgba(244, 201, 223, 0.44) 0 68px, transparent 69px),
-                linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(252, 249, 242, 0.92));
-            padding: 1rem;
-            box-shadow: 0 16px 40px rgba(122, 43, 74, 0.08);
-            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-        }
-
-        .booking-card::after {
-            content: "";
-            position: absolute;
-            right: -32px;
-            top: -32px;
-            width: 112px;
-            height: 112px;
-            border-radius: 999px;
-            border: 22px solid rgba(238, 78, 139, 0.08);
-            pointer-events: none;
-        }
-
-        .schedule-card:not(.is-booked):not(.is-disabled):hover .booking-card {
-            transform: translateY(-3px);
-            border-color: rgba(238, 78, 139, 0.85);
-            box-shadow: 0 22px 48px rgba(122, 43, 74, 0.14);
-        }
-
-        .class-mark {
-            position: relative;
-            width: 3.25rem;
-            height: 3.25rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 1rem;
-            background: linear-gradient(145deg, #FFF7FB, #FCF9F2);
-            border: 1px solid rgba(238, 78, 139, 0.22);
-            color: var(--power-pink);
-            box-shadow: inset 0 0 0 6px rgba(244, 201, 223, 0.18);
-        }
-
-        .class-mark i {
-            font-size: 1.1rem;
-            z-index: 1;
-        }
-
-        .class-mark::before,
-        .class-mark::after {
-            content: "";
-            position: absolute;
-            width: 0.72rem;
-            height: 0.72rem;
-            border-radius: 999px 999px 999px 0;
-            background: rgba(26, 122, 94, 0.18);
-            transform: rotate(-45deg);
-        }
-
-        .class-mark::before { left: 0.62rem; top: 0.62rem; }
-        .class-mark::after { right: 0.62rem; bottom: 0.62rem; background: rgba(238, 78, 139, 0.18); }
-
-        .schedule-card.is-booked .booking-card {
-            background:
-                linear-gradient(135deg, rgba(26, 122, 94, 0.08), rgba(197, 215, 155, 0.28)),
-                rgba(252, 249, 242, 0.94);
-            border-color: rgba(26, 122, 94, 0.42);
-            box-shadow: inset 0 0 0 1px rgba(26, 122, 94, 0.10), 0 12px 30px rgba(26, 122, 94, 0.08);
-        }
-
-        .schedule-card.is-booked .class-mark {
-            color: #1A7A5E;
-            border-color: rgba(26, 122, 94, 0.28);
-            background: linear-gradient(145deg, #F0F7E3, #FCF9F2);
-        }
-
-        .schedule-card.is-booked .booked-ribbon {
-            display: inline-flex;
-        }
-
         @media (max-width: 640px) {
-            .main-content {
-                padding-left: 0.75rem;
-                padding-right: 0.75rem;
-            }
-
-            .main-content > .space-y-6 {
-                width: 100%;
-                max-width: 100%;
-                overflow: hidden;
-            }
-
-            .main-content > .space-y-6 > section {
-                padding: 0.85rem !important;
-                border-radius: 1.25rem !important;
-                overflow: hidden;
-            }
-
-            .main-content > .space-y-6 > section > .flex:first-child {
-                align-items: flex-start !important;
+            .class-name-row {
                 flex-wrap: wrap;
-                gap: 0.75rem !important;
             }
 
-            .main-content > .space-y-6 > section > .flex:first-child > .flex {
-                min-width: 0;
-                flex: 1 1 auto;
-                flex-wrap: wrap;
-                row-gap: 0.45rem;
-            }
-
-            .main-content > .space-y-6 > section > .flex:first-child > span:last-child {
-                flex: 0 0 100%;
-                text-align: left;
-                letter-spacing: 0.12em;
-            }
-
-            .schedule-card.is-booked .booking-card {
-                padding-top: 1rem;
-            }
-
-            .booking-card {
-                width: 100%;
-                max-width: 100%;
-                padding: 0.85rem;
-                border-radius: 1.1rem;
-                overflow: hidden;
-            }
-
-            .booking-card > .flex {
-                gap: 0.6rem;
-            }
-
-            .class-mark {
-                width: 2.55rem;
-                height: 2.55rem;
-                border-radius: 0.9rem;
-            }
-
-            .class-mark::before,
-            .class-mark::after {
-                width: 0.55rem;
-                height: 0.55rem;
-            }
-
-            .class-mark::before { left: 0.5rem; top: 0.5rem; }
-            .class-mark::after { right: 0.5rem; bottom: 0.5rem; }
-
-            .booking-card h3 {
-                display: -webkit-box;
-                overflow: hidden;
-                text-overflow: ellipsis;
+            .class-name-line {
                 white-space: normal !important;
+                overflow-wrap: anywhere;
+                display: -webkit-box;
                 -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;
-                max-width: 100%;
-                font-size: 0.98rem !important;
-                line-height: 1.15 !important;
-                letter-spacing: 0.02em !important;
-                overflow-wrap: anywhere;
-            }
-
-            .booking-card .min-w-0 {
-                min-width: 0;
-                max-width: 100%;
-            }
-
-            .booking-card > .flex > .min-w-0 {
-                width: calc(100% - 3.15rem);
-            }
-
-            .booking-card p.mt-1.flex > span:not(.text-\[\#F4C9DF\]) {
-                min-width: 0;
-                overflow-wrap: anywhere;
-            }
-
-            .booking-card .flex-wrap.items-start.justify-between {
-                display: block;
-            }
-
-            .schedule-card-status {
-                width: fit-content;
-                max-width: 100%;
-                margin-top: 0.65rem;
-                white-space: normal;
-            }
-
-            .booking-card p,
-            .booking-card span {
-                max-width: 100%;
-            }
-
-            .booking-card p.mt-1.flex {
-                align-items: flex-start;
-                gap: 0.35rem 0.5rem;
-                font-size: 0.8rem !important;
-                line-height: 1.35;
-            }
-
-            .booking-card .mt-4.flex {
-                flex-wrap: wrap;
-                align-items: center;
-                gap: 0.45rem;
-                margin-top: 0.9rem;
-                letter-spacing: 0.11em;
-                line-height: 1.35;
-            }
-
-            .schedule-action {
-                flex: 1 1 9rem;
-                min-width: 0;
-                overflow-wrap: anywhere;
-            }
-
-            .schedule-card.is-booked .booked-ribbon {
-                position: static;
-                width: fit-content;
-                margin: 0 0 0.75rem auto;
-                padding: 0.35rem 0.7rem;
-                font-size: 0.6rem;
-                letter-spacing: 0.08em;
-            }
-
-            .schedule-card.is-booked .booking-card::after {
-                top: -48px;
-                right: -48px;
-            }
-
-            .schedule-card-status {
-                margin-top: 0.65rem;
-            }
-
-            .schedule-card-check {
-                right: 0.65rem !important;
-                top: 0.65rem !important;
-            }
-
-            .day-pill {
-                max-width: 100%;
-                overflow-wrap: anywhere;
-            }
-        }
-
-        @media (max-width: 380px) {
-            .main-content {
-                padding-left: 0.55rem;
-                padding-right: 0.55rem;
-            }
-
-            .booking-card {
-                padding: 0.75rem;
-            }
-
-            .class-mark {
-                width: 2.25rem;
-                height: 2.25rem;
-                border-radius: 0.8rem;
-            }
-
-            .booking-card > .flex {
-                gap: 0.5rem;
-            }
-
-            .booking-card > .flex > .min-w-0 {
-                width: calc(100% - 2.75rem);
-            }
-
-            .booking-card h3 {
-                font-size: 0.92rem !important;
-                letter-spacing: 0 !important;
-            }
-
-            .booking-card p,
-            .booking-card span {
-                font-size: 0.76rem !important;
             }
         }
         
-        /* ============================================
-           SCHEDULE TABLE
-           ============================================ */
-        .schedule-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .schedule-table thead {
-            background: linear-gradient(90deg, #FCF9F2 0%, rgba(241,204,227,0.40) 100%);
-        }
-        
-        .schedule-table th {
-            padding: 1rem;
-            text-align: left;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: #7A2B4A;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 2px solid rgba(238, 78, 139,0.25);
-        }
-        
-        .schedule-table td {
-            padding: 1.25rem 1rem;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        
-        .schedule-table tbody tr {
-            transition: background-color 0.2s;
-        }
-        
-        .schedule-table tbody tr:hover {
-            background: rgba(241,204,227,0.15);
-        }
-        
-        .class-info {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        
-        .class-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(241,204,227,0.35);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            flex-shrink: 0;
-        }
-        
-        .class-name {
-            font-weight: 600;
-            color: #7A2B4A;
-            font-size: 0.95rem;
-        }
-        
-        .time-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: rgba(210,220,165,0.30);
-            border-radius: 6px;
-            font-weight: 600;
-            color: #1D5A4B;
-            font-size: 0.95rem;
-        }
-        
-        .coach-name {
-            color: #64748b;
-            font-size: 0.95rem;
-        }
-        
-        /* ============================================
-           STATUS BADGES
-           ============================================ */
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            font-weight: 600;
-        }
-        
-        .status-badge.available {
-            background: rgba(26, 122, 94,0.10);
-            color: #1A7A5E;
-        }
-        
-        .status-badge.booked {
-            background: rgba(241,204,227,0.35);
-            color: #7A2B4A;
-        }
-        
-        /* ============================================
-           BUTTONS
-           ============================================ */
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #5A1F3A 0%, #B83863 100%);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(122, 43, 74, 0.35);
-        }
-        
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-        
-        .btn-success {
-            background: linear-gradient(135deg, #1D5A4B, #1A7A5E);
-            color: white;
-            cursor: not-allowed;
-        }
-        
-        .btn-disabled {
-            background: #e2e8f0;
-            color: #94a3b8;
-            cursor: not-allowed;
-        }
-        
-        /* ============================================
-           EMPTY STATE
-           ============================================ */
-        .empty-state {
-            text-align: center;
-            padding: 4rem 2rem;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        
-        .empty-state-icon {
-            font-size: 5rem;
-            opacity: 0.3;
-            margin-bottom: 1.5rem;
-        }
-        
-        .empty-state h3 {
-            font-size: 1.5rem;
-            color: #2d3748;
-            margin-bottom: 0.75rem;
-            font-weight: 600;
-        }
-        
-        .empty-state p {
-            color: #64748b;
-            font-size: 1rem;
-        }
-        
-        /* ============================================
-           RESPONSIVE DESIGN
-           ============================================ */
-        @media (max-width: 968px) {
-            .main-content {
-                padding: 1rem;
-            }
-            
-            .page-header h1 {
-                font-size: 1.5rem;
-            }
-            
-            .status-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .schedule-table {
-                display: block;
-                overflow-x: auto;
-            }
-        }
-        
-        @media (max-width: 640px) {
-            .breadcrumb {
-                font-size: 0.75rem;
-            }
-            
-            .day-badge {
-                font-size: 0.75rem;
-                padding: 0.4rem 0.75rem;
-            }
-            
-            .schedule-table th,
-            .schedule-table td {
-                padding: 0.75rem 0.5rem;
-                font-size: 0.875rem;
-            }
-        }
-
         /* ------------------------------------------- RESPONSIVE SIDEBAR ------------------------------------------- */
         .sidebar {
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
@@ -838,10 +286,6 @@
 
             body.sidebar-open {
                 overflow: hidden;
-            }
-
-            .main-content {
-                margin-top: 3rem;
             }
 
             /* Horizontal Overflow & Layout Adjustments */
@@ -896,10 +340,13 @@
                 width: 100% !important;
             }
 
+            /* Masthead & pita mingguan (mobile) */
+            .bc-masthead { align-items: flex-start; flex-direction: column; gap: .85rem; }
+            .bc-masthead h1 { font-size: 1.4rem !important; }
+            .bc-masthead .bc-sub { font-size: 13px; }
+            .bc-week-card { padding: .95rem 1rem 1.1rem; }
+
             /* Date Picker (SELECT DATE) */
-            .date-selector-container > .flex.items-center.justify-between {
-                padding-right: 12px !important;
-            }
             #week-dates {
                 display: flex !important;
                 grid-template-columns: none !important;
@@ -956,19 +403,19 @@
 
     <main class="flex-1 p-6 md:p-10 pb-24 md:pb-28 overflow-y-auto bg-cream">
         
-        {{-- MOBILE HAMBURGER --}}
-        <button id="hamburger-btn" class="hamburger-btn" onclick="toggleSidebar()">
-            <i class="fas fa-bars"></i>
-        </button>
-
-        {{-- HEADER --}}
-        <div class="bg-white rounded-2xl shadow-[0_2px_12px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] p-5 md:p-7 mb-8 mt-14 md:mt-0">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h1 class="font-nord font-bold text-[30px] md:text-[32px] text-dark leading-tight">Booking Kelas</h1>
-                </div>
+        {{-- MASTHEAD --}}
+        <header class="bc-masthead mt-14 md:mt-0">
+            <div>
+                <p class="bc-eyebrow"><i class="fas fa-calendar-plus"></i> Member Area &middot; Booking</p>
+                <h1 class="font-nord">Booking Kelas</h1>
+                <p class="bc-sub">Pilih tanggal di minggu ini, lalu booking satu atau beberapa slot sekaligus.</p>
             </div>
-        </div>
+            <div class="bc-today-chip">
+                <span class="bc-today-dot"></span>
+                <span class="bc-today-label">Hari ini</span>
+                <span class="bc-today-value">{{ \Carbon\Carbon::now()->format('d M Y') }}</span>
+            </div>
+        </header>
 
         {{-- FLASH MESSAGES --}}
         @if(session('success'))
@@ -1030,21 +477,24 @@
             </div>
         </div>
 
-        {{-- DATE SELECTOR --}}
-        <div class="date-selector-container mb-8">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="font-nord font-semibold text-[17px] text-dark">PILIH TANGGAL <span id="selected-date-label" class="font-poppins font-normal text-dark/40 text-[15px]">&mdash; {{ \Carbon\Carbon::parse($selectedDate)->format('l, d M Y') }}</span></h2>
-                <div class="flex items-center gap-2">
-                    <button onclick="changeWeek(-1)" class="w-8 h-8 rounded-lg bg-white border border-[rgba(238,78,139,0.15)] flex items-center justify-center text-dark/50 hover:text-primary hover:border-primary transition-all">
+        {{-- DATE SELECTOR: KARTU PITA MINGGUAN --}}
+        <section class="bc-week-card">
+            <div class="bc-week-head">
+                <div>
+                    <p class="bc-sec-label">Pilih Tanggal</p>
+                    <p id="selected-date-label" class="bc-week-date">&mdash; {{ \Carbon\Carbon::parse($selectedDate)->format('l, d M Y') }}</p>
+                </div>
+                <div class="bc-week-nav">
+                    <button type="button" onclick="changeWeek(-1)" aria-label="Minggu sebelumnya">
                         <i class="fas fa-chevron-left text-xs"></i>
                     </button>
-                    <button onclick="changeWeek(1)" class="w-8 h-8 rounded-lg bg-white border border-[rgba(238,78,139,0.15)] flex items-center justify-center text-dark/50 hover:text-primary hover:border-primary transition-all">
+                    <button type="button" onclick="changeWeek(1)" aria-label="Minggu berikutnya">
                         <i class="fas fa-chevron-right text-xs"></i>
                     </button>
                 </div>
             </div>
             <div id="week-dates" class="grid grid-cols-7 gap-2"></div>
-        </div>
+        </section>
 
         {{-- FILTER BAR --}}
         @php
@@ -1930,9 +1380,9 @@
                                 <i class="fas ${s.classIcon} text-base"></i>
                             </div>
                             <div class="min-w-0 flex-1">
-                                <div class="flex items-start justify-between gap-2">
+                                <div class="flex items-start justify-between gap-2 class-name-row">
                                     <div class="min-w-0">
-                                        <h4 class="font-nord font-bold text-[17px] text-dark leading-tight truncate">${s.className}</h4>
+                                        <h4 class="font-nord font-bold text-[17px] text-dark leading-tight class-name-line">${s.className}</h4>
                                         ${s.level ? '<span class="font-poppins text-[11px] text-dark/35 font-medium">' + s.level + '</span>' : ''}
                                     </div>
                                     <span class="font-poppins text-[10px] font-semibold uppercase tracking-wider whitespace-nowrap ${s.isFull ? 'text-secondary' : 'text-accent'} bg-[rgba(26,122,94,0.06)] px-2.5 py-1 rounded-full border border-[rgba(26,122,94,0.1)] flex-shrink-0">${capLabel}</span>

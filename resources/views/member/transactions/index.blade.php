@@ -29,6 +29,18 @@
 
         return $paymentMethodMap[strtolower($paymentType)] ?? ucwords(str_replace('_', ' ', $paymentType));
     };
+
+    $txTotal = method_exists($transactions, 'total') ? $transactions->total() : $transactions->count();
+
+    $monthNames = [
+        1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+        5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+        9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember',
+    ];
+
+    $monthGroups = $transactions->groupBy(function ($t) {
+        return $t->created_at ? $t->created_at->format('Y-m') : '0000-00';
+    });
 @endphp
 <!DOCTYPE html>
 <html lang="en">
@@ -72,25 +84,121 @@
             margin: 0 auto;
         }
 
-        .page-header {
-            margin-bottom: 2.5rem;
+        /* -- Masthead (konsisten dgn halaman Profil & Absensi) -- */
+        .tx-masthead {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+            padding: .25rem 0 1.05rem;
+            position: relative;
+            margin-bottom: 1.75rem;
         }
 
-        .page-header h1 {
-            font-family: 'Nord', sans-serif;
-            font-size: 28px;
+        .tx-masthead::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(122, 43, 74, .25), rgba(238, 78, 139, .12), transparent 70%);
+        }
+
+        .tx-eyebrow {
+            font-size: 11px;
             font-weight: 700;
+            letter-spacing: .2em;
+            text-transform: uppercase;
             color: var(--ftm-cherry);
-            margin-bottom: 0.25rem;
-            line-height: 1.2;
+            display: flex;
+            align-items: center;
+            gap: 7px;
         }
 
-        .page-header p {
+        .tx-eyebrow i { color: var(--ftm-pink); font-size: .85rem; }
+
+        .tx-masthead h1 {
+            font-family: 'Nord', sans-serif;
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: var(--ftm-cherry);
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+            margin-top: .35rem;
+        }
+
+        .tx-masthead .tx-sub {
             font-family: 'Poppins', sans-serif;
             font-size: 15px;
             color: #6B7280;
             line-height: 1.5;
+            margin-top: 4px;
         }
+
+        .tx-total-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem;
+            padding: .55rem 1rem;
+            border-radius: 999px;
+            border: 1px solid rgba(122, 43, 74, .16);
+            background: rgba(255, 255, 255, .85);
+            box-shadow: 0 8px 20px rgba(122, 43, 74, .06);
+            white-space: nowrap;
+        }
+
+        .tx-total-dot {
+            width: .6rem;
+            height: .6rem;
+            border-radius: 999px;
+            background: var(--ftm-pink);
+            box-shadow: 0 0 0 4px rgba(238, 78, 139, .15);
+        }
+
+        .tx-total-label { color: rgba(28, 28, 28, .45); font-size: .75rem; }
+        .tx-total-value { color: var(--ftm-layl); font-weight: 600; font-size: .78rem; }
+
+        /* -- Penanda bulan: pengelompokan kronologis -- */
+        .tx-month-head {
+            display: flex;
+            align-items: center;
+            gap: .85rem;
+            margin-bottom: .85rem;
+        }
+
+        .tx-month-label {
+            font-family: 'Nord', sans-serif;
+            font-size: .78rem;
+            font-weight: 800;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--ftm-cherry);
+            white-space: nowrap;
+        }
+
+        .tx-month-rule {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(122, 43, 74, .28), rgba(244, 201, 223, .5));
+        }
+
+        .tx-month-count {
+            font-size: .7rem;
+            font-weight: 600;
+            color: rgba(28, 28, 28, .5);
+            background: #fff;
+            border: 1px solid var(--border-color);
+            padding: .2rem .6rem;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        .tx-list { display: grid; gap: 1.1rem; }
+
+        @keyframes txIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+        .tx-month { animation: txIn .45s ease both; }
 
         /* Transactions list container */
         .transactions-grid {
@@ -107,6 +215,7 @@
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(122, 43, 74, 0.04);
             transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            --notch-y: 76px;
         }
 
         .transaction-card:hover {
@@ -124,7 +233,7 @@
             height: 14px;
             background: var(--ftm-rising);
             border-radius: 50%;
-            top: 55px; /* aligned right at the dashed line */
+            top: calc(var(--notch-y) - 7px);
             z-index: 10;
             border: 1px solid var(--border-color);
             box-sizing: border-box;
@@ -138,11 +247,12 @@
             clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
         }
 
-        /* Header of the ticket card */
+        /* Header of the ticket card (tinggi tetap agar garis putus-putus & lubang perforasi presisi) */
         .ticket-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            height: 76px;
             padding: 1.25rem 1.5rem;
             background: rgba(244, 201, 223, 0.1);
             border-bottom: 1px dashed var(--border-color);
@@ -254,7 +364,7 @@
         }
 
         .ticket-value.order-code {
-            font-family: monospace;
+            font-family: 'JetBrains Mono', monospace;
             background: #F3F4F6;
             padding: 0.15rem 0.5rem;
             border-radius: 4px;
@@ -380,16 +490,17 @@
                 padding: 1.25rem;
                 margin-top: 3.5rem;
             }
-            .page-header {
-                margin-bottom: 1.75rem;
+            .tx-masthead {
+                margin-bottom: 1.25rem;
             }
-            .page-header h1 {
-                font-size: 22px;
+            .tx-masthead h1 {
+                font-size: 1.4rem !important;
             }
-            .page-header p {
+            .tx-masthead .tx-sub {
                 font-size: 13px;
             }
             .ticket-header {
+                height: 68px;
                 padding: 1rem 1.25rem;
             }
             .ticket-package-name {
@@ -411,10 +522,14 @@
             .ticket-value.amount {
                 font-size: 15px;
             }
-            .transaction-card::before,
-            .transaction-card::after {
-                top: 50px;
+            .transaction-card {
+                --notch-y: 68px;
             }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .tx-month { animation: none; }
+            .transaction-card { transition: none; }
         }
 
         /* ═══════════════════════════════════════════ RESPONSIVE SIDEBAR ═══════════════════════════════════════════ */
@@ -500,15 +615,51 @@
     <main class="flex-1 overflow-y-auto">
         <div class="main-content">
             
-            <!-- Page Header -->
-            <div class="page-header">
-                <h1>Riwayat Transaksi</h1>
-                <p>Lihat semua transaksi dan detail pembayaran Anda</p>
+            <!-- Page masthead -->
+            <div class="tx-masthead">
+                <div>
+                    <p class="tx-eyebrow"><i class="fas fa-receipt"></i> Member Area &middot; Transaksi</p>
+                    <h1>Riwayat Transaksi</h1>
+                    <p class="tx-sub">Semua pembayaran paket Anda dalam satu tempat. Unduh invoice untuk setiap transaksi.</p>
+                </div>
+                <div class="tx-total-chip">
+                    <span class="tx-total-dot"></span>
+                    <span class="tx-total-label">Total</span>
+                    <span class="tx-total-value">{{ $txTotal }} transaksi</span>
+                </div>
             </div>
 
             <!-- Transactions Grid -->
             <div class="transactions-grid">
-        @forelse ($transactions as $t)
+        @if ($transactions->isEmpty())
+                    <!-- Empty State -->
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <h3>Belum Ada Transaksi</h3>
+                        <p>Pembayaran paket Anda akan tampil di sini setelah transaksi pertama.</p>
+                        <a href="{{ route('home') }}#packages" class="btn-primary">
+                            <i class="fas fa-box-open"></i>
+                            Lihat Paket Membership
+                        </a>
+                    </div>
+        @else
+            {{-- Transaksi dikelompokkan per bulan (urut waktu, terbaru dahulu) --}}
+            @foreach ($monthGroups as $monthKey => $monthItems)
+                @php
+                    $monthLabel = $monthKey === '0000-00'
+                        ? 'Tanpa Tanggal'
+                        : $monthNames[(int) substr($monthKey, 5, 2)] . ' ' . substr($monthKey, 0, 4);
+                @endphp
+                    <div class="tx-month" style="animation-delay: {{ round(min($loop->index * 0.06, 0.3), 2) }}s">
+                        <div class="tx-month-head">
+                            <span class="tx-month-label">{{ $monthLabel }}</span>
+                            <span class="tx-month-rule"></span>
+                            <span class="tx-month-count">{{ $monthItems->count() }} transaksi</span>
+                        </div>
+                        <div class="tx-list">
+                @foreach ($monthItems as $t)
                     @php
                         $status = strtolower($t->status ?? 'pending');
                         $statusClass = 'pending';
@@ -593,20 +744,11 @@
                             @endif
                         </div>
                     </div>
-        @empty
-                    <!-- Empty State -->
-                    <div class="empty-state">
-                        <div class="empty-icon">
-                            <i class="fas fa-receipt" style="color: #94a3b8;"></i>
+                @endforeach
                         </div>
-                        <h3>Belum Ada Transaksi</h3>
-                        <p>Anda belum memiliki riwayat transaksi</p>
-                        <a href="{{ route('home') ?? '#' }}" class="btn-primary">
-                            <i class="fas fa-shopping-cart"></i>
-                            Mulai Belanja
-                        </a>
                     </div>
-        @endforelse
+            @endforeach
+        @endif
 
         <!-- Pagination Links -->
         @if(method_exists($transactions, 'links'))

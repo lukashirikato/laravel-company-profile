@@ -38,158 +38,367 @@
             margin: 0 auto;
         }
 
-        .page-header {
-            margin-bottom: 2rem;
+        /* -- Masthead (konsisten dgn halaman Profil / Absensi / Transaksi) -- */
+        .mc-masthead {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+            padding: .25rem 0 1.05rem;
+            position: relative;
+            margin-bottom: 1.5rem;
+            animation: mcIn .45s ease both;
         }
 
-        .page-header h1 {
-            font-family: 'Nord', 'Poppins', sans-serif;
-            font-size: 28px;
+        .mc-masthead::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(122, 43, 74, .25), rgba(238, 78, 139, .12), transparent 70%);
+        }
+
+        .mc-eyebrow {
+            font-size: 11px;
             font-weight: 700;
+            letter-spacing: .2em;
+            text-transform: uppercase;
             color: var(--cherry);
-            margin-bottom: 0.15rem;
+            display: flex;
+            align-items: center;
+            gap: 7px;
         }
 
-        .page-header p {
+        .mc-eyebrow i { color: var(--pink); font-size: .85rem; }
+
+        .mc-masthead h1 {
+            font-family: 'Nord', 'Poppins', sans-serif;
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: var(--cherry);
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+            margin-top: .35rem;
+        }
+
+        .mc-masthead .mc-sub {
             font-family: 'Poppins', sans-serif;
             font-size: 15px;
             color: var(--caption);
+            line-height: 1.5;
+            margin-top: 4px;
         }
 
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            max-width: 600px;
-            margin-bottom: 2.25rem;
+        .mc-today-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem;
+            padding: .55rem 1rem;
+            border-radius: 999px;
+            border: 1px solid rgba(122, 43, 74, .16);
+            background: rgba(255, 255, 255, .85);
+            box-shadow: 0 8px 20px rgba(122, 43, 74, .06);
+            white-space: nowrap;
         }
 
-        .stat-card {
+        .mc-today-dot {
+            width: .6rem;
+            height: .6rem;
+            border-radius: 999px;
+            background: var(--pink);
+            box-shadow: 0 0 0 4px rgba(238, 78, 139, .15);
+        }
+
+        .mc-today-label { color: rgba(28, 28, 28, .45); font-size: .75rem; }
+        .mc-today-value { color: var(--layl); font-weight: 600; font-size: .78rem; }
+
+        /* -- SIGNATURE: panel "Sesi Berikutnya" -- */
+        .mc-next {
+            position: relative;
+            overflow: hidden;
             display: flex;
             align-items: center;
-            gap: 1rem;
-            background: #FFFFFF;
-            border-radius: 12px;
-            padding: 1rem 1.25rem;
-            border: 1px solid #E8C0D4;
-            box-shadow: 0 4px 14px rgba(122,43,74,0.08), 0 1px 3px rgba(122,43,74,0.04);
-            outline: none !important;
-        }
-
-        .stat-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
+            gap: 1.5rem;
+            padding: 1.5rem 1.75rem;
+            margin-bottom: 1.5rem;
+            border-radius: 22px;
+            background: linear-gradient(135deg, #7A2B4A 0%, #5A1F37 62%, #1C1C1C 100%);
             color: #fff;
+            box-shadow: 0 16px 40px rgba(122, 43, 74, 0.30);
+            animation: mcIn .5s ease .08s both;
+        }
+
+        .mc-next::before {
+            content: '';
+            position: absolute;
+            top: -70px;
+            right: -50px;
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(238, 78, 139, .35) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .mc-next-cal {
+            position: relative;
+            width: 92px;
+            flex-shrink: 0;
+            text-align: center;
+            padding: .7rem .5rem;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, .09);
+            border: 1px solid rgba(255, 255, 255, .18);
+        }
+
+        .mc-next-day {
+            display: block;
+            font-family: 'Nord', 'Poppins', sans-serif;
+            font-size: 2.4rem;
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            color: #fff;
+        }
+
+        .mc-next-mon {
+            display: block;
+            margin-top: .3rem;
+            font-size: .66rem;
+            font-weight: 600;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            color: var(--petal);
+        }
+
+        .mc-next-body { flex: 1; min-width: 0; position: relative; }
+
+        .mc-next-eyebrow {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: var(--petal);
+        }
+
+        .mc-next-eyebrow .cd {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: .15rem .55rem;
+            border-radius: 999px;
+            background: rgba(238, 78, 139, .28);
+            border: 1px solid rgba(244, 201, 223, .35);
+            color: #fff;
+            font-size: 10px;
+            letter-spacing: .06em;
+        }
+
+        .mc-next-eyebrow .cd-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--pink);
+            animation: mcPing 1.8s ease-out infinite;
+        }
+
+        .mc-next-title {
+            font-family: 'Nord', 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+            margin-top: .45rem;
+        }
+
+        .mc-next-meta {
+            margin-top: .4rem;
+            font-size: .86rem;
+            color: rgba(255, 255, 255, .78);
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: .5rem .9rem;
+        }
+
+        .mc-next-meta i { color: var(--petal); font-size: .78rem; margin-right: .3rem; }
+
+        .mc-next-pkg {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            font-size: .72rem;
+            font-weight: 600;
+            padding: .2rem .6rem;
+            border-radius: 999px;
+            background: rgba(197, 215, 155, .18);
+            border: 1px solid rgba(197, 215, 155, .4);
+            color: #C5D79B;
+        }
+
+        .mc-next-side {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: .65rem;
             flex-shrink: 0;
         }
 
-        .stat-icon.pink { background: var(--pink); }
-        .stat-icon.green { background: var(--green); }
+        .mc-next-who { display: flex; align-items: center; gap: .55rem; }
 
-        .stat-info .num {
-            font-family: 'Nord', 'Poppins', sans-serif;
-            font-size: 26px;
-            font-weight: 700;
-            color: var(--cherry);
-            line-height: 1.1;
-        }
-
-        .stat-info .label {
-            font-family: 'Poppins', sans-serif;
-            font-size: 13px;
-            font-weight: 400;
-            color: var(--caption);
-        }
-
-        .section-title {
-            font-family: 'Nord', 'Poppins', sans-serif;
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--cherry);
-            margin-bottom: 1rem;
-        }
-
-        .package-tabs {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.625rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .package-tab {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            padding: 0.5rem 1.125rem;
-            border-radius: 999px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--caption);
-            background: transparent;
-            border: 1px solid #F0C4D6;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            white-space: nowrap;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-        }
-
-        .package-tab:hover {
-            background: var(--section-bg);
-            color: var(--cherry);
-            border-color: var(--petal);
-        }
-
-        .package-tab.active {
-            background: var(--pink);
+        .mc-next-who .ava {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--pink), #B83863);
             color: #fff;
-            border-color: var(--pink);
-            box-shadow: 0 3px 10px rgba(238,78,139,0.2);
-        }
-
-        .package-tab .tab-count {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 11px;
-            font-weight: 600;
-            opacity: 0.65;
+            font-weight: 700;
+            border: 2px solid rgba(255, 255, 255, .35);
+            flex-shrink: 0;
         }
 
-        .package-tab.active .tab-count {
-            opacity: 0.9;
+        .mc-next-who .who-label {
+            font-size: 9.5px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, .5);
+            line-height: 1.3;
         }
 
-        .package-tab .tab-icon {
-            font-size: 12px;
-            opacity: 0.7;
-        }
+        .mc-next-who .who-name { font-size: .85rem; font-weight: 600; color: #fff; line-height: 1.3; }
 
-        .package-tab.active .tab-icon {
-            opacity: 1;
-        }
-
-        .card-package-badge {
+        .mc-next-badge {
             display: inline-flex;
             align-items: center;
-            gap: 0.25rem;
+            gap: .4rem;
+            padding: .35rem .8rem;
+            border-radius: 999px;
             font-size: 12px;
-            font-weight: 500;
-            font-style: normal;
-            color: var(--ivy);
-            padding: 0.1rem 0.5rem;
-            border-radius: 3px;
-            background: rgba(197, 215, 155, 0.18);
-            margin-left: 0.5rem;
-            vertical-align: middle;
-            letter-spacing: 0.01em;
+            font-weight: 600;
+            background: rgba(26, 122, 94, .45);
+            border: 1px solid rgba(197, 215, 155, .45);
+            color: #DDF3EA;
         }
 
-        .card-package-badge i {
-            font-size: 10px;
-            opacity: 0.7;
+        .mc-next-badge .d {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #7BE0BE;
+        }
+
+        /* -- Toolbar filter paket -- */
+        .mc-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: .75rem;
+            margin-bottom: .25rem;
+        }
+
+        .mc-toolbar-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            color: rgba(28, 28, 28, .45);
+        }
+
+        .mc-select-wrap {
+            position: relative;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .mc-select {
+            width: 100%;
+            appearance: none;
+            -webkit-appearance: none;
+            background: #FFFFFF;
+            border: 1px solid #E8C0D4;
+            border-radius: 12px;
+            padding: .65rem 2.5rem .65rem 1.1rem;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--layl);
+            cursor: pointer;
+            outline: none;
+            box-shadow: 0 2px 8px rgba(122, 43, 74, .06);
+            transition: border-color .2s ease, box-shadow .2s ease;
+        }
+
+        .mc-select:hover { border-color: var(--petal); }
+
+        .mc-select:focus-visible {
+            border-color: var(--pink);
+            box-shadow: 0 0 0 3px rgba(238, 78, 139, .18);
+        }
+
+        .mc-select-wrap i {
+            pointer-events: none;
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--cherry);
+            font-size: .8rem;
+        }
+
+        /* -- Judul seksi bergaris -- */
+        .mc-sec {
+            display: flex;
+            align-items: center;
+            gap: .85rem;
+            margin: 1.75rem 0 1rem;
+        }
+
+        .mc-sec-label {
+            font-family: 'Nord', 'Poppins', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--cherry);
+            white-space: nowrap;
+        }
+
+        .mc-sec-rule {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(122, 43, 74, .28), rgba(244, 201, 223, .5));
+        }
+
+        .mc-sec-count {
+            font-size: .72rem;
+            font-weight: 600;
+            color: rgba(28, 28, 28, .55);
+            background: #fff;
+            border: 1px solid rgba(122, 43, 74, .15);
+            padding: .2rem .65rem;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        @keyframes mcIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+        @keyframes mcPing { 0% { box-shadow: 0 0 0 0 rgba(238, 78, 139, .55); } 70% { box-shadow: 0 0 0 7px rgba(238, 78, 139, 0); } 100% { box-shadow: 0 0 0 0 rgba(238, 78, 139, 0); } }
+
+        @media (prefers-reduced-motion: reduce) {
+            .mc-masthead,
+            .mc-next,
+            .mc-next-eyebrow .cd-dot { animation: none; }
         }
 
         .filter-empty {
@@ -302,22 +511,6 @@
             color: var(--caption);
             border: none !important;
             outline: none !important;
-        }
-
-        .visit-badge {
-            display: inline-block;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-            padding: 0.2rem 0.7rem;
-            border-radius: 999px;
-            background: var(--section-bg);
-            color: var(--cherry);
-            margin-bottom: 0.85rem;
-            border: none !important;
-            outline: none !important;
-            line-height: 1.4;
         }
 
         .schedule-grid {
@@ -490,78 +683,45 @@
             background: var(--cherry);
         }
 
-        /* Status Tabs (Upcoming vs Riwayat) */
-        .class-status-tabs {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid #E8C0D4;
-            padding-bottom: 0.5rem;
-        }
-
-        .status-tab-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.6rem 1.25rem;
-            border-radius: 999px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--caption);
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            transition: all 0.25s ease;
-        }
-
-        .status-tab-btn:hover {
-            color: var(--cherry);
-            background: var(--section-bg);
-        }
-
-        .status-tab-btn.active {
-            color: #FFFFFF;
-            background: var(--pink);
-            box-shadow: 0 4px 12px rgba(238,78,139,0.3);
-        }
-
-        .status-tab-btn .badge-count {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.15rem 0.5rem;
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 700;
-            background: rgba(255,255,255,0.25);
-            color: currentColor;
-        }
-
-        .status-tab-btn:not(.active) .badge-count {
-            background: #E8C0D4;
-            color: var(--cherry);
-        }
-
         @media (max-width: 768px) {
             .main-content {
                 padding: 1.25rem;
                 margin-top: 3.5rem;
             }
 
-            .page-header h1 { font-size: 22px; }
-            .page-header p { font-size: 13px; }
+            .mc-masthead { margin-bottom: 1.25rem; }
+            .mc-masthead h1 { font-size: 1.4rem !important; }
+            .mc-masthead .mc-sub { font-size: 13px; }
 
-            .stats-row {
-                grid-template-columns: 1fr;
-                gap: 0.75rem;
-                margin-bottom: 1.75rem;
+            .mc-next {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+                padding: 1.25rem;
             }
 
-            .stat-card { padding: 0.85rem 1rem; }
-            .stat-icon { width: 38px; height: 38px; font-size: 0.95rem; }
-            .stat-info .num { font-size: 22px; }
+            .mc-next-cal {
+                width: auto;
+                display: inline-flex;
+                align-items: baseline;
+                gap: .45rem;
+                padding: .45rem .9rem;
+            }
+
+            .mc-next-day { font-size: 1.7rem; }
+            .mc-next-mon { margin-top: 0; }
+            .mc-next-title { font-size: 1.25rem; }
+
+            .mc-next-side {
+                align-items: flex-start;
+                width: 100%;
+            }
+
+            .mc-toolbar { flex-direction: column; align-items: stretch; }
+            .mc-select-wrap { max-width: none; }
+
+            .mc-sec { margin-top: 1.5rem; }
+            .mc-sec-label { font-size: .95rem; }
 
             .classes-grid { grid-template-columns: 1fr; gap: 0.75rem; }
 
@@ -592,32 +752,75 @@
     <main class="flex-1 overflow-y-auto">
         <div class="main-content">
 
-            <div class="page-header">
-                <h1>Kelas Saya</h1>
-                <p>Kelola jadwal kelas Anda</p>
+            <!-- Page masthead -->
+            <div class="mc-masthead">
+                <div>
+                    <p class="mc-eyebrow"><i class="fas fa-calendar-days"></i> Member Area &middot; Jadwal</p>
+                    <h1>Kelas Saya</h1>
+                    <p class="mc-sub">Sesi yang Anda booking — dari jadwal mendatang sampai riwayat latihan.</p>
+                </div>
+                <div class="mc-today-chip">
+                    <span class="mc-today-dot"></span>
+                    <span class="mc-today-label">Hari ini</span>
+                    <span class="mc-today-value">{{ \Carbon\Carbon::now()->format('d M Y') }}</span>
+                </div>
             </div>
 
-            @if(!$myClasses->isEmpty() || !$pastClasses->isEmpty())
-                <div class="stats-row">
-                    <div class="stat-card">
-                        <div class="stat-icon pink">
-                            <i class="fas fa-calendar-check"></i>
-                        </div>
-                        <div class="stat-info">
-                            <div class="num">{{ $stats['total_classes'] ?? 0 }}</div>
-                            <div class="label">Kelas Terjadwal</div>
+            {{-- -- SIGNATURE: panel Sesi Berikutnya -- --}}
+            @if(!$myClasses->isEmpty())
+                @php
+                    $nextItem = $myClasses->first();
+                    $nextSched = $nextItem->schedule;
+
+                    $nextInstructor = $nextSched->instructor ?? 'FTM Coach';
+                    $nextWords = explode(' ', $nextInstructor);
+                    $nextInitials = '';
+                    foreach ($nextWords as $w) { $nextInitials .= strtoupper(substr($w, 0, 1)); }
+                    if (strlen($nextInitials) > 2) $nextInitials = substr($nextInitials, 0, 2);
+
+                    $nextPkg = $nextItem->package_info['name'] ?? 'Membership';
+
+                    $nextDate = null;
+                    if ($nextSched->schedule_date) {
+                        $nextDate = \Carbon\Carbon::parse($nextSched->schedule_date);
+                    } else {
+                        try { $nextDate = \Carbon\Carbon::parse($nextSched->schedule_date_formatted); } catch (\Exception $e) { $nextDate = null; }
+                    }
+
+                    $cdLabel = 'Segera';
+                    if ($nextDate) {
+                        $daysUntil = (int) \Carbon\Carbon::today()->diffInDays($nextDate->copy()->startOfDay());
+                        $cdLabel = $daysUntil <= 0 ? 'Hari ini' : ($daysUntil === 1 ? 'Besok' : $daysUntil . ' hari lagi');
+                    }
+                @endphp
+                <section class="mc-next">
+                    <div class="mc-next-cal">
+                        <span class="mc-next-day">{{ $nextDate ? $nextDate->format('d') : '--' }}</span>
+                        <span class="mc-next-mon">{{ $nextDate ? $nextDate->format('M') : strtoupper(substr($nextSched->day ?? '', 0, 3)) }}</span>
+                    </div>
+                    <div class="mc-next-body">
+                        <p class="mc-next-eyebrow">
+                            <i class="fas fa-bolt" style="color:#EE4E8B;"></i> Sesi Berikutnya
+                            <span class="cd"><span class="cd-dot"></span>{{ $cdLabel }}</span>
+                        </p>
+                        <h2 class="mc-next-title">{{ $nextSched->classModel->class_name ?? 'Class' }}</h2>
+                        <div class="mc-next-meta">
+                            <span><i class="far fa-calendar"></i>{{ $nextSched->day ?? '-' }}, {{ $nextSched->schedule_date_formatted }}</span>
+                            <span><i class="far fa-clock"></i>{{ \Carbon\Carbon::parse($nextSched->class_time)->format('H:i') }}</span>
+                            <span class="mc-next-pkg"><i class="fas fa-box-open"></i>{{ $nextPkg }}</span>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon green">
-                            <i class="fas fa-users"></i>
+                    <div class="mc-next-side">
+                        <div class="mc-next-who">
+                            <div class="ava">{{ $nextInitials }}</div>
+                            <div>
+                                <div class="who-label">Instruktur</div>
+                                <div class="who-name">{{ $nextInstructor }}</div>
+                            </div>
                         </div>
-                        <div class="stat-info">
-                            <div class="num">{{ $stats['unique_packages'] ?? 0 }}</div>
-                            <div class="label">Membership Aktif</div>
-                        </div>
+                        <span class="mc-next-badge"><span class="d"></span>Terkonfirmasi</span>
                     </div>
-                </div>
+                </section>
             @endif
 
             @if($myClasses->isEmpty() && $pastClasses->isEmpty())
@@ -636,20 +839,25 @@
                     $allPkgs = $activePackages->pluck('package.name')->unique()->filter()->values();
                 @endphp
 
-                <div class="relative mb-6" style="max-width: 460px;">
-                    <select id="package-filter-select" onchange="applyFilter(this.value)" style="width:100%; appearance:none; -webkit-appearance:none; background:#FFFFFF; border:1px solid #E8C0D4; border-radius:12px; padding:0.65rem 2.5rem 0.65rem 1.1rem; font-family:'Poppins',sans-serif; font-size:13px; font-weight:500; color:#1C1C1C; cursor:pointer; outline:none; box-shadow:0 2px 8px rgba(122,43,74,0.06);">
-                        <option value="all" selected>Semua Kelas ({{ $myClasses->count() + $pastClasses->count() }})</option>
-                        @foreach($allPkgs as $pkgName)
-                            <option value="{{ Str::slug($pkgName) }}">{{ $pkgName }}</option>
-                        @endforeach
-                    </select>
-                    <div style="pointer-events:none; position:absolute; right:14px; top:50%; transform:translateY(-50%); color:#7A2B4A;">
+                <div class="mc-toolbar">
+                    <span class="mc-toolbar-label"><i class="fas fa-filter" style="margin-right:5px;"></i>Filter paket</span>
+                    <div class="mc-select-wrap">
+                        <select id="package-filter-select" class="mc-select" onchange="applyFilter(this.value)">
+                            <option value="all" selected>Semua Kelas ({{ $myClasses->count() + $pastClasses->count() }})</option>
+                            @foreach($allPkgs as $pkgName)
+                                <option value="{{ Str::slug($pkgName) }}">{{ $pkgName }}</option>
+                            @endforeach
+                        </select>
                         <i class="fas fa-chevron-down"></i>
                     </div>
                 </div>
 
                 @if(!$myClasses->isEmpty())
-                <div class="section-title">Sesi Terjadwal</div>
+                <div class="mc-sec">
+                    <span class="mc-sec-label">Sesi Terjadwal</span>
+                    <span class="mc-sec-rule"></span>
+                    <span class="mc-sec-count">{{ $myClasses->count() }} sesi</span>
+                </div>
 
                 <div class="classes-grid" id="classesGrid">
                     @foreach($myClasses as $item)
@@ -750,7 +958,11 @@
                 @endif
 
                 @if(!$pastClasses->isEmpty())
-                <div class="section-title">Riwayat Kelas</div>
+                <div class="mc-sec">
+                    <span class="mc-sec-label">Riwayat Kelas</span>
+                    <span class="mc-sec-rule"></span>
+                    <span class="mc-sec-count">{{ $pastClasses->count() }} sesi</span>
+                </div>
 
                 <div class="classes-grid" id="pastClassesGrid" style="margin-top: 0;">
                     @foreach($pastClasses as $item)
