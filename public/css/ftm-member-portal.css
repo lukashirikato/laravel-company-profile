@@ -412,14 +412,15 @@ main [class*="bg-accent"]:not([class*="bg-accent/"]),
 /* Kill gradients in the page main only — never inside modal scroll areas.
    #availablePackagesModal renders its own <main class="apm-scroll">, and its
    "Beli Sekarang" CTA relies on a gradient; flattening it made white text
-   disappear on the near-white modal shell. */
-main:not(.apm-scroll) [class*="bg-gradient"],
-.main-content [class*="bg-gradient"] {
+   disappear on the near-white modal shell. Elements tagged .db-pass-grad
+   (kartu pass tiket di dashboard) are exempt — they need their gradient. */
+main:not(.apm-scroll) [class*="bg-gradient"]:not(.db-pass-grad),
+.main-content [class*="bg-gradient"]:not(.db-pass-grad) {
     background-image: none !important;
 }
-main:not(.apm-scroll) [class*="from-"],
-main:not(.apm-scroll) [class*="via-"],
-main:not(.apm-scroll) [class*="to-"] {
+main:not(.apm-scroll) [class*="from-"]:not(.db-pass-grad),
+main:not(.apm-scroll) [class*="via-"]:not(.db-pass-grad),
+main:not(.apm-scroll) [class*="to-"]:not(.db-pass-grad) {
     background-image: none !important;
 }
 

@@ -126,34 +126,37 @@
 
         {{-- ===========================================================
              TOP HEADER — Greeting + Notif & Avatar
+             Semua item rata-atas sejajar baris pertama salam (presisi
+             di mobile walau nama/quote memanjang).
              =========================================================== --}}
-        <div class="px-6 md:px-10 pt-6 md:pt-10 pb-4">
-            <div class="flex items-center gap-3 md:gap-4">
+        <div class="px-5 sm:px-6 md:px-10 pt-6 md:pt-10 pb-4">
+            <div class="flex items-start gap-3 md:gap-4">
                 {{-- Mobile Hamburger — inline in header flow so it never overlaps the greeting --}}
-                <button id="hamburger-btn" class="hamburger-btn hidden flex-shrink-0 w-10 h-10 rounded-lg items-center justify-center"
+                <button id="hamburger-btn" class="hamburger-btn hidden flex-shrink-0 w-10 h-10 mt-0.5 md:mt-1.5 rounded-lg items-center justify-center"
                         style="background: var(--pink); color: var(--rising); box-shadow: 0 4px 12px rgba(238, 78, 139, 0.3);"
                         onclick="toggleSidebar()" aria-label="Buka menu">
                     <i class="fas fa-bars"></i>
                 </button>
 
                 <div class="flex-1 min-w-0">
-                    <h1 class="font-nord text-xl sm:text-2xl md:text-[28px] font-bold text-[#7A2B4A] break-words">
+                    <h1 class="font-nord text-xl sm:text-2xl md:text-[28px] font-bold leading-tight text-[#7A2B4A] break-words">
                         Assalamu'alaikum, {{ $customer->name }}
                     </h1>
-                    <p class="text-sm text-[#1C1C1C]/55 mt-1 leading-relaxed max-w-lg">
-                        "Setiap langkah kecil membawamu lebih dekat ke versi terbaik dirimu."<br>
-                        <span class="text-xs text-[#1C1C1C]/40">{{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM YYYY') }}</span>
+                    <p class="text-[13px] sm:text-sm text-[#1C1C1C]/55 italic leading-relaxed mt-1.5 max-w-md">
+                        "Setiap langkah kecil membawamu lebih dekat ke versi terbaik dirimu."
+                    </p>
+                    <p class="flex items-center gap-1.5 text-[11px] sm:text-xs text-[#1C1C1C]/40 font-medium mt-1.5">
+                        <i class="far fa-calendar text-[10px]"></i>
+                        {{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM YYYY') }}
                     </p>
                 </div>
-                <div class="flex items-center gap-3 flex-shrink-0">
 
-                    <a href="{{ route('member.account') }}" class="block group">
-                        <div class="w-12 h-12 rounded-full flex items-center justify-center text-white font-nord font-bold text-base shadow-lg border-2 border-white/80 transition-transform duration-200 group-hover:scale-105 group-hover:shadow-xl"
-                             style="background: linear-gradient(135deg, #EE4E8B, #7A2B4A); box-shadow: 0 4px 12px rgba(238,78,139,0.3), 0 0 0 4px rgba(238,78,139,0.12);">
-                            {{ strtoupper(substr($customer->name, 0, 1)) }}
-                        </div>
-                    </a>
-                </div>
+                <a href="{{ route('member.account') }}" class="block group flex-shrink-0 mt-0.5 md:mt-1.5" aria-label="Buka profil">
+                    <div class="w-11 h-11 md:w-12 md:h-12 rounded-full flex items-center justify-center text-white font-nord font-bold text-base shadow-lg border-2 border-white/80 transition-transform duration-200 group-hover:scale-105 group-hover:shadow-xl"
+                         style="background: linear-gradient(135deg, #EE4E8B, #7A2B4A); box-shadow: 0 4px 12px rgba(238,78,139,0.3), 0 0 0 4px rgba(238,78,139,0.12);">
+                        {{ strtoupper(substr($customer->name, 0, 1)) }}
+                    </div>
+                </a>
             </div>
         </div>
 
@@ -175,42 +178,114 @@
                 $pkgExpiry = $activeOrder->expired_at
                     ? \Carbon\Carbon::parse($activeOrder->expired_at)->isoFormat('D MMMM YYYY')
                     : 'Belum diaktifkan';
+                $pkgExpiryShort = $activeOrder->expired_at
+                    ? \Carbon\Carbon::parse($activeOrder->expired_at)->locale('id')->isoFormat('D MMM YYYY')
+                    : '-';
+                $passDaysLeft = $activeOrder->expired_at
+                    ? max(0, (int) \Carbon\Carbon::now()->startOfDay()->diffInDays(\Carbon\Carbon::parse($activeOrder->expired_at)->startOfDay(), false))
+                    : 0;
             @endphp
-            <div class="rounded-2xl overflow-hidden relative animate-fade-up delay-1"
-                 style="background: linear-gradient(135deg, #EE4E8B 0%, #7A2B4A 100%);">
-                <div class="absolute top-0 right-0 w-48 h-48 rounded-full bg-white/5 -mr-16 -mt-16"></div>
-                <div class="absolute bottom-0 left-0 w-32 h-32 rounded-full bg-white/5 -ml-12 -mb-12"></div>
-                <div class="relative z-10 p-5 md:p-6">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-                        <div>
-                            <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/70">MEMBER {{ $pkgIsExclusive ? 'EKSKLUSIF' : 'REGULER' }}</span>
-                            <h3 class="font-nord text-lg md:text-xl font-black tracking-tight text-white mt-0.5">{{ $pkgName }}</h3>
-                        </div>
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C5D79B]/30 text-white text-[10px] font-bold uppercase tracking-[0.12em] border border-[#C5D79B]/40 w-fit">
-                            <span class="w-1.5 h-1.5 rounded-full bg-[#C5D79B] animate-pulse"></span>
-                            AKTIF
-                        </span>
+            {{-- Kartu Pass Digital — desain tiket berperforasi --}}
+            <div class="db-pass-grad relative w-full overflow-hidden rounded-2xl bg-gradient-to-br from-[#782B49] via-[#6a243f] to-[#541a31] text-white shadow-xl animate-fade-up delay-1">
+                {{-- Kilau foil --}}
+                <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-[#fd5a96]/15 blur-2xl pointer-events-none"></div>
+
+                {{-- Badan Atas --}}
+                <div class="relative z-10 p-5 pb-3">
+                {{-- Header: Tier & Status --}}
+                <div class="flex items-center justify-between pb-3">
+                    <div class="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-rose-200">
+                        <svg class="h-4 w-4 text-[#ffdea6]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                        </svg>
+                        <span>MEMBER {{ $pkgIsExclusive ? 'EKSKLUSIF' : 'REGULER' }}</span>
                     </div>
-                    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-                        <div class="flex items-center gap-6">
-                            <div>
-                                <p class="text-[10px] uppercase tracking-[0.2em] text-white/60">Sisa Sesi</p>
-                                <p class="font-nord text-3xl md:text-4xl font-black leading-none mt-1 text-white">{{ $pkgRemaining }}</p>
-                            </div>
-                            <div class="max-w-[180px] w-full">
-                                <div class="w-full h-2 rounded-full bg-white/20 overflow-hidden">
-                                    <div class="h-full rounded-full bg-white/80 transition-all duration-700"
-                                         style="width: {{ $pkgProgress }}%"></div>
-                                </div>
-                                <p class="text-[11px] text-white/60 mt-1">Berakhir: {{ $pkgExpiry }}</p>
-                            </div>
-                        </div>
-                        <a href="{{ route('member.packages.index') }}"
-                           class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white text-[#7A2B4A] font-nord font-bold text-xs hover:bg-[#FCF9F2] transition-all shadow-lg hover:shadow-xl w-fit flex-shrink-0">
-                            PERPANJANG PAKET <i class="fas fa-arrow-right text-[10px]"></i>
-                        </a>
+                    <span class="inline-flex items-center gap-1.5 rounded-full bg-[#1b5e3d] px-2.5 py-1 text-[11px] font-bold text-[#86efac] border border-[#4ade80]/30 shadow-sm">
+                        <span class="h-1.5 w-1.5 rounded-full bg-[#4ade80] animate-pulse"></span>
+                        AKTIF
+                    </span>
+                </div>
+
+                {{-- Nama Paket & Sisa Hari --}}
+                <div class="mt-1 flex items-start justify-between gap-3">
+                    <div class="space-y-1 min-w-0">
+                        <span class="text-[10px] uppercase tracking-wider text-rose-200/70 font-medium">Paket Terdaftar</span>
+                        <h3 class="text-base font-bold leading-tight text-white drop-shadow-sm">{{ $pkgName }}</h3>
+                    </div>
+                    <div class="text-right shrink-0">
+                        <span class="text-2xl font-black tracking-tight text-white">{{ $passDaysLeft }} Hari</span>
+                        <span class="block text-[10px] font-medium text-rose-200/70 uppercase">Sisa Hari</span>
                     </div>
                 </div>
+
+                {{-- Kuota & Tanggal Kedaluwarsa --}}
+                <div class="mt-4 flex items-center justify-between gap-2 text-xs text-rose-100/90 border-t border-white/10 pt-3">
+                    <div class="flex items-center gap-1.5">
+                        <svg class="h-4 w-4 text-rose-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+                        </svg>
+                        <span class="font-medium"><strong>{{ $pkgRemaining }}</strong> dari <strong>{{ $pkgTotalQuota }}</strong> sesi bisa dipakai</span>
+                    </div>
+                    <span class="text-[11px] text-rose-200/75 whitespace-nowrap">s/d {{ $pkgExpiryShort }}</span>
+                </div>
+
+                </div>
+                {{-- /Badan Atas --}}
+
+                {{-- Perforasi + Notch Cuts (sejajar garis putus-putus) --}}
+                <div class="relative flex items-center z-10">
+                    <div class="absolute -left-3 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full bg-[#FCF9F2]"></div>
+                    <div class="absolute -right-3 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full bg-[#FCF9F2]"></div>
+                    <div class="flex-1 border-t border-dashed border-white/25 mx-4"></div>
+                </div>
+
+                {{-- Badan Bawah --}}
+                <div class="relative z-10 px-5 pb-5 pt-1">
+
+                {{-- Barcode & Membership ID --}}
+                <div class="flex items-center justify-between gap-3 rounded-xl bg-black/25 px-3 py-2 border border-white/10">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <svg class="h-6 w-24 text-white/90 flex-shrink-0" viewBox="0 0 100 24" fill="currentColor">
+                            <rect x="0" y="0" width="3" height="24"/>
+                            <rect x="5" y="0" width="2" height="24"/>
+                            <rect x="9" y="0" width="4" height="24"/>
+                            <rect x="15" y="0" width="1" height="24"/>
+                            <rect x="18" y="0" width="3" height="24"/>
+                            <rect x="23" y="0" width="2" height="24"/>
+                            <rect x="27" y="0" width="5" height="24"/>
+                            <rect x="34" y="0" width="2" height="24"/>
+                            <rect x="38" y="0" width="1" height="24"/>
+                            <rect x="41" y="0" width="4" height="24"/>
+                            <rect x="47" y="0" width="2" height="24"/>
+                            <rect x="51" y="0" width="3" height="24"/>
+                            <rect x="56" y="0" width="1" height="24"/>
+                            <rect x="59" y="0" width="4" height="24"/>
+                            <rect x="65" y="0" width="2" height="24"/>
+                            <rect x="69" y="0" width="5" height="24"/>
+                            <rect x="76" y="0" width="2" height="24"/>
+                            <rect x="80" y="0" width="3" height="24"/>
+                            <rect x="85" y="0" width="1" height="24"/>
+                            <rect x="88" y="0" width="4" height="24"/>
+                            <rect x="94" y="0" width="2" height="24"/>
+                            <rect x="98" y="0" width="2" height="24"/>
+                        </svg>
+                        <span class="font-mono text-xs tracking-wider text-rose-100 font-semibold truncate">#{{ $activeOrder->order_code }}</span>
+                    </div>
+                    <svg class="h-4 w-4 text-white/50 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                </div>
+
+                {{-- Tombol Aksi --}}
+                <div class="mt-4 grid grid-cols-2 gap-2.5">
+                    <a href="{{ route('member.packages.index') }}" class="inline-flex items-center justify-center rounded-xl bg-white/10 px-3 py-2.5 text-xs font-semibold uppercase tracking-wider text-white transition hover:bg-white/20 active:scale-[0.98] border border-white/15 backdrop-blur-sm">
+                        Detail Paket
+                    </a>
+                    <a href="{{ route('member.packages.index') }}" class="db-pass-grad inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-[#E94B87] to-[#d63a75] px-3 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-md shadow-rose-900/40 transition hover:opacity-95 active:scale-[0.98]">
+                        + Perpanjang
+                    </a>
+                </div>
+                </div>{{-- /Badan Bawah --}}
             </div>
             @else
             <div class="rounded-2xl overflow-hidden relative animate-fade-up delay-1"

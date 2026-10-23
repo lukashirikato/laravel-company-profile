@@ -22,13 +22,13 @@
         @if($package->duration_days || $package->quota)
         <div class="flex flex-wrap gap-2 my-3.5">
             @if($package->duration_days)
-            <span class="px-2.5 py-1 rounded-lg bg-rose-50/70 border border-rose-100 text-xs font-medium text-slate-700">
-                📅 {{ $package->duration_days }} Hari
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-50/70 border border-rose-100 text-xs font-medium text-slate-700">
+                <i class="fas fa-calendar-days text-[#9d174d]" aria-hidden="true"></i> {{ $package->duration_days }} Hari
             </span>
             @endif
             @if($package->quota)
-            <span class="px-2.5 py-1 rounded-lg bg-rose-50/70 border border-rose-100 text-xs font-medium text-slate-700">
-                🧘 {{ $package->quota }} Sesi
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-50/70 border border-rose-100 text-xs font-medium text-slate-700">
+                <i class="fas fa-ticket text-[#9d174d]" aria-hidden="true"></i> {{ $package->quota }} Sesi
             </span>
             @endif
         </div>
