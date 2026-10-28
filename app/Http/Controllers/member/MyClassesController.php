@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Models\CustomerSchedule;
+use App\Models\Attendance;
+use App\Models\InstructorRating;
 use App\Models\Order;
 use Carbon\Carbon;
 
@@ -45,16 +47,22 @@ class MyClassesController extends Controller
 
         // ✅ MAP package info & status kadaluarsa jadwal ke setiap schedule
         $processedSchedules = $allCustomerSchedules->map(function($item) use ($customerOrders, $activeOrders, $customer, $today, $currentTime) {
-            // Cek apakah jadwal sudah lewat (Past / Selesai)
-            $scheduleDate = $item->schedule->schedule_date ? Carbon::parse($item->schedule->schedule_date)->toDateString() : null;
-            $classTime = $item->schedule->class_time ? Carbon::parse($item->schedule->class_time)->format('H:i:s') : '23:59:59';
-
+            // Cek apakah jadwal sudah benar-benar selesai (lewat jam akhir kelas)
             $isPast = false;
-            if ($scheduleDate) {
-                if ($scheduleDate < $today) {
-                    $isPast = true;
-                } elseif ($scheduleDate === $today && $classTime < $currentTime) {
-                    $isPast = true;
+            $classEndAt = $item->schedule->getClassEndTime();
+
+            if ($classEndAt) {
+                $isPast = $classEndAt->isPast();
+            } else {
+                $scheduleDate = $item->schedule->schedule_date ? Carbon::parse($item->schedule->schedule_date)->toDateString() : null;
+                $classTime = $item->schedule->class_time ? Carbon::parse($item->schedule->class_time)->format('H:i:s') : '23:59:59';
+
+                if ($scheduleDate) {
+                    if ($scheduleDate < $today) {
+                        $isPast = true;
+                    } elseif ($scheduleDate === $today && $classTime < $currentTime) {
+                        $isPast = true;
+                    }
                 }
             }
 
@@ -94,6 +102,32 @@ class MyClassesController extends Controller
             }
 
             return $item;
+        });
+
+        // o. Lampirkan rating yang sudah pernah dikirim member (per jadwal)
+        $ratingsBySchedule = InstructorRating::where('customer_id', $customer->id)
+            ->get()
+            ->keyBy('schedule_id');
+
+        // o. Lampirkan status kehadiran (check-in / check-out) per jadwal.
+        // "Selesai" hanya jika member benar-benar sudah check-out.
+        $attendancesBySchedule = Attendance::where('customer_id', $customer->id)
+            ->whereNotNull('schedule_id')
+            ->get()
+            ->groupBy('schedule_id');
+
+        $processedSchedules->each(function ($item) use ($ratingsBySchedule, $attendancesBySchedule) {
+            $item->user_rating = $ratingsBySchedule->get($item->schedule_id);
+
+            $records = $attendancesBySchedule->get($item->schedule_id, collect());
+            $item->has_checked_in = $records->contains(fn ($a) => $a->check_in_at !== null);
+            $item->has_checked_out = $records->contains(fn ($a) => $a->check_out_at !== null);
+            $item->is_completed = $item->has_checked_out;
+
+            // Check-out menandakan sesi selesai, walau jam akhir kelas belum lewat.
+            if ($item->has_checked_out) {
+                $item->is_past = true;
+            }
         });
 
         // ✅ Pisahkan kelas aktif (Upcoming) dan kelas lewat (Past)

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>My Classes | FTM Society</title>
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -627,6 +628,32 @@
             border-radius: 50%;
         }
 
+        .status-pill.status-pill-pending {
+            background: #FFF1DC;
+            color: #9A5B00;
+            border: 1px solid rgba(201, 123, 0, .25) !important;
+        }
+
+        .status-pill.status-pill-pending .sdot {
+            background: #C97B00;
+        }
+
+        .rate-locked {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            font-family: 'Poppins', sans-serif;
+            font-size: 11.5px;
+            font-weight: 500;
+            color: rgba(28, 28, 28, .45);
+            line-height: 1.4;
+        }
+
+        .rate-locked i {
+            font-size: 10px;
+            color: #C97B00;
+        }
+
         .empty-card {
             text-align: center;
             padding: 3rem 2rem;
@@ -735,6 +762,332 @@
                 flex-wrap: wrap;
                 gap: 0.5rem;
             }
+        }
+
+        /* ============================================
+           PENILAIAN PELATIH
+           ============================================ */
+        .rate-row {
+            margin-top: .85rem;
+            padding-top: .8rem;
+            border-top: 1px dashed rgba(122, 43, 74, .16);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: .75rem;
+            flex-wrap: wrap;
+        }
+
+        .rate-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+            padding: .45rem 1.05rem;
+            border-radius: 999px;
+            border: 1px solid rgba(238, 78, 139, .3);
+            background: rgba(238, 78, 139, .07);
+            color: var(--pink);
+            font-family: 'Poppins', sans-serif;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform .16s ease, background .2s ease, color .2s ease, box-shadow .2s ease;
+        }
+
+        .rate-btn i { font-size: 11px; }
+
+        .rate-btn:hover {
+            background: var(--pink);
+            border-color: var(--pink);
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(238, 78, 139, .28);
+        }
+
+        .rate-btn:focus-visible,
+        .rate-edit:focus-visible,
+        .rate-star:focus-visible,
+        .rate-cancel:focus-visible,
+        .rate-submit:focus-visible,
+        .rate-modal-close:focus-visible {
+            outline: 2px solid var(--cherry);
+            outline-offset: 2px;
+        }
+
+        .rate-done {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            flex-wrap: wrap;
+        }
+
+        .rate-stars-static {
+            display: inline-flex;
+            gap: 2px;
+        }
+
+        .rate-stars-static i {
+            font-size: 12px;
+            color: rgba(122, 43, 74, .16);
+        }
+
+        .rate-stars-static i.is-on { color: var(--pink); }
+
+        .rate-done .rate-done-label {
+            font-family: 'Poppins', sans-serif;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--green);
+        }
+
+        .rate-edit {
+            padding: 0;
+            border: none;
+            background: none;
+            color: var(--cherry);
+            font-family: 'Poppins', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            cursor: pointer;
+        }
+
+        /* --- Modal --- */
+        .rate-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 90;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity .22s ease, visibility .22s ease;
+        }
+
+        .rate-modal.open {
+            display: flex;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .rate-modal.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .rate-modal-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(28, 28, 28, .55);
+            backdrop-filter: blur(4px);
+        }
+
+        .rate-modal-card {
+            position: relative;
+            width: min(440px, 100%);
+            max-height: calc(100vh - 2rem);
+            overflow-y: auto;
+            background: var(--rising);
+            border: 1px solid rgba(238, 78, 139, .16);
+            border-radius: 22px;
+            padding: 1.75rem 1.6rem 1.5rem;
+            box-shadow: 0 30px 70px rgba(28, 28, 28, .35);
+            transform: translateY(14px) scale(.98);
+            transition: transform .26s cubic-bezier(.2, .8, .2, 1);
+        }
+
+        .rate-modal.open .rate-modal-card { transform: none; }
+
+        .rate-modal-close {
+            position: absolute;
+            top: .9rem;
+            right: .9rem;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            border: 1px solid rgba(122, 43, 74, .16);
+            background: #fff;
+            color: var(--cherry);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background .2s ease, color .2s ease, border-color .2s ease;
+        }
+
+        .rate-modal-close:hover {
+            background: var(--cherry);
+            border-color: var(--cherry);
+            color: #fff;
+        }
+
+        .rate-eyebrow {
+            font-family: 'Poppins', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: var(--pink);
+        }
+
+        .rate-modal-card h3 {
+            font-family: 'Nord', 'Poppins', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 800;
+            line-height: 1.25;
+            color: var(--cherry);
+            margin-top: .35rem;
+            padding-right: 1.75rem;
+        }
+
+        .rate-modal-card h3 span { color: var(--pink); }
+
+        .rate-class-name {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-style: italic;
+            font-size: 1rem;
+            color: var(--caption);
+            margin-top: .15rem;
+        }
+
+        .rate-stars {
+            display: flex;
+            justify-content: center;
+            gap: .4rem;
+            margin: 1.15rem 0 .35rem;
+        }
+
+        .rate-star {
+            padding: .15rem;
+            border: none;
+            background: none;
+            font-size: 1.9rem;
+            line-height: 1;
+            color: rgba(122, 43, 74, .17);
+            cursor: pointer;
+            transition: transform .15s ease, color .15s ease;
+        }
+
+        .rate-star.is-on { color: var(--pink); text-shadow: 0 4px 12px rgba(238, 78, 139, .35); }
+
+        .rate-star.is-hover { transform: scale(1.12); }
+
+        .rate-hint {
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            color: rgba(28, 28, 28, .45);
+            margin-bottom: 1rem;
+        }
+
+        .rate-comment-label {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--cherry);
+            margin-bottom: .35rem;
+        }
+
+        .rate-comment-label span {
+            font-weight: 500;
+            color: rgba(28, 28, 28, .4);
+        }
+
+        .rate-comment {
+            width: 100%;
+            min-height: 86px;
+            resize: vertical;
+            padding: .75rem .9rem;
+            border-radius: 12px;
+            border: 1px solid rgba(122, 43, 74, .18);
+            background: #fff;
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: 1.05rem;
+            line-height: 1.5;
+            color: var(--layl);
+            transform: rotate(-1deg);
+            transition: transform .22s ease, border-color .2s ease, box-shadow .2s ease;
+        }
+
+        .rate-comment::placeholder {
+            color: rgba(28, 28, 28, .35);
+            font-style: italic;
+        }
+
+        .rate-comment:focus {
+            outline: none;
+            transform: rotate(0deg);
+            border-color: var(--pink);
+            box-shadow: 0 0 0 4px rgba(238, 78, 139, .12);
+        }
+
+        .rate-modal-actions {
+            display: flex;
+            gap: .6rem;
+            margin-top: 1rem;
+        }
+
+        .rate-cancel {
+            flex: 0 0 auto;
+            padding: .65rem 1.1rem;
+            border-radius: 999px;
+            border: 1px solid rgba(122, 43, 74, .18);
+            background: transparent;
+            color: var(--cherry);
+            font-family: 'Poppins', sans-serif;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .2s ease;
+        }
+
+        .rate-cancel:hover { background: rgba(122, 43, 74, .06); }
+
+        .rate-submit {
+            flex: 1;
+            padding: .65rem 1.1rem;
+            border: none;
+            border-radius: 999px;
+            background: linear-gradient(135deg, var(--cherry), var(--pink));
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 10px 22px rgba(238, 78, 139, .28);
+            transition: transform .15s ease, box-shadow .2s ease, opacity .2s ease;
+        }
+
+        .rate-submit:not(:disabled):hover {
+            transform: translateY(-1px);
+            box-shadow: 0 14px 26px rgba(238, 78, 139, .34);
+        }
+
+        .rate-submit:disabled { opacity: .55; cursor: default; }
+
+        .rate-error {
+            min-height: 1rem;
+            margin-top: .5rem;
+            font-family: 'Poppins', sans-serif;
+            font-size: 11.5px;
+            color: #C0264F;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .rate-modal,
+            .rate-modal-card,
+            .rate-star,
+            .rate-comment,
+            .rate-btn,
+            .rate-submit { transition: none; }
+            .rate-comment { transform: none; }
+            .rate-star.is-hover { transform: none; }
         }
     </style>
     <link rel="stylesheet" href="{{ asset('css/ftm-member-portal.css') }}?v={{ filemtime(public_path('css/ftm-member-portal.css')) }}">
@@ -1044,9 +1397,49 @@
                                             <div class="iname">{{ $instructor }}</div>
                                         </div>
                                     </div>
-                                    <div class="status-pill" style="background: var(--caption); color: #fff;">
-                                        <span class="sdot"></span> Selesai
-                                    </div>
+                                    @if($item->has_checked_out)
+                                        <div class="status-pill" style="background: var(--caption); color: #fff;">
+                                            <span class="sdot"></span> Selesai
+                                        </div>
+                                    @elseif($item->has_checked_in)
+                                        <div class="status-pill status-pill-pending">
+                                            <span class="sdot"></span> Belum Check-out
+                                        </div>
+                                    @else
+                                        <div class="status-pill status-pill-pending">
+                                            <span class="sdot"></span> Belum Check-in
+                                        </div>
+                                    @endif
+                                </div>
+
+                                @php $userRating = $item->user_rating ?? null; @endphp
+                                <div class="rate-row" data-rate-row
+                                     data-schedule-id="{{ $item->schedule_id }}"
+                                     data-instructor="{{ $instructor }}"
+                                     data-class="{{ $className }}">
+                                    @if($userRating)
+                                        <div class="rate-done">
+                                            <div class="rate-stars-static">
+                                                @for($s = 1; $s <= 5; $s++)
+                                                    <i class="fas fa-star {{ $s <= $userRating->rating ? 'is-on' : '' }}"></i>
+                                                @endfor
+                                            </div>
+                                            <span class="rate-done-label">Ulasan terkirim</span>
+                                            <button type="button" class="rate-edit" data-rate-open
+                                                    data-rating="{{ $userRating->rating }}"
+                                                    data-comment="{{ $userRating->comment }}">Ubah</button>
+                                        </div>
+                                    @elseif($item->has_checked_out)
+                                        <button type="button" class="rate-btn" data-rate-open
+                                                data-rating="0" data-comment="">
+                                            <i class="fas fa-star"></i> Beri Penilaian
+                                        </button>
+                                    @else
+                                        <span class="rate-locked">
+                                            <i class="fas fa-lock"></i>
+                                            Penilaian aktif setelah check-out di halaman Attendance
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -1056,6 +1449,41 @@
             @endif
         </div>
     </main>
+</div>
+
+{{-- PENILAIAN PELATIH: MODAL --}}
+<div class="rate-modal" id="rateModal" aria-hidden="true">
+    <div class="rate-modal-backdrop" data-rate-close></div>
+    <div class="rate-modal-card" role="dialog" aria-modal="true" aria-labelledby="rateModalTitle">
+        <button type="button" class="rate-modal-close" data-rate-close aria-label="Tutup">
+            <i class="fas fa-xmark"></i>
+        </button>
+
+        <p class="rate-eyebrow">Ulasan Kelas</p>
+        <h3 id="rateModalTitle">Beri penilaian untuk <span id="rateInstructor">pelatih</span></h3>
+        <p class="rate-class-name" id="rateClassName"></p>
+
+        <div class="rate-stars" role="radiogroup" aria-label="Rating 1 sampai 5 bintang">
+            <button type="button" class="rate-star" data-value="1" role="radio" aria-checked="false" aria-label="1 bintang"><i class="fas fa-star"></i></button>
+            <button type="button" class="rate-star" data-value="2" role="radio" aria-checked="false" aria-label="2 bintang"><i class="fas fa-star"></i></button>
+            <button type="button" class="rate-star" data-value="3" role="radio" aria-checked="false" aria-label="3 bintang"><i class="fas fa-star"></i></button>
+            <button type="button" class="rate-star" data-value="4" role="radio" aria-checked="false" aria-label="4 bintang"><i class="fas fa-star"></i></button>
+            <button type="button" class="rate-star" data-value="5" role="radio" aria-checked="false" aria-label="5 bintang"><i class="fas fa-star"></i></button>
+        </div>
+        <p class="rate-hint" id="rateHint">Ketuk bintang untuk memberi rating</p>
+
+        <label class="rate-comment-label" for="rateComment">
+            Komentar <span>opsional</span>
+        </label>
+        <textarea id="rateComment" class="rate-comment" rows="3" maxlength="1000"
+                  placeholder="Ceritakan pengalamanmu di kelas ini..."></textarea>
+
+        <div class="rate-modal-actions">
+            <button type="button" class="rate-cancel" data-rate-close>Batal</button>
+            <button type="button" class="rate-submit" id="rateSubmit">Kirim Ulasan</button>
+        </div>
+        <p class="rate-error" id="rateError" role="alert"></p>
+    </div>
 </div>
 
 <script>
@@ -1132,6 +1560,190 @@ window.addEventListener('resize', function() {
         document.body.style.overflow = '';
     }
 });
+
+// ============================================
+// PENILAIAN PELATIH
+// ============================================
+(function () {
+    const modal = document.getElementById('rateModal');
+    if (!modal) return;
+
+    const RATE_ENDPOINT = @json(route('member.ratings.store'));
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
+    const titleInstructor = document.getElementById('rateInstructor');
+    const classNameEl = document.getElementById('rateClassName');
+    const hintEl = document.getElementById('rateHint');
+    const commentEl = document.getElementById('rateComment');
+    const errorEl = document.getElementById('rateError');
+    const submitBtn = document.getElementById('rateSubmit');
+    const starEls = Array.from(modal.querySelectorAll('.rate-star'));
+
+    const ratingLabels = {
+        1: 'Kurang',
+        2: 'Cukup',
+        3: 'Baik',
+        4: 'Sangat baik',
+        5: 'Luar biasa'
+    };
+
+    let activeRow = null;
+    let rating = 0;
+
+    function paint() {
+        starEls.forEach(function (star) {
+            const value = parseInt(star.dataset.value, 10);
+            star.classList.toggle('is-on', value <= rating);
+            star.setAttribute('aria-checked', value === rating ? 'true' : 'false');
+        });
+        submitBtn.disabled = rating < 1;
+        hintEl.textContent = rating ? ratingLabels[rating] : 'Ketuk bintang untuk memberi rating';
+    }
+
+    function openModal(opener) {
+        activeRow = opener.closest('[data-rate-row]');
+        if (!activeRow) return;
+
+        rating = parseInt(opener.dataset.rating || '0', 10) || 0;
+        titleInstructor.textContent = activeRow.dataset.instructor || 'pelatih';
+        classNameEl.textContent = activeRow.dataset.class || '';
+        commentEl.value = opener.dataset.comment || '';
+        errorEl.textContent = '';
+        paint();
+
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        setTimeout(function () { commentEl.focus(); }, 120);
+    }
+
+    function closeModal() {
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        activeRow = null;
+    }
+
+    function renderDone(row, value, comment) {
+        row.innerHTML = '';
+
+        const done = document.createElement('div');
+        done.className = 'rate-done';
+
+        const stars = document.createElement('div');
+        stars.className = 'rate-stars-static';
+        for (let i = 1; i <= 5; i++) {
+            const icon = document.createElement('i');
+            icon.className = 'fas fa-star' + (i <= value ? ' is-on' : '');
+            stars.appendChild(icon);
+        }
+
+        const label = document.createElement('span');
+        label.className = 'rate-done-label';
+        label.textContent = 'Ulasan terkirim';
+
+        const edit = document.createElement('button');
+        edit.type = 'button';
+        edit.className = 'rate-edit';
+        edit.setAttribute('data-rate-open', '');
+        edit.dataset.rating = String(value);
+        edit.dataset.comment = comment || '';
+        edit.textContent = 'Ubah';
+
+        done.appendChild(stars);
+        done.appendChild(label);
+        done.appendChild(edit);
+        row.appendChild(done);
+    }
+
+    starEls.forEach(function (star) {
+        star.addEventListener('click', function () {
+            rating = parseInt(star.dataset.value, 10);
+            errorEl.textContent = '';
+            paint();
+        });
+
+        star.addEventListener('mouseenter', function () {
+            const hoverValue = parseInt(star.dataset.value, 10);
+            starEls.forEach(function (s) {
+                s.classList.toggle('is-hover', parseInt(s.dataset.value, 10) <= hoverValue);
+            });
+        });
+    });
+
+    modal.querySelector('.rate-stars').addEventListener('mouseleave', function () {
+        starEls.forEach(function (s) { s.classList.remove('is-hover'); });
+    });
+
+    document.addEventListener('click', function (e) {
+        const opener = e.target.closest('[data-rate-open]');
+        if (opener) {
+            e.preventDefault();
+            openModal(opener);
+            return;
+        }
+        if (e.target.closest('[data-rate-close]')) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+    });
+
+    submitBtn.addEventListener('click', function () {
+        if (rating < 1 || !activeRow) return;
+
+        const scheduleId = activeRow.dataset.scheduleId;
+        const comment = commentEl.value.trim();
+        const row = activeRow;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Mengirim...';
+        errorEl.textContent = '';
+
+        fetch(RATE_ENDPOINT, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({
+                schedule_id: scheduleId,
+                rating: rating,
+                comment: comment
+            })
+        })
+        .then(function (response) {
+            return response.json().then(function (data) {
+                return { ok: response.ok, status: response.status, data: data };
+            });
+        })
+        .then(function (result) {
+            if (!result.ok) {
+                let message = result.data.message || 'Ulasan gagal dikirim. Coba lagi.';
+                if (result.data.errors) {
+                    const firstKey = Object.keys(result.data.errors)[0];
+                    if (firstKey) message = result.data.errors[firstKey][0];
+                }
+                errorEl.textContent = message;
+                return;
+            }
+            renderDone(row, rating, comment);
+            closeModal();
+        })
+        .catch(function () {
+            errorEl.textContent = 'Koneksi terputus. Periksa jaringan lalu coba lagi.';
+        })
+        .finally(function () {
+            submitBtn.disabled = rating < 1;
+            submitBtn.textContent = 'Kirim Ulasan';
+        });
+    });
+
+    paint();
+})();
 </script>
 
 </body>

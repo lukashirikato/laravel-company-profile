@@ -157,6 +157,154 @@
 
         .bc-week-nav { display: flex; align-items: center; gap: .5rem; }
 
+        /* --- Pemicu kalender --- */
+        .bc-date-trigger {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            background: transparent;
+            border: 0;
+            padding: 0;
+            cursor: pointer;
+            text-align: left;
+            border-radius: 10px;
+        }
+
+        .bc-date-trigger .bc-sec-label,
+        .bc-date-trigger .bc-week-date { display: block; }
+
+        .bc-date-trigger:hover .bc-week-date { color: #EE4E8B; }
+
+        .bc-date-trigger-icon {
+            font-size: .7rem;
+            color: #EE4E8B;
+            flex-shrink: 0;
+            transition: transform .2s ease;
+        }
+
+        .bc-date-trigger[aria-expanded="true"] .bc-date-trigger-icon { transform: rotate(180deg); }
+
+        /* --- Popup kalender --- */
+        .bc-date-popup {
+            position: absolute;
+            top: calc(100% + .6rem);
+            left: 0;
+            z-index: 60;
+            width: min(288px, calc(100vw - 3rem));
+            background: #fff;
+            border: 1px solid rgba(238, 78, 139, .12);
+            border-radius: 16px;
+            box-shadow: 0 18px 40px rgba(122, 43, 74, .18);
+            padding: 1rem;
+            animation: bcIn .18s ease both;
+        }
+
+        .bc-cal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: .75rem;
+        }
+
+        .bc-cal-head button {
+            width: 2rem;
+            height: 2rem;
+            border-radius: .6rem;
+            background: #fff;
+            border: 1px solid rgba(238, 78, 139, .15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(28, 28, 28, .5);
+            cursor: pointer;
+            transition: color .2s ease, border-color .2s ease, background .2s ease;
+        }
+
+        .bc-cal-head button:hover { color: #EE4E8B; border-color: #EE4E8B; background: #FFF7FB; }
+
+        .bc-cal-month {
+            font-family: 'Nord', 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 800;
+            color: #7A2B4A;
+        }
+
+        .bc-cal-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            margin-bottom: .35rem;
+        }
+
+        .bc-cal-weekdays span {
+            font-family: 'Poppins', sans-serif;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            color: rgba(28, 28, 28, .35);
+            text-align: center;
+        }
+
+        .bc-cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+        }
+
+        .bc-cal-day {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 1 / 1;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            color: #1C1C1C;
+            background: transparent;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: background .15s ease, color .15s ease, border-color .15s ease;
+        }
+
+        .bc-cal-day.is-muted { color: rgba(28, 28, 28, .2); pointer-events: none; }
+
+        button.bc-cal-day:hover { background: #FFF7FB; border-color: rgba(238, 78, 139, .35); color: #7A2B4A; }
+
+        .bc-cal-day.is-today { border-color: rgba(238, 78, 139, .4); color: #EE4E8B; font-weight: 700; }
+
+        .bc-cal-day.is-selected {
+            background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%);
+            color: #fff;
+            border-color: transparent;
+            font-weight: 700;
+            box-shadow: 0 6px 14px rgba(238, 78, 139, .3);
+        }
+
+        .bc-cal-foot {
+            display: flex;
+            justify-content: center;
+            margin-top: .6rem;
+            padding-top: .6rem;
+            border-top: 1px solid rgba(238, 78, 139, .08);
+        }
+
+        .bc-cal-today-btn {
+            font-family: 'Poppins', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            color: #EE4E8B;
+            background: rgba(238, 78, 139, .08);
+            border: 0;
+            border-radius: 999px;
+            padding: .35rem .9rem;
+            cursor: pointer;
+            transition: background .2s ease;
+        }
+
+        .bc-cal-today-btn:hover { background: rgba(238, 78, 139, .16); }
+
         .bc-week-nav button {
             width: 2.25rem;
             height: 2.25rem;
@@ -177,10 +325,36 @@
             background: #FFF7FB;
         }
 
-        /* Pitu hari — override utilitas Tailwind pada pill hasil render JS */
+        /* Pita tanggal — dapat digeser (drag / swipe) */
+        #week-dates {
+            display: flex;
+            gap: .5rem;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x proximity;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            cursor: grab;
+            padding-bottom: .35rem;
+            max-width: 100%;
+        }
+
+        #week-dates::-webkit-scrollbar { display: none; }
+
+        #week-dates.is-dragging {
+            cursor: grabbing;
+            scroll-snap-type: none;
+            user-select: none;
+        }
+
+        /* Pill hari — override utilitas Tailwind pada pill hasil render JS */
         #week-dates button {
+            flex: 0 0 62px;
+            width: 62px;
+            min-width: 62px;
             border-radius: 14px;
             border: 1px solid rgba(238, 78, 139, .12);
+            scroll-snap-align: start;
             transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
         }
 
@@ -195,6 +369,76 @@
             border-color: transparent !important;
             box-shadow: 0 10px 22px rgba(238, 78, 139, .3) !important;
         }
+
+        /* ============================================
+           DAFTAR PAKET (PIL) — tanpa dropdown
+           ============================================ */
+        .package-strip {
+            display: flex;
+            gap: .5rem;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            cursor: grab;
+            padding-bottom: .25rem;
+            max-width: 100%;
+        }
+
+        .package-strip::-webkit-scrollbar { display: none; }
+
+        .package-strip.is-dragging {
+            cursor: grabbing;
+            user-select: none;
+        }
+
+        .package-pill {
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+            min-width: 200px;
+            max-width: 240px;
+            padding: .55rem .9rem;
+            border-radius: 12px;
+            background: #FCF9F2;
+            border: 1px solid rgba(238, 78, 139, .15);
+            text-align: left;
+            cursor: pointer;
+            transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+        }
+
+        .package-pill:hover {
+            border-color: rgba(238, 78, 139, .45);
+            box-shadow: 0 6px 16px rgba(122, 43, 74, .08);
+            transform: translateY(-1px);
+        }
+
+        .package-pill.is-active {
+            background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%);
+            border-color: transparent;
+            box-shadow: 0 10px 22px rgba(238, 78, 139, .28);
+        }
+
+        .package-pill-name {
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1.25;
+            color: #1C1C1C;
+            white-space: normal;
+        }
+
+        .package-pill-credit {
+            font-family: 'Poppins', sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            color: rgba(28, 28, 28, .45);
+        }
+
+        .package-pill.is-active .package-pill-name { color: #fff; }
+        .package-pill.is-active .package-pill-credit { color: rgba(255, 255, 255, .75); }
 
         @keyframes bcIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
@@ -329,11 +573,13 @@
                 font-size: 13px !important;
                 line-height: 1.3 !important;
             }
-            #package-select {
+            #package-strip {
                 max-width: 100% !important;
                 width: 100% !important;
-                font-size: 12px !important;
                 box-sizing: border-box;
+            }
+            .package-pill {
+                max-width: 200px;
             }
             .credit-status-card .ml-auto {
                 margin-left: 0 !important;
@@ -348,26 +594,15 @@
 
             /* Date Picker (SELECT DATE) */
             #week-dates {
-                display: flex !important;
-                grid-template-columns: none !important;
-                overflow-x: auto !important;
-                scroll-snap-type: x mandatory !important;
-                gap: 8px !important;
-                padding-bottom: 6px !important;
-                -webkit-overflow-scrolling: touch;
-                scrollbar-width: none; /* Hide scrollbar for Firefox */
-                width: 100% !important;
+                gap: 8px;
+                width: 100%;
                 box-sizing: border-box;
             }
-            #week-dates::-webkit-scrollbar {
-                display: none; /* Hide scrollbar for Chrome/Safari */
-            }
             #week-dates button {
-                flex: 0 0 54px !important;
-                width: 54px !important;
-                min-width: 54px !important;
-                padding: 8px 4px !important;
-                scroll-snap-align: start !important;
+                flex: 0 0 54px;
+                width: 54px;
+                min-width: 54px;
+                padding: 8px 4px;
                 box-sizing: border-box;
             }
             #week-dates button p {
@@ -464,14 +699,20 @@
                     </div>
                 </div>
                 @if($activeOrders)
-                <div class="ml-auto">
-                    <select id="package-select" onchange="switchPackage(this.value)" class="font-poppins text-[13px] bg-cream border border-[rgba(238,78,139,0.15)] rounded-xl px-4 py-2.5 text-dark font-medium focus:outline-none focus:border-primary focus:ring-2 focus:ring-[rgba(238,78,139,0.1)]">
+                <div class="ml-auto md:min-w-[300px] md:max-w-[380px]">
+                    <p class="font-poppins text-[10px] text-dark/40 uppercase tracking-wider font-medium mb-1.5">Pilih Paket</p>
+                    <div id="package-strip" class="package-strip">
                         @foreach($activeOrders as $ord)
-                            <option value="{{ $ord->id }}" {{ $ord->id == $selectedOrderId ? 'selected' : '' }}>
-                                {{ $ord->package?->name ?? 'Package' }} ({{ $ord->remaining_classes ?? 0 }} credits)
-                            </option>
+                            @php $isActiveOrder = $ord->id == $selectedOrderId; @endphp
+                            <button type="button"
+                                onclick="switchPackage({{ $ord->id }})"
+                                class="package-pill {{ $isActiveOrder ? 'is-active' : '' }}"
+                                aria-pressed="{{ $isActiveOrder ? 'true' : 'false' }}">
+                                <span class="package-pill-name">{{ $ord->package?->name ?? 'Package' }}</span>
+                                <span class="package-pill-credit">{{ $ord->remaining_classes ?? 0 }} kredit</span>
+                            </button>
                         @endforeach
-                    </select>
+                    </div>
                 </div>
                 @endif
             </div>
@@ -480,9 +721,34 @@
         {{-- DATE SELECTOR: KARTU PITA MINGGUAN --}}
         <section class="bc-week-card">
             <div class="bc-week-head">
-                <div>
-                    <p class="bc-sec-label">Pilih Tanggal</p>
-                    <p id="selected-date-label" class="bc-week-date">&mdash; {{ \Carbon\Carbon::parse($selectedDate)->format('l, d M Y') }}</p>
+                <div class="relative">
+                    <button type="button" id="date-trigger" class="bc-date-trigger" onclick="toggleDatePicker(event)" aria-haspopup="dialog" aria-expanded="false">
+                        <span class="min-w-0">
+                            <span class="bc-sec-label">Pilih Tanggal</span>
+                            <span id="selected-date-label" class="bc-week-date">&mdash; {{ \Carbon\Carbon::parse($selectedDate)->format('l, d M Y') }}</span>
+                        </span>
+                        <i class="fas fa-chevron-down bc-date-trigger-icon"></i>
+                    </button>
+
+                    {{-- POPUP KALENDER --}}
+                    <div id="date-picker-popup" class="bc-date-popup hidden" role="dialog" aria-label="Pilih tanggal">
+                        <div class="bc-cal-head">
+                            <button type="button" onclick="calendarShiftMonth(-1)" aria-label="Bulan sebelumnya">
+                                <i class="fas fa-chevron-left text-xs"></i>
+                            </button>
+                            <p id="calendar-month-label" class="bc-cal-month">&mdash;</p>
+                            <button type="button" onclick="calendarShiftMonth(1)" aria-label="Bulan berikutnya">
+                                <i class="fas fa-chevron-right text-xs"></i>
+                            </button>
+                        </div>
+                        <div class="bc-cal-weekdays">
+                            <span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span><span>Min</span>
+                        </div>
+                        <div id="calendar-grid" class="bc-cal-grid"></div>
+                        <div class="bc-cal-foot">
+                            <button type="button" class="bc-cal-today-btn" onclick="calendarGoToday()">Hari Ini</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="bc-week-nav">
                     <button type="button" onclick="changeWeek(-1)" aria-label="Minggu sebelumnya">
@@ -493,7 +759,7 @@
                     </button>
                 </div>
             </div>
-            <div id="week-dates" class="grid grid-cols-7 gap-2"></div>
+            <div id="week-dates"></div>
         </section>
 
         {{-- FILTER BAR --}}
@@ -1306,12 +1572,14 @@
         return h + ':' + m;
     }
 
+    const WEEK_PILL_DAYS = 21;
+
     function renderWeekPills() {
         const container = document.getElementById('week-dates');
         if (!container) return;
         const dayAbbr = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
         let html = '';
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i < WEEK_PILL_DAYS; i++) {
             const date = new Date(currentWeekStart);
             date.setDate(currentWeekStart.getDate() + i);
             const dateStr = formatYMD(date);
@@ -1321,7 +1589,7 @@
             const isSelected = dateStr === selectedDate;
 
             html += `
-                <button onclick="selectDate('${dateStr}')"
+                <button type="button" data-date="${dateStr}" onclick="selectDate('${dateStr}')"
                     class="rounded-xl p-3 text-center transition-all duration-200 ${isSelected ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-white border border-[rgba(238,78,139,0.1)] text-dark hover:border-primary/30 hover:shadow-sm'}">
                     <p class="font-poppins text-[10px] font-semibold uppercase tracking-wider ${isSelected ? 'text-white/70' : 'text-dark/40'}">${dayName.slice(0, 3)}</p>
                     <p class="font-nord font-bold text-lg leading-tight mt-0.5">${dayNum}</p>
@@ -1330,7 +1598,68 @@
             `;
         }
         container.innerHTML = html;
+
+        // Geser otomatis agar tanggal terpilih terlihat di tengah
+        const activeBtn = container.querySelector('button[data-date="' + selectedDate + '"]');
+        if (activeBtn) {
+            const cRect = container.getBoundingClientRect();
+            const bRect = activeBtn.getBoundingClientRect();
+            const target = container.scrollLeft + (bRect.left - cRect.left) - (container.clientWidth - bRect.width) / 2;
+            container.scrollTo({ left: Math.max(0, target), behavior: 'smooth' });
+        }
     }
+
+    // Drag-to-scroll generik (mouse); sentuhan pakai scroll native
+    function initDragScroll(el) {
+        if (!el || el.dataset.dragReady === '1') return;
+        el.dataset.dragReady = '1';
+
+        let down = false, moved = false, startX = 0, startScroll = 0, pointerId = null;
+
+        el.addEventListener('pointerdown', function(e) {
+            if (e.pointerType !== 'mouse' || e.button !== 0) return;
+            down = true;
+            moved = false;
+            startX = e.clientX;
+            startScroll = el.scrollLeft;
+            el.classList.add('is-dragging');
+        });
+
+        el.addEventListener('pointermove', function(e) {
+            if (!down) return;
+            const dx = e.clientX - startX;
+            if (!moved && Math.abs(dx) > 6) {
+                moved = true;
+                pointerId = e.pointerId;
+                try { el.setPointerCapture(pointerId); } catch (err) {}
+            }
+            if (moved) el.scrollLeft = startScroll - dx;
+        });
+
+        function endDrag() {
+            if (!down) return;
+            down = false;
+            el.classList.remove('is-dragging');
+            if (pointerId !== null) {
+                try { el.releasePointerCapture(pointerId); } catch (err) {}
+                pointerId = null;
+            }
+        }
+
+        el.addEventListener('pointerup', endDrag);
+        el.addEventListener('pointercancel', endDrag);
+
+        el.addEventListener('click', function(e) {
+            if (moved) {
+                e.preventDefault();
+                e.stopPropagation();
+                moved = false;
+            }
+        }, true);
+    }
+
+    initDragScroll(document.getElementById('week-dates'));
+    initDragScroll(document.getElementById('package-strip'));
 
     function renderScheduleCards(schedules) {
         const content = document.getElementById('schedule-content');
@@ -1506,6 +1835,99 @@
         selectedDate = dateStr;
         renderAll();
     }
+
+    // ============================================
+    // KALENDER POPUP (PILIH TANGGAL)
+    // ============================================
+    let calendarView = null;
+    const fullMonthNames = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+
+    function openDatePicker() {
+        const popup = document.getElementById('date-picker-popup');
+        const trigger = document.getElementById('date-trigger');
+        if (!popup) return;
+        const sel = new Date(selectedDate + 'T12:00:00');
+        calendarView = new Date(sel.getFullYear(), sel.getMonth(), 1);
+        renderCalendar();
+        popup.classList.remove('hidden');
+        if (trigger) trigger.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeDatePicker() {
+        const popup = document.getElementById('date-picker-popup');
+        const trigger = document.getElementById('date-trigger');
+        if (popup) popup.classList.add('hidden');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+    }
+
+    function toggleDatePicker(e) {
+        if (e) e.stopPropagation();
+        const popup = document.getElementById('date-picker-popup');
+        if (!popup) return;
+        if (popup.classList.contains('hidden')) { openDatePicker(); } else { closeDatePicker(); }
+    }
+
+    function calendarShiftMonth(delta) {
+        if (!calendarView) {
+            const sel = new Date(selectedDate + 'T12:00:00');
+            calendarView = new Date(sel.getFullYear(), sel.getMonth(), 1);
+        }
+        calendarView = new Date(calendarView.getFullYear(), calendarView.getMonth() + delta, 1);
+        renderCalendar();
+    }
+
+    function calendarGoToday() {
+        selectDate(todayStr);
+        closeDatePicker();
+    }
+
+    function renderCalendar() {
+        const grid = document.getElementById('calendar-grid');
+        const label = document.getElementById('calendar-month-label');
+        if (!grid || !calendarView) return;
+
+        if (label) label.textContent = fullMonthNames[calendarView.getMonth()] + ' ' + calendarView.getFullYear();
+
+        const year = calendarView.getFullYear();
+        const month = calendarView.getMonth();
+        const startOffset = (new Date(year, month, 1).getDay() + 6) % 7; // Senin = 0
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const prevMonthDays = new Date(year, month, 0).getDate();
+
+        let html = '';
+        for (let i = startOffset - 1; i >= 0; i--) {
+            html += '<span class="bc-cal-day is-muted">' + (prevMonthDays - i) + '</span>';
+        }
+        for (let d = 1; d <= daysInMonth; d++) {
+            const dateStr = formatYMD(new Date(year, month, d));
+            let cls = 'bc-cal-day';
+            if (dateStr === selectedDate) cls += ' is-selected';
+            else if (dateStr === todayStr) cls += ' is-today';
+            html += '<button type="button" class="' + cls + '" onclick="pickCalendarDate(\'' + dateStr + '\')">' + d + '</button>';
+        }
+        const trailing = (7 - ((startOffset + daysInMonth) % 7)) % 7;
+        for (let i = 1; i <= trailing; i++) {
+            html += '<span class="bc-cal-day is-muted">' + i + '</span>';
+        }
+        grid.innerHTML = html;
+    }
+
+    function pickCalendarDate(dateStr) {
+        selectedDate = dateStr;
+        currentWeekStart = getMonday(new Date(dateStr + 'T12:00:00'));
+        renderAll();
+        closeDatePicker();
+    }
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('#date-picker-popup') && !e.target.closest('#date-trigger')) {
+            closeDatePicker();
+        }
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeDatePicker();
+    });
 
     function applyFilter(key, value) {
         activeFilters[key] = value;

@@ -35,6 +35,7 @@ use App\Http\Controllers\CustomerSignupController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\MemberBookingController;
 use App\Http\Controllers\Member\MyClassesController;
+use App\Http\Controllers\Member\InstructorRatingController;
 use App\Http\Controllers\Customer\CustomerPackageController;
 use App\Http\Controllers\QRScannerController;
 use App\Http\Controllers\QRApiController;
@@ -343,6 +344,10 @@ Route::prefix('member')
         Route::get('/my-classes', [MyClassesController::class, 'index'])
             ->name('my-classes');
 
+        // Submit a class / instructor rating
+        Route::post('/ratings', [InstructorRatingController::class, 'store'])
+            ->name('ratings.store');
+
         /*
         |--------------------------------------------------------------------------
         | TRANSACTION HISTORY
@@ -495,3 +500,4 @@ Route::prefix('staff/dashboard')
 | Dihapus demi keamanan. Endpoint /api/customers dipindah ke grup
 | staff/dashboard (dilindungi auth + role admin) di atas.
 */
+
