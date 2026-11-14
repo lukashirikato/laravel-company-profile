@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Resources\UserResource;
+use App\Models\Instructor;
 use App\Support\UserRole;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Auth;
@@ -33,5 +34,25 @@ class CreateUser extends CreateRecord
         }
 
         return $data;
+    }
+
+    /**
+     * Akun ber-role Pelatih otomatis dibuatkan profil Instructor agar
+     * langsung bisa dipakai di portal /pelatih.
+     */
+    protected function afterCreate(): void
+    {
+        if (! $this->record->isTrainer()) {
+            return;
+        }
+
+        Instructor::query()->firstOrCreate(
+            ['user_id' => $this->record->id],
+            [
+                'name' => $this->record->name,
+                'phone' => $this->record->phone,
+                'is_active' => true,
+            ]
+        );
     }
 }

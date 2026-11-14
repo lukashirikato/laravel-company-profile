@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\ScheduleResource\Pages;
 
 use App\Filament\Resources\ScheduleResource;
+use App\Models\Instructor;
 use App\Services\ScheduleExpansionService;
 use Carbon\Carbon;
 use Filament\Notifications\Notification;
@@ -48,6 +49,10 @@ class CreateSchedule extends CreateRecord
         }
 
         unset($data['schedule_preview_confirmed']);
+
+        $data['instructor'] = ! empty($data['instructor_id'])
+            ? Instructor::whereKey($data['instructor_id'])->value('name')
+            : null;
 
         if (empty($data['expand_to_month'])) {
             $data['expand_to_month'] = false;

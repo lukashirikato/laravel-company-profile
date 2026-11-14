@@ -28,6 +28,11 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
+
+        'trainer' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
     ],
 
     'providers' => [

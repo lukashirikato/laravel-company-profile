@@ -287,12 +287,213 @@
       overflow: hidden;
       transition: all 0.3s ease;
       }
-      .mobile-menu {
-      transform: translateX(100%);
-      transition: transform 0.3s ease-in-out;
+      /* ─── Mobile drawer ─── */
+      .ftm-drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: min(88vw, 22rem);
+        display: flex;
+        flex-direction: column;
+        background: #FCF9F2;
+        z-index: 10000;
+        padding: 1.5rem 1.5rem calc(1.5rem + env(safe-area-inset-bottom));
+        border-left: 1px solid rgba(122, 43, 74, 0.12);
+        box-shadow: -24px 0 60px -24px rgba(28, 28, 28, 0.35);
+        overflow-y: auto;
+        transform: translateX(100%);
+        visibility: hidden;
+        transition: transform 0.38s cubic-bezier(0.22, 0.61, 0.36, 1), visibility 0.38s;
       }
-      .mobile-menu.active {
-      transform: translateX(0);
+      .ftm-drawer.is-open {
+        transform: translateX(0);
+        visibility: visible;
+      }
+      /* Signature: brand spine + ghost flower */
+      .ftm-drawer::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 6px;
+        background: linear-gradient(180deg, #EE4E8B 0%, #7A2B4A 100%);
+      }
+      .ftm-drawer .ftm-drawer-flower {
+        position: absolute;
+        left: -3.5rem;
+        bottom: -3.5rem;
+        width: 16rem;
+        height: 16rem;
+        display: block;
+        opacity: 0.05;
+        pointer-events: none;
+      }
+      .ftm-drawer-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+      .ftm-drawer-logo {
+        display: flex;
+        align-items: baseline;
+        gap: 0.35rem;
+        text-decoration: none;
+      }
+      .ftm-drawer-close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        flex-shrink: 0;
+        border-radius: 999px;
+        border: 1px solid rgba(122, 43, 74, 0.15);
+        background: #FFFFFF;
+        color: #7A2B4A;
+        transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+      }
+      .ftm-drawer-close:hover {
+        background: #F4C9DF;
+        border-color: #EE4E8B;
+        color: #EE4E8B;
+        transform: rotate(90deg);
+      }
+      .ftm-drawer-eyebrow {
+        margin: 2rem 0 0.5rem;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: rgba(28, 28, 28, 0.4);
+      }
+      .ftm-drawer-nav {
+        display: flex;
+        flex-direction: column;
+      }
+      .ftm-drawer-link {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.95rem 0;
+        font-family: 'Nord', 'Poppins', sans-serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        color: rgba(28, 28, 28, 0.72);
+        border-bottom: 1px solid rgba(122, 43, 74, 0.08);
+        transition: color 0.25s ease, padding-left 0.25s ease;
+      }
+      .ftm-drawer-nav .ftm-drawer-link:last-child {
+        border-bottom: none;
+      }
+      /* Kill the old centred underline from .nav-link-mobile */
+      .ftm-drawer .ftm-drawer-link::after {
+        display: none;
+      }
+      .ftm-drawer-link:hover {
+        color: #7A2B4A;
+        padding-left: 0.35rem;
+      }
+      .ftm-drawer-dot {
+        width: 8px;
+        height: 8px;
+        flex-shrink: 0;
+        border-radius: 999px;
+        border: 1.5px solid rgba(122, 43, 74, 0.25);
+        transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      }
+      .ftm-drawer-link:hover .ftm-drawer-dot {
+        border-color: #EE4E8B;
+      }
+      .ftm-drawer .ftm-drawer-link.active {
+        color: #7A2B4A;
+        font-weight: 700;
+      }
+      .ftm-drawer .ftm-drawer-link.active .ftm-drawer-dot {
+        background: #EE4E8B;
+        border-color: #EE4E8B;
+        box-shadow: 0 0 0 4px rgba(238, 78, 139, 0.14);
+      }
+      .ftm-drawer-foot {
+        margin-top: auto;
+        padding-top: 2rem;
+      }
+      .ftm-drawer-cta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        width: 100%;
+        padding: 0.95rem 1.25rem;
+        border-radius: 10px;
+        background: #EE4E8B;
+        color: #FFFFFF;
+        font-family: 'Nord', 'Poppins', sans-serif;
+        font-weight: 700;
+        font-size: 0.95rem;
+        letter-spacing: 0.02em;
+        box-shadow: 0 10px 24px -12px rgba(238, 78, 139, 0.8);
+        transition: background 0.25s ease, transform 0.25s ease;
+      }
+      .ftm-drawer-cta:hover {
+        background: #7A2B4A;
+        transform: translateY(-1px);
+      }
+      .ftm-drawer-cta i {
+        transition: transform 0.25s ease;
+      }
+      .ftm-drawer-cta:hover i {
+        transform: translateX(3px);
+      }
+      .ftm-drawer a:focus-visible,
+      .ftm-drawer button:focus-visible {
+        outline: 2px solid #EE4E8B;
+        outline-offset: 3px;
+        border-radius: 6px;
+      }
+      @keyframes ftmDrawerItem {
+        from { opacity: 0; transform: translateX(16px); }
+        to   { opacity: 1; transform: none; }
+      }
+      .ftm-drawer.is-open .ftm-drawer-link {
+        animation: ftmDrawerItem 0.45s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+      }
+      .ftm-drawer.is-open .ftm-drawer-link:nth-child(1) { animation-delay: 0.06s; }
+      .ftm-drawer.is-open .ftm-drawer-link:nth-child(2) { animation-delay: 0.10s; }
+      .ftm-drawer.is-open .ftm-drawer-link:nth-child(3) { animation-delay: 0.14s; }
+      .ftm-drawer.is-open .ftm-drawer-link:nth-child(4) { animation-delay: 0.18s; }
+      .ftm-drawer.is-open .ftm-drawer-link:nth-child(5) { animation-delay: 0.22s; }
+      .ftm-drawer.is-open .ftm-drawer-link:nth-child(6) { animation-delay: 0.26s; }
+      .ftm-drawer-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: rgba(28, 28, 28, 0.55);
+        backdrop-filter: blur(4px);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s;
+      }
+      .ftm-drawer-overlay.is-visible {
+        opacity: 1;
+        visibility: visible;
+      }
+      @media (min-width: 768px) {
+        .ftm-drawer { display: none; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .ftm-drawer,
+        .ftm-drawer-overlay { transition: none; }
+        .ftm-drawer.is-open .ftm-drawer-link { animation: none; }
+        .ftm-drawer-close,
+        .ftm-drawer-link,
+        .ftm-drawer-dot,
+        .ftm-drawer-cta,
+        .ftm-drawer-cta i { transition: none; }
       }
       .Facility-image:hover .overlay {
       opacity: 1;
@@ -579,6 +780,7 @@
             <button id="mobile-menu-button"
                     type="button"
                     aria-label="Buka menu"
+                    aria-controls="mobile-menu"
                     aria-expanded="false"
                     class="md:hidden inline-flex items-center justify-center w-11 h-11 rounded-full bg-white/80 backdrop-blur border border-[#F4C9DF] text-[#7A2B4A] hover:bg-[#F4C9DF] hover:border-[#EE4E8B] hover:text-[#EE4E8B] active:scale-95 transition shadow-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
@@ -593,34 +795,63 @@
 </header>
 
 <!-- MOBILE OVERLAY -->
-<div id="mobile-overlay" class="fixed inset-0 bg-dark/50 hidden z-[9999]"></div>
+<div id="mobile-overlay" class="ftm-drawer-overlay" aria-hidden="true"></div>
 
 <!-- MOBILE MENU SLIDE -->
 <div id="mobile-menu"
-    class="fixed top-0 right-[-100%] h-full w-64 bg-cream shadow-lg z-[10000] p-6 transition-all duration-300">
+    class="ftm-drawer"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Menu navigasi"
+    aria-hidden="true">
 
-    <div class="flex justify-end mb-8">
-        <button id="close-menu-button" class="w-10 h-10 flex items-center justify-center text-primary">
-            <i class="ri-close-line ri-lg"></i>
+    <span class="ftm-drawer-flower brand-flower brand-flower-pink" aria-hidden="true"></span>
+
+    <div class="ftm-drawer-head">
+        <a href="{{ route('member.dashboard') }}" class="ftm-drawer-logo" aria-label="FTM Society">
+            <span class="font-nord font-black text-[#EE4E8B] text-xl">FTM</span>
+            <span class="font-instrument italic text-[#7A2B4A] text-2xl">Society</span>
+        </a>
+        <button id="close-menu-button" type="button" class="ftm-drawer-close" aria-label="Tutup menu">
+            <i class="ri-close-line text-lg"></i>
         </button>
     </div>
 
-    <nav class="flex flex-col space-y-6">
-        <a href="#home" class="nav-link-mobile text-dark hover:text-primary transition" data-nav="home">Home</a>
-        <a href="#about" class="nav-link-mobile text-dark hover:text-primary transition" data-nav="about">About</a>
-        <a href="#our-programs" class="nav-link-mobile text-dark hover:text-primary transition" data-nav="programs">Programs</a>
-        <a href="#pricing" class="nav-link-mobile text-dark hover:text-primary transition" data-nav="package">Package</a>
-        <a href="#Facility" class="nav-link-mobile text-dark hover:text-primary transition" data-nav="gallery">Gallery</a>
-        <a href="#contact" class="nav-link-mobile text-dark hover:text-primary transition" data-nav="contact">Contact</a>
+    <p class="ftm-drawer-eyebrow">Menu</p>
 
-
-
-        <!-- LOGIN BUTTON (DITAMBAHKAN) -->
-        <a href="{{ route('member.login') }}"
-            class="border border-primary text-primary px-6 py-3 rounded-button text-center hover:bg-primary hover:text-white hover:scale-105 transition font-semibold">
-            Login
+    <nav class="ftm-drawer-nav" aria-label="Navigasi utama">
+        <a href="#home" class="nav-link-mobile ftm-drawer-link" data-nav="home">
+            <span>Home</span>
+            <span class="ftm-drawer-dot" aria-hidden="true"></span>
+        </a>
+        <a href="#about" class="nav-link-mobile ftm-drawer-link" data-nav="about">
+            <span>About</span>
+            <span class="ftm-drawer-dot" aria-hidden="true"></span>
+        </a>
+        <a href="#our-programs" class="nav-link-mobile ftm-drawer-link" data-nav="programs">
+            <span>Programs</span>
+            <span class="ftm-drawer-dot" aria-hidden="true"></span>
+        </a>
+        <a href="#pricing" class="nav-link-mobile ftm-drawer-link" data-nav="package">
+            <span>Package</span>
+            <span class="ftm-drawer-dot" aria-hidden="true"></span>
+        </a>
+        <a href="#Facility" class="nav-link-mobile ftm-drawer-link" data-nav="gallery">
+            <span>Gallery</span>
+            <span class="ftm-drawer-dot" aria-hidden="true"></span>
+        </a>
+        <a href="#contact" class="nav-link-mobile ftm-drawer-link" data-nav="contact">
+            <span>Contact</span>
+            <span class="ftm-drawer-dot" aria-hidden="true"></span>
         </a>
     </nav>
+
+    <div class="ftm-drawer-foot">
+        <a href="{{ route('member.login') }}" class="ftm-drawer-cta">
+            <span>Login</span>
+            <i class="ri-arrow-right-line"></i>
+        </a>
+    </div>
 </div>
 
 
@@ -634,36 +865,30 @@
 
     if (!menuBtn || !mobileMenu) return;
 
-    function showBackdrop(){
-      if (!overlay) return;
-      overlay.classList.remove('hidden');
-      overlay.style.pointerEvents = 'auto';
-    }
-    function hideBackdrop(){
-      if (!overlay) return;
-      overlay.classList.add('hidden');
-      overlay.style.pointerEvents = 'none';
-    }
-
     function openMenu(){
-      // ensure nothing auto-opens the menu — only run on explicit click
-      console.log('[mobile] openMenu');
-      mobileMenu.style.right = '0';
-      menuBtn.setAttribute('aria-expanded','true');
-      showBackdrop();
+      mobileMenu.classList.add('is-open');
+      mobileMenu.setAttribute('aria-hidden', 'false');
+      menuBtn.setAttribute('aria-expanded', 'true');
+      if (overlay) overlay.classList.add('is-visible');
       document.body.classList.add('overflow-hidden');
+      if (closeBtn) closeBtn.focus({ preventScroll: true });
     }
 
     function closeMenu(){
-      console.log('[mobile] closeMenu');
-      mobileMenu.style.right = '-100%';
-      menuBtn.setAttribute('aria-expanded','false');
-      hideBackdrop();
+      if (!mobileMenu.classList.contains('is-open')) return;
+      mobileMenu.classList.remove('is-open');
+      mobileMenu.setAttribute('aria-hidden', 'true');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      if (overlay) overlay.classList.remove('is-visible');
       document.body.classList.remove('overflow-hidden');
+      menuBtn.focus({ preventScroll: true });
     }
 
     // toggle on hamburger click (no automatic open anywhere else)
-    menuBtn.addEventListener('click', function(e){ e.preventDefault(); const isOpen = mobileMenu.style.right === '0' || mobileMenu.style.right === '' && mobileMenu.classList.contains('open'); if (isOpen) closeMenu(); else openMenu(); });
+    menuBtn.addEventListener('click', function(e){
+      e.preventDefault();
+      if (mobileMenu.classList.contains('is-open')) closeMenu(); else openMenu();
+    });
 
     // close button — stop propagation so it can't re-open
     if (closeBtn) closeBtn.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); try { e.stopImmediatePropagation(); } catch(_){} closeMenu(); return false; });
@@ -674,8 +899,25 @@
     // backdrop click closes
     if (overlay) overlay.addEventListener('click', function(){ closeMenu(); });
 
-    // Escape to close
-    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeMenu(); });
+    // Escape to close, Tab stays inside the open drawer
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape') { closeMenu(); return; }
+      if (e.key !== 'Tab' || !mobileMenu.classList.contains('is-open')) return;
+      const focusable = mobileMenu.querySelectorAll('a[href], button:not([disabled])');
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault(); last.focus({ preventScroll: true });
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault(); first.focus({ preventScroll: true });
+      }
+    });
+
+    // Close when resizing up to desktop so body scroll never stays locked
+    window.addEventListener('resize', function(){
+      if (window.innerWidth >= 768) closeMenu();
+    });
 
     // expose helper
     window.closeMobileMenu = closeMenu;
@@ -4753,6 +4995,7 @@ Kec. Kby. Baru, Jakarta Selatan 12160</p>
           <li><a href="#Programs" class="footer-link">Program</a></li>
           <li><a href="#schedule" class="footer-link">Jadwal</a></li>
           <li><a href="#Facility" class="footer-link">Fasilitas</a></li>
+          <li><a href="{{ route('trainer.login') }}" class="footer-link">Portal Pelatih</a></li>
           <li><a href="#contact" class="footer-link">Hubungi Kami</a></li>
         </ul>
       </div>

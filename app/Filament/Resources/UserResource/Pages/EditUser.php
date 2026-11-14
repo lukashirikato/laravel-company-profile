@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Resources\UserResource;
+use App\Models\Instructor;
 use App\Models\User;
 use App\Support\UserRole;
 use Filament\Resources\Pages\EditRecord;
@@ -49,5 +50,25 @@ class EditUser extends EditRecord
         }
 
         return $data;
+    }
+
+    /**
+     * Pastikan akun Pelatih punya profil Instructor yang terhubung,
+     * agar portal /pelatih langsung menampilkan jadwal.
+     */
+    protected function afterSave(): void
+    {
+        if (! $this->record->isTrainer()) {
+            return;
+        }
+
+        Instructor::query()->firstOrCreate(
+            ['user_id' => $this->record->id],
+            [
+                'name' => $this->record->name,
+                'phone' => $this->record->phone,
+                'is_active' => true,
+            ]
+        );
     }
 }

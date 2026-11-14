@@ -57,5 +57,8 @@ class Kernel extends HttpKernel
 
         // ✅ Middleware role dengan hierarki: role:admin | role:owner | role:user
         'role' => \App\Http\Middleware\CheckRole::class,
+
+        // ✅ Portal pelatih (guard web, role pelatih)
+        'trainer' => \App\Http\Middleware\EnsureTrainer::class,
     ];
 }

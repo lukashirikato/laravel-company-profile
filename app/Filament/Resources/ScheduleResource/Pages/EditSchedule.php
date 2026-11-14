@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\ScheduleResource\Pages;
 
 use App\Filament\Resources\ScheduleResource;
+use App\Models\Instructor;
 use App\Services\ScheduleExpansionService;
 use Carbon\Carbon;
 use Filament\Notifications\Notification;
@@ -12,6 +13,15 @@ use Illuminate\Support\Facades\DB;
 class EditSchedule extends EditRecord
 {
     protected static string $resource = ScheduleResource::class;
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $data['instructor'] = ! empty($data['instructor_id'])
+            ? Instructor::whereKey($data['instructor_id'])->value('name')
+            : null;
+
+        return $data;
+    }
 
     protected function afterSave(): void
     {

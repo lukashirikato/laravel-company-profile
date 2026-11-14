@@ -80,6 +80,19 @@ class WhatsAppTemplateSeeder extends Seeder
                 ],
                 'message' => "Halo {customer_name},\n\n✅ *CHECK-OUT BERHASIL!*\n\nTerima kasih telah berlatih di FTM Fitness Society hari ini.\n\n📋 *Detail Sesi Latihan:*\n• Nama Paket: {package_name}\n• Program: {program}\n• Lokasi: {location}\n• Check-in: {check_in_time}\n• Check-out: {check_out_time}\n\n⏱️ *Durasi Latihan:* {duration}\n\n📊 *Status Quota:*\n• Quota Tersisa: {remaining_quota} / {total_quota}\n\n💪 *Pencapaian Hari Ini:*\nBagus sekali! Anda telah menyelesaikan sesi latihan. Terus jaga konsistensi untuk hasil yang lebih baik!\n\n🎯 *Tips untuk Besok:*\n✓ Istirahat yang cukup\n✓ Minum air yang banyak\n✓ Makanan bergizi seimbang\n✓ Lihat jadwal kelas berikutnya di website\n\nSampai jumpa di latihan berikutnya! 💪\n\n*FTM Fitness Society*",
             ],
+            [
+                'key' => 'trainer_schedule_reminder',
+                'name' => 'Reminder Jadwal Pelatih',
+                'description' => 'Dikirim otomatis H-1 kepada pelatih berisi daftar sesi mengajar besok.',
+                'placeholders' => [
+                    'trainer_name' => 'Nama pelatih',
+                    'date' => 'Tanggal sesi',
+                    'schedule_details' => 'Daftar sesi mengajar',
+                    'total_sessions' => 'Jumlah sesi',
+                    'portal_url' => 'URL portal pelatih',
+                ],
+                'message' => "Halo {trainer_name},\n\nJadwal mengajar besok, {date}:\n\n{schedule_details}\n\nTotal sesi: {total_sessions}\n\nBuka portal pelatih: {portal_url}",
+            ],
         ];
 
         foreach ($templates as $template) {

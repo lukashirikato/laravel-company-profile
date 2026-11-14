@@ -164,6 +164,15 @@ class WhatsAppService
         return $this->send($phoneNumber, $message, ['priority' => 'high']);
     }
 
+    /**
+     * Bangun pesan reminder jadwal pelatih (template DB atau fallback).
+     */
+    public function trainerScheduleReminderMessage(array $data): string
+    {
+        return $this->renderFromDb('trainer_schedule_reminder', $data)
+            ?? $this->buildTrainerScheduleReminderMessage($data);
+    }
+
     // ==================== PRIVATE METHODS ====================
 
     /**
@@ -394,6 +403,30 @@ Pastikan untuk:
 Sampai jumpa besok! 💪
 
 FTM Fitness Society
+EOT;
+    }
+
+    /**
+     * Build trainer schedule reminder message.
+     */
+    private function buildTrainerScheduleReminderMessage(array $data): string
+    {
+        $trainerName = $data['trainer_name'] ?? 'Pelatih';
+        $date = $data['date'] ?? '-';
+        $details = $data['schedule_details'] ?? '-';
+        $total = $data['total_sessions'] ?? 0;
+        $portalUrl = $data['portal_url'] ?? '';
+
+        return <<<EOT
+Halo $trainerName,
+
+Jadwal mengajar besok, $date:
+
+$details
+
+Total sesi: $total
+
+Buka portal pelatih: $portalUrl
 EOT;
     }
 

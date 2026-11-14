@@ -47,6 +47,7 @@ class Schedule extends Model
         'class_time',
         'capacity',
         'instructor',
+        'instructor_id',
         'show_on_landing',
         'series_id',
         'parent_schedule_id',
@@ -70,6 +71,30 @@ class Schedule extends Model
 
     // add the summary field so Filament can access it without needing to eager-load
     protected $appends = ['packageNames', 'packageSummary'];
+
+    /**
+     * Kolom `day` di database NOT NULL, tetapi admin boleh mengisi
+     * schedule_date saja. Turunkan nama hari dari schedule_date agar
+     * tidak pernah menyimpan NULL (penyebab error 1048).
+     */
+    protected static function booted(): void
+    {
+        static::saving(function (Schedule $schedule): void {
+            if (filled($schedule->day)) {
+                return;
+            }
+
+            $date = $schedule->schedule_date;
+
+            if ($date) {
+                $schedule->day = Carbon::parse($date)->format('l');
+
+                return;
+            }
+
+            $schedule->day = '';
+        });
+    }
 
     /**
      * Relasi parent schedule untuk series.
@@ -252,6 +277,11 @@ class Schedule extends Model
         return $this->belongsTo(ClassModel::class, 'class_id');
     }
 
+    public function instructorProfile(): BelongsTo
+    {
+        return $this->belongsTo(Instructor::class, 'instructor_id');
+    }
+
 
     // Hapus relasi package() jika tidak dipakai, gunakan packages() untuk multi-package
 
@@ -283,6 +313,14 @@ class Schedule extends Model
     public function customerSchedules(): HasMany
     {
         return $this->hasMany(CustomerSchedule::class, 'schedule_id');
+    }
+
+    /**
+     * Relasi ke InstructorRating
+     */
+    public function ratings(): HasMany
+    {
+        return $this->hasMany(InstructorRating::class, 'schedule_id');
     }
 
     /**

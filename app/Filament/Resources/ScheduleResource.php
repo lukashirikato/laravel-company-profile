@@ -7,10 +7,13 @@ use App\Models\Schedule;
 use App\Models\Package;
 use App\Models\ClassGroup;
 use App\Models\ClassModel;
+use App\Models\Instructor;
 use App\Models\ScheduleLabelMapping;
 use App\Services\ScheduleExpansionService;
+use App\Services\TrainerScheduleReminderService;
 use App\Support\UserPermission;
 use Filament\Forms;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
@@ -95,8 +98,7 @@ class ScheduleResource extends Resource
                     Forms\Components\TextInput::make('day')
                         ->label('Day(s)')
                         ->placeholder('Wednesday atau Wednesday & Friday')
-                        ->helperText('Bisa 1 hari atau beberapa hari. Contoh: Wednesday & Friday')
-                        ->required()
+                        ->helperText('Bisa 1 hari atau beberapa hari. Contoh: Wednesday & Friday. Kosongkan jika hanya memakai Tanggal Jadwal — hari akan diisi otomatis.')
                         ->maxLength(255)
                         ->reactive()
                         ->afterStateUpdated(function (callable $set, $state) {
@@ -142,10 +144,12 @@ class ScheduleResource extends Resource
                             }
                         }),
 
-                    Forms\Components\TextInput::make('instructor')
-                        ->label('Instructor')
-                        ->maxLength(255)
-                        ->nullable(),
+                    Forms\Components\Select::make('instructor_id')
+                        ->label('Pelatih')
+                        ->options(fn (): array => Instructor::query()->active()->orderBy('name')->pluck('name', 'id')->toArray())
+                        ->searchable()
+                        ->nullable()
+                        ->helperText('Pilih pelatih agar jadwal muncul di portal pelatih dan reminder WA otomatis.'),
                 ])
                 ->columns(2),
 
@@ -268,7 +272,8 @@ class ScheduleResource extends Resource
                     ->formatStateUsing(fn($state, $record) => $state . ' / ' . ($record->capacity && $record->capacity > 0 ? $record->capacity : '∞')),
 
                 Tables\Columns\TextColumn::make('instructor')
-                    ->label('Instructor')
+                    ->label('Pelatih')
+                    ->searchable()
                     ->placeholder('—'),
 
                 Tables\Columns\BadgeColumn::make('show_on_landing')
@@ -322,9 +327,14 @@ class ScheduleResource extends Resource
                     ->relationship('classGroup', 'name')
                     ->multiple(),
 
-                // Text filter for instructor (partial match)
+                // Filter pelatih terhubung (data lama tetap bisa dicari lewat teks)
+                Tables\Filters\SelectFilter::make('instructor_id')
+                    ->label('Pelatih')
+                    ->relationship('instructorProfile', 'name')
+                    ->searchable(),
+
                 Tables\Filters\Filter::make('instructor')
-                    ->label('Instructor')
+                    ->label('Nama Pelatih (lama)')
                     ->form([
                         Forms\Components\TextInput::make('instructor')
                             ->label('Instructor')
@@ -358,6 +368,31 @@ class ScheduleResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
 
+                Tables\Actions\Action::make('send_reminder')
+                    ->label('Reminder')
+                    ->icon('heroicon-o-chat-alt-2')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->modalHeading('Kirim reminder WhatsApp ke pelatih?')
+                    ->modalSubheading(fn ($record): string => sprintf(
+                        'Reminder jadwal "%s" (%s) akan dikirim ke pelatih %s.',
+                        $record->schedule_label ?: '-',
+                        $record->schedule_date?->format('d M Y') ?? '-',
+                        $record->instructorProfile?->name ?? '-'
+                    ))
+                    ->action(function ($record): void {
+                        $result = app(TrainerScheduleReminderService::class)->sendScheduleReminder($record);
+
+                        $notification = Notification::make()
+                            ->title($result['success'] ? 'Reminder terkirim' : 'Gagal kirim reminder')
+                            ->body($result['message'] ?? '');
+
+                        $result['success'] ? $notification->success() : $notification->danger();
+
+                        $notification->send();
+                    })
+                    ->visible(fn ($record): bool => filled($record->instructor_id)),
+
                 Tables\Actions\Action::make('toggle_visibility')
                     ->label(fn($record) => $record->show_on_landing ? 'Hide' : 'Show')
                     ->tooltip('Toggle visibility di landing')
@@ -387,12 +422,23 @@ class ScheduleResource extends Resource
                             ->label('Class')
                             ->options(\App\Models\ClassModel::query()->orderBy('class_name')->pluck('class_name', 'id')->toArray())
                             ->nullable(),
+
+                        Forms\Components\Select::make('instructor_id')
+                            ->label('Pelatih (ganti)')
+                            ->options(Instructor::query()->active()->orderBy('name')->pluck('name', 'id')->toArray())
+                            ->searchable()
+                            ->nullable(),
                     ])
                     ->action(function ($records, $data) {
                         // $data may contain 'packages' and/or 'class_id'
                         foreach ($records as $record) {
                             if (array_key_exists('class_id', $data) && $data['class_id']) {
                                 $record->class_id = $data['class_id'];
+                            }
+
+                            if (array_key_exists('instructor_id', $data) && $data['instructor_id']) {
+                                $record->instructor_id = $data['instructor_id'];
+                                $record->instructor = Instructor::whereKey($data['instructor_id'])->value('name');
                             }
 
                             if (array_key_exists('packages', $data) && is_array($data['packages'])) {
@@ -402,6 +448,37 @@ class ScheduleResource extends Resource
 
                             $record->save();
                         }
+                    })
+                    ->deselectRecordsAfterCompletion(),
+
+                Tables\Actions\BulkAction::make('bulk_send_reminder')
+                    ->label('Kirim Reminder ke Pelatih')
+                    ->icon('heroicon-o-chat-alt-2')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->modalHeading('Kirim reminder ke pelatih?')
+                    ->modalSubheading('Reminder akan dikirim per jadwal terpilih ke pelatih masing-masing.')
+                    ->action(function ($records): void {
+                        $service = app(TrainerScheduleReminderService::class);
+                        $sent = 0;
+                        $failed = 0;
+
+                        foreach ($records as $record) {
+                            if (! filled($record->instructor_id)) {
+                                $failed++;
+
+                                continue;
+                            }
+
+                            $result = $service->sendScheduleReminder($record);
+                            $result['success'] ? $sent++ : $failed++;
+                        }
+
+                        Notification::make()
+                            ->title('Reminder diproses')
+                            ->body("{$sent} terkirim, {$failed} gagal/dilewati.")
+                            ->{$failed > 0 ? 'warning' : 'success'}()
+                            ->send();
                     })
                     ->deselectRecordsAfterCompletion(),
 
@@ -457,6 +534,7 @@ class ScheduleResource extends Resource
                     'schedules.class_time',
                     'schedules.capacity',
                     'schedules.instructor',
+                    'schedules.instructor_id',
                     'schedules.show_on_landing',
                     'schedules.series_id',
                     'schedules.parent_schedule_id',
@@ -465,7 +543,7 @@ class ScheduleResource extends Resource
                     'schedules.created_at',
                     'schedules.updated_at',
                 ])
-                ->with(['packages', 'classModel', 'classGroup'])
+                ->with(['packages', 'classModel', 'classGroup', 'instructorProfile'])
                 ->withCount('children')
                 ->withCount(['customerSchedules' => fn ($q) => $q->where('status', 'confirmed')])
                 ->orderByDesc('created_at'); // Jadwal terbaru di atas

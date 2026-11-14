@@ -17,6 +17,7 @@ class User extends Authenticatable implements FilamentUser
         'email',
         'password',
         'role',
+        'phone',
         'permissions',
     ];
 
@@ -76,6 +77,16 @@ class User extends Authenticatable implements FilamentUser
     public function isUser(): bool
     {
         return UserRole::normalize($this->role) === UserRole::USER;
+    }
+
+    public function isTrainer(): bool
+    {
+        return UserRole::normalize($this->role) === UserRole::TRAINER;
+    }
+
+    public function instructorProfile()
+    {
+        return $this->hasOne(Instructor::class, 'user_id');
     }
 
     public function roleLabel(): string

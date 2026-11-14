@@ -50,6 +50,23 @@ class Kernel extends ConsoleKernel
             });
 
         // ========================================
+        // REMINDER JADWAL PELATIH (HARIAN, 06:00)
+        // ========================================
+        // Satu pesan WhatsApp per pelatih berisi seluruh sesi mengajar hari itu.
+        $schedule->command('trainers:send-schedule-reminder')
+            ->daily()
+            ->at('06:00')
+            ->timezone('Asia/Jakarta')
+            ->withoutOverlapping()
+            ->runInBackground()
+            ->onSuccess(function () {
+                \Log::info('✅ Reminder jadwal pelatih berhasil dijalankan');
+            })
+            ->onFailure(function () {
+                \Log::error('❌ Reminder jadwal pelatih gagal dijalankan');
+            });
+
+        // ========================================
         // AUTO-CLEANUP ADMIN NOTIFICATIONS
         // ========================================
         // Hapus notif admin yang lebih dari 30 hari, jam 03:00 daily

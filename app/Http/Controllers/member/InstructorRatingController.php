@@ -52,6 +52,7 @@ class InstructorRatingController extends Controller
                 'schedule_id' => $schedule->id,
             ],
             [
+                'instructor_id' => $schedule->instructor_id,
                 'instructor_name' => $schedule->instructor,
                 'class_name' => $schedule->class_name,
                 'rating' => $data['rating'],

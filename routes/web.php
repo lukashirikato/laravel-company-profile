@@ -39,6 +39,8 @@ use App\Http\Controllers\Member\InstructorRatingController;
 use App\Http\Controllers\Customer\CustomerPackageController;
 use App\Http\Controllers\QRScannerController;
 use App\Http\Controllers\QRApiController;
+use App\Http\Controllers\Trainer\AuthController as TrainerAuthController;
+use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -445,6 +447,27 @@ Route::prefix('member')
         Route::post('/logout', [MemberAuthController::class, 'logout'])
             ->name('logout');
     });
+
+/*
+|--------------------------------------------------------------------------
+| TRAINER PORTAL (/pelatih)
+|--------------------------------------------------------------------------
+| Guard web, role pelatih. Tidak memakai panel Filament.
+*/
+Route::prefix('pelatih')->name('trainer.')->group(function () {
+    Route::get('/login', [TrainerAuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [TrainerAuthController::class, 'login'])
+        ->middleware('throttle:6,1')
+        ->name('login.submit');
+
+    Route::post('/logout', [TrainerAuthController::class, 'logout'])->name('logout');
+
+    Route::middleware('trainer')->group(function () {
+        Route::get('/', [TrainerDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/kinerja', [TrainerDashboardController::class, 'performance'])->name('performance');
+        Route::get('/jadwal/{schedule}', [TrainerDashboardController::class, 'show'])->name('schedule');
+    });
+});
 
 /*
 |--------------------------------------------------------------------------

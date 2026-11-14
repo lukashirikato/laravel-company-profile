@@ -26,8 +26,8 @@
 <div id="sidebar-overlay" class="ftm-sidebar-overlay" onclick="closeSidebar()"></div>
 
 <aside id="sidebar" class="ftm-sidebar">
-    {{-- Logo / Brand — klik kembali ke /member/profile#home (landing member) --}}
-    <a href="{{ route('member.profile') }}#home" class="ftm-sidebar-brand" title="Kembali ke beranda member">
+    {{-- Logo / Brand — klik kembali ke landing page --}}
+    <a href="{{ url('/') }}" class="ftm-sidebar-brand" title="Kembali ke beranda">
         <div class="ftm-sidebar-logo">
             <span class="ftm-logo-pink">FTM</span> <span class="ftm-logo-cream">SOCIETY</span>
         </div>

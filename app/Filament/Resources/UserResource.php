@@ -35,6 +35,11 @@ class UserResource extends Resource
         return \Filament\Facades\Filament::auth()->user()?->isOwner() ?? false;
     }
 
+    public static function canViewAny(): bool
+    {
+        return \Filament\Facades\Filament::auth()->user()?->isOwner() ?? false;
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -55,6 +60,13 @@ class UserResource extends Resource
                             ->maxLength(255)
                             ->unique(ignoreRecord: true)
                             ->placeholder('nama@email.com'),
+
+                        Forms\Components\TextInput::make('phone')
+                            ->label('Nomor WhatsApp')
+                            ->tel()
+                            ->maxLength(32)
+                            ->placeholder('08xxxxxxxxxx')
+                            ->helperText('Dipakai untuk reminder jadwal jika akun ini ber-role Pelatih.'),
                     ])
                     ->columns(2),
 
@@ -85,6 +97,7 @@ class UserResource extends Resource
                             ->content(fn ($get): string => match ($get('role')) {
                                 UserRole::OWNER => 'Owner: Memiliki seluruh hak akses secara otomatis (CRUD data, kelola staf, & konfigurasi).',
                                 UserRole::ADMIN => 'Admin: Akses operasional. Izin tambah/hapus data diatur pada bagian izin khusus di bawah.',
+                                UserRole::TRAINER => 'Pelatih: Hanya bisa login ke portal /pelatih untuk melihat jadwal mengajar. Tidak punya akses panel admin.',
                                 default => 'User: tidak memiliki akses ke panel admin.',
                             })
                             ->columnSpan('full'),
@@ -132,11 +145,17 @@ class UserResource extends Resource
                     ->searchable()
                     ->sortable(),
 
+                Tables\Columns\TextColumn::make('phone')
+                    ->label('WhatsApp')
+                    ->searchable()
+                    ->placeholder('-'),
+
                 Tables\Columns\BadgeColumn::make('role')
                     ->label('Role')
                     ->formatStateUsing(fn ($state): string => UserRole::label($state))
                     ->colors([
                         'secondary' => fn ($state): bool => UserRole::normalize($state) === UserRole::USER,
+                        'primary' => fn ($state): bool => UserRole::normalize($state) === UserRole::TRAINER,
                         'warning' => fn ($state): bool => UserRole::normalize($state) === UserRole::ADMIN,
                         'success' => fn ($state): bool => UserRole::normalize($state) === UserRole::OWNER,
                     ])

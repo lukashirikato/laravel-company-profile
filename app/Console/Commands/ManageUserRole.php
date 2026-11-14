@@ -10,9 +10,9 @@ class ManageUserRole extends Command
 {
     protected $signature = 'user:role
         {email : Email akun yang dikelola}
-        {role? : Role baru (user|admin|owner). Kosongkan untuk melihat role saat ini}';
+        {role? : Role baru (user|pelatih|admin|owner). Kosongkan untuk melihat role saat ini}';
 
-    protected $description = 'Melihat atau mengubah role akun panel admin (user, admin, owner)';
+    protected $description = 'Melihat atau mengubah role akun (user, pelatih, admin, owner)';
 
     public function handle(): int
     {
@@ -35,7 +35,7 @@ class ManageUserRole extends Command
         $role = strtolower(trim($role));
 
         if (! UserRole::isValid($role)) {
-            $this->error('Role tidak valid. Gunakan: user, admin, atau owner.');
+            $this->error('Role tidak valid. Gunakan: user, pelatih, admin, atau owner.');
 
             return self::FAILURE;
         }

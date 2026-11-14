@@ -5,26 +5,30 @@ namespace App\Support;
 /**
  * Daftar role panel admin beserta hierarkinya.
  *
- *   user  -> tidak punya akses panel
- *   admin -> akses panel penuh (tanpa manajemen akun admin)
- *   owner -> akses admin + manajemen akun/role (level tertinggi)
+ *   user    -> tidak punya akses panel
+ *   pelatih -> portal pelatih, tidak punya akses panel admin
+ *   admin   -> akses panel penuh (tanpa manajemen akun admin)
+ *   owner   -> akses admin + manajemen akun/role (level tertinggi)
  */
 final class UserRole
 {
     public const USER = 'user';
+    public const TRAINER = 'pelatih';
     public const ADMIN = 'admin';
     public const OWNER = 'owner';
 
-    public const ALL = [self::USER, self::ADMIN, self::OWNER];
+    public const ALL = [self::USER, self::TRAINER, self::ADMIN, self::OWNER];
 
     private const LABELS = [
         self::USER => 'User',
+        self::TRAINER => 'Pelatih',
         self::ADMIN => 'Admin',
         self::OWNER => 'Owner',
     ];
 
     private const BADGE_COLORS = [
         self::USER => 'secondary',
+        self::TRAINER => 'primary',
         self::ADMIN => 'warning',
         self::OWNER => 'success',
     ];
@@ -75,5 +79,10 @@ final class UserRole
         }
 
         return [self::USER => self::LABELS[self::USER]];
+    }
+
+    public static function trainerOnlyOptions(): array
+    {
+        return [self::TRAINER => self::LABELS[self::TRAINER]];
     }
 }

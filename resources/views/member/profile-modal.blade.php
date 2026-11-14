@@ -142,9 +142,6 @@
                     <h1 class="font-nord text-xl sm:text-2xl md:text-[28px] font-bold leading-tight text-[#7A2B4A] break-words">
                         Assalamu'alaikum, {{ $customer->name }}
                     </h1>
-                    <p class="text-[13px] sm:text-sm text-[#1C1C1C]/55 italic leading-relaxed mt-1.5 max-w-md">
-                        "Setiap langkah kecil membawamu lebih dekat ke versi terbaik dirimu."
-                    </p>
                     <p class="flex items-center gap-1.5 text-[11px] sm:text-xs text-[#1C1C1C]/40 font-medium mt-1.5">
                         <i class="far fa-calendar text-[10px]"></i>
                         {{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM YYYY') }}
@@ -210,7 +207,7 @@
                 <div class="mt-1 flex items-start justify-between gap-3">
                     <div class="space-y-1 min-w-0">
                         <span class="text-[10px] uppercase tracking-wider text-rose-200/70 font-medium">Paket Terdaftar</span>
-                        <h3 class="text-base font-bold leading-tight text-white drop-shadow-sm">{{ $pkgName }}</h3>
+                        <h3 class="text-base font-bold leading-tight !text-white drop-shadow-sm">{{ $pkgName }}</h3>
                     </div>
                     <div class="text-right shrink-0">
                         <span class="text-2xl font-black tracking-tight text-white">{{ $passDaysLeft }} Hari</span>
