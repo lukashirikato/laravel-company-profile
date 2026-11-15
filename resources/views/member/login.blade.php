@@ -160,6 +160,13 @@
                 </a>
             </div>
 
+            <div class="text-center text-xs" style="color: rgba(28, 28, 28, 0.6);">
+                Sudah bayar tapi belum punya password?
+                <a href="{{ route('guest.checkout.activate.recovery') }}" class="brand-link hover:underline font-semibold">
+                    Aktifkan akun
+                </a>
+            </div>
+
             <button type="submit"
                 class="w-full btn-primary text-white px-6 py-3 rounded-xl font-semibold shadow-sm">
                 Masuk

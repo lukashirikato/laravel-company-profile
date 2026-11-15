@@ -324,6 +324,7 @@ class CheckoutController extends Controller
     {
         $customer = $order->customer;
         $package = $order->package;
+        $quotaWasApplied = (bool) $order->quota_applied;
 
         // Verifikasi nominal pembayaran cocok dengan harga order (cegah manipulasi / salah nominal)
         $grossAmount = (int) data_get($notif, 'gross_amount');
@@ -384,6 +385,11 @@ class CheckoutController extends Controller
 
         // 📱 Kirim notifikasi WhatsApp payment berhasil
         $this->sendPaymentSuccessNotification($customer, $order);
+
+        // Guest checkout: kirim link aktivasi sekali, hanya bila kuota belum pernah diterapkan.
+        if (!$quotaWasApplied && empty($customer->password)) {
+            $this->sendGuestActivationNotification($customer, $order);
+        }
 
         // Check auto apply
         if (!$package->auto_apply) {
@@ -913,7 +919,7 @@ class CheckoutController extends Controller
      * @param string|null $voucherCode
      * @return int
      */
-    private function calculateDiscount(?string $voucherCode, int $price, int $packageId): int
+    public function calculateDiscount(?string $voucherCode, int $price, int $packageId): int
     {
         if (empty($voucherCode)) {
             return 0;
@@ -1158,7 +1164,7 @@ class CheckoutController extends Controller
      * 
      * @return array
      */
-    private function getExclusiveClassOptions(?Package $package = null): array
+    public function getExclusiveClassOptions(?Package $package = null): array
     {
         return $package ? $this->buildExclusiveClassOptionsFromSchedules($package) : [];
     }
@@ -1432,6 +1438,47 @@ class CheckoutController extends Controller
             Log::error('❌ Payment notification error: ' . $e->getMessage(), [
                 'customer_id' => $customer->id,
                 'trace' => $e->getTraceAsString(),
+            ]);
+        }
+    }
+
+    /**
+     * Send guest account activation link via WhatsApp.
+     *
+     * @param $customer
+     * @param Order $order
+     */
+    private function sendGuestActivationNotification($customer, Order $order): void
+    {
+        try {
+            if (!$customer->phone_number) {
+                Log::warning('Guest activation link skipped: customer has no phone number', [
+                    'customer_id' => $customer->id,
+                ]);
+                return;
+            }
+
+            $result = app(WhatsAppService::class)->sendGuestActivationNotification(
+                $customer->phone_number,
+                [
+                    'customer_name' => $customer->name,
+                    'package_name'  => $order->package->name ?? 'Paket FTM',
+                    'order_code'    => $order->order_code,
+                    'activation_url' => GuestCheckoutController::activationUrl($order),
+                ]
+            );
+
+            if (!($result['success'] ?? false)) {
+                Log::warning('Failed to send guest activation link', [
+                    'customer_id' => $customer->id,
+                    'order_code' => $order->order_code,
+                    'message' => $result['message'] ?? 'unknown',
+                ]);
+            }
+        } catch (\Throwable $e) {
+            Log::error('Guest activation notification error: ' . $e->getMessage(), [
+                'customer_id' => $customer->id,
+                'order_code' => $order->order_code,
             ]);
         }
     }

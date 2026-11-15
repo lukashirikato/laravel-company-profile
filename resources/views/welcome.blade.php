@@ -3533,14 +3533,14 @@ document.addEventListener('DOMContentLoaded', function() {
                                 {{-- CTA Button --}}
                                 <div class="w-full mt-auto">
                                     @auth('customer')
-                                        <a href="{{ route('join') }}"
+                                        <a href="{{ route('join.package', ['package' => $package->slug ?? $package->id]) }}"
                                              class="pricing-cta-btn pricing-cta-btn-primary">
-                                             <i class="ri-arrow-right-line mr-1.5"></i> Daftar Sekarang
+                                             <i class="ri-shopping-bag-3-line mr-1.5"></i> Beli Sekarang
                                         </a>
                                     @else
-                                        <a href="{{ route('join') }}"
+                                        <a href="{{ route('join.package', ['package' => $package->slug ?? $package->id]) }}"
                                              class="pricing-cta-btn pricing-cta-btn-primary">
-                                             <i class="ri-arrow-right-line mr-1.5"></i> Sign Up Now
+                                             <i class="ri-shopping-bag-3-line mr-1.5"></i> Beli Sekarang
                                         </a>
                                     @endauth
                                 </div>

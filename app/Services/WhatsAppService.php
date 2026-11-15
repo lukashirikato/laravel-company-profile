@@ -104,6 +104,21 @@ class WhatsAppService
     }
 
     /**
+     * Kirim link aktivasi akun untuk customer guest checkout.
+     *
+     * @param string $phoneNumber
+     * @param array $data
+     * @return array
+     */
+    public function sendGuestActivationNotification(string $phoneNumber, array $data): array
+    {
+        $message = $this->renderFromDb('guest_activation', $data)
+            ?? $this->buildGuestActivationMessage($data);
+
+        return $this->send($phoneNumber, $message, ['priority' => 'high']);
+    }
+
+    /**
      * Kirim reminder booking class
      * 
      * @param string $phoneNumber
@@ -308,12 +323,43 @@ EOT;
     }
 
     /**
+     * Build WhatsApp message for guest account activation.
+     *
+     * @param array $data
+     * @return string
+     */
+    private function buildGuestActivationMessage(array $data): string
+    {
+        $customerName = $data['customer_name'] ?? 'Sahabat FTM';
+        $packageName = $data['package_name'] ?? 'Paket FTM';
+        $orderCode = $data['order_code'] ?? '-';
+        $activationUrl = $data['activation_url'] ?? '';
+
+        return <<<EOT
+Halo $customerName,
+
+Pembayaran paket $packageName sudah kami terima.
+
+Satu langkah lagi: buat password akun agar bisa login ke Member Area dan booking kelas.
+
+Kode Pesanan: $orderCode
+
+Aktifkan akun melalui link berikut:
+$activationUrl
+
+Link berlaku 30 hari. Jika link tidak bisa dibuka, buka halaman aktivasi di website FTM lalu masukkan kode pesanan dan email yang kamu pakai saat checkout.
+
+Terima kasih,
+*FTM Society*
+EOT;
+    }
+
+    /**
      * Build booking confirmation message
      * 
      * @param array $bookingData
      * @return string
-     */
-    private function buildBookingConfirmationMessage(array $bookingData): string
+     */    private function buildBookingConfirmationMessage(array $bookingData): string
     {
         $customerName = $bookingData['customer_name'] ?? 'Valued Customer';
         $packageName = $bookingData['package_name'] ?? 'Package';

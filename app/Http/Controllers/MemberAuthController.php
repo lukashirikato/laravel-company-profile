@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\Order;
 use App\Models\OtpVerification;
 use App\Http\Controllers\OtpVerificationController;
 use Illuminate\Http\Request;
@@ -217,7 +218,7 @@ class MemberAuthController extends Controller
                 ->withInput($request->only('email', 'phone_number'));
         }
 
-        if (!$customer->is_verified) {
+        if (!$customer->is_verified && !$this->hasPaidGuestOrder($customer)) {
             return back()
                 ->withErrors(['email' => 'Akun Anda belum diverifikasi admin. Silakan hubungi admin terlebih dahulu.'])
                 ->withInput($request->only('email', 'phone_number'));
@@ -479,7 +480,12 @@ class MemberAuthController extends Controller
                 ->withErrors(['email' => 'Data tidak ditemukan.']);
         }
 
+        $activateGuest = !$customer->is_verified && $this->hasPaidGuestOrder($customer);
+
         $customer->password = Hash::make($request->new_password);
+        if ($activateGuest) {
+            $customer->is_verified = true;
+        }
         if (isset($customer->force_password_change)) {
             $customer->force_password_change = false;
         }
@@ -532,6 +538,21 @@ class MemberAuthController extends Controller
      * Helper: mask nomor HP untuk display.
      * Misal 081234567890 → 0812****7890
      */
+    /**
+     * Guest checkout yang sudah membayar tapi belum membuat password
+     * boleh reset password via OTP WhatsApp.
+     */
+    private function hasPaidGuestOrder(Customer $customer): bool
+    {
+        if (!empty($customer->password)) {
+            return false;
+        }
+
+        return Order::where('customer_id', $customer->id)
+            ->whereIn('status', ['paid', 'active', 'settlement', 'success', 'waiting_admin'])
+            ->exists();
+    }
+
     private function maskPhone(string $phone): string
     {
         $clean = preg_replace('/\D/', '', $phone);

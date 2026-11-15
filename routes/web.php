@@ -120,10 +120,9 @@ Route::get('/join/{package}', function ($package) {
         return redirect()->away($pkg->whatsapp_inquiry_url);
     }
 
-    // Not logged in → redirect to signup
+    // Not logged in → guest checkout (tanpa wajib daftar akun)
     if (!auth('customer')->check()) {
-        session(['after_register_package' => $pkg->slug]);
-        return redirect()->to(route('home') . '#signup');
+        return redirect()->route('guest.checkout.show', $pkg->slug ?: $pkg->id);
     }
 
     // Logged in → proceed to checkout
@@ -139,7 +138,40 @@ Route::get('/join/{package}', function ($package) {
 Route::get('/guest/checkout/{package:slug}', [GuestCheckoutController::class, 'show'])
     ->name('guest.checkout.show');
 Route::post('/guest/checkout/{package:slug}', [GuestCheckoutController::class, 'process'])
+    ->middleware('throttle:12,1')
     ->name('guest.checkout.process');
+
+// Status pesanan guest (berhasil / pending) — tanpa login
+Route::get('/guest/success/{order_code}', [GuestCheckoutController::class, 'success'])
+    ->name('guest.checkout.success');
+
+// Bayar ulang order pending
+Route::post('/guest/retry/{order_code}', [GuestCheckoutController::class, 'retry'])
+    ->middleware('throttle:10,1')
+    ->name('guest.checkout.retry');
+
+// Cek status pesanan (polling halaman pending)
+Route::get('/guest/status/{order_code}', [GuestCheckoutController::class, 'status'])
+    ->middleware('throttle:60,1')
+    ->name('guest.checkout.status');
+
+// Pemulihan aktivasi (kode pesanan + email) — harus di atas route {order_code}
+Route::get('/guest/activate', [GuestCheckoutController::class, 'showActivationRecovery'])
+    ->middleware('throttle:20,1')
+    ->name('guest.checkout.activate.recovery');
+Route::post('/guest/activate', [GuestCheckoutController::class, 'submitActivationRecovery'])
+    ->middleware('throttle:8,1')
+    ->name('guest.checkout.activate.recovery.submit');
+
+// Aktivasi akun setelah pembayaran berhasil (signed URL)
+Route::get('/guest/activate/{order_code}', [GuestCheckoutController::class, 'showActivate'])
+    ->name('guest.checkout.activate');
+Route::post('/guest/activate/{order_code}', [GuestCheckoutController::class, 'activate'])
+    ->middleware('throttle:10,1')
+    ->name('guest.checkout.activate.submit');
+Route::post('/guest/activate/{order_code}/resend', [GuestCheckoutController::class, 'resendActivation'])
+    ->middleware('throttle:3,10')
+    ->name('guest.checkout.activate.resend');
 
 /*
 |--------------------------------------------------------------------------

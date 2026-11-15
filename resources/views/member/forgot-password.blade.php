@@ -236,6 +236,11 @@
 
         <hr class="my-6" style="border-color: #F4C9DF;">
 
+        <div class="text-center text-sm mb-3" style="color: rgba(28, 28, 28, 0.7);">
+            Baru bayar dan belum membuat password?
+            <a href="{{ route('guest.checkout.activate.recovery') }}" class="ftm-link">Aktifkan akun di sini</a>
+        </div>
+
         <div class="text-center text-sm" style="color: rgba(28, 28, 28, 0.7);">
             Ingat password Anda?
             <a href="{{ route('member.login.form') }}" class="ftm-link">Kembali ke Login</a>
