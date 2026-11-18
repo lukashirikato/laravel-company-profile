@@ -180,6 +180,20 @@ class WhatsAppService
     }
 
     /**
+     * Kirim notifikasi pembatalan booking kelas oleh member.
+     *
+     * @param string $phoneNumber
+     * @param array $data
+     * @return array
+     */
+    public function sendBookingCancellationNotification(string $phoneNumber, array $data): array
+    {
+        $message = $this->renderFromDb('booking_cancellation', $data)
+            ?? $this->buildBookingCancellationMessage($data);
+        return $this->send($phoneNumber, $message, ['priority' => 'normal']);
+    }
+
+    /**
      * Bangun pesan reminder jadwal pelatih (template DB atau fallback).
      */
     public function trainerScheduleReminderMessage(array $data): string
@@ -415,8 +429,52 @@ EOT;
     }
 
     /**
+     * Build booking cancellation message.
+     *
+     * @param array $data
+     * @return string
+     */
+    private function buildBookingCancellationMessage(array $data): string
+    {
+        $customerName = $data['customer_name'] ?? 'Member';
+        $packageName = $data['package_name'] ?? 'Package';
+        $className = $data['class_name'] ?? 'Class';
+        $day = $data['day'] ?? '-';
+        $date = $data['date'] ?? '-';
+        $time = $data['time'] ?? '-';
+        $creditReturned = (bool) ($data['credit_returned'] ?? false);
+        $remainingClasses = $data['remaining_classes'] ?? null;
+
+        $creditInfo = $creditReturned
+            ? 'Kredit 1 kelas telah dikembalikan ke paket Anda.'
+            : 'Sesi ini tidak menghasilkan kredit pengganti.';
+
+        if ($remainingClasses !== null && $remainingClasses !== '') {
+            $creditInfo .= "\nSisa kelas: {$remainingClasses}";
+        }
+
+        return <<<EOT
+Halo $customerName,
+
+*BOOKING KELAS DIBATALKAN*
+
+Paket: $packageName
+Kelas: $className
+Jadwal: $day, $date
+Waktu: $time
+
+$creditInfo
+
+Silakan booking kelas lain melalui Member Area.
+Jika pembatalan ini tidak Anda lakukan, hubungi admin FTM Society.
+
+FTM Fitness Society
+EOT;
+    }
+
+    /**
      * Build class reminder message
-     * 
+     *
      * @param array $classData
      * @return string
      */

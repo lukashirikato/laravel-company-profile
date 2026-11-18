@@ -3,12 +3,17 @@
 namespace App\Http\Controllers\Member;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use App\Models\CustomerSchedule;
 use App\Models\Attendance;
 use App\Models\InstructorRating;
 use App\Models\Order;
+use App\Services\AdminNotificationService;
+use App\Services\BookingCancellationService;
+use App\Services\WhatsAppService;
 use Carbon\Carbon;
 
 class MyClassesController extends Controller
@@ -130,6 +135,19 @@ class MyClassesController extends Controller
             }
         });
 
+        // ✅ Status pembatalan mandiri per booking (kelas mendatang saja)
+        $cancellation = app(BookingCancellationService::class);
+        $cutoffHours = $cancellation->cutoffHours();
+
+        $processedSchedules->each(function ($item) use ($cancellation, $cutoffHours) {
+            $state = $cancellation->evaluate($item, $cutoffHours);
+            $item->can_cancel = $state['can_cancel'];
+            $item->cancel_deadline = $state['deadline'];
+            $item->cancel_block_reason = $state['reason'];
+            $item->is_exclusive_booking = $state['is_exclusive'];
+            $item->cancel_cutoff_hours = $cutoffHours;
+        });
+
         // ✅ Pisahkan kelas aktif (Upcoming) dan kelas lewat (Past)
         // 1. Upcoming Classes: Urutkan dari tanggal terdekat ke depan
         $myClasses = $processedSchedules->filter(fn($item) => !$item->is_past)->sortBy(function($item) {
@@ -163,6 +181,130 @@ class MyClassesController extends Controller
             'pastClasses' => $pastClasses,
             'stats' => $stats,
             'activePackages' => $activeOrders,
+            'cancelCutoffHours' => $cutoffHours,
         ]);
+    }
+
+    /**
+     * Batalkan booking kelas milik member yang sedang login.
+     */
+    public function cancel(Request $request, CustomerSchedule $customerSchedule)
+    {
+        $customer = Auth::guard('customer')->user();
+
+        if (!$customer || (int) $customerSchedule->customer_id !== (int) $customer->id) {
+            abort(403, 'Anda tidak berhak membatalkan booking ini.');
+        }
+
+        $validated = $request->validate([
+            'reason' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $respond = function (bool $success, string $message, array $extra = []) use ($request) {
+            if ($request->expectsJson()) {
+                return response()->json(array_merge([
+                    'success' => $success,
+                    'message' => $message,
+                ], $extra), $success ? 200 : 422);
+            }
+
+            return $success
+                ? back()->with('success', $message)
+                : back()->with('error', $message);
+        };
+
+        try {
+            $result = app(\App\Services\BookingCancellationService::class)->cancel(
+                $customerSchedule,
+                $validated['reason'] ?? null
+            );
+        } catch (ValidationException $e) {
+            return $respond(false, collect($e->errors())->flatten()->first() ?: 'Booking tidak dapat dibatalkan.');
+        } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
+            abort($e->getStatusCode(), $e->getMessage());
+        } catch (\Throwable $e) {
+            Log::error('Failed to cancel booking', [
+                'customer_id' => $customer->id,
+                'customer_schedule_id' => $customerSchedule->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return $respond(false, 'Gagal membatalkan booking. Silakan coba lagi.');
+        }
+
+        /** @var CustomerSchedule $booking */
+        $booking = $result['booking'];
+        $order = $result['order'];
+
+        $this->sendCancellationNotifications($customer, $booking, $order, $result['credit_returned']);
+
+        $message = $result['credit_returned']
+            ? 'Booking dibatalkan. 1 kredit kelas dikembalikan ke paket Anda.'
+            : 'Booking dibatalkan.' . ($result['is_exclusive'] ? ' Sesi exclusive tidak dikembalikan.' : '');
+
+        return $respond(true, $message, [
+            'status' => 'cancelled',
+            'remaining_classes' => $result['remaining_classes'],
+            'credit_returned' => $result['credit_returned'],
+        ]);
+    }
+
+    /**
+     * Kirim WhatsApp ke member dan notifikasi ke admin setelah pembatalan.
+     */
+    private function sendCancellationNotifications($customer, CustomerSchedule $booking, ?Order $order, bool $creditReturned): void
+    {
+        $schedule = $booking->schedule;
+        $className = $schedule?->classModel?->class_name ?? $schedule?->schedule_label ?? 'Class';
+        $date = $schedule?->schedule_date ? Carbon::parse($schedule->schedule_date)->format('d M Y') : '-';
+        $time = $schedule?->class_time ? Carbon::parse($schedule->class_time)->format('H:i') : '-';
+        $packageName = $order?->package?->name ?? 'Package';
+
+        try {
+            if ($customer->phone_number) {
+                $whatsapp = new WhatsAppService();
+                $whatsapp->sendBookingCancellationNotification($customer->phone_number, [
+                    'customer_name' => $customer->name,
+                    'package_name' => $packageName,
+                    'class_name' => $className,
+                    'day' => $schedule?->day ?? '-',
+                    'date' => $date,
+                    'time' => $time,
+                    'credit_returned' => $creditReturned,
+                    'remaining_classes' => $order?->remaining_classes,
+                ]);
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Failed to send cancellation WhatsApp notification', [
+                'customer_id' => $customer->id,
+                'booking_id' => $booking->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        AdminNotificationService::notify(
+            'booking_cancelled',
+            'Booking kelas dibatalkan',
+            sprintf(
+                '%s membatalkan %s (%s %s) - paket %s.%s',
+                $customer->name,
+                $className,
+                $date,
+                $time,
+                $packageName,
+                $creditReturned ? ' Kredit kelas dikembalikan.' : ''
+            ),
+            [
+                'data' => [
+                    'customer_id' => $customer->id,
+                    'customer_schedule_id' => $booking->id,
+                    'schedule_id' => $booking->schedule_id,
+                    'order_id' => $booking->order_id,
+                    'reason' => $booking->cancellation_reason,
+                ],
+                'related_id' => $booking->id,
+                'related_type' => CustomerSchedule::class,
+            ]
+        );
     }
 }

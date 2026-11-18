@@ -373,9 +373,19 @@
         /* ============================================
            DAFTAR PAKET (PIL) — tanpa dropdown
            ============================================ */
+        :root {
+            --ftm-cherry: #C0264F;
+            --ftm-pink: #EE4E8B;
+            --ftm-dark: #1C1C1C;
+            --ftm-caption: #64748b;
+            --ftm-light-bg: #FDFCFD;
+            --ftm-border-light: rgba(28, 28, 28, 0.1);
+            --ftm-accent-gradient: linear-gradient(135deg, var(--ftm-pink), var(--ftm-cherry));
+        }
+
         .package-strip {
             display: flex;
-            gap: .5rem;
+            gap: .75rem;
             overflow-x: auto;
             overflow-y: hidden;
             scrollbar-width: none;
@@ -398,47 +408,93 @@
             flex-direction: column;
             align-items: flex-start;
             gap: 2px;
-            min-width: 200px;
-            max-width: 240px;
-            padding: .55rem .9rem;
-            border-radius: 12px;
-            background: #FCF9F2;
-            border: 1px solid rgba(238, 78, 139, .15);
+            min-width: 180px;
+            max-width: 280px;
+            padding: .75rem 1rem;
+            border-radius: 14px;
+            background: var(--ftm-light-bg);
+            border: 1px solid var(--ftm-border-light);
             text-align: left;
             cursor: pointer;
-            transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+            transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+            position: relative;
+            overflow: hidden;
+            color: var(--ftm-dark);
         }
 
-        .package-pill:hover {
-            border-color: rgba(238, 78, 139, .45);
-            box-shadow: 0 6px 16px rgba(122, 43, 74, .08);
-            transform: translateY(-1px);
+        .package-pill:hover:not(.is-active) {
+            border-color: rgba(238, 78, 139, .3);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
         }
 
         .package-pill.is-active {
-            background: linear-gradient(135deg, #7A2B4A 0%, #EE4E8B 100%);
+            background: var(--ftm-accent-gradient);
             border-color: transparent;
-            box-shadow: 0 10px 22px rgba(238, 78, 139, .28);
+            color: #fff;
+            box-shadow: 0 12px 30px rgba(192, 38, 79, 0.35), inset 0 0 0 1px rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+            z-index: 1;
+        }
+
+        .package-pill.is-active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 14px;
+            background: radial-gradient(circle at 85% 15%, rgba(255,255,255,0.1) 0%, transparent 70%);
+            z-index: 2;
+            pointer-events: none;
         }
 
         .package-pill-name {
-            font-family: 'Poppins', sans-serif;
-            font-size: 12px;
-            font-weight: 600;
-            line-height: 1.25;
-            color: #1C1C1C;
+            font-family: 'Nord', 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.3;
+            color: inherit;
             white-space: normal;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .package-pill-name i {
+            font-size: 13px;
+            color: inherit;
         }
 
         .package-pill-credit {
             font-family: 'Poppins', sans-serif;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 500;
-            color: rgba(28, 28, 28, .45);
+            color: var(--ftm-caption);
         }
 
         .package-pill.is-active .package-pill-name { color: #fff; }
-        .package-pill.is-active .package-pill-credit { color: rgba(255, 255, 255, .75); }
+        .package-pill.is-active .package-pill-credit { color: rgba(255, 255, 255, .85); }
+
+        .package-selection-wrapper {
+            width: 100%;
+            margin-top: 1.5rem;
+            padding-top: 1.25rem;
+            border-top: 1px dashed rgba(28, 28, 28, 0.1);
+        }
+
+        .package-label {
+            display: block;
+            font-family: 'Poppins', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--ftm-cherry);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
 
         @keyframes bcIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
@@ -698,18 +754,31 @@
                         <p class="font-poppins text-[14px] text-dark font-semibold">{{ $activeOrders?->first()?->expired_at ? \Carbon\Carbon::parse($activeOrders->first()->expired_at)->format('d M Y') : ($selectedPackage?->duration_days ? 'Setelah booking pertama' : 'Tak Terbatas') }}</p>
                     </div>
                 </div>
+                {{-- Pemilihan Paket: Sekarang Sejajar di Bawah Info Paket --}}
                 @if($activeOrders)
-                <div class="ml-auto md:min-w-[300px] md:max-w-[380px]">
-                    <p class="font-poppins text-[10px] text-dark/40 uppercase tracking-wider font-medium mb-1.5">Pilih Paket</p>
+                <div class="package-selection-wrapper">
+                    <span class="package-label">Ganti Paket Aktif</span>
                     <div id="package-strip" class="package-strip">
                         @foreach($activeOrders as $ord)
-                            @php $isActiveOrder = $ord->id == $selectedOrderId; @endphp
+                            @php 
+                                $isActiveOrder = $ord->id == $selectedOrderId; 
+                                $packageName = strtolower($ord->package?->name ?? '');
+                                $packageIcon = 'fa-dumbbell';
+                                if (str_contains($packageName, 'reformer')) $packageIcon = 'fa-dumbbell';
+                                elseif (str_contains($packageName, 'mat pilates')) $packageIcon = 'fa-person-praying';
+                                elseif (str_contains($packageName, 'exclusive')) $packageIcon = 'fa-gem';
+                                elseif (str_contains($packageName, 'private')) $packageIcon = 'fa-crown';
+                                elseif (str_contains($packageName, 'yoga')) $packageIcon = 'fa-person-praying';
+                            @endphp
                             <button type="button"
                                 onclick="switchPackage({{ $ord->id }})"
                                 class="package-pill {{ $isActiveOrder ? 'is-active' : '' }}"
                                 aria-pressed="{{ $isActiveOrder ? 'true' : 'false' }}">
-                                <span class="package-pill-name">{{ $ord->package?->name ?? 'Package' }}</span>
-                                <span class="package-pill-credit">{{ $ord->remaining_classes ?? 0 }} kredit</span>
+                                <span class="package-pill-name">
+                                    <i class="fas {{ $packageIcon }}"></i>
+                                    {{ $ord->package?->name ?? 'Package' }}
+                                </span>
+                                <span class="package-pill-credit">{{ $ord->remaining_classes ?? 0 }} kredit tersedia</span>
                             </button>
                         @endforeach
                     </div>
@@ -880,6 +949,39 @@
 
 </div>
 {{-- End of flex wrapper --}}
+
+{{-- ============================================
+     CANCEL BOOKING MODAL
+     ============================================ --}}
+<div id="cancel-booking-modal" class="bulk-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="cancel-booking-title" style="display:none;">
+    <div class="bulk-modal-container" role="document">
+        <div class="bulk-modal-header">
+            <div class="bulk-modal-icon" style="background:rgba(192,38,79,0.1);color:#C0264F;">
+                <i class="fas fa-calendar-xmark"></i>
+            </div>
+            <h3 id="cancel-booking-title" class="bulk-modal-title">Batalkan Booking?</h3>
+            <p class="bulk-modal-subtitle" id="cancel-booking-summary">-</p>
+        </div>
+        <div class="bulk-modal-body">
+            <div class="bulk-modal-warning" id="cancel-booking-policy">
+                Batal gratis hingga {{ $cancelCutoffHours ?? 4 }} jam sebelum kelas. Kredit kelas dikembalikan ke paket.
+            </div>
+            <label class="bulk-modal-section-label" for="cancel-booking-reason">Alasan pembatalan (opsional)</label>
+            <select id="cancel-booking-reason" class="w-full border border-[rgba(238,78,139,0.25)] rounded-xl px-3.5 py-2.5 font-poppins text-[13px] text-dark bg-white focus:outline-none focus:border-primary">
+                <option value="">Pilih alasan</option>
+                <option value="Sakit">Sakit</option>
+                <option value="Jadwal bentrok">Jadwal bentrok</option>
+                <option value="Urusan mendadak">Urusan mendadak</option>
+                <option value="Lainnya">Lainnya</option>
+            </select>
+            <p id="cancel-booking-error" class="font-poppins text-[12.5px] text-[#C0264F] mt-2 min-h-[16px]" role="alert"></p>
+        </div>
+        <div class="bulk-modal-footer">
+            <button type="button" class="bulk-btn bulk-btn-secondary" onclick="closeCancelBooking()">Tidak</button>
+            <button type="button" class="bulk-btn bulk-btn-primary" id="cancel-booking-submit" onclick="submitCancelBooking()">Ya, Batalkan</button>
+        </div>
+    </div>
+</div>
 
 {{-- ============================================
      BULK BOOKING CONFIRMATION MODAL
@@ -1498,6 +1600,100 @@
         toast.addEventListener('click', function() { toast.remove(); });
     }
 
+    let activeCancelUrl = null;
+
+    function openCancelBooking(btn) {
+        activeCancelUrl = btn.getAttribute('data-cancel-url');
+        if (!activeCancelUrl) return;
+
+        const modal = document.getElementById('cancel-booking-modal');
+        const summary = document.getElementById('cancel-booking-summary');
+        const reason = document.getElementById('cancel-booking-reason');
+        const error = document.getElementById('cancel-booking-error');
+        const submit = document.getElementById('cancel-booking-submit');
+
+        if (summary) {
+            summary.textContent = [
+                btn.getAttribute('data-class-name') || 'Class',
+                btn.getAttribute('data-date') || '',
+                btn.getAttribute('data-time') || ''
+            ].filter(Boolean).join(' • ');
+        }
+        if (reason) reason.value = '';
+        if (error) error.textContent = '';
+        if (submit) {
+            submit.disabled = false;
+            submit.innerHTML = 'Ya, Batalkan';
+        }
+
+        if (modal) {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeCancelBooking() {
+        const modal = document.getElementById('cancel-booking-modal');
+        if (modal) modal.style.display = 'none';
+        document.body.style.overflow = '';
+        activeCancelUrl = null;
+    }
+
+    function submitCancelBooking() {
+        if (!activeCancelUrl) return;
+
+        const submit = document.getElementById('cancel-booking-submit');
+        const error = document.getElementById('cancel-booking-error');
+        const reason = document.getElementById('cancel-booking-reason');
+
+        if (submit) {
+            submit.disabled = true;
+            submit.textContent = 'Membatalkan...';
+        }
+        if (error) error.textContent = '';
+
+        fetch(activeCancelUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({ reason: reason ? reason.value : '' })
+        })
+        .then(function (response) {
+            return response.json().then(function (data) {
+                return { ok: response.ok, data: data };
+            });
+        })
+        .then(function (result) {
+            if (!result.ok || !result.data.success) {
+                let message = result.data.message || 'Booking tidak dapat dibatalkan.';
+                if (result.data.errors) {
+                    const firstKey = Object.keys(result.data.errors)[0];
+                    if (firstKey) message = result.data.errors[firstKey][0];
+                }
+                if (error) error.textContent = message;
+                if (submit) {
+                    submit.disabled = false;
+                    submit.innerHTML = 'Ya, Batalkan';
+                }
+                return;
+            }
+
+            closeCancelBooking();
+            showBookingToast('success', result.data.message || 'Booking dibatalkan.');
+            setTimeout(function () { window.location.reload(); }, 900);
+        })
+        .catch(function () {
+            if (error) error.textContent = 'Koneksi terputus. Periksa jaringan lalu coba lagi.';
+            if (submit) {
+                submit.disabled = false;
+                submit.innerHTML = 'Ya, Batalkan';
+            }
+        });
+    }
+
     function closeBulkConfirm() {
         const modal = document.getElementById('bulk-confirm-modal');
         if (modal) { modal.style.display = 'none'; document.body.style.overflow = ''; }
@@ -1517,6 +1713,8 @@
     }
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
+            const cancelModal = document.getElementById('cancel-booking-modal');
+            if (cancelModal && cancelModal.style.display === 'flex') closeCancelBooking();
             const modal = document.getElementById('bulk-confirm-modal');
             if (modal && modal.style.display === 'flex') closeBulkConfirm();
         }
@@ -1689,13 +1887,24 @@
             const isDisabled = s.isBooked || s.isFull;
             const capLabel = s.hasCapacity ? s.bookedCount + '/' + s.capacity + ' terbook · ' + s.remaining + ' sisa' : 'Tanpa Batas';
             const statusHtml = s.isBooked
-                ? '<span class="font-poppins text-[11px] font-semibold text-accent bg-[rgba(26,122,94,0.08)] px-3.5 py-1.5 rounded-full flex items-center gap-1.5"><i class="fas fa-check-circle text-[12px]"></i>Terbooking</span>'
+                ? '<div class="flex items-center gap-2 flex-wrap justify-end">'
+                    + '<span class="font-poppins text-[11px] font-semibold text-accent bg-[rgba(26,122,94,0.08)] px-3.5 py-1.5 rounded-full flex items-center gap-1.5"><i class="fas fa-check-circle text-[12px]"></i>Terbooking</span>'
+                    + (s.canCancel
+                        ? `<button type="button" class="font-poppins text-[11px] font-semibold text-[#C0264F] bg-[rgba(192,38,79,0.08)] border border-[rgba(192,38,79,0.3)] px-3.5 py-1.5 rounded-full flex items-center gap-1.5 hover:bg-[#C0264F] hover:text-white transition-colors" data-cancel-url="${s.cancelUrl || ''}" data-class-name="${s.className}" data-date="${fmtDisplayDate(getScheduleDate(s, currentWeekStart))}" data-time="${formatTime12(s.classTime)}" onclick="event.stopPropagation(); openCancelBooking(this)"><i class="fas fa-calendar-xmark text-[11px]"></i>Batalkan</button>`
+                        : `<div class="group relative flex items-center justify-end">
+                            <span class="font-poppins text-[10px] text-dark/30 cursor-help border-b border-dotted border-dark/20">Kebijakan pembatalan</span>
+                            <div class="absolute bottom-full right-0 mb-2 w-[220px] p-3 bg-white border border-[rgba(238,78,139,0.2)] rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 text-[11px] text-dark/70 leading-relaxed font-poppins">
+                                <i class="fas fa-info-circle text-primary mr-1.5"></i>
+                                Pembatalan mandiri tersedia hingga H-{{ $cancelCutoffHours ?? 4 }} jam sebelum kelas. Silakan <a href="https://wa.me/6288219775687" target="_blank" class="text-primary font-semibold underline">hubungi admin</a> untuk bantuan lebih lanjut.
+                            </div>
+                        </div>`)
+                    + '</div>'
                 : s.isFull
                 ? '<span class="font-poppins text-[11px] font-semibold text-dark/30 bg-[rgba(28,28,28,0.05)] px-3.5 py-1.5 rounded-full flex items-center gap-1.5"><i class="fas fa-ban text-[12px]"></i>Penuh</span>'
                 : '<span class="font-poppins text-[11px] font-semibold text-primary bg-[rgba(238,78,139,0.08)] px-3.5 py-1.5 rounded-full schedule-card-accent flex items-center gap-1.5"><i class="fas fa-plus-circle text-[12px]"></i>Pilih</span>';
 
             cardsHtml += `
-                <div class="bg-white rounded-2xl shadow-[0_2px_12px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 schedule-card ${s.isBooked ? 'is-booked opacity-60' : ''} ${s.isFull ? 'opacity-50' : ''} ${!isDisabled ? 'cursor-pointer' : 'cursor-default'}"
+                <div class="bg-white rounded-2xl shadow-[0_2px_12px_rgba(122,43,74,0.06)] border border-[rgba(238,78,139,0.1)] overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 schedule-card ${s.isBooked ? 'is-booked' : ''} ${s.isBooked && !s.canCancel ? 'opacity-60' : ''} ${s.isFull ? 'opacity-50' : ''} ${!isDisabled ? 'cursor-pointer' : 'cursor-default'}"
                       data-schedule-id="${s.id}"
                       data-class-name="${s.className}"
                       data-day="${s.day}"

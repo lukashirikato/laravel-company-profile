@@ -638,6 +638,147 @@
             background: #C97B00;
         }
 
+        .card-footer-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .cancel-booking-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.4rem 0.85rem;
+            border-radius: 999px;
+            border: 1px solid rgba(192, 38, 79, 0.35);
+            background: rgba(192, 38, 79, 0.06);
+            color: #C0264F;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .18s ease, color .18s ease, border-color .18s ease;
+        }
+
+        .cancel-booking-btn:hover {
+            background: #C0264F;
+            border-color: #C0264F;
+            color: #fff;
+        }
+
+        .cancel-booking-btn:focus-visible {
+            outline: 2px solid #C0264F;
+            outline-offset: 2px;
+        }
+
+        .cancel-locked {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-family: 'Poppins', sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+            color: rgba(28, 28, 28, 0.45);
+            text-align: right;
+            max-width: 180px;
+            line-height: 1.35;
+        }
+
+        .cancel-locked a {
+            color: #C0264F;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .cancel-summary {
+            background: rgba(122, 43, 74, 0.04);
+            border: 1px solid rgba(238, 78, 139, 0.12);
+            border-radius: 12px;
+            padding: 0.85rem 1rem;
+            margin: 0.75rem 0 0.5rem;
+        }
+
+        .cancel-summary .cs-class {
+            font-family: 'Nord', 'Poppins', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--cherry);
+            margin-bottom: 0.2rem;
+        }
+
+        .cancel-summary .cs-meta {
+            font-family: 'Poppins', sans-serif;
+            font-size: 12.5px;
+            color: var(--caption);
+            line-height: 1.6;
+        }
+
+        .cancel-policy {
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            line-height: 1.55;
+            color: #7A2B4A;
+            background: rgba(238, 78, 139, 0.06);
+            border-left: 3px solid var(--pink);
+            border-radius: 8px;
+            padding: 0.6rem 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .cancel-select {
+            width: 100%;
+            border: 1px solid rgba(238, 78, 139, 0.25);
+            border-radius: 10px;
+            padding: 0.65rem 0.75rem;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            color: var(--layl);
+            background: #fff;
+            margin-bottom: 0.35rem;
+        }
+
+        .cancel-select:focus {
+            outline: none;
+            border-color: var(--pink);
+            box-shadow: 0 0 0 3px rgba(238, 78, 139, 0.12);
+        }
+
+        .cancel-modal-label {
+            display: block;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--caption);
+            margin-top: 0.5rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .cancel-toast {
+            position: fixed;
+            top: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.9rem 1.5rem;
+            border-radius: 14px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+            background: #1A7A5E;
+            box-shadow: 0 12px 42px rgba(0, 0, 0, 0.18);
+            max-width: 90vw;
+        }
+
+        .cancel-toast.is-error {
+            background: #C0264F;
+        }
+
         .rate-locked {
             display: inline-flex;
             align-items: center;
@@ -1292,8 +1433,31 @@
                                             <div class="iname">{{ $instructor }}</div>
                                         </div>
                                     </div>
-                                    <div class="status-pill">
-                                        <span class="sdot"></span> Terkonfirmasi
+                                    <div class="card-footer-actions">
+                                        <div class="status-pill">
+                                            <span class="sdot"></span> Terkonfirmasi
+                                        </div>
+                                        @if($item->can_cancel)
+                                            <button type="button"
+                                                    class="cancel-booking-btn"
+                                                    data-cancel-open
+                                                    data-cancel-url="{{ route('member.my-classes.cancel', $item) }}"
+                                                    data-class-name="{{ $className }}"
+                                                    data-package-name="{{ $pkgName }}"
+                                                    data-day="{{ $item->schedule->day }}"
+                                                    data-date="{{ $item->schedule->schedule_date_formatted }}"
+                                                    data-time="{{ \Carbon\Carbon::parse($item->schedule->class_time)->format('H:i') }}"
+                                                    data-exclusive="{{ $item->is_exclusive_booking ? '1' : '0' }}">
+                                                <i class="fas fa-calendar-xmark" style="font-size:11px;"></i>
+                                                Batalkan
+                                            </button>
+                                        @elseif($item->cancel_block_reason)
+                                            <span class="cancel-locked">
+                                                <i class="fas fa-lock" style="font-size:10px;"></i>
+                                                {{ $item->cancel_block_reason }}
+                                                <a href="https://wa.me/6288219775687" target="_blank" rel="noopener">Hubungi Admin</a>
+                                            </span>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -1449,6 +1613,43 @@
             @endif
         </div>
     </main>
+</div>
+
+{{-- PEMBATALAN BOOKING: MODAL --}}
+<div class="rate-modal" id="cancelModal" aria-hidden="true">
+    <div class="rate-modal-backdrop" data-cancel-close></div>
+    <div class="rate-modal-card" role="dialog" aria-modal="true" aria-labelledby="cancelModalTitle">
+        <button type="button" class="rate-modal-close" data-cancel-close aria-label="Tutup">
+            <i class="fas fa-xmark"></i>
+        </button>
+
+        <p class="rate-eyebrow">Pembatalan Kelas</p>
+        <h3 id="cancelModalTitle">Batalkan <span>booking</span> ini?</h3>
+
+        <div class="cancel-summary">
+            <div class="cs-class" id="cancelClassName">-</div>
+            <div class="cs-meta" id="cancelClassMeta">-</div>
+        </div>
+
+        <p class="cancel-policy" id="cancelPolicy">
+            Batal gratis hingga {{ $cancelCutoffHours ?? 4 }} jam sebelum kelas. Kredit 1 kelas dikembalikan ke paket.
+        </p>
+
+        <label class="cancel-modal-label" for="cancelReason">Alasan pembatalan <span style="font-weight:400;">(opsional)</span></label>
+        <select id="cancelReason" class="cancel-select">
+            <option value="">Pilih alasan</option>
+            <option value="Sakit">Sakit</option>
+            <option value="Jadwal bentrok">Jadwal bentrok</option>
+            <option value="Urusan mendadak">Urusan mendadak</option>
+            <option value="Lainnya">Lainnya</option>
+        </select>
+
+        <div class="rate-modal-actions">
+            <button type="button" class="rate-cancel" data-cancel-close>Tidak</button>
+            <button type="button" class="rate-submit" id="cancelSubmit">Ya, Batalkan</button>
+        </div>
+        <p class="rate-error" id="cancelError" role="alert"></p>
+    </div>
 </div>
 
 {{-- PENILAIAN PELATIH: MODAL --}}
@@ -1743,6 +1944,133 @@ window.addEventListener('resize', function() {
     });
 
     paint();
+})();
+
+// ===== PEMBATALAN BOOKING =====
+(function () {
+    var modal = document.getElementById('cancelModal');
+    if (!modal) return;
+
+    var csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+    var submitBtn = document.getElementById('cancelSubmit');
+    var errorEl = document.getElementById('cancelError');
+    var reasonEl = document.getElementById('cancelReason');
+    var policyEl = document.getElementById('cancelPolicy');
+    var activeUrl = null;
+    var defaultPolicy = policyEl ? policyEl.textContent.trim() : '';
+
+    function openModal(btn) {
+        activeUrl = btn.getAttribute('data-cancel-url');
+        var exclusive = btn.getAttribute('data-exclusive') === '1';
+
+        document.getElementById('cancelClassName').textContent = btn.getAttribute('data-class-name') || 'Class';
+        document.getElementById('cancelClassMeta').textContent = [
+            btn.getAttribute('data-package-name') || 'Package',
+            (btn.getAttribute('data-day') || '') + ', ' + (btn.getAttribute('data-date') || ''),
+            btn.getAttribute('data-time') || ''
+        ].filter(Boolean).join(' · ');
+
+        if (policyEl) {
+            policyEl.textContent = exclusive
+                ? 'Paket exclusive: kursi dilepas, sesi ini tidak dikembalikan sebagai kredit.'
+                : defaultPolicy;
+        }
+
+        if (reasonEl) reasonEl.value = '';
+        if (errorEl) errorEl.textContent = '';
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Ya, Batalkan';
+        }
+
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        activeUrl = null;
+    }
+
+    function showToast(message, isError) {
+        var toast = document.createElement('div');
+        toast.className = 'cancel-toast' + (isError ? ' is-error' : '');
+        toast.innerHTML = '<i class="fas ' + (isError ? 'fa-circle-exclamation' : 'fa-circle-check') + '"></i><span></span>';
+        toast.querySelector('span').textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(function () {
+            toast.style.transition = 'opacity .3s';
+            toast.style.opacity = '0';
+            setTimeout(function () { toast.remove(); }, 320);
+        }, 3600);
+    }
+
+    document.addEventListener('click', function (e) {
+        var opener = e.target.closest('[data-cancel-open]');
+        if (opener) {
+            e.preventDefault();
+            openModal(opener);
+            return;
+        }
+        if (e.target.closest('[data-cancel-close]')) {
+            e.preventDefault();
+            closeModal();
+        }
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+    });
+
+    if (submitBtn) {
+        submitBtn.addEventListener('click', function () {
+            if (!activeUrl) return;
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Membatalkan...';
+            if (errorEl) errorEl.textContent = '';
+
+            fetch(activeUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({ reason: reasonEl ? reasonEl.value : '' })
+            })
+            .then(function (response) {
+                return response.json().then(function (data) {
+                    return { ok: response.ok, data: data };
+                });
+            })
+            .then(function (result) {
+                if (!result.ok || !result.data.success) {
+                    var message = result.data.message || 'Booking tidak dapat dibatalkan.';
+                    if (result.data.errors) {
+                        var firstKey = Object.keys(result.data.errors)[0];
+                        if (firstKey) message = result.data.errors[firstKey][0];
+                    }
+                    if (errorEl) errorEl.textContent = message;
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Ya, Batalkan';
+                    return;
+                }
+
+                closeModal();
+                showToast(result.data.message || 'Booking dibatalkan.', false);
+                setTimeout(function () { window.location.reload(); }, 900);
+            })
+            .catch(function () {
+                if (errorEl) errorEl.textContent = 'Koneksi terputus. Periksa jaringan lalu coba lagi.';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Ya, Batalkan';
+            });
+        });
+    }
 })();
 </script>
 

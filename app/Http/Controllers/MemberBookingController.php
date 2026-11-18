@@ -7,6 +7,7 @@ use App\Models\Schedule;
 use App\Models\Order;
 use App\Models\ClassModel;
 use App\Models\Package;
+use App\Services\BookingCancellationService;
 use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -94,6 +95,20 @@ class MemberBookingController extends Controller
             // ✅ AMBIL JADWAL YANG SUDAH DI-BOOK
             $bookedScheduleIds = $this->getBookedScheduleIds($customer, $selectedOrder);
 
+            $bookedSchedules = CustomerSchedule::query()
+                ->with('schedule')
+                ->where('customer_id', $customer->id)
+                ->where('order_id', $selectedOrder->id)
+                ->where('status', 'confirmed')
+                ->get()
+                ->keyBy('schedule_id');
+
+            $bookedSchedules->each(function (CustomerSchedule $booking) use ($selectedOrder) {
+                $booking->setRelation('order', $selectedOrder);
+            });
+
+            $cancellation = app(BookingCancellationService::class);
+
             // ✅ AMBIL FILTER PARAMS
             $filters = [
                 'date' => $request->get('date'),
@@ -133,13 +148,17 @@ class MemberBookingController extends Controller
 
             // ✅ BUILD JSON DATA UNTUK CLIENT-SIDE FILTERING
             $dayOrder = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-            $schedulesJson = $allSchedules->map(function ($schedule) use ($weekStart, $dayOrder, $bookedScheduleIds) {
+            $schedulesJson = $allSchedules->map(function ($schedule) use ($weekStart, $dayOrder, $bookedScheduleIds, $bookedSchedules, $cancellation) {
                 $dayIdx = array_search($schedule->day, $dayOrder);
                 $scheduleDate = $schedule->schedule_date
                     ? Carbon::parse($schedule->schedule_date)
                     : ($dayIdx !== false ? $weekStart->copy()->addDays($dayIdx) : null);
 
                 $isBooked = in_array($schedule->id, $bookedScheduleIds ?? []);
+                $bookedSchedule = $bookedSchedules->get($schedule->id);
+                $cancelState = $bookedSchedule ? $cancellation->evaluate($bookedSchedule) : null;
+                $canCancel = (bool) ($cancelState['can_cancel'] ?? false);
+                $cancelBlockedReason = $bookedSchedule && !$canCancel ? ($cancelState['reason'] ?? null) : null;
                 $capacity = (int) ($schedule->capacity ?? 5);
                 $bookedCount = (int) ($schedule->booked_count ?? 0);
                 $hasCapacity = $capacity > 0;
@@ -175,6 +194,10 @@ class MemberBookingController extends Controller
                     'capacity' => $capacity,
                     'bookedCount' => $bookedCount,
                     'isBooked' => $isBooked,
+                    'bookingId' => $bookedSchedule?->id,
+                    'canCancel' => $canCancel,
+                    'cancelBlockedReason' => $cancelBlockedReason,
+                    'cancelUrl' => $bookedSchedule ? route('member.my-classes.cancel', $bookedSchedule) : null,
                     'isFull' => $isFull,
                     'hasCapacity' => $hasCapacity,
                     'remaining' => $remaining,
@@ -207,6 +230,7 @@ class MemberBookingController extends Controller
                 'filters' => $filters,
                 'filterOptions' => $filterOptions,
                 'weekStart' => $weekStart,
+                'cancelCutoffHours' => $cancellation->cutoffHours(),
             ]);
 
         } catch (\Exception $e) {

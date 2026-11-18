@@ -378,6 +378,10 @@ Route::prefix('member')
         Route::get('/my-classes', [MyClassesController::class, 'index'])
             ->name('my-classes');
 
+        // Cancel a booked class (member self-service)
+        Route::post('/my-classes/{customerSchedule}/cancel', [MyClassesController::class, 'cancel'])
+            ->name('my-classes.cancel');
+
         // Submit a class / instructor rating
         Route::post('/ratings', [InstructorRatingController::class, 'store'])
             ->name('ratings.store');

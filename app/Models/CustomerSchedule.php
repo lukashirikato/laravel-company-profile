@@ -15,10 +15,14 @@ class CustomerSchedule extends Model
         'order_id',      // ✅ IMPORTANT: order_id untuk matching package
         'status',
         'joined_at',
+        'cancelled_at',
+        'cancelled_by',
+        'cancellation_reason',
     ];
 
     protected $casts = [
         'joined_at' => 'datetime',
+        'cancelled_at' => 'datetime',
     ];
 
     /**

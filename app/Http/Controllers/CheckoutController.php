@@ -727,14 +727,7 @@ class CheckoutController extends Controller
             return $upcoming;
         }
 
-        // Fallback: latest dated schedule (if all configured dates are in the past).
-        $latestDated = (clone $query)
-            ->whereNotNull('schedule_date')
-            ->orderBy('schedule_date', 'desc')
-            ->orderBy('id', 'desc')
-            ->first();
-
-        // Jika tidak ada jadwal mendatang, throw error
+        // Tidak ada jadwal mendatang → tolak checkout
         throw new \Exception("Tidak ada jadwal mendatang untuk kelas ini: {$selectedLabel} {$scheduleData['day']} {$scheduleData['time']}");
     }
 
@@ -1175,6 +1168,10 @@ class CheckoutController extends Controller
             $dbLabels = ScheduleLabelMapping::query()
                 ->orderBy('label')
                 ->pluck('label')
+                ->map(fn ($label) => trim((string) $label))
+                ->filter()
+                ->unique()
+                ->values()
                 ->toArray();
         } else {
             $dbLabels = [];
@@ -1295,6 +1292,8 @@ class CheckoutController extends Controller
         return Schedule::query()
             ->with('classModel')
             ->whereHas('packages', fn ($q) => $q->where('packages.id', $package->id))
+            ->whereNotNull('schedule_date')
+            ->whereDate('schedule_date', '>=', Carbon::today()->toDateString())
             ->latest('updated_at')
             ->latest('id')
             ->get()
@@ -1342,9 +1341,9 @@ class CheckoutController extends Controller
 
         // ✅ Cek apakah label terdaftar di database (Management → Schedule Labels)
         if (Schema::hasTable('schedule_label_mappings')) {
-            $mapping = ScheduleLabelMapping::where('label', $rawLabel)->first();
+            $mapping = ScheduleLabelMapping::whereRaw('TRIM(label) = ?', [$rawLabel])->first();
             if ($mapping) {
-                return $mapping->label;
+                return trim((string) $mapping->label);
             }
         }
 
